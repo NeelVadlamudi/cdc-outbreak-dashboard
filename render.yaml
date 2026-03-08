@@ -1,0 +1,31 @@
+services:
+  # Python Backend Service
+  - type: web
+    name: cdc-outbreak-api
+    env: python
+    buildCommand: "cd backend && pip install -r requirements.txt"
+    startCommand: "cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
+      # Required for downloading/updating CDC datasets on production
+      - key: APP_ENV
+        value: production
+
+  # React Frontend Service
+  - type: web
+    name: cdc-outbreak-dashboard
+    env: static
+    buildCommand: "cd frontend && npm install && npm run build"
+    staticPublishPath: "./frontend/dist"
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: cdc-outbreak-api
+          envVarKey: RENDER_EXTERNAL_URL
+        # Appends /api to the end of the URL
+        property: url_with_path
+        value: /api
+      - key: NODE_VERSION
+        value: 18.17.0
