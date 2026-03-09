@@ -13,6 +13,8 @@
 
 </div>
 
+<img src="assets/dashboard_preview.png" alt="CDC Outbreak AI Dashboard Preview" width="100%" />
+
 ---
 
 ## Executive Summary
