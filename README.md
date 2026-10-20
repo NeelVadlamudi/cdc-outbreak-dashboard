@@ -52,6 +52,7 @@ All settings are read from environment variables. `.env.example` lists each one.
 | Variable | Purpose | Default |
 | --- | --- | --- |
 | `ALLOWED_ORIGINS` | Comma-separated origins allowed by CORS | `http://localhost:5173` |
+| `LOG_FORMAT` | `json` (one JSON object per line) or `text` | `json` |
 | `ADMIN_API_KEY` | Key required in the `X-API-Key` header for the training endpoints; if unset, training is disabled | unset |
 | `CDC_DB_PATH` | DuckDB file the app reads and writes | `data/cdc_surveillance.duckdb` |
 | `INGEST_ON_STARTUP` | Set to `false` to serve `CDC_DB_PATH` without downloading new data | `true` |
@@ -88,6 +89,29 @@ make test   # run pytest
 make lint   # run ruff
 make eval   # placeholder until an evaluation suite exists
 ```
+
+## Nightly run
+
+`.github/workflows/nightly.yml` runs daily at 09:17 UTC. You can also start it by hand from the Actions tab (workflow_dispatch). Each run does the following:
+
+1. `scripts/refresh_data.py` pulls the latest CDC data into a fresh DuckDB file.
+2. `evals/backtest.py` reruns the rolling-origin backtest on that data. It writes `evals/results/backtest.json` and `site/data/backtest.json`.
+3. `scripts/build_dashboard.py` writes `site/data/dashboard.json`.
+4. The 60-question eval runs against the frozen snapshot (`evals/snapshot.duckdb`), so its scores stay comparable from night to night. `scripts/publish_eval.py` then appends the run to `site/data/eval.json` and rebuilds `site/data/replay.json`. This step uses the `GEMINI_API_KEY` repository secret.
+5. `scripts/nightly_status.py` writes `site/data/status.json`. Its shape is in `site/DATA_CONTRACT.md` section 6.
+6. The run commits the results to `main` and starts the Pages deploy.
+7. `scripts/open_alerts.py` opens a GitHub issue labelled `nightly-alert` for each alert, or comments on a matching open issue.
+
+A run raises an alert when:
+- an eval rate is more than 5 points worse than `evals/baseline.json`;
+- a current table is more than 14 days old; or
+- a step fails.
+
+A failed step also marks the run as failed. To move the baseline, replace `evals/baseline.json` with the summary of a newer run.
+
+## Logs
+
+The API logs one JSON object per line by default (`LOG_FORMAT=json`; set `LOG_FORMAT=text` for plain lines). Every line in a request carries a `request_id`, taken from the `X-Request-ID` header or generated, and the response echoes it back. The agent logs one line for each model call (`event: model_call`, with elapsed time and token counts when the model reports them) and one for each tool call (`event: tool_call`, with inputs, rows returned and elapsed time). It logs a final `agent_answer` line with the status. Each request also gets one `event: request` line.
 
 ## Deployment
 

@@ -1,7 +1,10 @@
 """Application settings read from environment variables."""
 
+import contextvars
+import json
 import logging
 import os
+from datetime import datetime, timezone
 
 
 def _split_csv(value: str) -> list[str]:
@@ -44,8 +47,41 @@ OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "mistral")
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
 
 
+LOG_FORMAT = os.getenv("LOG_FORMAT", "json").lower()  # "json" (one object per line) or "text"
+
+# Set per request by the middleware in backend/main.py; included in every JSON log line.
+request_id_var: contextvars.ContextVar[str | None] = contextvars.ContextVar("request_id", default=None)
+
+_STD_ATTRS = set(logging.LogRecord("", 0, "", 0, "", None, None).__dict__) | {"message", "asctime"}
+
+
+class JsonFormatter(logging.Formatter):
+    """One JSON object per line: ts, level, logger, msg, request_id, plus any `extra=` fields."""
+
+    def format(self, record: logging.LogRecord) -> str:
+        out = {
+            "ts": datetime.fromtimestamp(record.created, timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z"),
+            "level": record.levelname,
+            "logger": record.name,
+            "msg": record.getMessage(),
+        }
+        rid = request_id_var.get()
+        if rid:
+            out["request_id"] = rid
+        for k, v in record.__dict__.items():
+            if k not in _STD_ATTRS and not k.startswith("_"):
+                out[k] = v
+        if record.exc_info:
+            out["exc"] = self.formatException(record.exc_info)
+        return json.dumps(out, default=str)
+
+
 def configure_logging() -> None:
-    logging.basicConfig(
-        level=LOG_LEVEL,
-        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-    )
+    handler = logging.StreamHandler()
+    if LOG_FORMAT == "json":
+        handler.setFormatter(JsonFormatter())
+    else:
+        handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(name)s: %(message)s"))
+    root = logging.getLogger()
+    root.handlers[:] = [handler]
+    root.setLevel(LOG_LEVEL)
