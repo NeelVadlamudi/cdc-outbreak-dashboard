@@ -38,7 +38,9 @@ One entry per model run. Each entry is the top of the file `evals/run_evals.py` 
     {
       "model": "string",
       "date": "YYYY-MM-DD",
+      "note": "string?, shown above the table for the latest run",
       "summary": {
+        "question_set": "string?, e.g. cdc-q60-v1",
         "questions": 0,
         "numeric_accuracy": 0.0,
         "tool_choice": 0.0,
@@ -65,7 +67,7 @@ One entry per model run. Each entry is the top of the file `evals/run_evals.py` 
   earlier runs are listed underneath ("History", newest first), values only.
 - **Computed change:** the headline gets a "Change · computed" column only against the most recent earlier run with the
   **same question set**: equal `questions` count and, if a question-set id key is present in either summary, an equal id
-  in both. `summarize()` has no such key today; if one is added, tell the UI its name (`QSET_ID_KEYS` in site.js).
+  in both. The key is `question_set` (set by `version:` in `evals/questions.yaml`; `QSET_ID_KEYS` in site.js). Runs without it are never compared with runs that have it.
   Never compared across different sets (e.g. 20 vs 60). Shown only when both values are numbers, else "—".
   Rates in percentage points (pp), times via the duration formatter, counts as-is. Nothing else is computed.
 
