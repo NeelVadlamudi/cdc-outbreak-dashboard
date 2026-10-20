@@ -443,29 +443,34 @@
     const url = d && typeof d.url === "string" && /^https:\/\//.test(d.url) ? d.url : null;
     if (!url) { sec.hidden = true; return; }
     const base = url.replace(/\/+$/, "");
-    const input = el("input", { type: "text", name: "question", maxlength: "500", required: "", "aria-label": "Question", placeholder: "Ask about the CDC data" });
+    const input = el("input", { type: "text", id: "live-q", name: "question", maxlength: "500", required: "", placeholder: "Ask about the CDC data" });
+    const label = el("label", { for: "live-q", class: "live-label", text: "Your question" });
     const button = el("button", { type: "submit", class: "btn" }, el("span", { text: "Ask" }));
-    const out = el("div", { class: "live-out", "aria-live": "polite" });
+    const out = el("div", { class: "live-out", "aria-live": "polite", "aria-busy": "false" });
+    const setState = (state) => { out.classList.toggle("is-loading", state === "loading"); out.classList.toggle("is-error", state === "error"); out.setAttribute("aria-busy", state === "loading" ? "true" : "false"); };
     const form = el("form", { class: "live-ask" }, input, " ", button);
     form.addEventListener("submit", async (ev) => {
       ev.preventDefault();
       const question = input.value.trim(); if (!question) return;
-      button.disabled = true;
+      button.disabled = true; setState("loading");
       out.replaceChildren(el("p", { class: "note", text: "Asking… the first call can take about 50 s while the server wakes." }));
       try {
         const r = await fetch(`${base}/api/agent/ask`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question }) });
-        const j = await r.json();
-        if (!r.ok) throw new Error((j && j.detail) || `HTTP ${r.status}`);
+        let j = null;
+        try { j = await r.json(); } catch { throw new Error(`HTTP ${r.status}${r.statusText ? " " + r.statusText : ""}, not a JSON response`); }
+        if (!r.ok) throw new Error((j && typeof j.detail === "string" && j.detail) || `HTTP ${r.status}`);
+        setState("done");
         out.replaceChildren(
           el("p", { class: "live-answer", text: String(j.answer ?? "") }),
           el("p", { class: "note", text: [j.status, j.as_of ? `data as of ${j.as_of}` : null].filter(Boolean).join(" · ") }));
       } catch (e) {
+        setState("error");
         out.replaceChildren(el("p", { class: "note", text: `Could not reach the live API (${e.message}). It may still be waking; try again.` }));
       } finally { button.disabled = false; }
     });
     $("[data-body]", sec).replaceChildren(
       el("p", { class: "note", text: "Asks the hosted agent. The free server sleeps when idle, so the first call can take about 50 s while it wakes." }),
-      form, out,
+      label, form, out,
       el("p", { class: "note" }, el("a", { href: "app/review", text: "Review queue" }), " · ", el("a", { href: "app/ask", text: "Full Ask page" }), " · ", el("a", { href: url, rel: "noopener", text: "API" })));
     sec.hidden = false;
   }
