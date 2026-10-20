@@ -15,6 +15,7 @@ from backend.agent.checker import UNVERIFIED_MESSAGE, check_numbers, queue_for_r
 from backend.agent.models import get_chat_model, model_label
 
 MAX_TOOL_CALLS = 6
+REFUSAL_PHRASES = ("the data does not cover", "can't answer", "cannot answer", "can not answer", "out of date")
 PROMPT_VERSION = "system_v1"
 SYSTEM_PROMPT = (Path(__file__).parent / "prompts" / f"{PROMPT_VERSION}.md").read_text()
 
@@ -123,7 +124,15 @@ def run_agent(question: str, model=None, setting: str | None = None) -> dict:
                           "tool_calls": trace, "model": label})
         answer = UNVERIFIED_MESSAGE
 
+    if not checker["passed"]:
+        status = "unverified"
+    elif stale or any(p in answer.lower() for p in REFUSAL_PHRASES):
+        status = "refused"
+    else:
+        status = "answered"
+
     return {
+        "status": status,
         "answer": answer,
         "tool_calls": trace,
         "as_of": as_of,
