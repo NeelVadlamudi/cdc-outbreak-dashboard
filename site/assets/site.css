@@ -57,7 +57,6 @@ ol.calls code{font-family:var(--mono);color:var(--ink)}
 ol.calls .in{font-family:var(--mono);color:var(--mute);font-size:12px}
 .btn{display:inline-flex;flex-direction:column;gap:2px;padding:12px 18px;border-radius:10px;border:1px solid rgba(243,148,68,.55);color:var(--ink);text-decoration:none;background:rgba(243,148,68,.08)}
 .btn small{font:400 11.5px var(--mono);color:var(--acc)}
-.btn[aria-disabled=true]{border-color:var(--line);background:none;color:var(--dim);cursor:not-allowed}
-.btn[aria-disabled=true] small{color:var(--dim)}
 .foot{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:space-between;color:var(--dim);font:400 12px var(--mono);margin-top:22px}
 @media(prefers-reduced-transparency:reduce){.panel{backdrop-filter:none;-webkit-backdrop-filter:none;background:#121214}}
+[hidden]{display:none!important}
