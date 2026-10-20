@@ -13,7 +13,8 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-DB_PATH = os.path.join(Path(__file__).parent.parent, "data", "cdc_surveillance.duckdb")
+from backend.config import DB_PATH  # noqa: E402
+
 MODEL_DIR = os.path.join(Path(__file__).parent.parent, "models")
 
 
@@ -86,9 +87,9 @@ def get_training_data(virus: str = "COVID-NET") -> np.ndarray:
             SELECT week_ending_date, AVG(weekly_rate) as avg_rate
             FROM hospitalization_rates
             WHERE surveillance_network = ?
-              AND age_group = 'Overall'
-              AND sex = 'Overall'
-              AND race_ethnicity = 'Overall'
+              AND age_group = 'Overall' AND site = 'Overall'
+              AND sex IN ('All', 'Overall')
+              AND race_ethnicity IN ('All', 'Overall')
               AND rate_type = 'Observed'
             GROUP BY week_ending_date
             ORDER BY week_ending_date

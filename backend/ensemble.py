@@ -12,7 +12,8 @@ import duckdb
 import numpy as np
 import xgboost as xgb
 
-DB_PATH = os.path.join(Path(__file__).parent.parent, "data", "cdc_surveillance.duckdb")
+from backend.config import DB_PATH  # noqa: E402
+
 MODEL_DIR = os.path.join(Path(__file__).parent.parent, "models")
 
 
@@ -24,8 +25,8 @@ def get_time_series(virus: str = "COVID-NET") -> list:
             SELECT week_ending_date as date, AVG(weekly_rate) as rate
             FROM hospitalization_rates
             WHERE surveillance_network = ?
-              AND age_group = 'Overall' AND sex = 'Overall'
-              AND race_ethnicity = 'Overall' AND rate_type = 'Observed'
+              AND age_group = 'Overall' AND site = 'Overall' AND sex IN ('All', 'Overall')
+              AND race_ethnicity IN ('All', 'Overall') AND rate_type = 'Observed'
             GROUP BY week_ending_date
             ORDER BY week_ending_date
         """, [virus]).fetchdf()
@@ -200,7 +201,7 @@ def detect_anomalies() -> list:
         df = conn.execute("""
             SELECT site, surveillance_network, week_ending_date, weekly_rate
             FROM hospitalization_rates
-            WHERE age_group = 'Overall' AND sex = 'Overall' AND race_ethnicity = 'Overall'
+            WHERE age_group = 'Overall' AND site = 'Overall' AND sex IN ('All', 'Overall') AND race_ethnicity IN ('All', 'Overall')
               AND rate_type = 'Observed'
             ORDER BY week_ending_date DESC
             LIMIT 2000
@@ -256,7 +257,7 @@ def get_age_heatmap_data(network: str = "COVID-NET") -> list:
             SELECT week_ending_date, age_group, AVG(weekly_rate) as rate
             FROM hospitalization_rates
             WHERE surveillance_network = ?
-              AND sex = 'Overall' AND race_ethnicity = 'Overall'
+              AND sex IN ('All', 'Overall') AND race_ethnicity IN ('All', 'Overall')
               AND rate_type = 'Observed' AND age_group != 'Overall'
             GROUP BY week_ending_date, age_group
             ORDER BY week_ending_date, age_group
@@ -279,8 +280,8 @@ def get_season_comparison() -> list:
             SELECT surveillance_network, season, mmwr_week,
                    AVG(weekly_rate) as avg_rate
             FROM hospitalization_rates
-            WHERE age_group = 'Overall' AND sex = 'Overall'
-              AND race_ethnicity = 'Overall' AND rate_type = 'Observed'
+            WHERE age_group = 'Overall' AND site = 'Overall' AND sex IN ('All', 'Overall')
+              AND race_ethnicity IN ('All', 'Overall') AND rate_type = 'Observed'
             GROUP BY surveillance_network, season, mmwr_week
             ORDER BY surveillance_network, season, mmwr_week
         """).fetchdf()

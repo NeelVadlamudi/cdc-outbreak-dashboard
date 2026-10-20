@@ -5,13 +5,12 @@ Lightweight, embedded OLAP database — perfect for analytical queries on time-s
 
 import logging
 import os
-from pathlib import Path
 
 import duckdb
 
 logger = logging.getLogger(__name__)
 
-DB_PATH = os.path.join(Path(__file__).parent.parent, "data", "cdc_surveillance.duckdb")
+from backend.config import DB_PATH  # noqa: E402
 
 
 def get_connection(read_only: bool = False):
