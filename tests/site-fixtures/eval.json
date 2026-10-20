@@ -51,6 +51,7 @@
         "median_output_tokens": null,
         "question_set": "EXAMPLE-set-v1"
       },
+      "scoring_changed": true,
       "note": "Scoring changed for this run: EXAMPLE note."
     },
     {

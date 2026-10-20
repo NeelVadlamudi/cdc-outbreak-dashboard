@@ -1,6 +1,6 @@
 name: nightly
 
-# Refresh CDC data, run the backtest and the 60-question eval, publish results to site/data,
+# Refresh CDC data, run the backtest, the 60-question eval and the 30-question Mirage audit eval, publish results to site/data,
 # write site/data/status.json, and open issues for score drops, stale tables or failed steps.
 on:
   schedule:
@@ -69,6 +69,20 @@ jobs:
           echo "result=$f" >> "$GITHUB_OUTPUT"
           python scripts/publish_eval.py "$f"
 
+      - id: mirage
+        name: Mirage audit eval (30 questions)
+        continue-on-error: true
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          if [ -z "$GEMINI_API_KEY" ]; then echo "GEMINI_API_KEY secret is not set"; exit 1; fi
+          python mirage/vendor/scripts/verify_kpis.py
+          python mirage/vendor/scripts/verify_allocation.py
+          python evals/mirage/run_mirage_evals.py --model "$EVAL_MODEL"
+          f=$(ls -t evals/mirage/results/"$EVAL_MODEL"_*.json | head -1)
+          echo "result=$f" >> "$GITHUB_OUTPUT"
+          python scripts/publish_mirage.py "$f"
+
       - id: status
         name: Write status.json
         if: always()
@@ -79,6 +93,8 @@ jobs:
             --step backtest=${{ steps.backtest.outcome }} \
             --step dashboard=${{ steps.dashboard.outcome }} \
             --step eval=${{ steps.eval.outcome }} \
+            --step mirage_eval=${{ steps.mirage.outcome }} \
+            --mirage-result "${{ steps.mirage.outputs.result }}" \
             --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
             --commit "${{ github.sha }}" --started-at "${{ steps.start.outputs.at }}"
 
@@ -87,7 +103,7 @@ jobs:
         run: |
           git config user.name "NeelVadlamudi"
           git config user.email "73226768+NeelVadlamudi@users.noreply.github.com"
-          git add evals/results site/data
+          git add evals/results evals/mirage/results site/data
           if git diff --cached --quiet; then echo "nothing to commit"; exit 0; fi
           git commit -m "Nightly results $(date -u +%Y-%m-%d)"
           git pull --rebase origin main

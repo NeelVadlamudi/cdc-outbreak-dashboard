@@ -32,7 +32,8 @@ test("site.js eval columns use exactly these keys, no checker column", () => {
 
 test("fixture covers question_set and a scoring-change note", () => {
   assert.ok(fx.runs.some((r) => r.summary.question_set));
-  assert.ok(fx.runs.some((r) => /^Scoring changed/.test(r.note || "")));
+  assert.ok(fx.runs.some((r) => r.scoring_changed === true));
+  assert.ok(fx.runs.every((r) => r.scoring_changed === undefined || typeof r.scoring_changed === "boolean"));
 });
 test("status fixture is EXAMPLE and has the §6 top-level keys", () => {
   const st = JSON.parse(readFileSync(new URL("./status.json", import.meta.url)));

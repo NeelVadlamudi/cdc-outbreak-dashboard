@@ -90,6 +90,30 @@ make lint   # run ruff
 make eval   # placeholder until an evaluation suite exists
 ```
 
+## Mirage audit agent
+
+The audit agent answers questions about shelf gaps at the Mirage warehouse clubs (synthetic data from https://github.com/NeelVadlamudi/mirage, vendored at commit `ca12b53` in `mirage/vendor`). For example: "Why is Paper Towels 12pk empty at Everett on 2026-09-22?"
+
+It compares the floor count, the backroom count and the system on-hand figure, then names the case and proposes the next step:
+- the record is wrong: recount;
+- the stock is in the backroom: pull to the floor;
+- it is truly out: reorder.
+
+It never changes a record.
+
+It uses the same agent loop, number checker, JSON logs, CI and nightly job as the CDC agent. It runs on Gemini Flash-Lite by default, or on Ollama with `AGENT_MODEL=ollama-local`.
+
+- **Read-only tools** (`mirage/tools.py`): `list_shelf_gaps(club, day)`, `get_sku_position(club, sku, day)`, `get_po_allocation(po)` and `get_weeks_of_supply(club, sku)`. They query a DuckDB copy of the Mirage tables that is opened read-only (`mirage/build_db.py`).
+- **One write tool**, `propose_action(club, sku, action, reason)`. It only adds a row with status `waiting for approval` to a `proposals` table in a separate database (`MIRAGE_STATE_DB`). It writes nothing unless the action matches the case that the read tools found for that club and SKU earlier in the run, and every number in the reason appears in those tool results.
+- **Approval:** `POST /api/proposals/{id}/approve` and `/reject` need `X-API-Key: <ADMIN_API_KEY>` and the deciding person's name. Each decision is written to `audit_log` with who decided and when. A decision is final; a second one returns 409.
+- **Eval:** `evals/mirage/` has 30 questions. Expected values are recomputed from the raw CSVs with the logic of Mirage's `verify_kpis.py` and `verify_allocation.py`. The check day must still give 22.5%, 7 and 6, and the PO 98 / 60 / 38, or the eval stops. CI runs both Mirage checks and rescores the recorded run; the nightly job runs the eval live on Gemini.
+
+```bash
+python evals/mirage/run_mirage_evals.py --model gemini-3.5-flash-lite        # live, 30 questions
+python evals/mirage/run_mirage_evals.py --model ollama --setting ollama-local
+python scripts/record_mirage_audit.py   # one full audit: question, tool calls, proposal, approval, audit log
+```
+
 ## Nightly run
 
 `.github/workflows/nightly.yml` runs daily at 09:17 UTC. You can also start it by hand from the Actions tab (workflow_dispatch). Each run does the following:
