@@ -31,7 +31,8 @@
         "median_s": 2.31,
         "p95_s": 3.0,
         "median_input_tokens": null,
-        "median_output_tokens": null
+        "median_output_tokens": null,
+        "question_set": "EXAMPLE-set-v1"
       }
     },
     {
@@ -47,7 +48,26 @@
         "median_s": 2.0,
         "p95_s": 3.5,
         "median_input_tokens": null,
-        "median_output_tokens": null
+        "median_output_tokens": null,
+        "question_set": "EXAMPLE-set-v1"
+      },
+      "note": "Scoring changed for this run: EXAMPLE note."
+    },
+    {
+      "model": "EXAMPLE-model-a",
+      "date": "2000-01-04",
+      "summary": {
+        "questions": 60,
+        "numeric_accuracy": 60.0,
+        "tool_choice": 90.0,
+        "correct_refusals": null,
+        "false_refusals": 10.5,
+        "grounded_answers": null,
+        "median_s": 1.5,
+        "p95_s": 3.5,
+        "median_input_tokens": null,
+        "median_output_tokens": null,
+        "question_set": "EXAMPLE-set-v1"
       }
     }
   ]
