@@ -139,9 +139,9 @@ The API on Render (`render.yaml`) accepts `POST <render url>/api/agent/ask` and 
 - The request body is `{question}`, and the response is the Ask contract below.
 - `GET <render url>/api/health` is a cheap way to wake the service first.
 - The free instance sleeps after about 15 minutes idle. The first call after that can take about 50 seconds while it wakes; later calls are fast.
-- `url` is the API base. The page links to it, and code calls `${url}/api/agent/ask`.
+- `url` is the API base. The section has an ask box that POSTs `{question}` to `${url}/api/agent/ask` and shows `answer`, `status` and `as_of`, plus links to the React app at `app/review` and `app/ask`. The site CSP allows `connect-src` to this origin only.
 
-If `live` is not listed in `index.json` (or the URL is missing or not https), the whole "Try it live" section is **hidden**, not disabled. When shown, the button reads "Try it live · may take a minute to wake".
+If `live` is not listed in `index.json` (or the URL is missing or not https), the whole "Try it live" section is **hidden**, not disabled. When shown, it holds the ask box with a note that the first call can take about 50 s.
 
 ## 6. `data/status.json` — nightly run status strip
 Written by `scripts/nightly_status.py` at the end of every nightly run (`.github/workflows/nightly.yml`).

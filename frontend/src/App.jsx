@@ -54,7 +54,7 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <Router>
+    <Router basename={import.meta.env.BASE_URL.replace(/\/$/, "")}>
       <div className="app-layout">
         <CustomCursor />
         {/* Mobile Header */}

@@ -3,7 +3,7 @@ name: pages
 on:
   push:
     branches: [main]
-    paths: ["site/**", ".github/workflows/pages.yml"]
+    paths: ["site/**", "frontend/**", ".github/workflows/pages.yml"]
   workflow_dispatch:
 
 permissions:
@@ -24,8 +24,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Build React app under /app/
+        working-directory: frontend
+        env:
+          APP_BASE: /cdc-outbreak-dashboard/app/
+        run: npm ci && npm run build
+      - name: Assemble site with app
+        run: |
+          mkdir -p _site
+          cp -r site/. _site/
+          cp -r frontend/dist _site/app
+          # Pages has no SPA fallback, so give each route its own entry file.
+          for r in review ask map forecasts analytics simulator wastewater advanced; do
+            mkdir -p "_site/app/$r" && cp _site/app/index.html "_site/app/$r/index.html"
+          done
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: site
+          path: _site
       - id: deployment
         uses: actions/deploy-pages@v4
