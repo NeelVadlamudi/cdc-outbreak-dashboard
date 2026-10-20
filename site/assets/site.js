@@ -272,10 +272,10 @@
       const a = it.response;
       const flagged = a.status === "refused" || a.status === "unverified";
       if (it.bare) return el("article", { class: flagged ? "qa refused" : "qa" }, it.question ? el("div", { class: "q", text: it.question }) : null,
-        flagged ? el("div", { class: "flag", text: a.status === "unverified" ? "Could not verify" : "Declined to answer" }) : null, el("div", { class: "a" }, mdLite(a.answer)));
+        flagged ? el("div", { class: "flag", text: a.status === "unverified" ? "Could not verify" : "Declined to answer" }) : null, el("div", { class: "a" }, mdLite(a.answer)), it.extra || null);
       const calls = Array.isArray(a.tool_calls) ? a.tool_calls : [];
       const meta = [];
-      meta.push(el("span", { class: "chip", text: a.as_of ? `as of ${a.as_of}` : "no data date" }));
+      if (!it.partial || a.as_of != null) meta.push(el("span", { class: "chip", text: a.as_of ? `as of ${a.as_of}` : "no data date" }));
       const took = secs(a.elapsed_s); if (took) meta.push(el("span", { class: "chip", text: `took ${took}` }));
       if (a.model) meta.push(el("span", { class: "chip", text: a.model }));
       const stale = a.checker && Array.isArray(a.checker.stale_tables) ? a.checker.stale_tables : [];
@@ -313,12 +313,16 @@
     lines: "PO lines", cases_received: "Cases received", cases_allocated: "Cases to clubs", cases_held_at_dc: "Cases held at the DC",
     transfers: "Transfers", club_skus_under_1_week_before: "Club SKUs under 1 week of supply, before", club_skus_under_1_week_after: "Club SKUs under 1 week of supply, after",
   };
+  const CASE_COUNT_KEYS = ["book_wrong_sku_count", "backroom_sku_count", "truly_out_sku_count"];
   function keyFacts(o, cls) {
     if (!o || typeof o !== "object" || Array.isArray(o)) return null;
     const items = Object.entries(o).filter(([, v]) => v != null && typeof v !== "object");
     if (!items.length) return null;
-    return el("dl", { class: `kv ${cls}` }, items.map(([k, v]) => el("div", {}, el("dt", { text: FACT_LABEL[k] || k }),
+    const dl = el("dl", { class: `kv ${cls}` }, items.map(([k, v]) => el("div", {}, el("dt", { text: FACT_LABEL[k] || k }),
       el("dd", { text: /_pct$/.test(k) && isNum(v) ? `${v}%` : String(v) }))));
+    // One SKU can be both "record wrong" and "in the backroom", so case counts may sum past the empty total.
+    if (!CASE_COUNT_KEYS.some((k) => k in o)) return dl;
+    return el("div", { class: "kvwrap" }, dl, el("p", { class: "overlap", text: "Categories can overlap" }));
   }
   function caseList(calls) {
     const rows = calls.flatMap((c) => (c && c.output && Array.isArray(c.output.rows) ? c.output.rows : [])).filter((r) => r && (r.case_label || r.case) && r.next_step);
@@ -401,7 +405,11 @@
     parts.push(el("h3", { class: "subhead", text: `Recorded decisions · ${log.length}` }), log.length ? auditTable(log) : el("div", { class: "empty", text: "No decisions recorded" }));
     const sa = d.second_answer;
     if (sa && typeof sa.answer === "string") parts.push(el("h3", { class: "subhead", text: "Second recorded answer" }),
-      answerCard({ question: sa.question, response: { status: sa.status, answer: sa.answer, as_of: null, tool_calls: [] }, bare: true }));
+      Array.isArray(sa.tool_calls)
+        ? answerCard({ question: sa.question, partial: true, response: { status: sa.status, answer: sa.answer, as_of: sa.as_of, tool_calls: sa.tool_calls,
+            proposals: sa.proposal_id != null ? [{ proposal_id: sa.proposal_id }] : [] } })
+        : answerCard({ question: sa.question, response: { status: sa.status, answer: sa.answer }, bare: true,
+            extra: sa.proposal_id != null ? proposalChips([{ proposal_id: sa.proposal_id }]) : null }));
     if (d.source) parts.push(el("p", { class: "note src", text: d.source }));
     body.replaceChildren(...parts);
   }
