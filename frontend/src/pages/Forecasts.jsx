@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Plot from 'react-plotly.js';
 import { Bot, Crosshair, Calendar, BrainCircuit, Activity, LineChart } from 'lucide-react';
-import { getForecast, trainModel } from '../api';
+import { getForecast } from '../api';
 
 const VIRUSES = [
   { key: 'COVID-NET', label: 'COVID-19', color: '#4F46E5', icon: <Activity size={16} /> },
@@ -13,7 +13,6 @@ export default function Forecasts() {
   const [selectedVirus, setSelectedVirus] = useState('COVID-NET');
   const [forecast, setForecast] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [training, setTraining] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -22,19 +21,6 @@ export default function Forecasts() {
       .catch(console.error)
       .finally(() => setLoading(false));
   }, [selectedVirus]);
-
-  const handleTrain = async () => {
-    setTraining(true);
-    try {
-      await trainModel(selectedVirus);
-      const res = await getForecast(selectedVirus);
-      setForecast(res);
-    } catch (err) {
-      console.error('Training failed:', err);
-    } finally {
-      setTraining(false);
-    }
-  };
 
   const virusInfo = VIRUSES.find(v => v.key === selectedVirus);
 
@@ -59,14 +45,6 @@ export default function Forecasts() {
               LSTM deep learning forecasts predicting hospitalization rates 4 weeks ahead
             </p>
           </div>
-          <button
-            className="filter-btn active"
-            onClick={handleTrain}
-            disabled={training}
-            style={{ padding: '8px 20px', fontSize: '13px' }}
-          >
-            {training ? <><Bot className="animate-pulse" size={16} /> Training...</> : <><BrainCircuit size={16} /> Retrain Model</>}
-          </button>
         </div>
       </div>
 
@@ -218,7 +196,7 @@ export default function Forecasts() {
           <Bot size={56} strokeWidth={1.5} color="#9CA3AF" style={{ margin: '0 auto 20px' }} />
           <h3 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text-primary)' }}>Model Not Yet Trained</h3>
           <p style={{ color: 'var(--text-secondary)', marginTop: '8px', fontSize: '15px', maxWidth: '500px', margin: '8px auto 0' }}>
-            {forecast?.detail || 'Click "Retrain Model" to train the LSTM neural network on the latest historical CDC data to generate 4-week projections.'}
+            {forecast?.detail || 'No trained model is available. Training runs from the command line; see the README.'}
           </p>
         </div>
       )}
