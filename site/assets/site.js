@@ -455,17 +455,29 @@
       button.disabled = true; setState("loading");
       out.replaceChildren(el("p", { class: "note", text: "Asking… the first call can take about 50 s while the server wakes." }));
       try {
-        const r = await fetch(`${base}/api/agent/ask`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question }) });
-        let j = null;
-        try { j = await r.json(); } catch { throw new Error(`HTTP ${r.status}${r.statusText ? " " + r.statusText : ""}, not a JSON response`); }
-        if (!r.ok) throw new Error((j && typeof j.detail === "string" && j.detail) || `HTTP ${r.status}`);
+        const fail = (text) => { setState("error"); out.replaceChildren(el("p", { class: "note", text })); };
+        let r;
+        try {
+          r = await fetch(`${base}/api/agent/ask`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question }) });
+        } catch {
+          return fail("Couldn't reach the live API. It may be waking up, so try again in a minute.");
+        }
+        let j;
+        try { j = await r.json(); } catch {
+          return fail(`The live API sent a response the page couldn't read (HTTP ${r.status}).`);
+        }
+        if (!r.ok) {
+          const d = j && j.detail;
+          const detail = typeof d === "string" ? d : Array.isArray(d) ? d.map((x) => x && x.msg).filter(Boolean).join("; ") : "";
+          return fail(`The live API returned an error (HTTP ${r.status}).${detail ? " " + detail : ""}`);
+        }
         setState("done");
         out.replaceChildren(
           el("p", { class: "live-answer", text: String(j.answer ?? "") }),
           el("p", { class: "note", text: [j.status, j.as_of ? `data as of ${j.as_of}` : null].filter(Boolean).join(" · ") }));
-      } catch (e) {
+      } catch {
         setState("error");
-        out.replaceChildren(el("p", { class: "note", text: `Could not reach the live API (${e.message}). It may still be waking; try again.` }));
+        out.replaceChildren(el("p", { class: "note", text: "Couldn't reach the live API. It may be waking up, so try again in a minute." }));
       } finally { button.disabled = false; }
     });
     $("[data-body]", sec).replaceChildren(
