@@ -8,6 +8,11 @@ import os
 from pathlib import Path
 from datetime import datetime
 import json
+import logging
+
+from backend.config import OLLAMA_MODEL
+
+logger = logging.getLogger(__name__)
 
 DB_PATH = os.path.join(Path(__file__).parent.parent, "data", "cdc_surveillance.duckdb")
 
@@ -19,7 +24,7 @@ except ImportError:
     OLLAMA_AVAILABLE = False
 
 # Default model — Mistral 7B is fast and accurate
-LLM_MODEL = "mistral"
+LLM_MODEL = OLLAMA_MODEL
 
 
 def get_data_context() -> str:
@@ -190,7 +195,7 @@ CURRENT DATA:
             }
         except Exception as e:
             # Ollama not running — fall back to rule-based
-            pass
+            logger.warning("Ollama call failed, using rule-based answer: %s", e)
 
     # Fallback: rule-based response using data context
     return generate_rule_based_response(question, context)

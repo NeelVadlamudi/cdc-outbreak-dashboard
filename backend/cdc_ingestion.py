@@ -3,12 +3,16 @@ CDC SODA API Data Ingestion Pipeline.
 Fetches live data from 4 CDC datasets (incl. county-level wastewater), transforms, and loads into DuckDB.
 """
 
+import logging
+
 import httpx
 import duckdb
 import os
 import pandas as pd
 from datetime import datetime, timedelta
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 DB_PATH = os.path.join(Path(__file__).parent.parent, "data", "cdc_surveillance.duckdb")
 
@@ -42,7 +46,7 @@ async def fetch_dataset(dataset_key: str, limit: int = 50000, offset: int = 0) -
         response = await client.get(url)
         response.raise_for_status()
         data = response.json()
-        print(f"📡 Fetched {len(data)} records from {config['description']}")
+        logger.info(f"Fetched {len(data)} records from {config['description']}")
         return data
 
 
@@ -82,7 +86,7 @@ def ingest_ari_activity(data: list):
                 """, [week_end, geography, label, buildnumber])
 
         count = conn.execute("SELECT COUNT(*) FROM ari_activity").fetchone()[0]
-        print(f"✅ ARI Activity: {count} total records in DB")
+        logger.info(f"ARI Activity: {count} total records in DB")
     finally:
         conn.close()
 
@@ -119,7 +123,7 @@ def ingest_hospitalization_rates(data: list):
                 continue
 
         count = conn.execute("SELECT COUNT(*) FROM hospitalization_rates").fetchone()[0]
-        print(f"✅ Hospitalization Rates: {count} total records in DB")
+        logger.info(f"Hospitalization Rates: {count} total records in DB")
     finally:
         conn.close()
 
@@ -146,7 +150,7 @@ def ingest_test_positivity(data: list):
                     continue
 
         count = conn.execute("SELECT COUNT(*) FROM test_positivity").fetchone()[0]
-        print(f"✅ Test Positivity: {count} total records in DB")
+        logger.info(f"Test Positivity: {count} total records in DB")
     finally:
         conn.close()
 
@@ -168,7 +172,7 @@ async def fetch_wastewater_recent(days: int = 90) -> list:
             if not batch:
                 break
             all_data.extend(batch)
-            print(f"📡 Fetched {len(batch)} wastewater records (total: {len(all_data)})")
+            logger.info(f"Fetched {len(batch)} wastewater records (total: {len(all_data)})")
             if len(batch) < 50000:
                 break
             offset += 50000
@@ -218,16 +222,14 @@ def ingest_wastewater(data: list):
         conn.execute("INSERT INTO wastewater_sites SELECT * FROM df")
         count = conn.execute("SELECT COUNT(*) FROM wastewater_sites").fetchone()[0]
         counties = conn.execute("SELECT COUNT(DISTINCT county_fips) FROM wastewater_sites").fetchone()[0]
-        print(f"✅ Wastewater: {count} records across {counties} counties")
+        logger.info(f"Wastewater: {count} records across {counties} counties")
     finally:
         conn.close()
 
 
 async def run_full_ingestion():
     """Run complete data ingestion pipeline for all CDC datasets."""
-    print(f"\n{'='*60}")
-    print(f"🚀 CDC Data Ingestion Pipeline — {datetime.now().isoformat()}")
-    print(f"{'='*60}\n")
+    logger.info("CDC data ingestion started at %s", datetime.now().isoformat())
 
     try:
         # Fetch all datasets
@@ -243,8 +245,8 @@ async def run_full_ingestion():
         ingest_test_positivity(positivity_data)
         ingest_wastewater(wastewater_data)
 
-        print(f"\n✅ Full ingestion complete at {datetime.now().isoformat()}")
+        logger.info("CDC data ingestion finished at %s", datetime.now().isoformat())
         return True
     except Exception as e:
-        print(f"\n❌ Ingestion failed: {e}")
+        logger.exception("Ingestion failed: %s", e)
         return False
