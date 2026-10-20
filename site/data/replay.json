@@ -1,0 +1,1760 @@
+{
+  "recorded_at": "2026-10-20T14:34:33Z",
+  "answers": [
+    {
+      "question": "What was COVID-19 test positivity for the latest week?",
+      "response": {
+        "status": "answered",
+        "answer": "For the week-ending date of 2026-10-10, the COVID-19 test positivity was 3.6%. This is based on CDC surveillance data as of 2026-10-10.",
+        "tool_calls": [
+          {
+            "tool": "get_data_freshness",
+            "inputs": {},
+            "rows_returned": 4,
+            "elapsed_s": 0.012,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "all",
+              "rows": [
+                {
+                  "table": "ari_activity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "hospitalization_rates",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "test_positivity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "wastewater_sites",
+                  "latest_week": "2025-09-07",
+                  "age_days": 408,
+                  "stale": true
+                }
+              ]
+            }
+          },
+          {
+            "tool": "get_test_positivity",
+            "inputs": {
+              "pathogen": "COVID-19"
+            },
+            "rows_returned": 1,
+            "elapsed_s": 0.011,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "test_positivity",
+              "rows": [
+                {
+                  "week_end": "2026-10-10",
+                  "pathogen": "COVID-19",
+                  "percent_positive": 3.6
+                }
+              ]
+            }
+          }
+        ],
+        "as_of": "2026-10-10",
+        "elapsed_s": 1.999,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_version": "system_v1",
+        "checker": {
+          "passed": true,
+          "unverified": [],
+          "stale_tables": []
+        }
+      },
+      "correct": true
+    },
+    {
+      "question": "What was influenza test positivity for the week ending October 3, 2026?",
+      "response": {
+        "status": "answered",
+        "answer": "For the week ending October 3, 2026, influenza test positivity was 3.9%. This is based on CDC respiratory virus surveillance data for that week.",
+        "tool_calls": [
+          {
+            "tool": "get_test_positivity",
+            "inputs": {
+              "pathogen": "Influenza",
+              "week": "2026-10-03"
+            },
+            "rows_returned": 1,
+            "elapsed_s": 0.013,
+            "output": {
+              "as_of": "2026-10-03",
+              "source_table": "test_positivity",
+              "rows": [
+                {
+                  "week_end": "2026-10-03",
+                  "pathogen": "Influenza",
+                  "percent_positive": 3.9
+                }
+              ]
+            }
+          }
+        ],
+        "as_of": "2026-10-03",
+        "elapsed_s": 1.864,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_version": "system_v1",
+        "checker": {
+          "passed": true,
+          "unverified": [],
+          "stale_tables": []
+        }
+      },
+      "correct": true
+    },
+    {
+      "question": "What was RSV test positivity for the latest week?",
+      "response": {
+        "status": "answered",
+        "answer": "For the week ending October 10, 2026, the RSV test positivity was 0.7%.",
+        "tool_calls": [
+          {
+            "tool": "get_data_freshness",
+            "inputs": {},
+            "rows_returned": 4,
+            "elapsed_s": 0.012,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "all",
+              "rows": [
+                {
+                  "table": "ari_activity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "hospitalization_rates",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "test_positivity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "wastewater_sites",
+                  "latest_week": "2025-09-07",
+                  "age_days": 408,
+                  "stale": true
+                }
+              ]
+            }
+          },
+          {
+            "tool": "get_test_positivity",
+            "inputs": {
+              "pathogen": "RSV"
+            },
+            "rows_returned": 1,
+            "elapsed_s": 0.011,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "test_positivity",
+              "rows": [
+                {
+                  "week_end": "2026-10-10",
+                  "pathogen": "RSV",
+                  "percent_positive": 0.7
+                }
+              ]
+            }
+          }
+        ],
+        "as_of": "2026-10-10",
+        "elapsed_s": 1.921,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_version": "system_v1",
+        "checker": {
+          "passed": true,
+          "unverified": [],
+          "stale_tables": []
+        }
+      },
+      "correct": true
+    },
+    {
+      "question": "By how many percentage points did COVID-19 test positivity change from the week ending September 26 to the week ending October 10, 2026?",
+      "response": {
+        "status": "unverified",
+        "answer": "I could not verify that figure.",
+        "tool_calls": [
+          {
+            "tool": "get_test_positivity",
+            "inputs": {
+              "pathogen": "COVID-19",
+              "week": "2026-10-10"
+            },
+            "rows_returned": 1,
+            "elapsed_s": 0.014,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "test_positivity",
+              "rows": [
+                {
+                  "week_end": "2026-10-10",
+                  "pathogen": "COVID-19",
+                  "percent_positive": 3.6
+                }
+              ]
+            }
+          },
+          {
+            "tool": "get_test_positivity",
+            "inputs": {
+              "pathogen": "COVID-19",
+              "week": "2026-09-26"
+            },
+            "rows_returned": 1,
+            "elapsed_s": 0.011,
+            "output": {
+              "as_of": "2026-09-26",
+              "source_table": "test_positivity",
+              "rows": [
+                {
+                  "week_end": "2026-09-26",
+                  "pathogen": "COVID-19",
+                  "percent_positive": 4.7
+                }
+              ]
+            }
+          }
+        ],
+        "as_of": "2026-10-10",
+        "elapsed_s": 2.17,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_version": "system_v1",
+        "checker": {
+          "passed": false,
+          "unverified": [
+            "1.1"
+          ],
+          "stale_tables": []
+        }
+      },
+      "correct": false
+    },
+    {
+      "question": "How many states or territories were at Very Low respiratory illness activity in the latest week?",
+      "response": {
+        "status": "answered",
+        "answer": "In the latest week ending October 10, 2026, there were 40 states or territories at Very Low respiratory illness activity.",
+        "tool_calls": [
+          {
+            "tool": "get_data_freshness",
+            "inputs": {},
+            "rows_returned": 4,
+            "elapsed_s": 0.012,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "all",
+              "rows": [
+                {
+                  "table": "ari_activity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "hospitalization_rates",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "test_positivity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "wastewater_sites",
+                  "latest_week": "2025-09-07",
+                  "age_days": 408,
+                  "stale": true
+                }
+              ]
+            }
+          },
+          {
+            "tool": "list_states_at_level",
+            "inputs": {
+              "week": null,
+              "level": "Very Low"
+            },
+            "rows_returned": 40,
+            "elapsed_s": 0.01,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "ari_activity",
+              "rows": [
+                {
+                  "state": "Arizona"
+                },
+                {
+                  "state": "Arkansas"
+                },
+                {
+                  "state": "California"
+                },
+                {
+                  "state": "Colorado"
+                },
+                {
+                  "state": "Connecticut"
+                },
+                {
+                  "state": "Delaware"
+                },
+                {
+                  "state": "District of Columbia"
+                },
+                {
+                  "state": "Florida"
+                },
+                {
+                  "state": "Georgia"
+                },
+                {
+                  "state": "Idaho"
+                },
+                {
+                  "state": "Illinois"
+                },
+                {
+                  "state": "Indiana"
+                },
+                {
+                  "state": "Kansas"
+                },
+                {
+                  "state": "Kentucky"
+                },
+                {
+                  "state": "Maine"
+                },
+                {
+                  "state": "Maryland"
+                },
+                {
+                  "state": "Massachusetts"
+                },
+                {
+                  "state": "Michigan"
+                },
+                {
+                  "state": "Minnesota"
+                },
+                {
+                  "state": "Mississippi"
+                },
+                {
+                  "state": "Missouri"
+                },
+                {
+                  "state": "Montana"
+                },
+                {
+                  "state": "Nebraska"
+                },
+                {
+                  "state": "Nevada"
+                },
+                {
+                  "state": "New Jersey"
+                },
+                {
+                  "state": "New Mexico"
+                },
+                {
+                  "state": "New York"
+                },
+                {
+                  "state": "North Carolina"
+                },
+                {
+                  "state": "Oklahoma"
+                },
+                {
+                  "state": "Oregon"
+                },
+                {
+                  "state": "Pennsylvania"
+                },
+                {
+                  "state": "Rhode Island"
+                },
+                {
+                  "state": "South Carolina"
+                },
+                {
+                  "state": "Tennessee"
+                },
+                {
+                  "state": "Utah"
+                },
+                {
+                  "state": "Vermont"
+                },
+                {
+                  "state": "Virginia"
+                },
+                {
+                  "state": "Washington"
+                },
+                {
+                  "state": "West Virginia"
+                },
+                {
+                  "state": "Wisconsin"
+                }
+              ],
+              "count": 40
+            }
+          }
+        ],
+        "as_of": "2026-10-10",
+        "elapsed_s": 2.156,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_version": "system_v1",
+        "checker": {
+          "passed": true,
+          "unverified": [],
+          "stale_tables": []
+        }
+      },
+      "correct": true
+    },
+    {
+      "question": "How many states or territories were at Low respiratory illness activity in the latest week?",
+      "response": {
+        "status": "answered",
+        "answer": "Based on data for the week ending October 10, 2026, there were 10 states or territories at Low respiratory illness activity: Alabama, Alaska, Hawaii, Louisiana, New Hampshire, North Dakota, Ohio, South Dakota, Texas, and Wyoming.",
+        "tool_calls": [
+          {
+            "tool": "get_data_freshness",
+            "inputs": {},
+            "rows_returned": 4,
+            "elapsed_s": 0.012,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "all",
+              "rows": [
+                {
+                  "table": "ari_activity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "hospitalization_rates",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "test_positivity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "wastewater_sites",
+                  "latest_week": "2025-09-07",
+                  "age_days": 408,
+                  "stale": true
+                }
+              ]
+            }
+          },
+          {
+            "tool": "list_states_at_level",
+            "inputs": {
+              "level": "Low"
+            },
+            "rows_returned": 10,
+            "elapsed_s": 0.009,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "ari_activity",
+              "rows": [
+                {
+                  "state": "Alabama"
+                },
+                {
+                  "state": "Alaska"
+                },
+                {
+                  "state": "Hawaii"
+                },
+                {
+                  "state": "Louisiana"
+                },
+                {
+                  "state": "New Hampshire"
+                },
+                {
+                  "state": "North Dakota"
+                },
+                {
+                  "state": "Ohio"
+                },
+                {
+                  "state": "South Dakota"
+                },
+                {
+                  "state": "Texas"
+                },
+                {
+                  "state": "Wyoming"
+                }
+              ],
+              "count": 10
+            }
+          }
+        ],
+        "as_of": "2026-10-10",
+        "elapsed_s": 2.179,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_version": "system_v1",
+        "checker": {
+          "passed": true,
+          "unverified": [],
+          "stale_tables": []
+        }
+      },
+      "correct": true
+    },
+    {
+      "question": "What was the overall weekly COVID-19 hospitalization rate per 100,000 (COVID-NET) for the week ending October 10, 2026?",
+      "response": {
+        "status": "answered",
+        "answer": "For the week ending October 10, 2026, the overall weekly COVID-19 hospitalization rate per 100,000 (COVID-NET) was 0.8.",
+        "tool_calls": [
+          {
+            "tool": "get_hospitalization_rate",
+            "inputs": {
+              "weeks": 10,
+              "network": "COVID-NET",
+              "age_group": "Overall"
+            },
+            "rows_returned": 10,
+            "elapsed_s": 0.017,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "hospitalization_rates",
+              "rows": [
+                {
+                  "week_end": "2026-10-10",
+                  "rate_per_100k": 0.8,
+                  "cumulative_per_100k": 1.0
+                },
+                {
+                  "week_end": "2026-10-03",
+                  "rate_per_100k": 1.1,
+                  "cumulative_per_100k": 45.0
+                },
+                {
+                  "week_end": "2026-09-26",
+                  "rate_per_100k": 1.2,
+                  "cumulative_per_100k": 44.0
+                },
+                {
+                  "week_end": "2026-09-19",
+                  "rate_per_100k": 1.2,
+                  "cumulative_per_100k": 43.0
+                },
+                {
+                  "week_end": "2026-09-12",
+                  "rate_per_100k": 1.0,
+                  "cumulative_per_100k": 42.0
+                },
+                {
+                  "week_end": "2026-09-05",
+                  "rate_per_100k": 1.0,
+                  "cumulative_per_100k": 41.0
+                },
+                {
+                  "week_end": "2026-08-29",
+                  "rate_per_100k": 0.8,
+                  "cumulative_per_100k": 40.0
+                },
+                {
+                  "week_end": "2026-08-22",
+                  "rate_per_100k": 0.6,
+                  "cumulative_per_100k": 39.0
+                },
+                {
+                  "week_end": "2026-08-15",
+                  "rate_per_100k": 0.6,
+                  "cumulative_per_100k": 38.0
+                },
+                {
+                  "week_end": "2026-08-08",
+                  "rate_per_100k": 0.4,
+                  "cumulative_per_100k": 38.0
+                }
+              ],
+              "network": "COVID-NET",
+              "age_group": "Overall",
+              "units": "rate per 100,000"
+            }
+          },
+          {
+            "tool": "get_data_freshness",
+            "inputs": {},
+            "rows_returned": 4,
+            "elapsed_s": 0.009,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "all",
+              "rows": [
+                {
+                  "table": "ari_activity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "hospitalization_rates",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "test_positivity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "wastewater_sites",
+                  "latest_week": "2025-09-07",
+                  "age_days": 408,
+                  "stale": true
+                }
+              ]
+            }
+          }
+        ],
+        "as_of": "2026-10-10",
+        "elapsed_s": 1.631,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_version": "system_v1",
+        "checker": {
+          "passed": true,
+          "unverified": [],
+          "stale_tables": []
+        }
+      },
+      "correct": true
+    },
+    {
+      "question": "What was the overall weekly flu hospitalization rate per 100,000 (FluSurv-NET) for the week ending October 3, 2026?",
+      "response": {
+        "status": "answered",
+        "answer": "For the week ending October 3, 2026, the overall weekly influenza hospitalization rate per 100,000 (FluSurv-NET) was 0.9. This is based on data as of the week ending October 10, 2026.",
+        "tool_calls": [
+          {
+            "tool": "get_hospitalization_rate",
+            "inputs": {
+              "age_group": "Overall",
+              "network": "FluSurv-NET",
+              "weeks": 5
+            },
+            "rows_returned": 5,
+            "elapsed_s": 0.017,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "hospitalization_rates",
+              "rows": [
+                {
+                  "week_end": "2026-10-10",
+                  "rate_per_100k": 0.7,
+                  "cumulative_per_100k": 1.0
+                },
+                {
+                  "week_end": "2026-10-03",
+                  "rate_per_100k": 0.9,
+                  "cumulative_per_100k": 91.0
+                },
+                {
+                  "week_end": "2026-09-26",
+                  "rate_per_100k": 0.8,
+                  "cumulative_per_100k": 90.0
+                },
+                {
+                  "week_end": "2026-09-19",
+                  "rate_per_100k": 0.5,
+                  "cumulative_per_100k": 90.0
+                },
+                {
+                  "week_end": "2026-09-12",
+                  "rate_per_100k": 0.4,
+                  "cumulative_per_100k": 89.0
+                }
+              ],
+              "network": "FluSurv-NET",
+              "age_group": "Overall",
+              "units": "rate per 100,000"
+            }
+          },
+          {
+            "tool": "get_data_freshness",
+            "inputs": {},
+            "rows_returned": 4,
+            "elapsed_s": 0.01,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "all",
+              "rows": [
+                {
+                  "table": "ari_activity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "hospitalization_rates",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "test_positivity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "wastewater_sites",
+                  "latest_week": "2025-09-07",
+                  "age_days": 408,
+                  "stale": true
+                }
+              ]
+            }
+          }
+        ],
+        "as_of": "2026-10-10",
+        "elapsed_s": 1.728,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_version": "system_v1",
+        "checker": {
+          "passed": true,
+          "unverified": [],
+          "stale_tables": []
+        }
+      },
+      "correct": true
+    },
+    {
+      "question": "What was the combined weekly hospitalization rate per 100,000 for COVID-19, flu and RSV for the week ending September 26, 2026?",
+      "response": {
+        "status": "answered",
+        "answer": "For the week ending September 26, 2026, the combined weekly hospitalization rate per 100,000 for COVID-19, flu, and RSV was 2. This is based on data for the week-ending date of September 26, 2026, with an as-of week of October 10, 2026.",
+        "tool_calls": [
+          {
+            "tool": "get_hospitalization_rate",
+            "inputs": {
+              "network": "Combined",
+              "weeks": 10
+            },
+            "rows_returned": 10,
+            "elapsed_s": 0.017,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "hospitalization_rates",
+              "rows": [
+                {
+                  "week_end": "2026-10-10",
+                  "rate_per_100k": 1.6,
+                  "cumulative_per_100k": 2.0
+                },
+                {
+                  "week_end": "2026-10-03",
+                  "rate_per_100k": 2.0,
+                  "cumulative_per_100k": 181.0
+                },
+                {
+                  "week_end": "2026-09-26",
+                  "rate_per_100k": 2.0,
+                  "cumulative_per_100k": 179.0
+                },
+                {
+                  "week_end": "2026-09-19",
+                  "rate_per_100k": 1.7,
+                  "cumulative_per_100k": 177.0
+                },
+                {
+                  "week_end": "2026-09-12",
+                  "rate_per_100k": 1.5,
+                  "cumulative_per_100k": 175.0
+                },
+                {
+                  "week_end": "2026-09-05",
+                  "rate_per_100k": 1.3,
+                  "cumulative_per_100k": 174.0
+                },
+                {
+                  "week_end": "2026-08-29",
+                  "rate_per_100k": 1.0,
+                  "cumulative_per_100k": 172.0
+                },
+                {
+                  "week_end": "2026-08-22",
+                  "rate_per_100k": 0.8,
+                  "cumulative_per_100k": 171.0
+                },
+                {
+                  "week_end": "2026-08-15",
+                  "rate_per_100k": 0.7,
+                  "cumulative_per_100k": 170.0
+                },
+                {
+                  "week_end": "2026-08-08",
+                  "rate_per_100k": 0.6,
+                  "cumulative_per_100k": 170.0
+                }
+              ],
+              "network": "Combined",
+              "age_group": "Overall",
+              "units": "rate per 100,000"
+            }
+          }
+        ],
+        "as_of": "2026-10-10",
+        "elapsed_s": 1.925,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_version": "system_v1",
+        "checker": {
+          "passed": true,
+          "unverified": [],
+          "stale_tables": []
+        }
+      },
+      "correct": true
+    },
+    {
+      "question": "What was the cumulative COVID-NET hospitalization rate per 100,000 for the 2025-26 season as of the week ending October 3, 2026?",
+      "response": {
+        "status": "refused",
+        "answer": "The data does not cover the week ending October 3, 2026; the latest available data is for the week ending October 10, 2026. As of October 10, 2026, the overall cumulative COVID-NET hospitalization rate per 100,000 was 1.",
+        "tool_calls": [
+          {
+            "tool": "get_hospitalization_rate",
+            "inputs": {
+              "weeks": 1,
+              "network": "COVID-NET"
+            },
+            "rows_returned": 1,
+            "elapsed_s": 0.017,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "hospitalization_rates",
+              "rows": [
+                {
+                  "week_end": "2026-10-10",
+                  "rate_per_100k": 0.8,
+                  "cumulative_per_100k": 1.0
+                }
+              ],
+              "network": "COVID-NET",
+              "age_group": "Overall",
+              "units": "rate per 100,000"
+            }
+          },
+          {
+            "tool": "get_data_freshness",
+            "inputs": {},
+            "rows_returned": 4,
+            "elapsed_s": 0.012,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "all",
+              "rows": [
+                {
+                  "table": "ari_activity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "hospitalization_rates",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "test_positivity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "wastewater_sites",
+                  "latest_week": "2025-09-07",
+                  "age_days": 408,
+                  "stale": true
+                }
+              ]
+            }
+          }
+        ],
+        "as_of": "2026-10-10",
+        "elapsed_s": 2.692,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_version": "system_v1",
+        "checker": {
+          "passed": true,
+          "unverified": [],
+          "stale_tables": []
+        }
+      },
+      "correct": false
+    },
+    {
+      "question": "How many wastewater sites reported in the latest week of wastewater data?",
+      "response": {
+        "status": "refused",
+        "answer": "The wastewater table (`wastewater_sites`) is out of date: it is stale with a latest week of 2025-09-07 (408 days old). Because the tool requires a specific state or county FIPS code to retrieve site counts, I cannot provide a national total for wastewater sites reporting in the latest week.",
+        "tool_calls": [
+          {
+            "tool": "get_wastewater",
+            "inputs": {},
+            "rows_returned": 0,
+            "elapsed_s": 0.0,
+            "output": {
+              "error": "Give a state or a county_fips."
+            }
+          },
+          {
+            "tool": "get_data_freshness",
+            "inputs": {},
+            "rows_returned": 4,
+            "elapsed_s": 0.012,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "all",
+              "rows": [
+                {
+                  "table": "ari_activity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "hospitalization_rates",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "test_positivity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "wastewater_sites",
+                  "latest_week": "2025-09-07",
+                  "age_days": 408,
+                  "stale": true
+                }
+              ]
+            }
+          },
+          {
+            "tool": "list_states_at_level",
+            "inputs": {
+              "level": "High"
+            },
+            "rows_returned": 0,
+            "elapsed_s": 0.014,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "ari_activity",
+              "rows": [],
+              "count": 0
+            }
+          }
+        ],
+        "as_of": "2026-10-10",
+        "elapsed_s": 2.433,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_version": "system_v1",
+        "checker": {
+          "passed": true,
+          "unverified": [],
+          "stale_tables": []
+        }
+      },
+      "correct": false
+    },
+    {
+      "question": "What was the median 15-day percent change in wastewater viral levels across New York sites in the latest week of wastewater data?",
+      "response": {
+        "status": "refused",
+        "answer": "Warning: this data is more than 14 days old: wastewater_sites (latest 2025-09-07). The wastewater data for New York, as of the week ending September 7, 2025, shows an average percentile of 145.7 across 162 sites. However, the data does not provide the median 15-day percent change in wastewater viral levels.",
+        "tool_calls": [
+          {
+            "tool": "get_wastewater",
+            "inputs": {
+              "state": "New York"
+            },
+            "rows_returned": 1,
+            "elapsed_s": 0.017,
+            "output": {
+              "as_of": "2025-09-07",
+              "source_table": "wastewater_sites",
+              "rows": [
+                {
+                  "date_end": "2025-09-07",
+                  "avg_percentile": 145.7,
+                  "site_count": 162
+                }
+              ]
+            }
+          }
+        ],
+        "as_of": "2025-09-07",
+        "elapsed_s": 1.605,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_version": "system_v1",
+        "checker": {
+          "passed": true,
+          "unverified": [],
+          "stale_tables": [
+            "wastewater_sites"
+          ]
+        }
+      },
+      "correct": false
+    },
+    {
+      "question": "For the week ending October 10, 2026, give COVID-19 test positivity and the overall COVID-NET weekly hospitalization rate.",
+      "response": {
+        "status": "answered",
+        "answer": "For the week ending October 10, 2026, the COVID-19 test positivity was 3.6%. The overall COVID-NET weekly hospitalization rate was 0.8 per 100,000.",
+        "tool_calls": [
+          {
+            "tool": "get_test_positivity",
+            "inputs": {
+              "pathogen": "COVID-19",
+              "week": "2026-10-10"
+            },
+            "rows_returned": 1,
+            "elapsed_s": 0.015,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "test_positivity",
+              "rows": [
+                {
+                  "week_end": "2026-10-10",
+                  "pathogen": "COVID-19",
+                  "percent_positive": 3.6
+                }
+              ]
+            }
+          },
+          {
+            "tool": "get_hospitalization_rate",
+            "inputs": {
+              "network": "COVID-NET",
+              "weeks": 1,
+              "age_group": "Overall"
+            },
+            "rows_returned": 1,
+            "elapsed_s": 0.014,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "hospitalization_rates",
+              "rows": [
+                {
+                  "week_end": "2026-10-10",
+                  "rate_per_100k": 0.8,
+                  "cumulative_per_100k": 1.0
+                }
+              ],
+              "network": "COVID-NET",
+              "age_group": "Overall",
+              "units": "rate per 100,000"
+            }
+          },
+          {
+            "tool": "get_data_freshness",
+            "inputs": {},
+            "rows_returned": 4,
+            "elapsed_s": 0.01,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "all",
+              "rows": [
+                {
+                  "table": "ari_activity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "hospitalization_rates",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "test_positivity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "wastewater_sites",
+                  "latest_week": "2025-09-07",
+                  "age_days": 408,
+                  "stale": true
+                }
+              ]
+            }
+          }
+        ],
+        "as_of": "2026-10-10",
+        "elapsed_s": 1.498,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_version": "system_v1",
+        "checker": {
+          "passed": true,
+          "unverified": [],
+          "stale_tables": []
+        }
+      },
+      "correct": true
+    },
+    {
+      "question": "How many states were at Low respiratory illness activity in the latest week, and what was influenza test positivity that week?",
+      "response": {
+        "status": "answered",
+        "answer": "Based on data for the week-ending date of 2026-10-10, there were 10 states at Low acute respiratory illness activity. Influenza test positivity for that same week was 5.",
+        "tool_calls": [
+          {
+            "tool": "get_data_freshness",
+            "inputs": {},
+            "rows_returned": 4,
+            "elapsed_s": 0.012,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "all",
+              "rows": [
+                {
+                  "table": "ari_activity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "hospitalization_rates",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "test_positivity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "wastewater_sites",
+                  "latest_week": "2025-09-07",
+                  "age_days": 408,
+                  "stale": true
+                }
+              ]
+            }
+          },
+          {
+            "tool": "list_states_at_level",
+            "inputs": {
+              "level": "Low",
+              "week": null
+            },
+            "rows_returned": 10,
+            "elapsed_s": 0.01,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "ari_activity",
+              "rows": [
+                {
+                  "state": "Alabama"
+                },
+                {
+                  "state": "Alaska"
+                },
+                {
+                  "state": "Hawaii"
+                },
+                {
+                  "state": "Louisiana"
+                },
+                {
+                  "state": "New Hampshire"
+                },
+                {
+                  "state": "North Dakota"
+                },
+                {
+                  "state": "Ohio"
+                },
+                {
+                  "state": "South Dakota"
+                },
+                {
+                  "state": "Texas"
+                },
+                {
+                  "state": "Wyoming"
+                }
+              ],
+              "count": 10
+            }
+          },
+          {
+            "tool": "get_test_positivity",
+            "inputs": {
+              "pathogen": "Influenza",
+              "week": null
+            },
+            "rows_returned": 1,
+            "elapsed_s": 0.01,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "test_positivity",
+              "rows": [
+                {
+                  "week_end": "2026-10-10",
+                  "pathogen": "Influenza",
+                  "percent_positive": 5.0
+                }
+              ]
+            }
+          }
+        ],
+        "as_of": "2026-10-10",
+        "elapsed_s": 2.063,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_version": "system_v1",
+        "checker": {
+          "passed": true,
+          "unverified": [],
+          "stale_tables": []
+        }
+      },
+      "correct": true
+    },
+    {
+      "question": "In the latest week, how many states were at Very Low respiratory illness activity, and what was the overall RSV-NET weekly hospitalization rate?",
+      "response": {
+        "status": "answered",
+        "answer": "For the week ending 2026-10-10, there were 40 states at Very Low respiratory illness activity. The overall RSV-NET weekly hospitalization rate was 0.1 per 100,000 for that same week.",
+        "tool_calls": [
+          {
+            "tool": "list_states_at_level",
+            "inputs": {
+              "level": "Very Low"
+            },
+            "rows_returned": 40,
+            "elapsed_s": 0.014,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "ari_activity",
+              "rows": [
+                {
+                  "state": "Arizona"
+                },
+                {
+                  "state": "Arkansas"
+                },
+                {
+                  "state": "California"
+                },
+                {
+                  "state": "Colorado"
+                },
+                {
+                  "state": "Connecticut"
+                },
+                {
+                  "state": "Delaware"
+                },
+                {
+                  "state": "District of Columbia"
+                },
+                {
+                  "state": "Florida"
+                },
+                {
+                  "state": "Georgia"
+                },
+                {
+                  "state": "Idaho"
+                },
+                {
+                  "state": "Illinois"
+                },
+                {
+                  "state": "Indiana"
+                },
+                {
+                  "state": "Kansas"
+                },
+                {
+                  "state": "Kentucky"
+                },
+                {
+                  "state": "Maine"
+                },
+                {
+                  "state": "Maryland"
+                },
+                {
+                  "state": "Massachusetts"
+                },
+                {
+                  "state": "Michigan"
+                },
+                {
+                  "state": "Minnesota"
+                },
+                {
+                  "state": "Mississippi"
+                },
+                {
+                  "state": "Missouri"
+                },
+                {
+                  "state": "Montana"
+                },
+                {
+                  "state": "Nebraska"
+                },
+                {
+                  "state": "Nevada"
+                },
+                {
+                  "state": "New Jersey"
+                },
+                {
+                  "state": "New Mexico"
+                },
+                {
+                  "state": "New York"
+                },
+                {
+                  "state": "North Carolina"
+                },
+                {
+                  "state": "Oklahoma"
+                },
+                {
+                  "state": "Oregon"
+                },
+                {
+                  "state": "Pennsylvania"
+                },
+                {
+                  "state": "Rhode Island"
+                },
+                {
+                  "state": "South Carolina"
+                },
+                {
+                  "state": "Tennessee"
+                },
+                {
+                  "state": "Utah"
+                },
+                {
+                  "state": "Vermont"
+                },
+                {
+                  "state": "Virginia"
+                },
+                {
+                  "state": "Washington"
+                },
+                {
+                  "state": "West Virginia"
+                },
+                {
+                  "state": "Wisconsin"
+                }
+              ],
+              "count": 40
+            }
+          },
+          {
+            "tool": "get_hospitalization_rate",
+            "inputs": {
+              "network": "RSV-NET",
+              "age_group": "Overall",
+              "weeks": 1
+            },
+            "rows_returned": 1,
+            "elapsed_s": 0.014,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "hospitalization_rates",
+              "rows": [
+                {
+                  "week_end": "2026-10-10",
+                  "rate_per_100k": 0.1,
+                  "cumulative_per_100k": 0.0
+                }
+              ],
+              "network": "RSV-NET",
+              "age_group": "Overall",
+              "units": "rate per 100,000"
+            }
+          },
+          {
+            "tool": "get_data_freshness",
+            "inputs": {},
+            "rows_returned": 4,
+            "elapsed_s": 0.01,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "all",
+              "rows": [
+                {
+                  "table": "ari_activity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "hospitalization_rates",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "test_positivity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "wastewater_sites",
+                  "latest_week": "2025-09-07",
+                  "age_days": 408,
+                  "stale": true
+                }
+              ]
+            }
+          }
+        ],
+        "as_of": "2026-10-10",
+        "elapsed_s": 1.959,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_version": "system_v1",
+        "checker": {
+          "passed": true,
+          "unverified": [],
+          "stale_tables": []
+        }
+      },
+      "correct": true
+    },
+    {
+      "question": "What is the latest week of wastewater data, and how many sites reported that week?",
+      "response": {
+        "status": "refused",
+        "answer": "Warning: this data is more than 14 days old: wastewater_sites (latest 2025-09-07). Based on the wastewater data for California, the latest week ending date is 2025-09-07. During that week, 1 site reported data.",
+        "tool_calls": [
+          {
+            "tool": "get_wastewater",
+            "inputs": {
+              "state": "California"
+            },
+            "rows_returned": 1,
+            "elapsed_s": 0.016,
+            "output": {
+              "as_of": "2025-09-07",
+              "source_table": "wastewater_sites",
+              "rows": [
+                {
+                  "date_end": "2025-09-07",
+                  "avg_percentile": 79.2,
+                  "site_count": 1
+                }
+              ]
+            }
+          }
+        ],
+        "as_of": "2025-09-07",
+        "elapsed_s": 1.495,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_version": "system_v1",
+        "checker": {
+          "passed": true,
+          "unverified": [],
+          "stale_tables": [
+            "wastewater_sites"
+          ]
+        }
+      },
+      "correct": false
+    },
+    {
+      "question": "How many ICU beds are free in Texas right now?",
+      "response": {
+        "status": "refused",
+        "answer": "The data does not cover that. The available respiratory surveillance data does not include hospital bed availability or ICU counts.",
+        "tool_calls": [
+          {
+            "tool": "get_data_freshness",
+            "inputs": {},
+            "rows_returned": 4,
+            "elapsed_s": 0.012,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "all",
+              "rows": [
+                {
+                  "table": "ari_activity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "hospitalization_rates",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "test_positivity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "wastewater_sites",
+                  "latest_week": "2025-09-07",
+                  "age_days": 408,
+                  "stale": true
+                }
+              ]
+            }
+          }
+        ],
+        "as_of": "2026-10-10",
+        "elapsed_s": 1.282,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_version": "system_v1",
+        "checker": {
+          "passed": true,
+          "unverified": [],
+          "stale_tables": []
+        }
+      },
+      "correct": true
+    },
+    {
+      "question": "What was COVID-19 test positivity for the week ending March 6, 2027?",
+      "response": {
+        "status": "refused",
+        "answer": "The data does not cover that. The test positivity data only extends up to the week ending October 10, 2026.",
+        "tool_calls": [
+          {
+            "tool": "get_test_positivity",
+            "inputs": {
+              "week": "2027-03-06",
+              "pathogen": "COVID-19"
+            },
+            "rows_returned": 0,
+            "elapsed_s": 0.013,
+            "output": {
+              "as_of": "2027-03-06",
+              "source_table": "test_positivity",
+              "rows": []
+            }
+          },
+          {
+            "tool": "get_data_freshness",
+            "inputs": {},
+            "rows_returned": 4,
+            "elapsed_s": 0.012,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "all",
+              "rows": [
+                {
+                  "table": "ari_activity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "hospitalization_rates",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "test_positivity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "wastewater_sites",
+                  "latest_week": "2025-09-07",
+                  "age_days": 408,
+                  "stale": true
+                }
+              ]
+            }
+          }
+        ],
+        "as_of": "2027-03-06",
+        "elapsed_s": 2.705,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_version": "system_v1",
+        "checker": {
+          "passed": true,
+          "unverified": [],
+          "stale_tables": []
+        }
+      },
+      "correct": true
+    },
+    {
+      "question": "How many people died of influenza in Ohio last week?",
+      "response": {
+        "status": "refused",
+        "answer": "I can't answer that from this data, as the surveillance data does not include mortality counts for influenza.",
+        "tool_calls": [
+          {
+            "tool": "get_data_freshness",
+            "inputs": {},
+            "rows_returned": 4,
+            "elapsed_s": 0.012,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "all",
+              "rows": [
+                {
+                  "table": "ari_activity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "hospitalization_rates",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "test_positivity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "wastewater_sites",
+                  "latest_week": "2025-09-07",
+                  "age_days": 408,
+                  "stale": true
+                }
+              ]
+            }
+          }
+        ],
+        "as_of": "2026-10-10",
+        "elapsed_s": 1.579,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_version": "system_v1",
+        "checker": {
+          "passed": true,
+          "unverified": [],
+          "stale_tables": []
+        }
+      },
+      "correct": true
+    },
+    {
+      "question": "What is the measles case count in California this month?",
+      "response": {
+        "status": "unverified",
+        "answer": "I could not verify that figure.",
+        "tool_calls": [
+          {
+            "tool": "get_data_freshness",
+            "inputs": {},
+            "rows_returned": 4,
+            "elapsed_s": 0.012,
+            "output": {
+              "as_of": "2026-10-10",
+              "source_table": "all",
+              "rows": [
+                {
+                  "table": "ari_activity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "hospitalization_rates",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "test_positivity",
+                  "latest_week": "2026-10-10",
+                  "age_days": 10,
+                  "stale": false
+                },
+                {
+                  "table": "wastewater_sites",
+                  "latest_week": "2025-09-07",
+                  "age_days": 408,
+                  "stale": true
+                }
+              ]
+            }
+          }
+        ],
+        "as_of": "2026-10-10",
+        "elapsed_s": 1.937,
+        "model": "gemini-3.5-flash-lite",
+        "prompt_version": "system_v1",
+        "checker": {
+          "passed": false,
+          "unverified": [
+            "19"
+          ],
+          "stale_tables": []
+        }
+      },
+      "correct": true
+    }
+  ]
+}
