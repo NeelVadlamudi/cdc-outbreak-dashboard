@@ -267,11 +267,11 @@ def main(argv=None) -> int:
     day = date.today().isoformat()
     args.out_dir.mkdir(parents=True, exist_ok=True)
     base = args.out_dir / f"{re.sub(r'[^A-Za-z0-9_.-]', '-', args.model)}_{day}"
-    base.with_suffix(".json").write_text(json.dumps(
+    base.with_name(base.name + ".json").write_text(json.dumps(
         {"model": args.model, "date": day, "summary": summary,
          "rows": rows, "responses": responses}, indent=2, default=str))
     md = markdown(args.model, day, summary, rows)
-    base.with_suffix(".md").write_text(md)
+    base.with_name(base.name + ".md").write_text(md)
     print(md)
     print(f"wrote {base}.json and {base}.md")
     return 0
