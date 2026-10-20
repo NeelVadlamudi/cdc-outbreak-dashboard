@@ -97,7 +97,7 @@
      earlier runs are listed underneath as history. A computed change column appears only against the
      most recent earlier run with the same question set: same `questions` count and, if a question-set id
      key is present in both summaries, the same id. Never between different question sets. */
-  const QSET_ID_KEYS = []; // run_evals.py summarize() has no question-set id today; add the key name here if bob adds one.
+  const QSET_ID_KEYS = ["question_set"]; // summarize() in run_evals.py writes the question-set id under this key.
   const DELTA = {
     pct: (x) => `${x > 0 ? "+" : x < 0 ? "−" : "±"}${Math.abs(x).toFixed(1)} pp`,
     s: (x) => `${x > 0 ? "+" : x < 0 ? "−" : "±"}${fmtDuration(Math.abs(x) * 1000)}`,
@@ -119,7 +119,7 @@
     let base = null;
     for (let i = earlier.length - 1; i >= 0; i--) if (sameQuestionSet(latest.summary, earlier[i].summary)) { base = earlier[i]; break; }
     const head = el("tr", {}, el("th", { scope: "col", text: "Score" }),
-      el("th", { scope: "col" }, el("span", { class: "runhd", text: latest.model }), el("span", { class: "runsub", text: [latest.date, "latest run"].filter(Boolean).join(" · ") })),
+      el("th", { scope: "col" }, el("span", { class: "runhd", text: latest.model }), el("span", { class: "runsub", text: [latest.date, latest.summary.question_set, "latest run"].filter(Boolean).join(" · ") })),
       base ? el("th", { scope: "col", class: "delta-h" }, el("span", { class: "runhd", text: "Change · computed" }), el("span", { class: "runsub", text: `vs ${runLabel(base)}, same question set` })) : null);
     const rows = EVAL_COLS.map(([k, label, f]) => {
       const z = latest.summary[k], a = base ? base.summary[k] : null;
@@ -132,10 +132,11 @@
     if (earlier.length) {
       const hist = el("table", { class: "evalpast" },
         el("thead", {}, el("tr", {}, el("th", { scope: "col", text: "Earlier run" }), EVAL_COLS.map(([, h]) => el("th", { scope: "col", text: h })))),
-        el("tbody", {}, [...earlier].reverse().map((r) => el("tr", {}, el("td", { text: runLabel(r) }), EVAL_COLS.map(([k, , f]) => evalCell(f(r.summary[k])))))));
+        el("tbody", {}, [...earlier].reverse().map((r) => el("tr", {}, el("td", { text: runLabel(r), title: typeof r.note === "string" ? r.note : "" }), EVAL_COLS.map(([k, , f]) => evalCell(f(r.summary[k])))))));
       parts.push(el("h3", { class: "subhead", text: `History · ${earlier.length} earlier run${earlier.length === 1 ? "" : "s"}` }), el("div", { class: "scroll" }, hist));
     }
     if (base) parts.push(el("div", { class: "meta" }, el("span", { class: "chip", text: "pp = percentage points" })));
+    if (typeof latest.note === "string" && latest.note) parts.unshift(el("p", { class: "note", text: latest.note }));
     body.replaceChildren(...parts);
   }
 

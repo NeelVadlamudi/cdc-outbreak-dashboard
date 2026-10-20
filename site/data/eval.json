@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-10-20T15:15:35Z",
+  "run_at": "2026-10-20T15:57:39Z",
   "runs": [
     {
       "model": "gemini-3.5-flash-lite",
@@ -29,6 +29,24 @@
         "grounded_answers": 97.9,
         "median_s": 1.85,
         "p95_s": 2.5,
+        "median_input_tokens": null,
+        "median_output_tokens": null
+      }
+    },
+    {
+      "model": "gemini-3.5-flash-lite",
+      "date": "2026-10-20",
+      "note": "Scoring changed for this run: pathogen and model names (COVID-19, SARS-CoV-2, H5N1) and dates in the question no longer count as numbers when checking refusals, and grounding accepts a sum or difference of two tool values. Earlier runs used the old scoring and are not directly comparable.",
+      "summary": {
+        "question_set": "cdc-q60-v1",
+        "questions": 60,
+        "numeric_accuracy": 91.7,
+        "tool_choice": 100.0,
+        "correct_refusals": 75.0,
+        "false_refusals": 6.2,
+        "grounded_answers": 100.0,
+        "median_s": 1.8,
+        "p95_s": 2.48,
         "median_input_tokens": null,
         "median_output_tokens": null
       }
