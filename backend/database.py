@@ -14,10 +14,10 @@ logger = logging.getLogger(__name__)
 DB_PATH = os.path.join(Path(__file__).parent.parent, "data", "cdc_surveillance.duckdb")
 
 
-def get_connection():
+def get_connection(read_only: bool = False):
     """Get a DuckDB connection. Creates the data directory if needed."""
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
-    return duckdb.connect(DB_PATH)
+    return duckdb.connect(DB_PATH, read_only=read_only)
 
 
 def init_database():
@@ -117,7 +117,7 @@ def init_database():
 
 def query(sql: str, params=None):
     """Execute a read query and return results as list of dicts."""
-    conn = get_connection()
+    conn = get_connection(read_only=True)
     try:
         if params:
             result = conn.execute(sql, params).fetchdf()
