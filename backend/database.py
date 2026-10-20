@@ -96,6 +96,21 @@ def init_database():
         )
     """)
 
+    # Wastewater Viral Activity Level by site and pathogen (current NWSS dataset)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS wastewater_activity (
+            week_end DATE,
+            state_territory VARCHAR,
+            site VARCHAR,
+            counties_served VARCHAR,
+            population_served BIGINT,
+            source VARCHAR,
+            pathogen VARCHAR,
+            wval DOUBLE,
+            wval_category VARCHAR
+        )
+    """)
+
     # Anomaly detection results
     conn.execute("""
         CREATE TABLE IF NOT EXISTS anomalies (
