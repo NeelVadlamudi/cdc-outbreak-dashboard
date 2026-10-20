@@ -1,0 +1,5 @@
+store_id,store_name,region,format_type,city,lat,lon,map_label,chip_label
+101,warehouse_1,Northeast,club,"Everett, MA",42.4084,-71.0537,warehouse_1,warehouse_1
+102,warehouse_2,Northeast,club,"Dedham, MA",42.2418,-71.1662,warehouse_2,warehouse_2
+103,warehouse_3,Northeast,club,"Waltham, MA",42.3765,-71.2356,warehouse_3,warehouse_3
+901,warehouse_4,Northeast,crossdock,"Avon, MA",42.1306,-71.0412,warehouse_4 · supply pin only,warehouse_4

@@ -1,0 +1,47 @@
+{
+ "generated_at": "2026-10-20T18:10:47Z",
+ "proposals": [
+  {
+   "id": 1,
+   "created_at": "2026-10-20T18:10:43Z",
+   "club": "Everett",
+   "store_id": "101",
+   "sku_id": "184220",
+   "sku_name": "Paper Towels 12pk",
+   "action": "recount",
+   "reason": "System on-hand is 36 but floor and backroom counts are 0, indicating a record error (case: record_wrong).",
+   "status": "approved",
+   "decided_by": "Demo reviewer",
+   "decided_at": "2026-10-20T18:10:44Z"
+  },
+  {
+   "id": 2,
+   "created_at": "2026-10-20T18:10:46Z",
+   "club": "Dedham",
+   "store_id": "102",
+   "sku_id": "551930",
+   "sku_name": "Potato Salad Tub",
+   "action": "reorder",
+   "reason": "Floor count is 0, backroom count is 0, and system on-hand is 0 on 2026-09-22.",
+   "status": "waiting for approval",
+   "decided_by": null,
+   "decided_at": null
+  }
+ ],
+ "audit_log": [
+  {
+   "id": 1,
+   "proposal_id": 1,
+   "decision": "approved",
+   "decided_by": "Demo reviewer",
+   "decided_at": "2026-10-20T18:10:44Z",
+   "note": "Recount requested before the next truck."
+  }
+ ],
+ "source": "Recorded by scripts/record_mirage_audit.py; proposals from two real answers.",
+ "second_answer": {
+  "question": "Potato Salad Tub is empty at Dedham on 2026-09-22. Find the cause and queue the next step for a manager to approve.",
+  "status": "answered",
+  "answer": "For 2026-09-22 at Dedham, Potato Salad Tub has a floor count of 0, a backroom count of 0, and a system on-hand count of 0. \n\n**Case:** Truly out (system minus physical is 0).\n**Next step:** Reorder.\n\nI have queued the `reorder` action for manager approval (proposal id 2)."
+ }
+}

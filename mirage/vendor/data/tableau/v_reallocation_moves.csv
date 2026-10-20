@@ -1,0 +1,2 @@
+sku_id,sku_name,category,case_pack,from_store_id,from_store,to_store_id,to_store,cases_moved,units_moved,from_wos_before,from_wos_after,to_wos_before,to_wos_after
+441220,Sticky Notes Value,Office,3,101,warehouse_1,102,warehouse_2,5,15,7.466666666666667,3.466666666666667,0.0,2.3076923076923075
