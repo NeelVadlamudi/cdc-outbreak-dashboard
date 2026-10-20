@@ -63,3 +63,5 @@ ol.calls .in{font-family:var(--mono);color:var(--mute);font-size:12px}
 ol.calls .facts{font:400 12px var(--mono);color:var(--mute);margin-top:2px}
 details.out{margin-top:6px}
 details.out table{font-size:12px}
+#sec-eval td:first-child{white-space:normal;min-width:150px;max-width:220px}
+#sec-eval th{min-width:64px}
