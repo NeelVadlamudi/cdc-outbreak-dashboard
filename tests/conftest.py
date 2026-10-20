@@ -24,6 +24,11 @@ def fixture_db(tmp_path, monkeypatch):
         ('COVID-NET', '2026-27', '2026-10-03', 2026, 0, 'Overall', 'All', 'All', 'Overall', 1.1, 45.0, 'Observed')""")
     conn.execute("""INSERT INTO wastewater_sites VALUES
         ('Ohio', 'w1', 'Franklin', '39049', 1000, '2025-08-24', '2025-09-07', 1.0, 0.5, 40.0, '', '2020-01-01'),
-        ('Ohio', 'w2', 'Franklin', '39049', 1000, '2025-08-24', '2025-09-07', 1.0, 0.5, 60.0, '', '2020-01-01')""")
+        ('Ohio', 'w2', 'Franklin', '39049', 1000, '2025-08-24', '2025-09-07', 3.0, 0.5, 60.0, '', '2020-01-01'),
+        ('Ohio', 'w3', 'Franklin', '39049', 1000, '2025-08-24', '2025-09-07', -99, 0.5, 999.0, '', '2020-01-01')""")
+    conn.execute("""INSERT INTO wastewater_activity VALUES
+        ('2025-09-06', 'Ohio', 's1', 'Franklin', 1000, 'NWSS', 'RSV', 1.0, 'Very Low'),
+        ('2025-09-06', 'Ohio', 's2', 'Franklin', 1000, 'NWSS', 'RSV', 9.0, 'High'),
+        ('2025-09-06', 'Texas', 's3', 'Harris', 1000, 'NWSS', 'RSV', 3.0, 'Low')""")
     conn.close()
     return path
