@@ -5,8 +5,9 @@ from a frozen copy of the CDC data.
 
 - `build_snapshot.py` writes `snapshot.duckdb` for a fixed window (weeks ending
   2026-07-25 to 2026-10-10; the legacy wastewater metrics to 2025-09-07, where
-  that CDC file stops). `--add-wastewater-activity` adds only the current NWSS
-  viral activity table for the same weeks, leaving the other tables untouched.
+  that CDC file stops). `--add-wastewater-activity` adds the current NWSS viral
+  activity rows (source_dataset `atcp-73re`) to `wastewater_sites` for the same
+  weeks, leaving the legacy rows and the other tables untouched.
   The file is committed (about 3 MB) so expected answers never move. Rebuild with
   `python evals/build_snapshot.py --force`.
 - `questions.yaml` has 60 questions: 36 single-number, 12 that need more than

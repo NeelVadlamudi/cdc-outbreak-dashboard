@@ -22,7 +22,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
-from backend.cdc_ingestion import CDC_DATASETS, wastewater_activity_frame  # noqa: E402
+from backend.cdc_ingestion import CDC_DATASETS, WASTEWATER_CURRENT, wastewater_activity_frame  # noqa: E402
 
 OUT = Path(__file__).resolve().parent / "snapshot.duckdb"
 
@@ -31,7 +31,8 @@ AS_OF = date(2026, 10, 10)          # last week in the snapshot
 WEEKS = 12                          # weeks kept, ending at AS_OF
 START = AS_OF - timedelta(weeks=WEEKS - 1)
 # Legacy NWSS metric file (wastewater_sites) stopped at 2025-09-07; keep its last 12 weeks.
-# The current viral activity file (wastewater_activity) uses the main window.
+# The current NWSS viral activity file (atcp-73re) uses the main window; both live in
+# wastewater_sites, told apart by source_dataset.
 WW_END = date(2025, 9, 7)
 WW_START = WW_END - timedelta(weeks=WEEKS) + timedelta(days=1)
 
@@ -140,12 +141,21 @@ def build(path: Path) -> None:
 
 
 def add_wastewater_activity(con) -> None:
-    """Current NWSS viral activity levels (atcp-73re) for the same weeks as the other tables."""
+    """Add current NWSS viral activity rows (atcp-73re) to wastewater_sites for the main window.
+
+    Legacy rows are tagged source_dataset = '2ew6-ywp6'; other tables are not touched.
+    """
     lo, hi = START.isoformat(), AS_OF.isoformat()
-    wa = wastewater_activity_frame(fetch("wastewater_activity", f"week_end between '{lo}' and '{hi}T23:59:59'"))  # noqa: F841
-    con.execute("DROP TABLE IF EXISTS wastewater_activity")
-    con.execute("CREATE TABLE wastewater_activity AS SELECT * FROM wa")
-    print(f"wastewater_activity: {con.execute('SELECT COUNT(*) FROM wastewater_activity').fetchone()[0]} rows")
+    for column, kind in (("pathogen", "VARCHAR"), ("wval", "DOUBLE"), ("wval_category", "VARCHAR"),
+                         ("source_dataset", "VARCHAR")):
+        con.execute(f"ALTER TABLE wastewater_sites ADD COLUMN IF NOT EXISTS {column} {kind}")
+    con.execute("UPDATE wastewater_sites SET source_dataset = '2ew6-ywp6', pathogen = 'SARS-CoV-2' "
+                "WHERE source_dataset IS NULL")
+    wa = wastewater_activity_frame(fetch("wastewater_current", f"week_end between '{lo}' and '{hi}T23:59:59'"))  # noqa: F841
+    con.execute("DELETE FROM wastewater_sites WHERE source_dataset = ?", [WASTEWATER_CURRENT])
+    con.execute("INSERT INTO wastewater_sites BY NAME SELECT * FROM wa")
+    for src, n in con.execute("SELECT source_dataset, COUNT(*) FROM wastewater_sites GROUP BY 1 ORDER BY 1").fetchall():
+        print(f"wastewater_sites [{src}]: {n} rows")
 
 
 def main() -> None:
@@ -153,7 +163,7 @@ def main() -> None:
     ap.add_argument("--out", type=Path, default=OUT)
     ap.add_argument("--force", action="store_true")
     ap.add_argument("--add-wastewater-activity", action="store_true",
-                    help="add or replace only the wastewater_activity table in an existing snapshot")
+                    help="add or replace only the current NWSS rows in wastewater_sites of an existing snapshot")
     args = ap.parse_args()
     if args.add_wastewater_activity:
         con = duckdb.connect(str(args.out))
