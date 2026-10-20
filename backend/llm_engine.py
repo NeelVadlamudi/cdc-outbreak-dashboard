@@ -59,14 +59,14 @@ def get_data_context() -> str:
         ww_summary = ""
         try:
             ww = conn.execute("""
-                SELECT COUNT(DISTINCT county_fips) as counties,
-                       AVG(percentile) as avg_percentile,
-                       COUNT(*) as sites
+                SELECT COUNT(DISTINCT wwtp_jurisdiction) as states,
+                       COUNT(DISTINCT wwtp_id) as sites
                 FROM wastewater_sites
-                WHERE date_end = (SELECT MAX(date_end) FROM wastewater_sites)
+                WHERE source_dataset = 'atcp-73re'
+                  AND date_end = (SELECT MAX(date_end) FROM wastewater_sites WHERE source_dataset = 'atcp-73re')
             """).fetchdf()
             if len(ww) > 0:
-                ww_summary = f"\nWastewater: Monitoring {int(ww.iloc[0]['sites'])} sites across {int(ww.iloc[0]['counties'])} counties. Average viral percentile: {ww.iloc[0]['avg_percentile']:.0f}th."
+                ww_summary = f"\nWastewater: {int(ww.iloc[0]['sites'])} sites across {int(ww.iloc[0]['states'])} states reported viral activity levels in the latest week."
         except Exception:
             pass
 

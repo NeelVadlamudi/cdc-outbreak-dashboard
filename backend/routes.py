@@ -210,11 +210,13 @@ async def get_dashboard_summary():
     try:
         ww = query("""
             SELECT COUNT(DISTINCT wwtp_id) as sites,
-                   COUNT(DISTINCT county_fips) as counties,
-                   AVG(percentile) as avg_percentile
+                   COUNT(DISTINCT wwtp_jurisdiction) as states,
+                   MAX(date_end) as week_end
             FROM wastewater_sites
-            WHERE date_end = (SELECT MAX(date_end) FROM wastewater_sites)
+            WHERE source_dataset = 'atcp-73re'
+              AND date_end = (SELECT MAX(date_end) FROM wastewater_sites WHERE source_dataset = 'atcp-73re')
         """)
+        serialize_dates(ww)
         if ww:
             ww_summary = ww[0]
     except Exception:
@@ -268,76 +270,135 @@ async def event_stream():
 # PHASE 2A: Wastewater Surveillance (County-Level)
 # ═══════════════════════════════════════════════════════════════════════════════
 
+CURRENT_WW = "source_dataset = 'atcp-73re'"
+LEGACY_WW = "source_dataset = '2ew6-ywp6'"
+LEGACY_NOTE = "Legacy NWSS SARS-CoV-2 metrics (dataset 2ew6-ywp6); CDC stopped updating them after 2025-09-07."
+
+
+def _ww_meta(dataset: str) -> dict:
+    if dataset == "legacy":
+        return {"dataset": "legacy", "source_dataset": "2ew6-ywp6", "note": LEGACY_NOTE}
+    return {"dataset": "current", "source_dataset": "atcp-73re",
+            "note": "CDC Wastewater Viral Activity Level (WVAL) by site, week and pathogen."}
+
+
+def _check_dataset(dataset: str) -> str:
+    if dataset not in ("current", "legacy"):
+        raise HTTPException(status_code=400, detail="dataset must be 'current' or 'legacy'")
+    return dataset
+
+
 @router.get("/wastewater")
 async def get_wastewater(
     state: str = Query(None, description="Filter by state jurisdiction"),
-    county: str = Query(None, description="Filter by county name"),
-    limit: int = Query(5000),
+    pathogen: str = Query(None, description="SARS-CoV-2, Influenza A virus or RSV (current dataset)"),
+    dataset: str = Query("current", description="'current' (atcp-73re) or 'legacy' (2ew6-ywp6)"),
+    limit: int = Query(5000, le=50000),
 ):
-    """Get wastewater surveillance data — county/site level."""
-    sql = """
-        SELECT wwtp_jurisdiction, wwtp_id, county_names, county_fips,
-               population_served, date_end, ptc_15d, detect_prop_15d, percentile
-        FROM wastewater_sites WHERE 1=1
-    """
+    """Wastewater rows by site. Current viral activity levels by default."""
+    _check_dataset(dataset)
+    if dataset == "legacy":
+        sql = f"""
+            SELECT wwtp_jurisdiction, wwtp_id, county_names, county_fips, population_served, date_end,
+                   ptc_15d AS legacy_ptc_15d, detect_prop_15d AS legacy_detect_prop_15d,
+                   percentile AS legacy_percentile
+            FROM wastewater_sites WHERE {LEGACY_WW}
+        """
+    else:
+        sql = f"""
+            SELECT wwtp_jurisdiction, wwtp_id, county_names, population_served, date_end AS week_end,
+                   pathogen, wval, wval_category
+            FROM wastewater_sites WHERE {CURRENT_WW}
+        """
     params = []
     if state:
         sql += " AND wwtp_jurisdiction = ?"
         params.append(state)
-    if county:
-        sql += " AND county_names LIKE ?"
-        params.append(f"%{county}%")
+    if pathogen and dataset == "current":
+        sql += " AND pathogen = ?"
+        params.append(pathogen)
     sql += " ORDER BY date_end DESC LIMIT ?"
     params.append(limit)
-    results = query(sql, params if params else None)
+    results = query(sql, params)
     serialize_dates(results)
-    return {"data": results, "count": len(results)}
+    return {**_ww_meta(dataset), "data": results, "count": len(results)}
 
 
 @router.get("/wastewater/latest")
-async def get_wastewater_latest():
-    """Get the most recent wastewater data for all sites."""
-    results = query("""
-        SELECT wwtp_jurisdiction as state, county_names as county, county_fips as fips,
-               wwtp_id, population_served, percentile, ptc_15d as pct_change,
-               detect_prop_15d as detection_rate, date_end
-        FROM wastewater_sites
-        WHERE date_end = (SELECT MAX(date_end) FROM wastewater_sites)
-        ORDER BY percentile DESC
-    """)
+async def get_wastewater_latest(
+    pathogen: str = Query("SARS-CoV-2", description="Pathogen (current dataset)"),
+    dataset: str = Query("current"),
+):
+    """Most recent week for every site."""
+    _check_dataset(dataset)
+    if dataset == "legacy":
+        results = query(f"""
+            SELECT wwtp_jurisdiction AS state, county_names AS county, county_fips AS fips, wwtp_id,
+                   population_served, date_end,
+                   CASE WHEN percentile BETWEEN 0 AND 100 THEN percentile END AS legacy_percentile,
+                   CASE WHEN ptc_15d NOT IN (-99, 2147483647) THEN ptc_15d END AS legacy_pct_change
+            FROM wastewater_sites
+            WHERE {LEGACY_WW} AND date_end = (SELECT MAX(date_end) FROM wastewater_sites WHERE {LEGACY_WW})
+            ORDER BY legacy_percentile DESC NULLS LAST
+        """)
+    else:
+        results = query(f"""
+            SELECT wwtp_jurisdiction AS state, county_names AS county, wwtp_id, population_served,
+                   date_end AS week_end, pathogen, wval, wval_category
+            FROM wastewater_sites
+            WHERE {CURRENT_WW} AND pathogen = ?
+              AND date_end = (SELECT MAX(date_end) FROM wastewater_sites WHERE {CURRENT_WW} AND pathogen = ?)
+            ORDER BY wval DESC NULLS LAST
+        """, [pathogen, pathogen])
     serialize_dates(results)
-    return {"data": results, "count": len(results)}
+    return {**_ww_meta(dataset), "data": results, "count": len(results)}
 
 
 @router.get("/wastewater/county/{fips}")
 async def get_wastewater_county(fips: str):
-    """Get wastewater trend for a specific county by FIPS code."""
-    results = query("""
-        SELECT date_end, percentile, ptc_15d, detect_prop_15d, population_served,
-               county_names, wwtp_jurisdiction
+    """Legacy SARS-CoV-2 trend for a county FIPS (the current dataset has no FIPS codes)."""
+    results = query(f"""
+        SELECT date_end,
+               CASE WHEN percentile BETWEEN 0 AND 100 THEN percentile END AS legacy_percentile,
+               CASE WHEN ptc_15d NOT IN (-99, 2147483647) THEN ptc_15d END AS legacy_ptc_15d,
+               population_served, county_names, wwtp_jurisdiction
         FROM wastewater_sites
-        WHERE county_fips = ?
+        WHERE {LEGACY_WW} AND county_fips = ?
         ORDER BY date_end
     """, [fips])
     serialize_dates(results)
-    return {"data": results, "county_fips": fips}
+    return {**_ww_meta("legacy"), "data": results, "county_fips": fips}
 
 
 @router.get("/wastewater/states")
-async def get_wastewater_states():
-    """Get wastewater summary by state."""
-    results = query("""
-        SELECT wwtp_jurisdiction as state,
-               COUNT(DISTINCT wwtp_id) as sites,
-               COUNT(DISTINCT county_fips) as counties,
-               AVG(percentile) as avg_percentile,
-               AVG(ptc_15d) as avg_pct_change
-        FROM wastewater_sites
-        WHERE date_end = (SELECT MAX(date_end) FROM wastewater_sites)
-        GROUP BY wwtp_jurisdiction
-        ORDER BY avg_percentile DESC
-    """)
-    return {"data": results}
+async def get_wastewater_states(
+    pathogen: str = Query("SARS-CoV-2", description="Pathogen (current dataset)"),
+    dataset: str = Query("current"),
+):
+    """Summary by state for the latest week."""
+    _check_dataset(dataset)
+    if dataset == "legacy":
+        results = query(f"""
+            SELECT wwtp_jurisdiction AS state, COUNT(DISTINCT wwtp_id) AS sites,
+                   COUNT(DISTINCT county_fips) AS counties,
+                   AVG(CASE WHEN percentile BETWEEN 0 AND 100 THEN percentile END) AS legacy_avg_percentile,
+                   AVG(CASE WHEN ptc_15d NOT IN (-99, 2147483647) THEN ptc_15d END) AS legacy_avg_pct_change
+            FROM wastewater_sites
+            WHERE {LEGACY_WW} AND date_end = (SELECT MAX(date_end) FROM wastewater_sites WHERE {LEGACY_WW})
+            GROUP BY 1 ORDER BY legacy_avg_percentile DESC NULLS LAST
+        """)
+    else:
+        results = query(f"""
+            SELECT wwtp_jurisdiction AS state, COUNT(DISTINCT wwtp_id) AS sites,
+                   MEDIAN(wval) AS median_wval,
+                   COUNT(DISTINCT CASE WHEN wval_category IN ('High', 'Very High') THEN wwtp_id END) AS sites_high
+            FROM wastewater_sites
+            WHERE {CURRENT_WW} AND pathogen = ?
+              AND date_end = (SELECT MAX(date_end) FROM wastewater_sites WHERE {CURRENT_WW} AND pathogen = ?)
+            GROUP BY 1 ORDER BY median_wval DESC NULLS LAST
+        """, [pathogen, pathogen])
+    serialize_dates(results)
+    return {**_ww_meta(dataset), "data": results}
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
