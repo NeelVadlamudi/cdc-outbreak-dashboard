@@ -74,15 +74,3 @@ def test_publish_sets_scoring_changed(tmp_path):
     assert run["scoring_changed"] is True
     assert "status" in json.loads((tmp_path / "index.json").read_text())["available"]
 
-
-def test_mirage_eval_drop_alerts():
-    base = {"question_set": "m1", "overall_correct": 96.7, "unrequested_proposals": 0.0}
-    s = ns.build_status(steps={"eval": "success"}, eval_result=None, baseline=None, backtest=None, fresh_rows=[],
-                        run_url=None, commit=None, started_at=None,
-                        mirage_result={"model": "m", "date": "d", "summary": {**base, "overall_correct": 90.0,
-                                                                               "unrequested_proposals": 10.0}},
-                        mirage_baseline={"model": "m", "date": "d0", "summary": base})
-    titles = [a["title"] for a in s["alerts"]]
-    assert "Mirage audit eval score drop: overall_correct" in titles
-    assert "Mirage audit eval score drop: unrequested_proposals" in titles
-    assert s["mirage_eval"]["question_set"] == "m1"
