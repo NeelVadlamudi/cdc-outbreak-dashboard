@@ -4,14 +4,16 @@ Main entry point with lifespan events, CORS, and route mounting.
 """
 
 import logging
+import time
+import uuid
 from contextlib import asynccontextmanager
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from backend.cdc_ingestion import run_full_ingestion
-from backend.config import ALLOWED_ORIGINS, INGEST_ON_STARTUP, configure_logging
+from backend.config import ALLOWED_ORIGINS, INGEST_ON_STARTUP, configure_logging, request_id_var
 from backend.database import init_database
 from backend.routes import router
 
@@ -64,6 +66,25 @@ app.add_middleware(
     allow_methods=["GET", "POST"],
     allow_headers=["Content-Type", "X-API-Key"],
 )
+
+
+
+@app.middleware("http")
+async def request_log(request: Request, call_next):
+    """Tag every log line in a request with a request id and log one line per request."""
+    rid = request.headers.get("X-Request-ID") or uuid.uuid4().hex[:12]
+    token = request_id_var.set(rid)
+    start = time.perf_counter()
+    try:
+        response = await call_next(request)
+        response.headers["X-Request-ID"] = rid
+        logger.info("request", extra={"event": "request", "method": request.method, "path": request.url.path,
+                                      "status": response.status_code,
+                                      "elapsed_s": round(time.perf_counter() - start, 3)})
+        return response
+    finally:
+        request_id_var.reset(token)
+
 
 # Mount routes
 app.include_router(router)
