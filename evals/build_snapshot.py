@@ -22,7 +22,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
-from backend.cdc_ingestion import CDC_DATASETS  # noqa: E402
+from backend.cdc_ingestion import CDC_DATASETS, wastewater_activity_frame  # noqa: E402
 
 OUT = Path(__file__).resolve().parent / "snapshot.duckdb"
 
@@ -30,7 +30,8 @@ OUT = Path(__file__).resolve().parent / "snapshot.duckdb"
 AS_OF = date(2026, 10, 10)          # last week in the snapshot
 WEEKS = 12                          # weeks kept, ending at AS_OF
 START = AS_OF - timedelta(weeks=WEEKS - 1)
-# NWSS wastewater stopped updating at 2025-09-07; keep its last 12 weeks.
+# Legacy NWSS metric file (wastewater_sites) stopped at 2025-09-07; keep its last 12 weeks.
+# The current viral activity file (wastewater_activity) uses the main window.
 WW_END = date(2025, 9, 7)
 WW_START = WW_END - timedelta(weeks=WEEKS) + timedelta(days=1)
 
@@ -124,6 +125,8 @@ def build(path: Path) -> None:
     })
     con.execute("CREATE TABLE wastewater_sites AS SELECT * FROM ww")
 
+    add_wastewater_activity(con)
+
     meta = pd.DataFrame([{
         "as_of": AS_OF, "window_start": START, "weeks": WEEKS,
         "wastewater_start": WW_START, "wastewater_end": WW_END,
@@ -136,11 +139,27 @@ def build(path: Path) -> None:
     con.close()
 
 
+def add_wastewater_activity(con) -> None:
+    """Current NWSS viral activity levels (atcp-73re) for the same weeks as the other tables."""
+    lo, hi = START.isoformat(), AS_OF.isoformat()
+    wa = wastewater_activity_frame(fetch("wastewater_activity", f"week_end between '{lo}' and '{hi}T23:59:59'"))  # noqa: F841
+    con.execute("DROP TABLE IF EXISTS wastewater_activity")
+    con.execute("CREATE TABLE wastewater_activity AS SELECT * FROM wa")
+    print(f"wastewater_activity: {con.execute('SELECT COUNT(*) FROM wastewater_activity').fetchone()[0]} rows")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, default=OUT)
     ap.add_argument("--force", action="store_true")
+    ap.add_argument("--add-wastewater-activity", action="store_true",
+                    help="add or replace only the wastewater_activity table in an existing snapshot")
     args = ap.parse_args()
+    if args.add_wastewater_activity:
+        con = duckdb.connect(str(args.out))
+        add_wastewater_activity(con)
+        con.close()
+        return
     if args.out.exists():
         if not args.force:
             print(f"{args.out} exists; use --force to rebuild")
