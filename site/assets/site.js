@@ -123,7 +123,7 @@
     let base = null;
     let floor = 0; // earliest index comparable with the latest run under the current scoring
     for (let i = runs.length - 1; i >= 0; i--) if (scoringChanged(runs[i])) { floor = i; break; }
-    for (let i = earlier.length - 1; i >= floor; i--) if (sameQuestionSet(latest.summary, earlier[i].summary)) { base = earlier[i]; break; }
+    for (let i = earlier.length - 1; i >= floor; i--) if (earlier[i].model === latest.model && sameQuestionSet(latest.summary, earlier[i].summary)) { base = earlier[i]; break; }
     const head = el("tr", {}, el("th", { scope: "col", text: "Score" }),
       el("th", { scope: "col" }, el("span", { class: "runhd", text: latest.model }), el("span", { class: "runsub", text: [latest.date, latest.summary.question_set, "latest run"].filter(Boolean).join(" · ") })),
       base ? el("th", { scope: "col", class: "delta-h" }, el("span", { class: "runhd", text: "Change · computed" }), el("span", { class: "runsub", text: "vs earlier run ↓" })) : null);
