@@ -16,7 +16,7 @@ DB_PATH = os.getenv(
 
 # Agent model setting: "gemini-flash-lite" or "ollama-local".
 AGENT_MODEL = os.getenv("AGENT_MODEL", "gemini-flash-lite")
-GEMINI_MODEL_ID = os.getenv("GEMINI_MODEL_ID", "gemini-flash-lite-latest")
+GEMINI_MODEL_ID = os.getenv("GEMINI_MODEL_ID", "gemini-3.5-flash-lite")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 OLLAMA_AGENT_MODEL = os.getenv("OLLAMA_AGENT_MODEL", "qwen2.5:7b")
 
