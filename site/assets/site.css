@@ -63,5 +63,19 @@ ol.calls .in{font-family:var(--mono);color:var(--mute);font-size:12px}
 ol.calls .facts{font:400 12px var(--mono);color:var(--mute);margin-top:2px}
 details.out{margin-top:6px}
 details.out table{font-size:12px}
-#sec-eval td:first-child{white-space:normal;min-width:150px;max-width:220px}
+table.evalhist thead th{min-width:110px;max-width:200px}
 #sec-eval th{min-width:64px}
+.freshness{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:-4px 0 16px;padding:0 2px}
+.freshness .fr-lab{font:400 11.5px var(--mono);color:var(--dim);text-transform:uppercase;letter-spacing:.05em;margin-right:4px}
+.freshness .chip b{font-weight:500;color:var(--ink)}
+.freshness .chip.stale{color:var(--acc);border-color:rgba(243,148,68,.45)}
+.freshness .chip.stale b{color:var(--acc)}
+.freshness .fr-note{flex-basis:100%;font-size:12px;color:var(--dim)}
+table.evalhist th[scope=row]{text-align:left;font:300 13px var(--sans);color:var(--ink);text-transform:none;letter-spacing:0;position:sticky;left:0;background:#0b0b0c;white-space:nowrap}
+table.evalhist thead th{text-align:right}
+table.evalhist thead th:first-child{text-align:left}
+.runhd{display:block;color:var(--ink);text-transform:none;letter-spacing:0;white-space:normal}
+.runsub{display:block;margin-top:2px;text-transform:none;letter-spacing:0}
+td.delta{color:var(--mute);font-style:italic}
+th.delta-h .runhd{font-style:italic}
+.meta .chip{white-space:normal;line-height:1.35}
