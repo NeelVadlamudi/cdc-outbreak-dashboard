@@ -110,9 +110,8 @@
     for (const k of QSET_ID_KEYS) if (a[k] != null || b[k] != null) return a[k] != null && a[k] === b[k];
     return isNum(a.questions) && a.questions === b.questions;
   }
-  // A run marks a scoring change with scoring_changed: true, or (as publish_eval.py writes today) a note that starts
-  // "Scoring changed". No change is computed across that boundary.
-  const scoringChanged = (r) => r.scoring_changed === true || (typeof r.note === "string" && /^\s*scoring changed/i.test(r.note));
+  // A run marks a scoring change with scoring_changed: true (note text is never parsed). No change is computed across it.
+  const scoringChanged = (r) => r.scoring_changed === true;
   const runLabel = (r) => [r.model, r.date].filter(Boolean).join(" · ");
   function renderEval(sec, d) {
     const body = $("[data-body]", sec);
