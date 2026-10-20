@@ -1,22 +1,22 @@
 {
- "generated_at": "2026-10-20T18:10:47Z",
+ "generated_at": "2026-10-20T18:59:27Z",
  "proposals": [
   {
    "id": 1,
-   "created_at": "2026-10-20T18:10:43Z",
+   "created_at": "2026-10-20T18:59:23Z",
    "club": "Everett",
    "store_id": "101",
    "sku_id": "184220",
    "sku_name": "Paper Towels 12pk",
    "action": "recount",
-   "reason": "System on-hand is 36 but floor and backroom counts are 0, indicating a record error (case: record_wrong).",
+   "reason": "Floor count is 0, backroom count is 0, and system on-hand is 36 (system minus physical is 36).",
    "status": "approved",
    "decided_by": "Demo reviewer",
-   "decided_at": "2026-10-20T18:10:44Z"
+   "decided_at": "2026-10-20T18:59:24Z"
   },
   {
    "id": 2,
-   "created_at": "2026-10-20T18:10:46Z",
+   "created_at": "2026-10-20T18:59:25Z",
    "club": "Dedham",
    "store_id": "102",
    "sku_id": "551930",
@@ -34,7 +34,7 @@
    "proposal_id": 1,
    "decision": "approved",
    "decided_by": "Demo reviewer",
-   "decided_at": "2026-10-20T18:10:44Z",
+   "decided_at": "2026-10-20T18:59:24Z",
    "note": "Recount requested before the next truck."
   }
  ],
@@ -42,6 +42,68 @@
  "second_answer": {
   "question": "Potato Salad Tub is empty at Dedham on 2026-09-22. Find the cause and queue the next step for a manager to approve.",
   "status": "answered",
-  "answer": "For 2026-09-22 at Dedham, Potato Salad Tub has a floor count of 0, a backroom count of 0, and a system on-hand count of 0. \n\n**Case:** Truly out (system minus physical is 0).\n**Next step:** Reorder.\n\nI have queued the `reorder` action for manager approval (proposal id 2)."
+  "answer": "For Dedham on 2026-09-22, Potato Salad Tub has a floor count of 0, a backroom count of 0, and a system on-hand count of 0. \n\n**Case:** Truly out  \n**Next step:** Reorder\n\nI have proposed the reorder action for a manager to approve (Proposal ID: 2, status: waiting for approval).",
+  "as_of": "2026-09-22",
+  "tool_calls": [
+   {
+    "tool": "get_sku_position",
+    "inputs": {
+     "sku": "Potato Salad Tub",
+     "club": "Dedham",
+     "day": "2026-09-22"
+    },
+    "rows_returned": 1,
+    "elapsed_s": 0.015,
+    "output": {
+     "as_of": "2026-09-22",
+     "source_table": "fact_inventory_daily",
+     "club": "Dedham",
+     "store_id": "102",
+     "rows": [
+      {
+       "sku_id": "551930",
+       "sku_name": "Potato Salad Tub",
+       "category": "Deli",
+       "in_assortment": true,
+       "floor_qty": 0,
+       "backroom_qty": 0,
+       "system_on_hand_qty": 0,
+       "physical_qty": 0,
+       "system_minus_physical": 0,
+       "shelf_empty": true,
+       "case": "truly_out",
+       "case_label": "Truly out",
+       "next_step": "reorder"
+      }
+     ]
+    }
+   },
+   {
+    "tool": "propose_action",
+    "inputs": {
+     "action": "reorder",
+     "sku": "Potato Salad Tub",
+     "club": "Dedham",
+     "reason": "Floor count is 0, backroom count is 0, and system on-hand is 0 on 2026-09-22."
+    },
+    "rows_returned": 1,
+    "elapsed_s": 0.047,
+    "output": {
+     "as_of": null,
+     "source_table": "proposals",
+     "rows": [
+      {
+       "proposal_id": 2,
+       "club": "Dedham",
+       "sku_id": "551930",
+       "sku_name": "Potato Salad Tub",
+       "action": "reorder",
+       "status": "waiting for approval"
+      }
+     ]
+    }
+   }
+  ],
+  "proposal_id": 2
  }
 }

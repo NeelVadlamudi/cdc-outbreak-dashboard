@@ -48,4 +48,4 @@ jobs:
         working-directory: frontend
         run: npm run build
       - name: Node tests
-        run: node --test frontend/src/agent/__tests__/contract.test.js tests/site-fixtures/eval-contract.test.mjs
+        run: node --test frontend/src/agent/__tests__/contract.test.js tests/site-fixtures/*.test.mjs frontend/src/mirage/__tests__/contract.test.js
