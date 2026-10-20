@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Plot from 'react-plotly.js';
 import { Map as MapIcon, MapPin, Activity, Globe as GlobeIcon } from 'lucide-react';
 import Globe from 'react-globe.gl';
