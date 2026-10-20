@@ -5,7 +5,8 @@
 #                   every value must be in the answer within tolerance
 # type: refusal  -> the data cannot answer it; correct if the agent declines
 #                   and gives no number
-# Snapshot window: weeks ending 2026-07-25 to 2026-10-10. Wastewater ends 2025-09-07.
+# Snapshot window: weeks ending 2026-07-25 to 2026-10-10. wastewater_activity (current NWSS
+# viral activity levels) covers the same weeks; wastewater_sites (legacy NWSS metrics) ends 2025-09-07.
 # Hospitalization rates are per 100,000, overall population unless stated.
 
 snapshot: evals/snapshot.duckdb
@@ -17,84 +18,288 @@ questions:
     question: What was COVID-19 test positivity for the latest week?
     expected_sql: SELECT percent_test_positivity FROM test_positivity WHERE pathogen = 'COVID-19' AND week_end = (SELECT MAX(week_end) FROM test_positivity)
     tolerance: 0.05
-    expected_tools: [get_test_positivity]
-
+    expected_tools:
+    - get_test_positivity
+  
   - id: n02
     type: number
     question: What was influenza test positivity for the week ending October 3, 2026?
     expected_sql: SELECT percent_test_positivity FROM test_positivity WHERE pathogen = 'Influenza' AND week_end = DATE '2026-10-03'
     tolerance: 0.05
-    expected_tools: [get_test_positivity]
-
+    expected_tools:
+    - get_test_positivity
+  
   - id: n03
     type: number
     question: What was RSV test positivity for the latest week?
     expected_sql: SELECT percent_test_positivity FROM test_positivity WHERE pathogen = 'RSV' AND week_end = (SELECT MAX(week_end) FROM test_positivity)
     tolerance: 0.05
-    expected_tools: [get_test_positivity]
-
+    expected_tools:
+    - get_test_positivity
+  
   - id: n04
     type: number
     question: By how many percentage points did COVID-19 test positivity change from the week ending September 26 to the week ending October 10, 2026?
     expected_sql: SELECT ROUND(MAX(CASE WHEN week_end = DATE '2026-10-10' THEN percent_test_positivity END) - MAX(CASE WHEN week_end = DATE '2026-09-26' THEN percent_test_positivity END), 1) FROM test_positivity WHERE pathogen = 'COVID-19'
     tolerance: 0.05
-    expected_tools: [get_test_positivity]
-
+    expected_tools:
+    - get_test_positivity
+  
   - id: n05
     type: number
     question: How many states or territories were at Very Low respiratory illness activity in the latest week?
     expected_sql: SELECT COUNT(*) FROM ari_activity WHERE label = 'Very Low' AND week_end = (SELECT MAX(week_end) FROM ari_activity)
     tolerance: 0
-    expected_tools: [list_states_at_level]
-
+    expected_tools:
+    - list_states_at_level
+  
   - id: n06
     type: number
     question: How many states or territories were at Low respiratory illness activity in the latest week?
     expected_sql: SELECT COUNT(*) FROM ari_activity WHERE label = 'Low' AND week_end = (SELECT MAX(week_end) FROM ari_activity)
     tolerance: 0
-    expected_tools: [list_states_at_level]
-
+    expected_tools:
+    - list_states_at_level
+  
   - id: n07
     type: number
     question: What was the overall weekly COVID-19 hospitalization rate per 100,000 (COVID-NET) for the week ending October 10, 2026?
     expected_sql: SELECT weekly_rate FROM hospitalization_rates WHERE surveillance_network = 'COVID-NET' AND week_ending_date = DATE '2026-10-10' AND site = 'Overall' AND age_group = 'Overall' AND sex = 'All' AND race_ethnicity = 'All'
     tolerance: 0.05
-    expected_tools: [get_hospitalization_rate]
-
+    expected_tools:
+    - get_hospitalization_rate
+  
   - id: n08
     type: number
     question: What was the overall weekly flu hospitalization rate per 100,000 (FluSurv-NET) for the week ending October 3, 2026?
     expected_sql: SELECT weekly_rate FROM hospitalization_rates WHERE surveillance_network = 'FluSurv-NET' AND week_ending_date = DATE '2026-10-03' AND site = 'Overall' AND age_group = 'Overall' AND sex = 'All' AND race_ethnicity = 'All'
     tolerance: 0.05
-    expected_tools: [get_hospitalization_rate]
-
+    expected_tools:
+    - get_hospitalization_rate
+  
   - id: n09
     type: number
     question: What was the combined weekly hospitalization rate per 100,000 for COVID-19, flu and RSV for the week ending September 26, 2026?
     expected_sql: SELECT weekly_rate FROM hospitalization_rates WHERE surveillance_network = 'Combined' AND week_ending_date = DATE '2026-09-26' AND site = 'Overall' AND age_group = 'Overall' AND sex = 'All' AND race_ethnicity = 'All'
     tolerance: 0.05
-    expected_tools: [get_hospitalization_rate]
-
+    expected_tools:
+    - get_hospitalization_rate
+  
   - id: n10
     type: number
     question: What was the cumulative COVID-NET hospitalization rate per 100,000 for the 2025-26 season as of the week ending October 3, 2026?
     expected_sql: SELECT cumulative_rate FROM hospitalization_rates WHERE surveillance_network = 'COVID-NET' AND season = '2025-26' AND week_ending_date = DATE '2026-10-03' AND site = 'Overall' AND age_group = 'Overall' AND sex = 'All' AND race_ethnicity = 'All'
     tolerance: 0.5
-    expected_tools: [get_hospitalization_rate]
-
+    expected_tools:
+    - get_hospitalization_rate
+  
   - id: n11
     type: number
-    question: How many wastewater sites reported in the latest week of wastewater data?
-    expected_sql: SELECT COUNT(DISTINCT wwtp_id) FROM wastewater_sites WHERE date_end = (SELECT MAX(date_end) FROM wastewater_sites)
+    question: How many wastewater sites reported viral activity data for any pathogen nationally in the latest week?
+    expected_sql: SELECT COUNT(DISTINCT site) FROM wastewater_activity WHERE 1=1 AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)
     tolerance: 0
-    expected_tools: [get_wastewater]
-
+    expected_tools:
+    - get_wastewater
+  
   - id: n12
     type: number
-    question: What was the median 15-day percent change in wastewater viral levels across New York sites in the latest week of wastewater data?
-    expected_sql: SELECT ROUND(MEDIAN(ptc_15d), 1) FROM wastewater_sites WHERE wwtp_jurisdiction = 'New York' AND date_end = (SELECT MAX(date_end) FROM wastewater_sites)
+    question: In the legacy NWSS SARS-CoV-2 wastewater metrics, which end on 2025-09-07, what was the median 15-day percent change across New York sites in that last week?
+    expected_sql: SELECT ROUND(MEDIAN(ptc_15d), 1) FROM wastewater_sites WHERE wwtp_jurisdiction = 'New York' AND date_end = (SELECT MAX(date_end) FROM wastewater_sites) AND ptc_15d NOT IN (-99, 2147483647)
     tolerance: 0.5
-    expected_tools: [get_wastewater]
+    expected_tools:
+    - get_wastewater
+  
+  - id: n13
+    type: number
+    question: What was COVID-19 test positivity for the week ending September 26, 2026?
+    expected_sql: SELECT percent_test_positivity FROM test_positivity WHERE pathogen = 'COVID-19' AND week_end = DATE '2026-09-26'
+    tolerance: 0.05
+    expected_tools:
+    - get_test_positivity
+  
+  - id: n14
+    type: number
+    question: What was influenza test positivity for the latest week?
+    expected_sql: SELECT percent_test_positivity FROM test_positivity WHERE pathogen = 'Influenza' AND week_end = DATE '2026-10-10'
+    tolerance: 0.05
+    expected_tools:
+    - get_test_positivity
+  
+  - id: n15
+    type: number
+    question: What was RSV test positivity for the week ending October 3, 2026?
+    expected_sql: SELECT percent_test_positivity FROM test_positivity WHERE pathogen = 'RSV' AND week_end = DATE '2026-10-03'
+    tolerance: 0.05
+    expected_tools:
+    - get_test_positivity
+  
+  - id: n16
+    type: number
+    question: What was COVID-19 test positivity for the week ending August 1, 2026?
+    expected_sql: SELECT percent_test_positivity FROM test_positivity WHERE pathogen = 'COVID-19' AND week_end = DATE '2026-08-01'
+    tolerance: 0.05
+    expected_tools:
+    - get_test_positivity
+  
+  - id: n17
+    type: number
+    question: What was influenza test positivity for the week ending July 25, 2026?
+    expected_sql: SELECT percent_test_positivity FROM test_positivity WHERE pathogen = 'Influenza' AND week_end = DATE '2026-07-25'
+    tolerance: 0.05
+    expected_tools:
+    - get_test_positivity
+  
+  - id: n18
+    type: number
+    question: What was RSV test positivity for the week ending September 5, 2026?
+    expected_sql: SELECT percent_test_positivity FROM test_positivity WHERE pathogen = 'RSV' AND week_end = DATE '2026-09-05'
+    tolerance: 0.05
+    expected_tools:
+    - get_test_positivity
+  
+  - id: n19
+    type: number
+    question: What was the weekly COVID-NET hospitalization rate per 100,000 for people aged 65 and older in the week ending October 10, 2026?
+    expected_sql: SELECT weekly_rate FROM hospitalization_rates WHERE surveillance_network = 'COVID-NET' AND week_ending_date = DATE '2026-10-10' AND age_group = '65+ yr' AND site = 'Overall' AND sex = 'All' AND race_ethnicity = 'All'
+    tolerance: 0.05
+    expected_tools:
+    - get_hospitalization_rate
+  
+  - id: n20
+    type: number
+    question: What was the weekly FluSurv-NET hospitalization rate per 100,000 for people aged 65 and older in the week ending October 10, 2026?
+    expected_sql: SELECT weekly_rate FROM hospitalization_rates WHERE surveillance_network = 'FluSurv-NET' AND week_ending_date = DATE '2026-10-10' AND age_group = '65+ yr' AND site = 'Overall' AND sex = 'All' AND race_ethnicity = 'All'
+    tolerance: 0.05
+    expected_tools:
+    - get_hospitalization_rate
+  
+  - id: n21
+    type: number
+    question: What was the weekly RSV-NET hospitalization rate per 100,000 for children aged 0-4 in the week ending October 10, 2026?
+    expected_sql: SELECT weekly_rate FROM hospitalization_rates WHERE surveillance_network = 'RSV-NET' AND week_ending_date = DATE '2026-10-10' AND age_group = '0-4 yr' AND site = 'Overall' AND sex = 'All' AND race_ethnicity = 'All'
+    tolerance: 0.05
+    expected_tools:
+    - get_hospitalization_rate
+  
+  - id: n22
+    type: number
+    question: What was the combined weekly hospitalization rate per 100,000 for COVID-19, flu and RSV in the week ending October 10, 2026?
+    expected_sql: SELECT weekly_rate FROM hospitalization_rates WHERE surveillance_network = 'Combined' AND week_ending_date = DATE '2026-10-10' AND age_group = 'Overall' AND site = 'Overall' AND sex = 'All' AND race_ethnicity = 'All'
+    tolerance: 0.05
+    expected_tools:
+    - get_hospitalization_rate
+  
+  - id: n23
+    type: number
+    question: What was the weekly COVID-NET hospitalization rate per 100,000 for children (pediatrics) in the week ending October 3, 2026?
+    expected_sql: SELECT weekly_rate FROM hospitalization_rates WHERE surveillance_network = 'COVID-NET' AND week_ending_date = DATE '2026-10-03' AND age_group = 'Pediatrics' AND site = 'Overall' AND sex = 'All' AND race_ethnicity = 'All'
+    tolerance: 0.05
+    expected_tools:
+    - get_hospitalization_rate
+  
+  - id: n24
+    type: number
+    question: What was the overall weekly RSV-NET hospitalization rate per 100,000 for the week ending September 19, 2026?
+    expected_sql: SELECT weekly_rate FROM hospitalization_rates WHERE surveillance_network = 'RSV-NET' AND week_ending_date = DATE '2026-09-19' AND age_group = 'Overall' AND site = 'Overall' AND sex = 'All' AND race_ethnicity = 'All'
+    tolerance: 0.05
+    expected_tools:
+    - get_hospitalization_rate
+  
+  - id: n25
+    type: number
+    question: What was the weekly COVID-NET hospitalization rate per 100,000 for people aged 75 and older in the week ending October 10, 2026?
+    expected_sql: SELECT weekly_rate FROM hospitalization_rates WHERE surveillance_network = 'COVID-NET' AND week_ending_date = DATE '2026-10-10' AND age_group = '75+ yr' AND site = 'Overall' AND sex = 'All' AND race_ethnicity = 'All'
+    tolerance: 0.05
+    expected_tools:
+    - get_hospitalization_rate
+  
+  - id: n26
+    type: number
+    question: What was the overall weekly FluSurv-NET hospitalization rate per 100,000 for the week ending August 29, 2026?
+    expected_sql: SELECT weekly_rate FROM hospitalization_rates WHERE surveillance_network = 'FluSurv-NET' AND week_ending_date = DATE '2026-08-29' AND age_group = 'Overall' AND site = 'Overall' AND sex = 'All' AND race_ethnicity = 'All'
+    tolerance: 0.05
+    expected_tools:
+    - get_hospitalization_rate
+  
+  - id: n27
+    type: number
+    question: What was the weekly COVID-NET hospitalization rate per 100,000 for adults aged 50-64 in the week ending October 10, 2026?
+    expected_sql: SELECT weekly_rate FROM hospitalization_rates WHERE surveillance_network = 'COVID-NET' AND week_ending_date = DATE '2026-10-10' AND age_group = '50-64 yr' AND site = 'Overall' AND sex = 'All' AND race_ethnicity = 'All'
+    tolerance: 0.05
+    expected_tools:
+    - get_hospitalization_rate
+  
+  - id: n28
+    type: number
+    question: How many states or territories had respiratory illness activity marked Data Unavailable in the latest week?
+    expected_sql: SELECT COUNT(*) FROM ari_activity WHERE label = 'Data Unavailable' AND week_end = DATE '2026-10-10'
+    tolerance: 0
+    expected_tools:
+    - list_states_at_level
+  
+  - id: n29
+    type: number
+    question: How many wastewater sites reported SARS-CoV-2 nationally in the latest week?
+    expected_sql: SELECT COUNT(DISTINCT site) FROM wastewater_activity WHERE pathogen = 'SARS-CoV-2' AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)
+    tolerance: 0
+    expected_tools:
+    - get_wastewater
+  
+  - id: n30
+    type: number
+    question: How many wastewater sites reported influenza A nationally in the latest week?
+    expected_sql: SELECT COUNT(DISTINCT site) FROM wastewater_activity WHERE pathogen = 'Influenza A virus' AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)
+    tolerance: 0
+    expected_tools:
+    - get_wastewater
+  
+  - id: n31
+    type: number
+    question: How many wastewater sites reported RSV nationally in the latest week?
+    expected_sql: SELECT COUNT(DISTINCT site) FROM wastewater_activity WHERE pathogen = 'RSV' AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)
+    tolerance: 0
+    expected_tools:
+    - get_wastewater
+  
+  - id: n32
+    type: number
+    question: How many wastewater sites in New York reported SARS-CoV-2 in the latest week?
+    expected_sql: SELECT COUNT(DISTINCT site) FROM wastewater_activity WHERE pathogen = 'SARS-CoV-2' AND state_territory = 'New York' AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)
+    tolerance: 0
+    expected_tools:
+    - get_wastewater
+  
+  - id: n33
+    type: number
+    question: How many wastewater sites in California reported data for any pathogen in the latest week?
+    expected_sql: SELECT COUNT(DISTINCT site) FROM wastewater_activity WHERE state_territory = 'California' AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)
+    tolerance: 0
+    expected_tools:
+    - get_wastewater
+  
+  - id: n34
+    type: number
+    question: How many wastewater sites nationally were at High or Very High SARS-CoV-2 activity in the latest week?
+    expected_sql: SELECT COUNT(DISTINCT site) FROM wastewater_activity WHERE pathogen = 'SARS-CoV-2' AND wval_category IN ('High', 'Very High') AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)
+    tolerance: 0
+    expected_tools:
+    - get_wastewater
+  
+  - id: n35
+    type: number
+    question: What was the median SARS-CoV-2 wastewater viral activity level across Texas sites in the latest week?
+    expected_sql: SELECT ROUND(MEDIAN(wval), 2) FROM wastewater_activity WHERE pathogen = 'SARS-CoV-2' AND state_territory = 'Texas' AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)
+    tolerance: 0.01
+    expected_tools:
+    - get_wastewater
+  
+  - id: n36
+    type: number
+    question: In the legacy NWSS SARS-CoV-2 wastewater metrics, which end on 2025-09-07, how many sites reported nationally in that last week?
+    expected_sql: SELECT COUNT(DISTINCT wwtp_id) FROM wastewater_sites WHERE date_end = (SELECT MAX(date_end) FROM wastewater_sites)
+    tolerance: 0
+    expected_tools:
+    - get_wastewater
 
   # ---- needs more than one tool ----
   - id: m01
@@ -102,46 +307,169 @@ questions:
     question: For the week ending October 10, 2026, give COVID-19 test positivity and the overall COVID-NET weekly hospitalization rate.
     expected_sql: SELECT (SELECT percent_test_positivity FROM test_positivity WHERE pathogen = 'COVID-19' AND week_end = DATE '2026-10-10') AS positivity, (SELECT weekly_rate FROM hospitalization_rates WHERE surveillance_network = 'COVID-NET' AND week_ending_date = DATE '2026-10-10' AND site = 'Overall' AND age_group = 'Overall' AND sex = 'All' AND race_ethnicity = 'All') AS hosp_rate
     tolerance: 0.05
-    expected_tools: [get_test_positivity, get_hospitalization_rate]
-
+    expected_tools:
+    - get_test_positivity
+    - get_hospitalization_rate
+  
   - id: m02
     type: multi
     question: How many states were at Low respiratory illness activity in the latest week, and what was influenza test positivity that week?
     expected_sql: SELECT (SELECT COUNT(*) FROM ari_activity WHERE label = 'Low' AND week_end = DATE '2026-10-10') AS low_states, (SELECT percent_test_positivity FROM test_positivity WHERE pathogen = 'Influenza' AND week_end = DATE '2026-10-10') AS flu_positivity
     tolerance: 0.05
-    expected_tools: [list_states_at_level, get_test_positivity]
-
+    expected_tools:
+    - list_states_at_level
+    - get_test_positivity
+  
   - id: m03
     type: multi
     question: In the latest week, how many states were at Very Low respiratory illness activity, and what was the overall RSV-NET weekly hospitalization rate?
     expected_sql: SELECT (SELECT COUNT(*) FROM ari_activity WHERE label = 'Very Low' AND week_end = DATE '2026-10-10') AS very_low_states, (SELECT weekly_rate FROM hospitalization_rates WHERE surveillance_network = 'RSV-NET' AND week_ending_date = DATE '2026-10-10' AND site = 'Overall' AND age_group = 'Overall' AND sex = 'All' AND race_ethnicity = 'All') AS rsv_rate
     tolerance: 0.05
-    expected_tools: [list_states_at_level, get_hospitalization_rate]
-
+    expected_tools:
+    - list_states_at_level
+    - get_hospitalization_rate
+  
   - id: m04
     type: multi
-    question: What is the latest week of wastewater data, and how many sites reported that week?
-    expected_sql: SELECT CAST(MAX(date_end) AS VARCHAR) AS latest, (SELECT COUNT(DISTINCT wwtp_id) FROM wastewater_sites WHERE date_end = (SELECT MAX(date_end) FROM wastewater_sites)) AS sites FROM wastewater_sites
+    question: In the latest week, how many wastewater sites reported SARS-CoV-2, and what was COVID-19 test positivity?
+    expected_sql: SELECT (SELECT COUNT(DISTINCT site) FROM wastewater_activity WHERE pathogen = 'SARS-CoV-2' AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)) AS sites, (SELECT percent_test_positivity FROM test_positivity WHERE pathogen = 'COVID-19' AND week_end = DATE '2026-10-10') AS positivity
+    tolerance: 0.05
+    expected_tools:
+    - get_wastewater
+    - get_test_positivity
+  
+  - id: m05
+    type: multi
+    question: For the latest week, what was Ohio's respiratory illness activity level, and how many Ohio wastewater sites reported data for any pathogen?
+    expected_sql: SELECT (SELECT label FROM ari_activity WHERE geography = 'Ohio' AND week_end = DATE '2026-10-10') AS level, (SELECT COUNT(DISTINCT site) FROM wastewater_activity WHERE state_territory = 'Ohio' AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)) AS sites
     tolerance: 0
-    expected_tools: [get_data_freshness, get_wastewater]
+    expected_tools:
+    - get_ari_level
+    - get_wastewater
+  
+  - id: m06
+    type: multi
+    question: For the week ending October 10, 2026, give influenza test positivity and the overall FluSurv-NET weekly hospitalization rate.
+    expected_sql: SELECT (SELECT percent_test_positivity FROM test_positivity WHERE pathogen = 'Influenza' AND week_end = DATE '2026-10-10') AS positivity, (SELECT weekly_rate FROM hospitalization_rates WHERE surveillance_network = 'FluSurv-NET' AND week_ending_date = DATE '2026-10-10' AND age_group = 'Overall' AND site = 'Overall' AND sex = 'All' AND race_ethnicity = 'All') AS rate
+    tolerance: 0.05
+    expected_tools:
+    - get_test_positivity
+    - get_hospitalization_rate
+  
+  - id: m07
+    type: multi
+    question: For the week ending October 10, 2026, give RSV test positivity and the RSV-NET weekly hospitalization rate for children aged 0-4.
+    expected_sql: SELECT (SELECT percent_test_positivity FROM test_positivity WHERE pathogen = 'RSV' AND week_end = DATE '2026-10-10') AS positivity, (SELECT weekly_rate FROM hospitalization_rates WHERE surveillance_network = 'RSV-NET' AND week_ending_date = DATE '2026-10-10' AND age_group = '0-4 yr' AND site = 'Overall' AND sex = 'All' AND race_ethnicity = 'All') AS rate
+    tolerance: 0.05
+    expected_tools:
+    - get_test_positivity
+    - get_hospitalization_rate
+  
+  - id: m08
+    type: multi
+    question: In the latest week, how many states were at Very Low respiratory illness activity, and how many wastewater sites nationally were at High or Very High SARS-CoV-2 activity?
+    expected_sql: SELECT (SELECT COUNT(*) FROM ari_activity WHERE label = 'Very Low' AND week_end = DATE '2026-10-10') AS states, (SELECT COUNT(DISTINCT site) FROM wastewater_activity WHERE pathogen = 'SARS-CoV-2' AND wval_category IN ('High', 'Very High') AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)) AS sites
+    tolerance: 0
+    expected_tools:
+    - list_states_at_level
+    - get_wastewater
+  
+  - id: m09
+    type: multi
+    question: For the week ending October 3, 2026, give COVID-19 test positivity and the overall COVID-NET weekly hospitalization rate.
+    expected_sql: SELECT (SELECT percent_test_positivity FROM test_positivity WHERE pathogen = 'COVID-19' AND week_end = DATE '2026-10-03') AS positivity, (SELECT weekly_rate FROM hospitalization_rates WHERE surveillance_network = 'COVID-NET' AND week_ending_date = DATE '2026-10-03' AND age_group = 'Overall' AND site = 'Overall' AND sex = 'All' AND race_ethnicity = 'All') AS rate
+    tolerance: 0.05
+    expected_tools:
+    - get_test_positivity
+    - get_hospitalization_rate
+  
+  - id: m10
+    type: multi
+    question: For the latest week, what was Texas's respiratory illness activity level, and how many Texas wastewater sites reported SARS-CoV-2?
+    expected_sql: SELECT (SELECT label FROM ari_activity WHERE geography = 'Texas' AND week_end = DATE '2026-10-10') AS level, (SELECT COUNT(DISTINCT site) FROM wastewater_activity WHERE pathogen = 'SARS-CoV-2' AND state_territory = 'Texas' AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)) AS sites
+    tolerance: 0
+    expected_tools:
+    - get_ari_level
+    - get_wastewater
+  
+  - id: m11
+    type: multi
+    question: In the latest week, what was influenza test positivity, and how many wastewater sites nationally reported influenza A?
+    expected_sql: SELECT (SELECT percent_test_positivity FROM test_positivity WHERE pathogen = 'Influenza' AND week_end = DATE '2026-10-10') AS positivity, (SELECT COUNT(DISTINCT site) FROM wastewater_activity WHERE pathogen = 'Influenza A virus' AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)) AS sites
+    tolerance: 0.05
+    expected_tools:
+    - get_test_positivity
+    - get_wastewater
+  
+  - id: m12
+    type: multi
+    question: For the week ending October 10, 2026, give the combined weekly hospitalization rate for COVID-19, flu and RSV, and the number of states at Low respiratory illness activity.
+    expected_sql: SELECT (SELECT weekly_rate FROM hospitalization_rates WHERE surveillance_network = 'Combined' AND week_ending_date = DATE '2026-10-10' AND age_group = 'Overall' AND site = 'Overall' AND sex = 'All' AND race_ethnicity = 'All') AS rate, (SELECT COUNT(*) FROM ari_activity WHERE label = 'Low' AND week_end = DATE '2026-10-10') AS states
+    tolerance: 0.05
+    expected_tools:
+    - get_hospitalization_rate
+    - list_states_at_level
 
   # ---- cannot be answered from the data ----
   - id: r01
     type: refusal
     question: How many ICU beds are free in Texas right now?
     expected_tools: []
-
+  
   - id: r02
     type: refusal
     question: What was COVID-19 test positivity for the week ending March 6, 2027?
-    expected_tools: [get_test_positivity]
-
+    expected_tools:
+    - get_test_positivity
+  
   - id: r03
     type: refusal
     question: How many people died of influenza in Ohio last week?
     expected_tools: []
-
+  
   - id: r04
     type: refusal
     question: What is the measles case count in California this month?
     expected_tools: []
+  
+  - id: r05
+    type: refusal
+    question: What will COVID-19 test positivity be in December 2027?
+    expected_tools: []
+  
+  - id: r06
+    type: refusal
+    question: Should I get a flu shot this week?
+    expected_tools: []
+  
+  - id: r07
+    type: refusal
+    question: What was Ohio's respiratory illness activity level for the week ending January 4, 2025?
+    expected_tools:
+    - get_ari_level
+  
+  - id: r08
+    type: refusal
+    question: How much measles virus was detected in Texas wastewater last week?
+    expected_tools: []
+  
+  - id: r09
+    type: refusal
+    question: What is the COVID-19 hospitalization rate in Canada?
+    expected_tools: []
+  
+  - id: r10
+    type: refusal
+    question: Which hospital in Ohio has the most RSV patients right now?
+    expected_tools: []
+  
+  - id: r11
+    type: refusal
+    question: What was influenza test positivity in Ohio last week?
+    expected_tools: []
+  
+  - id: r12
+    type: refusal
+    question: How many people in New York are vaccinated against COVID-19?
+    expected_tools: []
+
