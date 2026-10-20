@@ -149,3 +149,4 @@ table.proposals td:nth-child(6),table.auditlog td:nth-child(6){min-width:200px}
 table.mtable th,table.mtable td{text-align:left}
 #sec-mirage-eval table.evalhist th[scope=row]{white-space:normal;min-width:8.5em}
 table.proposals td:nth-child(3),table.proposals td:nth-child(4){min-width:120px}
+.kvwrap .overlap{font:400 11.5px var(--mono);color:var(--dim);margin:4px 0 0}

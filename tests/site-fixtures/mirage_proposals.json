@@ -43,6 +43,34 @@
  "second_answer": {
   "question": "EXAMPLE second question?",
   "status": "answered",
-  "answer": "EXAMPLE second answer."
+  "answer": "EXAMPLE second answer.",
+  "proposal_id": 2,
+  "tool_calls": [
+   {
+    "tool": "get_sku_position",
+    "inputs": {
+     "club": "EXAMPLE-club",
+     "sku": "EXAMPLE Milk"
+    },
+    "rows_returned": 1,
+    "elapsed_s": 0.1,
+    "output": {
+     "as_of": "2000-01-01",
+     "source_table": "fact_inventory_daily",
+     "rows": [
+      {
+       "sku_id": "000002",
+       "sku_name": "EXAMPLE Milk",
+       "floor_qty": 0,
+       "backroom_qty": 3,
+       "system_on_hand_qty": 3,
+       "case": "in_backroom",
+       "case_label": "Stock is in the backroom",
+       "next_step": "pull_to_floor"
+      }
+     ]
+    }
+   }
+  ]
  }
 }
