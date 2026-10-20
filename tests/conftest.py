@@ -2,6 +2,15 @@ import duckdb
 import pytest
 
 from backend import config
+from backend.ratelimit import limiter
+
+
+@pytest.fixture(autouse=True)
+def _reset_rate_limits():
+    """Each test starts with empty rate-limit counters."""
+    limiter.reset()
+    yield
+    limiter.reset()
 
 
 @pytest.fixture()
