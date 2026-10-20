@@ -912,3 +912,18 @@ body {
   
   .page-title { font-size: 24px; }
 }
+
+/* ── Agent answer (Ask page) ── */
+.agent-answer { display: flex; flex-direction: column; gap: 10px; }
+.agent-text { white-space: pre-wrap; overflow-wrap: anywhere; }
+.agent-refused { border-left: 3px solid #f39444; padding-left: 10px; }
+.agent-flag { display: inline-flex; gap: 6px; align-items: center; font-size: 12px; font-weight: 600; color: #f39444; }
+.agent-meta { display: flex; flex-wrap: wrap; gap: 12px; font-size: 11px; color: var(--text-muted); border-top: 1px solid var(--border-subtle); padding-top: 10px; font-family: ui-monospace, monospace; }
+.agent-calls-toggle { display: inline-flex; gap: 6px; align-items: center; background: none; border: 0; color: var(--text-secondary); cursor: pointer; font-size: 12px; padding: 0; }
+.agent-calls-list { margin: 8px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 12px; }
+.agent-calls-list li { display: flex; flex-wrap: wrap; gap: 4px 10px; overflow-wrap: anywhere; }
+.agent-tool { font-weight: 600; }
+.agent-inputs { color: var(--text-secondary); font-family: ui-monospace, monospace; }
+.agent-rows { color: var(--text-muted); }
+.agent-error { color: #b91c1c; }
+@media (max-width: 900px) { .ask-grid { grid-template-columns: 1fr !important; } }

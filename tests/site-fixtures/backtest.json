@@ -1,0 +1,4 @@
+{ "_label": "EXAMPLE fixture — not real data", "run_at": "2026-01-01T06:00:00Z", "target": "EXAMPLE target", "mae_unit": "EXAMPLE units", "n_origins": 8,
+  "models": [
+    { "model": "EXAMPLE-naive", "horizons": [ {"h":1,"mae":10,"wmape":0.1}, {"h":2,"mae":12,"wmape":0.12}, {"h":3,"mae":15,"wmape":0.15}, {"h":4,"mae":20,"wmape":0.2} ] },
+    { "model": "EXAMPLE-model", "horizons": [ {"h":1,"mae":8,"wmape":0.08}, {"h":2,"mae":11,"wmape":0.1}, {"h":3,"mae":13,"wmape":0.14}, {"h":4,"mae":null,"wmape":null} ] } ] }

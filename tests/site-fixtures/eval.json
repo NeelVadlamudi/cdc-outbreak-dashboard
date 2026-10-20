@@ -1,0 +1,4 @@
+{ "_label": "EXAMPLE fixture — not real data", "run_at": "2026-01-01T06:00:00Z", "n_questions": 10, "dataset_version": "EXAMPLE-set",
+  "rows": [
+    { "model": "EXAMPLE-model-a", "numeric_accuracy": 0.5, "tool_choice": 0.6, "correct_refusals": 0.7, "false_refusals": 0.1, "grounded": 0.8, "checker_catches": 3, "ms_per_answer": 1400, "tokens_per_answer": 900 },
+    { "model": "EXAMPLE-model-b-long-name", "numeric_accuracy": 0.4, "tool_choice": null, "correct_refusals": 0.9, "false_refusals": 0.2, "grounded": 0.7, "checker_catches": 5, "ms_per_answer": 125000, "tokens_per_answer": 1500 } ] }

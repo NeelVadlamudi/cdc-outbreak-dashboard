@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import { MessageSquare, Bot, ArrowRight, Activity, Cpu, ShieldAlert } from "lucide-react";
-import { chatWithData, getWeeklyBrief } from "../api";
+import { Bot, ArrowRight, Activity, AlertTriangle } from "lucide-react";
+import { askAgent, getWeeklyBrief } from "../api";
+import AgentAnswer from "../components/AgentAnswer";
 
 const SUGGESTED_QUESTIONS = [
   "What's the COVID risk level right now?",
@@ -34,21 +35,10 @@ export default function AskData() {
     setLoading(true);
 
     try {
-      const res = await chatWithData(q);
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: res.answer,
-          model: res.model,
-          engine: res.engine,
-        },
-      ]);
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: "Sorry, I couldn't process that question. Please try again.", model: "error" },
-      ]);
+      const result = await askAgent(q);
+      setMessages((prev) => [...prev, { role: "assistant", result }]);
+    } catch (err) {
+      setMessages((prev) => [...prev, { role: "assistant", error: err?.message || "Request failed", question: q }]);
     }
     setLoading(false);
   };
@@ -60,13 +50,13 @@ export default function AskData() {
           <div>
             <h1 className="page-title">Neural Interface</h1>
             <p className="page-subtitle">
-              Talk directly to the CDC SODA API via Mistral 7B + RAG
+              Answers come from tool calls on the CDC data; every call is listed under the answer
             </p>
           </div>
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "24px" }} className="fade-in">
+      <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "24px" }} className="fade-in ask-grid">
         <div className="card" style={{ display: "flex", flexDirection: "column", minHeight: "600px", padding: 0 }}>
           <div style={{ flex: 1, overflowY: "auto", padding: "24px" }}>
             {messages.length === 0 && (
@@ -76,7 +66,7 @@ export default function AskData() {
                   Ask anything about the outbreak data
                 </h3>
                 <p style={{ color: "var(--text-muted)", fontSize: "14px" }}>
-                  Powered by RAG — queries the DuckDB database and generates insights
+                  Each answer shows the tools it called, the data week, and how long it took
                 </p>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", justifyContent: "center", marginTop: "32px" }}>
                   {SUGGESTED_QUESTIONS.map((q, i) => (
@@ -118,17 +108,12 @@ export default function AskData() {
                   {msg.role === "assistant" ? <Bot size={20} /> : null}
                 </div>
                 <div className="message-bubble">
-                  {msg.content}
-                  {msg.model && msg.role === "assistant" && (
-                    <div style={{
-                      marginTop: "12px",
-                      fontSize: "11px",
-                      color: "var(--text-muted)",
-                      borderTop: "1px solid var(--border-subtle)",
-                      paddingTop: "12px",
-                      fontWeight: 500,
-                    }}>
-                      {msg.engine === "ollama" ? "Mistral 7B (Ollama)" : "Data-driven analysis"} · {msg.model}
+                  {msg.role === "user" && msg.content}
+                  {msg.result && <AgentAnswer result={msg.result} />}
+                  {msg.error && (
+                    <div className="agent-error" role="alert">
+                      <AlertTriangle size={14} /> {msg.error}{" "}
+                      <button className="agent-calls-toggle" onClick={() => sendMessage(msg.question)} disabled={loading}>Retry</button>
                     </div>
                   )}
                 </div>
@@ -138,8 +123,9 @@ export default function AskData() {
             {loading && (
               <div className="chat-message assistant">
                 <div className="chat-avatar"><Bot size={20} /></div>
-                <div className="message-bubble" style={{ padding: "16px 20px" }}>
+                <div className="message-bubble" style={{ padding: "16px 20px" }} aria-live="polite">
                   <div className="loading-spinner" style={{ width: "20px", height: "20px", borderWidth: "2px" }} />
+                  <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>Agent is querying the data…</span>
                 </div>
               </div>
             )}
@@ -187,25 +173,6 @@ export default function AskData() {
             )}
           </div>
 
-          <div className="card fade-in" style={{ marginTop: "24px" }}>
-            <div className="card-header" style={{ marginBottom: "16px" }}>
-              <span className="card-title"><Cpu size={18} /> Architecture</span>
-            </div>
-            <div style={{ fontSize: "13px", color: "var(--text-muted)", lineHeight: 1.6 }}>
-              <div style={{ padding: "12px", background: "var(--accent-primary-glow)", borderRadius: "8px", marginBottom: "12px", border: "1px solid var(--border-accent)" }}>
-                <strong style={{ color: "var(--accent-primary)" }}>RAG Pipeline:</strong><br />
-                <span style={{ color: "var(--text-secondary)" }}>Question → DuckDB query → context injection → LLM response</span>
-              </div>
-              <div style={{ padding: "12px", background: "rgba(5, 150, 105, 0.1)", borderRadius: "8px", marginBottom: "12px", border: "1px solid rgba(5, 150, 105, 0.2)" }}>
-                <strong style={{ color: "#059669" }}>LLM Engine:</strong><br />
-                <span style={{ color: "var(--text-secondary)" }}>Ollama + Mistral 7B (local, privacy-first)</span>
-              </div>
-              <div style={{ padding: "12px", background: "rgba(217, 119, 6, 0.1)", borderRadius: "8px", border: "1px solid rgba(217, 119, 6, 0.2)" }}>
-                <strong style={{ color: "#d97706" }}>Fallback Mechanism:</strong><br />
-                <span style={{ color: "var(--text-secondary)" }}>Rule-based structured responses on DuckDB data</span>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
