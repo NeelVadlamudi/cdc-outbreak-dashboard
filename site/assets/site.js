@@ -104,8 +104,7 @@
     n: (x) => `${x > 0 ? "+" : x < 0 ? "−" : "±"}${Math.abs(x).toLocaleString("en-US")}`,
   };
   const KIND = { questions: "n", numeric_accuracy: "pct", tool_choice: "pct", correct_refusals: "pct", false_refusals: "pct",
-    grounded_answers: "pct", median_s: "s", p95_s: "s", median_input_tokens: "n", median_output_tokens: "n",
-    overall_correct: "pct", case_and_step: "pct", proposal_accuracy: "pct", unrequested_proposals: "pct", blocked_proposals: "n" };
+    grounded_answers: "pct", median_s: "s", p95_s: "s", median_input_tokens: "n", median_output_tokens: "n" };
   // Question-set id wins; the questions count is only the fallback when neither summary carries an id.
   function sameQuestionSet(a, b) {
     for (const k of QSET_ID_KEYS) if (a[k] != null || b[k] != null) return a[k] != null && a[k] === b[k];
@@ -271,11 +270,9 @@
   function answerCard(it) {
       const a = it.response;
       const flagged = a.status === "refused" || a.status === "unverified";
-      if (it.bare) return el("article", { class: flagged ? "qa refused" : "qa" }, it.question ? el("div", { class: "q", text: it.question }) : null,
-        flagged ? el("div", { class: "flag", text: a.status === "unverified" ? "Could not verify" : "Declined to answer" }) : null, el("div", { class: "a" }, mdLite(a.answer)), it.extra || null);
       const calls = Array.isArray(a.tool_calls) ? a.tool_calls : [];
       const meta = [];
-      if (!it.partial || a.as_of != null) meta.push(el("span", { class: "chip", text: a.as_of ? `as of ${a.as_of}` : "no data date" }));
+      meta.push(el("span", { class: "chip", text: a.as_of ? `as of ${a.as_of}` : "no data date" }));
       const took = secs(a.elapsed_s); if (took) meta.push(el("span", { class: "chip", text: `took ${took}` }));
       if (a.model) meta.push(el("span", { class: "chip", text: a.model }));
       const stale = a.checker && Array.isArray(a.checker.stale_tables) ? a.checker.stale_tables : [];
@@ -285,7 +282,6 @@
         it.question ? el("div", { class: "q", text: it.question }) : null,
         flagged ? el("div", { class: "flag", text: a.status === "unverified" ? "Could not verify" : "Declined to answer" }) : null,
         el("div", { class: "a" }, mdLite(a.answer)),
-        caseList(calls), proposalChips(a.proposals),
         el("div", { class: "meta" }, meta),
         calls.length ? el("details", {}, el("summary", { text: `${calls.length} tool call${calls.length === 1 ? "" : "s"}` }),
           el("ol", { class: "calls" }, calls.map((c) => {
@@ -299,142 +295,8 @@
             if (extra) facts.push(extra);
             return el("li", {}, el("code", { text: c.tool || "unknown" }), " ",
               el("span", { class: "in", text: fmtInputs(c.inputs) || "no inputs" }),
-              el("div", { class: "facts", text: facts.join(" · ") }), keyFacts(o.summary, "summary"), keyFacts(o.totals, "totals"),
-              outputRows(o.rows), outputRows(o.transfers, "transfers"));
+              el("div", { class: "facts", text: facts.join(" · ") }), outputRows(o.rows));
           }))) : el("div", { class: "meta" }, el("span", { class: "chip", text: "no tool calls" })));
-  }
-
-  /* Mirage (DATA_CONTRACT.md §7). Values are shown as given; labels only. */
-  const NEXT_STEP = { recount: "Recount", pull_to_floor: "Pull to floor", reorder: "Reorder" };
-  const stepLabel = (v) => (v == null ? null : NEXT_STEP[v] || String(v));
-  const FACT_LABEL = {
-    assortment_sku_count: "SKUs in assortment", gap_sku_count: "SKUs with an empty shelf", gap_rate_pct: "Gap rate",
-    book_wrong_sku_count: "Record wrong", backroom_sku_count: "In the backroom", truly_out_sku_count: "Truly out",
-    lines: "PO lines", cases_received: "Cases received", cases_allocated: "Cases to clubs", cases_held_at_dc: "Cases held at the DC",
-    transfers: "Transfers", club_skus_under_1_week_before: "Club SKUs under 1 week of supply, before", club_skus_under_1_week_after: "Club SKUs under 1 week of supply, after",
-  };
-  const CASE_COUNT_KEYS = ["book_wrong_sku_count", "backroom_sku_count", "truly_out_sku_count"];
-  function keyFacts(o, cls) {
-    if (!o || typeof o !== "object" || Array.isArray(o)) return null;
-    const items = Object.entries(o).filter(([, v]) => v != null && typeof v !== "object");
-    if (!items.length) return null;
-    const dl = el("dl", { class: `kv ${cls}` }, items.map(([k, v]) => el("div", {}, el("dt", { text: FACT_LABEL[k] || k }),
-      el("dd", { text: /_pct$/.test(k) && isNum(v) ? `${v}%` : String(v) }))));
-    // One SKU can be both "record wrong" and "in the backroom", so case counts may sum past the empty total.
-    if (!CASE_COUNT_KEYS.some((k) => k in o)) return dl;
-    return el("div", { class: "kvwrap" }, dl, el("p", { class: "overlap", text: "Categories can overlap" }));
-  }
-  function caseList(calls) {
-    const rows = calls.flatMap((c) => (c && c.output && Array.isArray(c.output.rows) ? c.output.rows : [])).filter((r) => r && (r.case_label || r.case) && r.next_step);
-    if (!rows.length) return null;
-    return el("ul", { class: "cases" }, rows.map((r) => el("li", {},
-      el("b", { text: r.sku_name || r.sku_id || "SKU" }), " ", el("span", { class: "case", text: r.case_label || r.case }),
-      " → ", el("span", { class: "chip acc step", text: stepLabel(r.next_step) }),
-      r.also ? el("span", { class: "also", text: ` also ${stepLabel(r.also)}${r.also_reason ? `: ${r.also_reason}` : ""}` }) : null)));
-  }
-  function proposalChips(ps) {
-    if (!Array.isArray(ps) || !ps.length) return null;
-    return el("div", { class: "meta props" }, ps.map((p) => el("span", { class: "chip acc",
-      text: [`Proposal ${p.proposal_id}`, p.club, p.sku_name, stepLabel(p.action), p.status].filter((x) => x != null).join(" · ") })));
-  }
-  const MIRAGE_EVAL_COLS = [
-    ["questions", "Questions", asGiven, null],
-    ["overall_correct", "Overall correct", pctGiven, "max"],
-    ["numeric_accuracy", "Numeric accuracy", pctGiven, "max"],
-    ["case_and_step", "Case and next step", pctGiven, "max"],
-    ["proposal_accuracy", "Proposal accuracy", pctGiven, "max"],
-    ["unrequested_proposals", "Unrequested proposals (lower is better)", pctGiven, "min"],
-    ["tool_choice", "Tool choice", pctGiven, "max"],
-    ["blocked_proposals", "Blocked proposals (count)", asGiven, null],
-    ["correct_refusals", "Correct refusals", pctGiven, "max"],
-    ["false_refusals", "False refusals (lower is better)", pctGiven, "min"],
-    ["grounded_answers", "Grounded answers", pctGiven, "max"],
-    ["median_s", "Median time / answer", secsFmt, "min"],
-    ["p95_s", "p95 time / answer", secsFmt, "min"],
-  ];
-  function renderMirageEval(sec, d) {
-    renderEval(sec, d, { cols: MIRAGE_EVAL_COLS, file: "data/mirage_eval.json", headline: (sm) => {
-      const oc = pctGiven(sm.overall_correct), q = asGiven(sm.questions);
-      if (!oc || !q) return null;
-      return el("p", { class: "headline" }, el("span", { class: "big", text: oc }), ` overall correct on ${q} questions`,
-        sm.question_set ? el("span", { class: "runsub", text: ` · ${sm.question_set}` }) : null);
-    } });
-  }
-  function renderMirageReplay(sec, d) {
-    const body = $("[data-body]", sec);
-    const items = d && Array.isArray(d.answers) ? d.answers.filter((a) => a && a.response && typeof a.response.answer === "string") : [];
-    if (!items.length) return notRun(body, "data/mirage_replay.json");
-    const right = items.filter((a) => a.correct === true).length;
-    body.replaceChildren(el("div", { class: "meta" }, el("span", { class: "chip", text: `${items.length} recorded answers` }),
-      el("span", { class: "chip", text: `${right} graded correct` })),
-      el("div", { class: "replay" }, items.map((it) => { const c = answerCard(it); if (it.type) c.prepend(el("div", { class: "qtype", text: [it.id, it.type].filter(Boolean).join(" · ") })); return c; })));
-  }
-  const DEMO = "Demo reviewer";
-  const who = (name) => (name == null ? null : el("span", { class: "who" }, name, name === DEMO ? el("span", { class: "chip demo", text: "Demo" }) : null));
-  const tdNode = (n) => (n == null ? el("td", { class: "na", text: "—" }) : el("td", {}, n));
-  const STATUS_CLASS = { "waiting for approval": "chip acc", approved: "chip res-success", rejected: "chip res-failure" };
-  const statusChip = (st) => el("span", { class: STATUS_CLASS[st] || "chip", text: st || "unknown" });
-  function proposalsTable(ps) {
-    return el("div", { class: "scroll" }, el("table", { class: "mtable proposals" },
-      el("thead", {}, el("tr", {}, ["#", "Created", "Club", "SKU", "Action", "Reason", "Status", "Decided by", "Decided at"].map((h) => el("th", { scope: "col", text: h })))),
-      el("tbody", {}, ps.map((p) => el("tr", {}, cell(p.id == null ? null : String(p.id)), cell(p.created_at ? fmtDate(p.created_at) : null),
-        cell([p.club, p.store_id ? `store ${p.store_id}` : null].filter(Boolean).join(" · ") || null),
-        cell([p.sku_name, p.sku_id].filter(Boolean).join(" · ") || null), cell(stepLabel(p.action)), cell(p.reason || null),
-        tdNode(statusChip(p.status)), tdNode(who(p.decided_by)), cell(p.decided_at ? fmtDate(p.decided_at) : null))))));
-  }
-  function auditTable(rows) {
-    return el("div", { class: "scroll" }, el("table", { class: "mtable auditlog" },
-      el("thead", {}, el("tr", {}, ["#", "Proposal", "Decision", "Decided by", "Decided at", "Note"].map((h) => el("th", { scope: "col", text: h })))),
-      el("tbody", {}, rows.map((a) => el("tr", {}, cell(a.id == null ? null : String(a.id)), cell(a.proposal_id == null ? null : String(a.proposal_id)),
-        tdNode(statusChip(a.decision)), tdNode(who(a.decided_by)), cell(a.decided_at ? fmtDate(a.decided_at) : null), cell(a.note || null))))));
-  }
-  function renderMirageReview(sec, d) {
-    const body = $("[data-body]", sec);
-    const ps = d && Array.isArray(d.proposals) ? d.proposals.filter((p) => p && typeof p === "object") : null;
-    if (!ps) return notRun(body, "data/mirage_proposals.json");
-    const log = Array.isArray(d.audit_log) ? d.audit_log.filter((a) => a && typeof a === "object") : [];
-    const pending = ps.filter((p) => p.status === "waiting for approval");
-    const parts = [el("p", { class: "note ro", text: "Read-only. This page cannot approve or reject; decisions are made in the app with an admin key." })];
-    parts.push(el("h3", { class: "subhead", text: `Waiting for approval · ${pending.length}` }));
-    parts.push(pending.length ? el("div", { class: "pending" }, pending.map((p) => el("article", { class: "qa prop" },
-      el("div", { class: "q", text: [`Proposal ${p.id}`, p.club, p.created_at ? `created ${fmtDate(p.created_at)}` : null].filter(Boolean).join(" · ") }),
-      el("div", { class: "a" }, el("b", { text: [p.sku_name, p.sku_id].filter(Boolean).join(" · ") }), " → ", el("span", { class: "chip acc step", text: stepLabel(p.action) })),
-      p.reason ? el("div", { class: "reason", text: p.reason }) : null,
-      el("div", { class: "meta" }, statusChip(p.status))))) : el("div", { class: "empty", text: "No proposals waiting" }));
-    parts.push(el("h3", { class: "subhead", text: `All proposals · ${ps.length}` }), ps.length ? proposalsTable(ps) : el("div", { class: "empty", text: "No proposals" }));
-    parts.push(el("h3", { class: "subhead", text: `Recorded decisions · ${log.length}` }), log.length ? auditTable(log) : el("div", { class: "empty", text: "No decisions recorded" }));
-    const sa = d.second_answer;
-    if (sa && typeof sa.answer === "string") parts.push(el("h3", { class: "subhead", text: "Second recorded answer" }),
-      Array.isArray(sa.tool_calls)
-        ? answerCard({ question: sa.question, partial: true, response: { status: sa.status, answer: sa.answer, as_of: sa.as_of, tool_calls: sa.tool_calls,
-            proposals: sa.proposal_id != null ? [{ proposal_id: sa.proposal_id }] : [] } })
-        : answerCard({ question: sa.question, response: { status: sa.status, answer: sa.answer }, bare: true,
-            extra: sa.proposal_id != null ? proposalChips([{ proposal_id: sa.proposal_id }]) : null }));
-    if (d.source) parts.push(el("p", { class: "note src", text: d.source }));
-    body.replaceChildren(...parts);
-  }
-  const STEP_LABEL = { ask: "Ask", queue: "Review queue", approve_without_key: "Approve without a key", approve: "Approve with the admin key",
-    decide_again: "Decide again", audit_log: "Audit log" };
-  function renderMirageAudit(sec, d) {
-    const body = $("[data-body]", sec);
-    const steps = d && Array.isArray(d.steps) ? d.steps.filter((s) => s && s.step) : [];
-    if (!steps.length) return notRun(body, "data/mirage_audit.json");
-    body.replaceChildren(el("ol", { class: "steps" }, steps.map((st) => {
-      const rq = st.request || {}, rs = st.response || {}, b = rq.body || {};
-      const head = [el("span", { class: "stepname", text: STEP_LABEL[st.step] || st.step })];
-      if (isNum(st.status_code)) head.push(el("span", { class: st.status_code < 300 ? "chip res-success" : "chip res-failure", text: String(st.status_code) }));
-      const kids = [el("div", { class: "stephead" }, head),
-        el("div", { class: "req" }, el("code", { text: [rq.method, rq.path].filter(Boolean).join(" ") }),
-          rq.headers && Object.keys(rq.headers).length ? el("span", { class: "in", text: ` · header ${Object.keys(rq.headers).join(", ")} (placeholder in the recording)` }) : null)];
-      if (b.decided_by != null) kids.push(el("div", { class: "facts" }, "decided_by ", who(b.decided_by), b.note ? ` · note: ${b.note}` : ""));
-      if (typeof rs.answer === "string") kids.push(answerCard({ question: b.question, response: rs }));
-      else if (typeof rs.detail === "string") kids.push(el("div", { class: "detail", text: rs.detail }));
-      if (Array.isArray(rs.proposals)) kids.push(rs.proposals.length ? proposalsTable(rs.proposals) : el("div", { class: "empty", text: "No proposals waiting" }));
-      if (rs.proposal && typeof rs.proposal === "object") kids.push(proposalsTable([rs.proposal]));
-      const log = Array.isArray(rs.audit_log) ? rs.audit_log : Array.isArray(rs.audit) ? rs.audit : null;
-      if (log) kids.push(log.length ? auditTable(log) : el("div", { class: "empty", text: "No audit rows" }));
-      return el("li", { class: "step" }, kids);
-    })));
   }
 
   /* (e) Try it live */
@@ -484,7 +346,7 @@
     $("[data-body]", sec).replaceChildren(
       el("p", { class: "note", text: "Asks the hosted agent. The free server sleeps when idle, so the first call can take about 50 s while it wakes." }),
       label, form, out,
-      el("p", { class: "note" }, el("a", { href: "app/review", text: "Review queue" }), " · ", el("a", { href: "app/ask", text: "Full Ask page" }), " · ", el("a", { href: url, rel: "noopener", text: "API" })));
+      el("p", { class: "note" }, el("a", { href: "app/ask", text: "Full Ask page" }), " · ", el("a", { href: url, rel: "noopener", text: "API" })));
     sec.hidden = false;
   }
 
@@ -552,7 +414,7 @@
     strip.replaceChildren(...kids);
   }
 
-  const SECTIONS = [["dashboard", "#sec-dashboard", renderDashboard], ["eval", "#sec-eval", renderEval], ["backtest", "#sec-backtest", renderBacktest], ["replay", "#sec-replay", renderReplay], ["mirage_eval", "#sec-mirage-eval", renderMirageEval], ["mirage_replay", "#sec-mirage-replay", renderMirageReplay], ["mirage_proposals", "#sec-mirage-review", renderMirageReview], ["mirage_audit", "#sec-mirage-audit", renderMirageAudit], ["live", "#sec-live", renderLive]];
+  const SECTIONS = [["dashboard", "#sec-dashboard", renderDashboard], ["eval", "#sec-eval", renderEval], ["backtest", "#sec-backtest", renderBacktest], ["replay", "#sec-replay", renderReplay], ["live", "#sec-live", renderLive]];
   load("status").then(renderStatus).catch(() => renderStatus(null));
   Promise.all([load("dashboard"), load("replay"), load("status")]).then(([dsh, rp, st]) => renderFreshness(dsh, rp, st)).catch(() => { $("#freshness").hidden = true; });
   for (const [name, sel, fn] of SECTIONS) {
