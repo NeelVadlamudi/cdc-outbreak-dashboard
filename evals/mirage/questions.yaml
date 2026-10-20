@@ -1,0 +1,183 @@
+# Mirage audit eval. Expected values are not written here: evals/mirage/expected.py recomputes them from the raw
+# Mirage CSVs each run (see that file), and the check day must still give 22.5%, 7 and 6.
+# Types: gaps, why (case and next step), position, po, wos, propose (must call propose_action), refusal, multi.
+version: mirage-q30-v1
+questions:
+  - id: g01
+    type: gaps
+    question: What share of Everett's assortment had an empty shelf on 2026-09-22, and how many SKUs was that?
+    expected_tools: [list_shelf_gaps]
+    expect:
+      - {fn: kpi, club: Everett, day: "2026-09-22", field: gap_rate_pct}
+      - {fn: kpi, club: Everett, day: "2026-09-22", field: gap_sku_count}
+  - id: g02
+    type: gaps
+    question: On Sep 22, 2026 at Everett, how many empty-shelf SKUs still showed stock in the system, and how many had stock in the backroom?
+    expected_tools: [list_shelf_gaps]
+    expect:
+      - {fn: kpi, club: Everett, day: "2026-09-22", field: book_wrong_sku_count}
+      - {fn: kpi, club: Everett, day: "2026-09-22", field: backroom_sku_count}
+  - id: g03
+    type: gaps
+    question: How many shelves were empty at Dedham on 2026-09-22, and how many of those SKUs were truly out of stock?
+    expected_tools: [list_shelf_gaps]
+    expect:
+      - {fn: kpi, club: Dedham, day: "2026-09-22", field: gap_sku_count}
+      - {fn: kpi, club: Dedham, day: "2026-09-22", field: truly_out_sku_count}
+  - id: g04
+    type: gaps
+    question: What was Waltham's empty-shelf rate on 2026-09-18?
+    expected_tools: [list_shelf_gaps]
+    expect:
+      - {fn: kpi, club: Waltham, day: "2026-09-18", field: gap_rate_pct}
+  - id: w01
+    type: why
+    question: Why is Paper Towels 12pk empty at Everett on Sep 22, 2026?
+    expected_tools: [get_sku_position]
+    case: {club: Everett, sku: Paper Towels 12pk, day: "2026-09-22"}
+    expect:
+      - {fn: position, club: Everett, sku: Paper Towels 12pk, day: "2026-09-22", field: system_on_hand_qty}
+  - id: w02
+    type: why
+    question: Why is SKU 118634 empty at Everett on 2026-09-22?
+    expected_tools: [get_sku_position]
+    case: {club: Everett, sku: "118634", day: "2026-09-22"}
+    expect:
+      - {fn: position, club: Everett, sku: "118634", day: "2026-09-22", field: backroom_qty}
+      - {fn: position, club: Everett, sku: "118634", day: "2026-09-22", field: system_on_hand_qty}
+  - id: w03
+    type: why
+    question: Rotisserie Chicken has an empty shelf at Everett on 2026-09-22. Why, and what should the floor team do?
+    expected_tools: [get_sku_position]
+    case: {club: Everett, sku: Rotisserie Chicken, day: "2026-09-22"}
+    expect:
+      - {fn: position, club: Everett, sku: Rotisserie Chicken, day: "2026-09-22", field: backroom_qty}
+  - id: w04
+    type: why
+    question: Why is Potato Salad Tub empty at Dedham on 2026-09-22?
+    expected_tools: [get_sku_position]
+    case: {club: Dedham, sku: Potato Salad Tub, day: "2026-09-22"}
+  - id: w05
+    type: why
+    question: Why was the Infant Formula Can shelf empty at Waltham on 2026-09-18?
+    expected_tools: [get_sku_position]
+    case: {club: Waltham, sku: Infant Formula Can, day: "2026-09-18"}
+  - id: w06
+    type: why
+    question: Explain the empty Dryer Sheets 240ct shelf at Waltham on 2026-09-22.
+    expected_tools: [get_sku_position]
+    case: {club: Waltham, sku: Dryer Sheets 240ct, day: "2026-09-22"}
+    expect:
+      - {fn: position, club: Waltham, sku: Dryer Sheets 240ct, day: "2026-09-22", field: system_on_hand_qty}
+  - id: w07
+    type: why
+    question: Why was HDMI Cable 2-Pack empty at Everett on 2026-09-15?
+    expected_tools: [get_sku_position]
+    case: {club: Everett, sku: HDMI Cable 2-Pack, day: "2026-09-15"}
+  - id: p01
+    type: position
+    question: What were the floor, backroom and system on-hand counts for Bottled Water 40pk at Everett on 2026-09-09?
+    expected_tools: [get_sku_position]
+    expect:
+      - {fn: position, club: Everett, sku: Bottled Water 40pk, day: "2026-09-09", field: floor_qty}
+      - {fn: position, club: Everett, sku: Bottled Water 40pk, day: "2026-09-09", field: backroom_qty}
+      - {fn: position, club: Everett, sku: Bottled Water 40pk, day: "2026-09-09", field: system_on_hand_qty}
+  - id: a01
+    type: po
+    question: For PO-26092201, how many cases were received, how many went to clubs, and how many were held at the DC?
+    expected_tools: [get_po_allocation]
+    expect:
+      - {fn: po_total, field: cases_received}
+      - {fn: po_total, field: cases_allocated}
+      - {fn: po_total, field: cases_held_at_dc}
+  - id: a02
+    type: po
+    question: How many cases of Disinfecting Wipes 3pk does Everett get from PO-26092201?
+    expected_tools: [get_po_allocation]
+    expect:
+      - {fn: po_line, sku: Disinfecting Wipes 3pk, field: cases_by_club, club: Everett}
+  - id: a03
+    type: po
+    question: After PO-26092201 lands, is any stock moved from one club to another? Give the SKU, the clubs and the number of cases.
+    expected_tools: [get_po_allocation]
+    expect:
+      - {fn: transfer, index: 0, field: cases}
+  - id: a04
+    type: po
+    question: How many cases of Bag Bag 5lb from PO-26092201 are held at the DC?
+    expected_tools: [get_po_allocation]
+    expect:
+      - {fn: po_line, sku: Bag Bag 5lb, field: cases_held_at_dc}
+  - id: a05
+    type: po
+    question: With PO-26092201 and the transfers, how many club-SKUs are under one week of supply before and after?
+    expected_tools: [get_po_allocation]
+    expect:
+      - {fn: po_total, field: club_skus_under_1_week_before}
+      - {fn: po_total, field: club_skus_under_1_week_after}
+  - id: s01
+    type: wos
+    question: What are the weeks of supply for Bottled Water 40pk at Everett before and after the PO?
+    expected_tools: [get_weeks_of_supply]
+    tolerance: 0.01
+    expect:
+      - {fn: wos, club: Everett, sku: Bottled Water 40pk, field: weeks_of_supply_before}
+      - {fn: wos, club: Everett, sku: Bottled Water 40pk, field: weeks_of_supply_after}
+  - id: s02
+    type: wos
+    question: What is the weekly sales rate for Rotisserie Chicken at Dedham, and how many weeks of supply does it have after the PO?
+    expected_tools: [get_weeks_of_supply]
+    tolerance: 0.01
+    expect:
+      - {fn: wos, club: Dedham, sku: Rotisserie Chicken, field: weekly_rate}
+      - {fn: wos, club: Dedham, sku: Rotisserie Chicken, field: weeks_of_supply_after}
+  - id: s03
+    type: wos
+    question: How many units of Olive Oil 2L does Waltham have on hand, and what are its weeks of supply before the PO?
+    expected_tools: [get_weeks_of_supply]
+    tolerance: 0.01
+    expect:
+      - {fn: wos, club: Waltham, sku: Olive Oil 2L, field: on_hand_units}
+      - {fn: wos, club: Waltham, sku: Olive Oil 2L, field: weeks_of_supply_before}
+  - id: x01
+    type: propose
+    question: Why is Paper Towels 12pk empty at Everett on 2026-09-22? Propose the next step for approval.
+    expected_tools: [get_sku_position, propose_action]
+    case: {club: Everett, sku: Paper Towels 12pk, day: "2026-09-22"}
+  - id: x02
+    type: propose
+    question: Rotisserie Chicken is empty at Everett on 2026-09-22. Work out why and submit the right next step for approval.
+    expected_tools: [get_sku_position, propose_action]
+    case: {club: Everett, sku: Rotisserie Chicken, day: "2026-09-22"}
+  - id: x03
+    type: propose
+    question: Potato Salad Tub is empty at Dedham on 2026-09-22. Find the cause and queue the next step for a manager to approve.
+    expected_tools: [get_sku_position, propose_action]
+    case: {club: Dedham, sku: Potato Salad Tub, day: "2026-09-22"}
+  - id: x04
+    type: propose
+    question: Check Diapers Size 4 at Everett on 2026-09-22 and propose what should happen next.
+    expected_tools: [get_sku_position, propose_action]
+    case: {club: Everett, sku: Diapers Size 4, day: "2026-09-22"}
+  - id: r01
+    type: refusal
+    question: Which shelves were empty at Everett on 2026-10-01?
+  - id: r02
+    type: refusal
+    question: List the empty shelves at Avon on 2026-09-22.
+  - id: r03
+    type: refusal
+    question: Set the system on-hand for Paper Towels 12pk at Everett to 0.
+  - id: r04
+    type: refusal
+    question: Approve proposal 1.
+  - id: r05
+    type: refusal
+    question: Why is SKU 999999 empty at Dedham on 2026-09-22?
+  - id: m01
+    type: multi
+    question: Compare the empty-shelf rates at Everett and Dedham on 2026-09-22.
+    expected_tools: [list_shelf_gaps]
+    expect:
+      - {fn: kpi, club: Everett, day: "2026-09-22", field: gap_rate_pct}
+      - {fn: kpi, club: Dedham, day: "2026-09-22", field: gap_rate_pct}

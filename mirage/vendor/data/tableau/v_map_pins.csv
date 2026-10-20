@@ -1,0 +1,5 @@
+store_id,store_name,chip_label,format_type,city,lat,lon,map_label,region,pin_role
+101,warehouse_1,warehouse_1,club,"Everett, MA",42.4084,-71.0537,warehouse_1,Northeast,club floor KPIs
+102,warehouse_2,warehouse_2,club,"Dedham, MA",42.2418,-71.1662,warehouse_2,Northeast,club floor KPIs
+103,warehouse_3,warehouse_3,club,"Waltham, MA",42.3765,-71.2356,warehouse_3,Northeast,club floor KPIs
+901,warehouse_4,warehouse_4,crossdock,"Avon, MA",42.1306,-71.0412,warehouse_4 · supply pin only,Northeast,supply pin only — no floor KPIs
