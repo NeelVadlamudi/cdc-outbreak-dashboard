@@ -66,7 +66,7 @@ One entry per model run. Each entry is the top of the file `evals/run_evals.py` 
 - There is no checker-catches column (no summary key for it).
 - **History:** `runs[]` is appended on each rerun, oldest first. The **last** entry is the headline table;
   earlier runs are listed underneath ("History", newest first), values only.
-- **Computed change:** the headline gets a "Change · computed" column only against the most recent earlier run that
+- **Computed change:** the headline gets a "Change · computed" column only against the most recent earlier run of the **same `model`** that
   (a) has the same question set: equal `summary.question_set` when either run has one (`QSET_ID_KEYS` in site.js);
   the `questions` count is used only when neither has an id; and
   (b) is not before a scoring change. A run marks a scoring change with `scoring_changed: true`
