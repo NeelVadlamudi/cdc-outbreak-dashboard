@@ -92,6 +92,22 @@ app.include_router(router)
 app.include_router(mirage_router)
 
 
+@app.get("/api/health")
+async def health():
+    """Liveness check for the host (Render health check). Opens the database read-only."""
+    import duckdb
+
+    from backend import config
+
+    try:
+        con = duckdb.connect(config.DB_PATH, read_only=True)
+        latest = con.execute("SELECT MAX(week_end) FROM test_positivity").fetchone()[0]
+        con.close()
+    except Exception as e:  # report, but keep the shape
+        return {"status": "degraded", "database": f"error: {type(e).__name__}"}
+    return {"status": "ok", "database": "ok", "latest_week": latest.isoformat() if latest else None}
+
+
 @app.get("/")
 async def root():
     return {

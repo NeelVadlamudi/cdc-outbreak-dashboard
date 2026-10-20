@@ -10,9 +10,15 @@ from pathlib import Path
 
 import duckdb
 import numpy as np
-import xgboost as xgb
+
+try:  # XGBoost is optional (not installed on the Render free tier); without it forecasts return no_model
+    import xgboost as xgb
+except ImportError:
+    xgb = None
 
 from backend.config import DB_PATH  # noqa: E402
+
+NO_XGB = {"status": "no_model", "detail": "XGBoost is not installed on this server, so XGBoost forecasts are unavailable."}
 
 MODEL_DIR = os.path.join(Path(__file__).parent.parent, "models")
 
@@ -64,6 +70,8 @@ def create_xgb_features(series: list, lookback: int = 8) -> tuple:
 
 def train_xgboost(virus: str = "COVID-NET") -> dict:
     """Train XGBoost model for hospitalization rate prediction."""
+    if xgb is None:
+        return dict(NO_XGB)
     series = get_time_series(virus)
     if len(series) < 30:
         return {"status": "insufficient_data", "samples": len(series)}
@@ -120,6 +128,8 @@ def train_xgboost(virus: str = "COVID-NET") -> dict:
 
 def xgb_forecast(virus: str = "COVID-NET") -> dict:
     """Generate forecast using XGBoost model."""
+    if xgb is None:
+        return dict(NO_XGB)
     safe_name = virus.replace("-", "_").replace(" ", "_").lower()
     model_path = os.path.join(MODEL_DIR, f"xgb_{safe_name}.json")
     importance_path = os.path.join(MODEL_DIR, f"xgb_importance_{safe_name}.json")
