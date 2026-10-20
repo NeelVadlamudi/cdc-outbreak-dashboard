@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-10-20T14:34:33Z",
+  "run_at": "2026-10-20T15:15:35Z",
   "runs": [
     {
       "model": "gemini-3.5-flash-lite",
@@ -13,6 +13,22 @@
         "grounded_answers": 84.6,
         "median_s": 1.93,
         "p95_s": 2.71,
+        "median_input_tokens": null,
+        "median_output_tokens": null
+      }
+    },
+    {
+      "model": "gemini-3.5-flash-lite",
+      "date": "2026-10-20",
+      "summary": {
+        "questions": 60,
+        "numeric_accuracy": 95.8,
+        "tool_choice": 100.0,
+        "correct_refusals": 66.7,
+        "false_refusals": 2.1,
+        "grounded_answers": 97.9,
+        "median_s": 1.85,
+        "p95_s": 2.5,
         "median_input_tokens": null,
         "median_output_tokens": null
       }
