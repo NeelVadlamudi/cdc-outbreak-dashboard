@@ -1,0 +1,436 @@
+{
+  "run_at": "2026-10-20T15:10:20Z",
+  "target": "Weekly RESP-NET hospitalization rate, overall population, 1-4 weeks ahead",
+  "mae_unit": "rate per 100,000",
+  "n_origins": 12,
+  "data_through": "2026-10-10",
+  "coverage_note": "Share of actual values inside the app's band (validation MAE times a growth factor).",
+  "series": {
+    "COVID-NET": {
+      "weeks": 163,
+      "first_week": "2023-09-02",
+      "last_week": "2026-10-10",
+      "origins": [
+        "2026-06-27",
+        "2026-07-04",
+        "2026-07-11",
+        "2026-07-18",
+        "2026-07-25",
+        "2026-08-01",
+        "2026-08-08",
+        "2026-08-15",
+        "2026-08-22",
+        "2026-08-29",
+        "2026-09-05",
+        "2026-09-12"
+      ]
+    },
+    "FluSurv-NET": {
+      "weeks": 137,
+      "first_week": "2023-10-07",
+      "last_week": "2026-10-10",
+      "origins": [
+        "2026-06-27",
+        "2026-07-04",
+        "2026-07-11",
+        "2026-07-18",
+        "2026-07-25",
+        "2026-08-01",
+        "2026-08-08",
+        "2026-08-15",
+        "2026-08-22",
+        "2026-08-29",
+        "2026-09-05",
+        "2026-09-12"
+      ]
+    },
+    "RSV-NET": {
+      "weeks": 163,
+      "first_week": "2023-09-02",
+      "last_week": "2026-10-10",
+      "origins": [
+        "2026-06-27",
+        "2026-07-04",
+        "2026-07-11",
+        "2026-07-18",
+        "2026-07-25",
+        "2026-08-01",
+        "2026-08-08",
+        "2026-08-15",
+        "2026-08-22",
+        "2026-08-29",
+        "2026-09-05",
+        "2026-09-12"
+      ]
+    },
+    "Combined": {
+      "weeks": 163,
+      "first_week": "2023-09-02",
+      "last_week": "2026-10-10",
+      "origins": [
+        "2026-06-27",
+        "2026-07-04",
+        "2026-07-11",
+        "2026-07-18",
+        "2026-07-25",
+        "2026-08-01",
+        "2026-08-08",
+        "2026-08-15",
+        "2026-08-22",
+        "2026-08-29",
+        "2026-09-05",
+        "2026-09-12"
+      ]
+    }
+  },
+  "models": [
+    {
+      "model": "LSTM \u00b7 COVID-NET",
+      "horizons": [
+        {
+          "h": 1,
+          "mae": 0.533,
+          "wmape": 0.914,
+          "coverage": 0.75
+        },
+        {
+          "h": 2,
+          "mae": 0.538,
+          "wmape": 0.807,
+          "coverage": 0.75
+        },
+        {
+          "h": 3,
+          "mae": 0.502,
+          "wmape": 0.676,
+          "coverage": 1.0
+        },
+        {
+          "h": 4,
+          "mae": 0.634,
+          "wmape": 0.81,
+          "coverage": 1.0
+        }
+      ]
+    },
+    {
+      "model": "XGBoost \u00b7 COVID-NET",
+      "horizons": [
+        {
+          "h": 1,
+          "mae": 0.644,
+          "wmape": 1.104,
+          "coverage": 0.333
+        },
+        {
+          "h": 2,
+          "mae": 0.89,
+          "wmape": 1.335,
+          "coverage": 0.167
+        },
+        {
+          "h": 3,
+          "mae": 1.077,
+          "wmape": 1.452,
+          "coverage": 0.083
+        },
+        {
+          "h": 4,
+          "mae": 1.148,
+          "wmape": 1.466,
+          "coverage": 0.25
+        }
+      ]
+    },
+    {
+      "model": "Last value \u00b7 COVID-NET",
+      "horizons": [
+        {
+          "h": 1,
+          "mae": 0.083,
+          "wmape": 0.143,
+          "coverage": null
+        },
+        {
+          "h": 2,
+          "mae": 0.167,
+          "wmape": 0.25,
+          "coverage": null
+        },
+        {
+          "h": 3,
+          "mae": 0.242,
+          "wmape": 0.326,
+          "coverage": null
+        },
+        {
+          "h": 4,
+          "mae": 0.317,
+          "wmape": 0.404,
+          "coverage": null
+        }
+      ]
+    },
+    {
+      "model": "LSTM \u00b7 FluSurv-NET",
+      "horizons": [
+        {
+          "h": 1,
+          "mae": 2.287,
+          "wmape": 11.93,
+          "coverage": 0.083
+        },
+        {
+          "h": 2,
+          "mae": 2.088,
+          "wmape": 8.351,
+          "coverage": 0.583
+        },
+        {
+          "h": 3,
+          "mae": 1.974,
+          "wmape": 6.234,
+          "coverage": 0.917
+        },
+        {
+          "h": 4,
+          "mae": 1.93,
+          "wmape": 5.262,
+          "coverage": 0.917
+        }
+      ]
+    },
+    {
+      "model": "XGBoost \u00b7 FluSurv-NET",
+      "horizons": [
+        {
+          "h": 1,
+          "mae": 0.163,
+          "wmape": 0.849,
+          "coverage": 0.917
+        },
+        {
+          "h": 2,
+          "mae": 0.446,
+          "wmape": 1.784,
+          "coverage": 0.5
+        },
+        {
+          "h": 3,
+          "mae": 0.715,
+          "wmape": 2.258,
+          "coverage": 0.417
+        },
+        {
+          "h": 4,
+          "mae": 0.948,
+          "wmape": 2.585,
+          "coverage": 0.333
+        }
+      ]
+    },
+    {
+      "model": "Last value \u00b7 FluSurv-NET",
+      "horizons": [
+        {
+          "h": 1,
+          "mae": 0.033,
+          "wmape": 0.174,
+          "coverage": null
+        },
+        {
+          "h": 2,
+          "mae": 0.092,
+          "wmape": 0.367,
+          "coverage": null
+        },
+        {
+          "h": 3,
+          "mae": 0.158,
+          "wmape": 0.5,
+          "coverage": null
+        },
+        {
+          "h": 4,
+          "mae": 0.208,
+          "wmape": 0.568,
+          "coverage": null
+        }
+      ]
+    },
+    {
+      "model": "LSTM \u00b7 RSV-NET",
+      "horizons": [
+        {
+          "h": 1,
+          "mae": 0.735,
+          "wmape": 22.065,
+          "coverage": 0.0
+        },
+        {
+          "h": 2,
+          "mae": 0.778,
+          "wmape": 31.108,
+          "coverage": 0.083
+        },
+        {
+          "h": 3,
+          "mae": 0.899,
+          "wmape": 35.955,
+          "coverage": 0.083
+        },
+        {
+          "h": 4,
+          "mae": 1.073,
+          "wmape": 32.186,
+          "coverage": 0.083
+        }
+      ]
+    },
+    {
+      "model": "XGBoost \u00b7 RSV-NET",
+      "horizons": [
+        {
+          "h": 1,
+          "mae": 0.041,
+          "wmape": 1.242,
+          "coverage": 0.833
+        },
+        {
+          "h": 2,
+          "mae": 0.069,
+          "wmape": 2.768,
+          "coverage": 0.667
+        },
+        {
+          "h": 3,
+          "mae": 0.078,
+          "wmape": 3.121,
+          "coverage": 0.75
+        },
+        {
+          "h": 4,
+          "mae": 0.071,
+          "wmape": 2.127,
+          "coverage": 0.75
+        }
+      ]
+    },
+    {
+      "model": "Last value \u00b7 RSV-NET",
+      "horizons": [
+        {
+          "h": 1,
+          "mae": 0.042,
+          "wmape": 1.25,
+          "coverage": null
+        },
+        {
+          "h": 2,
+          "mae": 0.05,
+          "wmape": 2.0,
+          "coverage": null
+        },
+        {
+          "h": 3,
+          "mae": 0.05,
+          "wmape": 2.0,
+          "coverage": null
+        },
+        {
+          "h": 4,
+          "mae": 0.042,
+          "wmape": 1.25,
+          "coverage": null
+        }
+      ]
+    },
+    {
+      "model": "LSTM \u00b7 Combined",
+      "horizons": [
+        {
+          "h": 1,
+          "mae": 3.423,
+          "wmape": 4.279,
+          "coverage": 0.333
+        },
+        {
+          "h": 2,
+          "mae": 3.655,
+          "wmape": 3.881,
+          "coverage": 0.583
+        },
+        {
+          "h": 3,
+          "mae": 3.593,
+          "wmape": 3.343,
+          "coverage": 0.833
+        },
+        {
+          "h": 4,
+          "mae": 4.317,
+          "wmape": 3.674,
+          "coverage": 1.0
+        }
+      ]
+    },
+    {
+      "model": "XGBoost \u00b7 Combined",
+      "horizons": [
+        {
+          "h": 1,
+          "mae": 0.683,
+          "wmape": 0.854,
+          "coverage": 0.917
+        },
+        {
+          "h": 2,
+          "mae": 1.208,
+          "wmape": 1.282,
+          "coverage": 0.333
+        },
+        {
+          "h": 3,
+          "mae": 1.467,
+          "wmape": 1.364,
+          "coverage": 0.333
+        },
+        {
+          "h": 4,
+          "mae": 1.518,
+          "wmape": 1.292,
+          "coverage": 0.5
+        }
+      ]
+    },
+    {
+      "model": "Last value \u00b7 Combined",
+      "horizons": [
+        {
+          "h": 1,
+          "mae": 0.125,
+          "wmape": 0.156,
+          "coverage": null
+        },
+        {
+          "h": 2,
+          "mae": 0.25,
+          "wmape": 0.265,
+          "coverage": null
+        },
+        {
+          "h": 3,
+          "mae": 0.383,
+          "wmape": 0.357,
+          "coverage": null
+        },
+        {
+          "h": 4,
+          "mae": 0.483,
+          "wmape": 0.411,
+          "coverage": null
+        }
+      ]
+    }
+  ]
+}

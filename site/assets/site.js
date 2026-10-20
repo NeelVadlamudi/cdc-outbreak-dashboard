@@ -93,21 +93,50 @@
   ];
   function secsFmt(v) { return isNum(v) ? fmtDuration(v * 1000) : null; }
   const evalCell = (s) => (s == null ? el("td", { class: "na", text: NOT_RUN }) : el("td", { text: s }));
+  /* Eval: runs[] is appended on each rerun (oldest first). The latest run is the headline table;
+     earlier runs are listed underneath as history. A computed change column appears only against the
+     most recent earlier run with the same question set: same `questions` count and, if a question-set id
+     key is present in both summaries, the same id. Never between different question sets. */
+  const QSET_ID_KEYS = []; // run_evals.py summarize() has no question-set id today; add the key name here if bob adds one.
+  const DELTA = {
+    pct: (x) => `${x > 0 ? "+" : x < 0 ? "−" : "±"}${Math.abs(x).toFixed(1)} pp`,
+    s: (x) => `${x > 0 ? "+" : x < 0 ? "−" : "±"}${fmtDuration(Math.abs(x) * 1000)}`,
+    n: (x) => `${x > 0 ? "+" : x < 0 ? "−" : "±"}${Math.abs(x).toLocaleString("en-US")}`,
+  };
+  const KIND = { questions: "n", numeric_accuracy: "pct", tool_choice: "pct", correct_refusals: "pct", false_refusals: "pct",
+    grounded_answers: "pct", median_s: "s", p95_s: "s", median_input_tokens: "n", median_output_tokens: "n" };
+  function sameQuestionSet(a, b) {
+    if (!isNum(a.questions) || a.questions !== b.questions) return false;
+    for (const k of QSET_ID_KEYS) if (k in a || k in b) { if (a[k] == null || a[k] !== b[k]) return false; }
+    return true;
+  }
+  const runLabel = (r) => [r.model, r.date].filter(Boolean).join(" · ");
   function renderEval(sec, d) {
     const body = $("[data-body]", sec);
     const runs = d && Array.isArray(d.runs) ? d.runs.filter((r) => r && r.model && r.summary && typeof r.summary === "object") : [];
     if (!runs.length) return notRun(body, "data/eval.json");
-    const best = {};
-    for (const [k, , , dir] of EVAL_COLS) {
-      if (!dir || runs.length < 2) continue;
-      const vals = runs.map((r) => r.summary[k]).filter(isNum);
-      if (vals.length > 1) best[k] = dir === "max" ? Math.max(...vals) : Math.min(...vals);
+    const latest = runs[runs.length - 1], earlier = runs.slice(0, -1);
+    let base = null;
+    for (let i = earlier.length - 1; i >= 0; i--) if (sameQuestionSet(latest.summary, earlier[i].summary)) { base = earlier[i]; break; }
+    const head = el("tr", {}, el("th", { scope: "col", text: "Score" }),
+      el("th", { scope: "col" }, el("span", { class: "runhd", text: latest.model }), el("span", { class: "runsub", text: [latest.date, "latest run"].filter(Boolean).join(" · ") })),
+      base ? el("th", { scope: "col", class: "delta-h" }, el("span", { class: "runhd", text: "Change · computed" }), el("span", { class: "runsub", text: `vs ${runLabel(base)}, same question set` })) : null);
+    const rows = EVAL_COLS.map(([k, label, f]) => {
+      const z = latest.summary[k], a = base ? base.summary[k] : null;
+      const dc = !base ? null : isNum(a) && isNum(z)
+        ? el("td", { class: "delta", title: "Computed: latest minus earlier run", text: DELTA[KIND[k]](Math.round((z - a) * 100) / 100) })
+        : el("td", { class: "na", text: "—" });
+      return el("tr", {}, el("th", { scope: "row", text: label }), evalCell(f(z)), dc);
+    });
+    const parts = [el("div", { class: "scroll" }, el("table", { class: "evalhist" }, el("thead", {}, head), el("tbody", {}, rows)))];
+    if (earlier.length) {
+      const hist = el("table", { class: "evalpast" },
+        el("thead", {}, el("tr", {}, el("th", { scope: "col", text: "Earlier run" }), EVAL_COLS.map(([, h]) => el("th", { scope: "col", text: h })))),
+        el("tbody", {}, [...earlier].reverse().map((r) => el("tr", {}, el("td", { text: runLabel(r) }), EVAL_COLS.map(([k, , f]) => evalCell(f(r.summary[k])))))));
+      parts.push(el("h3", { class: "subhead", text: `History · ${earlier.length} earlier run${earlier.length === 1 ? "" : "s"}` }), el("div", { class: "scroll" }, hist));
     }
-    const table = el("table", {},
-      el("thead", {}, el("tr", {}, el("th", { scope: "col", text: "Model" }), EVAL_COLS.map(([, h]) => el("th", { scope: "col", text: h })))),
-      el("tbody", {}, runs.map((r) => el("tr", {}, el("td", { text: r.date ? `${r.model} · ${r.date}` : r.model }),
-        EVAL_COLS.map(([k, , f]) => { const v = r.summary[k]; const c = evalCell(f(v)); if (isNum(v) && best[k] === v) c.classList.add("best"); return c; })))));
-    body.replaceChildren(el("div", { class: "scroll" }, table));
+    if (base) parts.push(el("div", { class: "meta" }, el("span", { class: "chip", text: "pp = percentage points" })));
+    body.replaceChildren(...parts);
   }
 
   /* (c) Backtest chart: MAE and WMAPE per model across horizons 1–4 */
@@ -214,7 +243,40 @@
     sec.hidden = false;
   }
 
+  /* Freshness strip: only dates that exist in the data. Staleness only from the data's own flags
+     (get_data_freshness rows[].stale, checker.stale_tables); no thresholds here. */
+  function renderFreshness(dash, replay) {
+    const strip = $("#freshness");
+    const items = new Map(); // table -> {date, stale}
+    const answers = replay && Array.isArray(replay.answers) ? replay.answers : [];
+    const staleFlag = new Set();
+    let fresh = null;
+    for (const it of answers) {
+      const r = it && it.response; if (!r) continue;
+      for (const t of (r.checker && Array.isArray(r.checker.stale_tables) ? r.checker.stale_tables : [])) staleFlag.add(t);
+      for (const c of Array.isArray(r.tool_calls) ? r.tool_calls : []) {
+        const o = c && c.output; if (!o) continue;
+        if (c.tool === "get_data_freshness" && Array.isArray(o.rows)) fresh = o.rows; // last recorded wins
+        else if (o.source_table && o.source_table !== "all" && typeof o.as_of === "string") {
+          const prev = items.get(o.source_table);
+          if (!prev || o.as_of > prev.date) items.set(o.source_table, { date: o.as_of, stale: false });
+        }
+      }
+    }
+    if (fresh) { items.clear(); for (const row of fresh) if (row && row.table) items.set(row.table, { date: typeof row.latest_week === "string" ? row.latest_week : null, stale: row.stale === true }); }
+    for (const t of staleFlag) { const v = items.get(t) || { date: null, stale: false }; v.stale = true; items.set(t, v); }
+    const chips = [];
+    if (dash && typeof dash.as_of === "string") chips.push(el("span", { class: "chip" }, "dashboard ", el("b", { text: dash.as_of })));
+    for (const [t, v] of [...items].sort((x, y) => x[0].localeCompare(y[0])))
+      chips.push(el("span", { class: v.stale ? "chip stale" : "chip" }, `${t} `, el("b", { text: v.date ?? "no data" }), v.stale ? " · stale" : ""));
+    if (!chips.length) { strip.hidden = true; return; }
+    const rec = replay && replay.recorded_at ? ` (from answers recorded ${fmtDate(replay.recorded_at)})` : "";
+    strip.replaceChildren(el("span", { class: "fr-lab", text: "Data as of" }), ...chips, fresh || staleFlag.size ? el("span", { class: "fr-note", text: `Stale flags come from the agent's own checks${rec}.` }) : "");
+    strip.hidden = false;
+  }
+
   const SECTIONS = [["dashboard", "#sec-dashboard", renderDashboard], ["eval", "#sec-eval", renderEval], ["backtest", "#sec-backtest", renderBacktest], ["replay", "#sec-replay", renderReplay], ["live", "#sec-live", renderLive]];
+  Promise.all([load("dashboard"), load("replay")]).then(([dsh, rp]) => renderFreshness(dsh, rp)).catch(() => { $("#freshness").hidden = true; });
   for (const [name, sel, fn] of SECTIONS) {
     const sec = $(sel);
     load(name).then((d) => { if (name !== "live") stamp(sec, d); try { fn(sec, d); } catch (e) { notRun($("[data-body]", sec), `data/${name}.json could not be read`); console.warn(e); } });

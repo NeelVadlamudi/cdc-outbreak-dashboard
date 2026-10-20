@@ -79,3 +79,10 @@ def test_summary_and_from_file(tmp_path):
     assert s["false_refusals"] == 0.0 and s["grounded_answers"] == 100.0
     assert s["median_s"] == 2.0
     assert next(out.glob("fake_*.md")).read_text().startswith("# Eval results: fake")
+
+
+def test_results_filename_keeps_dotted_model_name(tmp_path):
+    from pathlib import Path
+
+    base = Path(tmp_path) / "gemini-3.5-flash-lite_2026-10-20"
+    assert base.with_name(base.name + ".json").name == "gemini-3.5-flash-lite_2026-10-20.json"

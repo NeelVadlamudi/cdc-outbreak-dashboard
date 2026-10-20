@@ -28,9 +28,17 @@ CDC_DATASETS = {
         "url": "https://data.cdc.gov/resource/seuz-s2cv.json",
         "description": "Percent Positive Tests for Viral Respiratory Pathogens",
     },
+    # Legacy NWSS SARS-CoV-2 metric dataset; CDC stopped adding records after 2025-09-07.
+    # Kept for the frozen eval snapshot and the older wastewater pages; no longer ingested.
     "wastewater_sites": {
         "url": "https://data.cdc.gov/resource/2ew6-ywp6.json",
-        "description": "NWSS Wastewater Surveillance — County-Level Viral Activity",
+        "description": "NWSS Wastewater Surveillance — County-Level Viral Activity (legacy)",
+    },
+    # Current NWSS dataset: weekly site-level Wastewater Viral Activity Level (WVAL)
+    # for SARS-CoV-2, influenza A and RSV.
+    "wastewater_current": {
+        "url": "https://data.cdc.gov/resource/atcp-73re.json",
+        "description": "CDC Wastewater Viral Activity Level for SARS-CoV-2, Influenza A and RSV",
     },
 }
 
@@ -239,11 +247,90 @@ def ingest_wastewater(data: list):
     conn = duckdb.connect(DB_PATH)
     try:
         # Clear and batch insert (much faster than individual INSERT OR REPLACE)
-        conn.execute("DELETE FROM wastewater_sites")
-        conn.execute("INSERT INTO wastewater_sites SELECT * FROM df")
+        conn.execute("DELETE FROM wastewater_sites WHERE source_dataset = ?", [WASTEWATER_LEGACY])
+        conn.execute("INSERT INTO wastewater_sites BY NAME SELECT *, 'SARS-CoV-2' AS pathogen, ? AS source_dataset FROM df",
+                     [WASTEWATER_LEGACY])
         count = conn.execute("SELECT COUNT(*) FROM wastewater_sites").fetchone()[0]
         counties = conn.execute("SELECT COUNT(DISTINCT county_fips) FROM wastewater_sites").fetchone()[0]
         logger.info(f"Wastewater: {count} records across {counties} counties")
+    finally:
+        conn.close()
+
+
+async def fetch_wastewater_activity(days: int = 120) -> list:
+    """Fetch recent site-level wastewater viral activity levels."""
+    since = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
+    config = CDC_DATASETS["wastewater_current"]
+    all_data, offset = [], 0
+    async with httpx.AsyncClient(timeout=120.0) as client:
+        while True:
+            response = await client.get(
+                config["url"],
+                params={"$where": f"week_end>='{since}'", "$limit": 50000, "$offset": offset, "$order": ":id"},
+            )
+            response.raise_for_status()
+            batch = response.json()
+            all_data.extend(batch)
+            logger.info(f"Fetched {len(batch)} wastewater activity records (total: {len(all_data)})")
+            if len(batch) < 50000:
+                break
+            offset += 50000
+    return all_data
+
+
+WASTEWATER_CURRENT = "atcp-73re"
+WASTEWATER_LEGACY = "2ew6-ywp6"
+
+
+def wastewater_activity_frame(data: list) -> pd.DataFrame:
+    """Shape raw atcp-73re records into wastewater_sites rows (one per site, week and pathogen).
+
+    The current dataset has no county FIPS, 15-day change or percentile; those stay NULL.
+    """
+    w = pd.DataFrame(data)
+    if w.empty:
+        return w
+    week = pd.to_datetime(w["week_end"].str[:10]).dt.date
+    df = pd.DataFrame({
+        "wwtp_jurisdiction": w.get("state_territory"),
+        "wwtp_id": w.get("site"),
+        "county_names": w.get("counties_served"),
+        "county_fips": None,
+        "population_served": pd.to_numeric(w.get("population_served"), errors="coerce").astype("Int64"),
+        "date_start": None,
+        "date_end": week,
+        "ptc_15d": None,
+        "detect_prop_15d": None,
+        "percentile": None,
+        "sampling_prior": None,
+        "first_sample_date": None,
+        "pathogen": w.get("pathogen_target"),
+        "wval": pd.to_numeric(w.get("site_wval"), errors="coerce"),
+        "wval_category": w.get("site_wval_category"),
+        "source_dataset": WASTEWATER_CURRENT,
+    })
+    for col in ("county_fips", "sampling_prior"):
+        df[col] = df[col].astype("string")
+    for col in ("date_start", "first_sample_date"):
+        df[col] = pd.to_datetime(df[col]).dt.date
+    for col in ("ptc_15d", "detect_prop_15d", "percentile"):
+        df[col] = df[col].astype("float64")
+    return df.drop_duplicates(subset=["date_end", "wwtp_id", "pathogen"], keep="last")
+
+
+def ingest_wastewater_activity(data: list):
+    """Replace the current-dataset rows in wastewater_sites; legacy rows are kept."""
+    df = wastewater_activity_frame(data)  # noqa: F841 (read by DuckDB below)
+    if df.empty:
+        return
+    conn = duckdb.connect(DB_PATH)
+    try:
+        conn.execute("DELETE FROM wastewater_sites WHERE source_dataset = ?", [WASTEWATER_CURRENT])
+        conn.execute("INSERT INTO wastewater_sites BY NAME SELECT * FROM df")
+        count = conn.execute(
+            "SELECT COUNT(*) FROM wastewater_sites WHERE source_dataset = ?", [WASTEWATER_CURRENT]
+        ).fetchone()[0]
+        logger.info(f"Wastewater (current NWSS viral activity): {count} records")
     finally:
         conn.close()
 
@@ -256,7 +343,7 @@ async def run_full_ingestion():
         ("ari_activity", lambda: fetch_all_pages("ari_activity"), ingest_ari_activity),
         ("hospitalization_rates", fetch_hospitalization_recent, ingest_hospitalization_rates),
         ("test_positivity", lambda: fetch_all_pages("test_positivity"), ingest_test_positivity),
-        ("wastewater_sites", lambda: fetch_wastewater_recent(days=365), ingest_wastewater),
+        ("wastewater_sites", fetch_wastewater_activity, ingest_wastewater_activity),
     ]
     ok = True
     for name, fetch, ingest in steps:

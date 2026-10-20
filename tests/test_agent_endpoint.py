@@ -53,7 +53,7 @@ def test_agent_ask_unverified(fixture_db, monkeypatch, tmp_path):
 def test_agent_ask_stale_is_refused(fixture_db, monkeypatch, tmp_path):
     messages = [
         AIMessage(content="", tool_calls=[{"name": "get_wastewater", "args": {"state": "Ohio"}, "id": "c1"}]),
-        AIMessage(content="Ohio's wastewater percentile was 50.0 for the week ending 2025-09-07."),
+        AIMessage(content="Ohio had 2 wastewater sites reporting RSV for the week ending 2025-09-06."),
     ]
     body = _client(monkeypatch, tmp_path, messages).post("/api/agent/ask", json={"question": "Ohio wastewater?"}).json()
     assert body["status"] == "refused"
