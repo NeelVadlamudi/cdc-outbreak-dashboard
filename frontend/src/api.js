@@ -43,7 +43,22 @@ export const chatWithData = (question) =>
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ question }),
   });
-export const getWeeklyBrief = () => fetchAPI("/weekly-brief");
+// ─── Agent (Phase 1): field names live in ./agent/contract.js ───────
+import { ASK_ENDPOINT, adaptAskResponse } from "./agent/contract.js";
+export async function askAgent(question, { signal } = {}) {
+  const res = await fetch(`${API_BASE}${ASK_ENDPOINT}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ question }),
+    signal,
+  });
+  if (!res.ok) {
+    let detail = "";
+    try { detail = (await res.json())?.detail ?? ""; } catch { /* non-JSON */ }
+    throw new Error(`The agent returned ${res.status}${detail ? `: ${detail}` : ""}`);
+  }
+  return adaptAskResponse(await res.json());
+}
 
 // ─── Phase 2D: Simulator ────────────────────────────────────────────
 export const runSimulator = (params) =>

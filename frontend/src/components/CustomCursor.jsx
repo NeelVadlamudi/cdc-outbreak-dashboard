@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { motion, useSpring } from 'framer-motion';
 
+// Module-scope alias: core no-unused-vars does not see JSX member use (<MotionDiv>).
+const MotionDiv = motion.div;
+
 export default function CustomCursor() {
   const [mousePosition, setMousePosition] = useState({ x: -100, y: -100 });
   const [isHovering, setIsHovering] = useState(false);
@@ -47,14 +50,14 @@ export default function CustomCursor() {
 
   return (
     <>
-      <motion.div
+      <MotionDiv
         className="custom-cursor-dot"
         style={{
           x: mousePosition.x - 4,
           y: mousePosition.y - 4,
         }}
       />
-      <motion.div
+      <MotionDiv
         className="custom-cursor-ring"
         style={{
           x: cursorX,

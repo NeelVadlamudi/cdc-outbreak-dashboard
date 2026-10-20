@@ -1,0 +1,6 @@
+{ "_label": "EXAMPLE fixture — not real data", "generated_at": "2026-01-01T06:00:00Z", "as_of": "2000-01-01",
+  "metrics": [
+    { "id": "ex1", "label": "EXAMPLE metric A", "value": 1234, "unit": "per 100k" },
+    { "id": "ex2", "label": "EXAMPLE metric B", "value": 0.111, "format": "pct", "change_text": "EXAMPLE change text" },
+    { "id": "ex3", "label": "EXAMPLE metric C", "value": 22.5, "decimals": 1 },
+    { "id": "ex4", "label": "EXAMPLE metric D with a long label to test wrapping", "value": 9 } ] }
