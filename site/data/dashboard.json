@@ -1,0 +1,68 @@
+{
+  "generated_at": "2026-10-20T14:41:14Z",
+  "as_of": "2026-10-10",
+  "metrics": [
+    {
+      "id": "positivity_covid19",
+      "label": "COVID-19 test positivity",
+      "value": 0.036,
+      "format": "pct",
+      "decimals": 1,
+      "change_text": "4.2% the week ending 2026-10-03"
+    },
+    {
+      "id": "positivity_influenza",
+      "label": "Influenza test positivity",
+      "value": 0.05,
+      "format": "pct",
+      "decimals": 1,
+      "change_text": "3.9% the week ending 2026-10-03"
+    },
+    {
+      "id": "positivity_rsv",
+      "label": "RSV test positivity",
+      "value": 0.007,
+      "format": "pct",
+      "decimals": 1,
+      "change_text": "0.5% the week ending 2026-10-03"
+    },
+    {
+      "id": "hosp_combined",
+      "label": "Combined hospitalizations (Combined)",
+      "value": 1.6,
+      "unit": "per 100,000 per week",
+      "decimals": 1
+    },
+    {
+      "id": "hosp_covidnet",
+      "label": "COVID-19 hospitalizations (COVID-NET)",
+      "value": 0.8,
+      "unit": "per 100,000 per week",
+      "decimals": 1
+    },
+    {
+      "id": "hosp_flusurvnet",
+      "label": "Influenza hospitalizations (FluSurv-NET)",
+      "value": 0.7,
+      "unit": "per 100,000 per week",
+      "decimals": 1
+    },
+    {
+      "id": "hosp_rsvnet",
+      "label": "RSV hospitalizations (RSV-NET)",
+      "value": 0.1,
+      "unit": "per 100,000 per week",
+      "decimals": 1
+    },
+    {
+      "id": "ari_very_low",
+      "label": "States and territories at Very Low ARI activity",
+      "value": 40
+    },
+    {
+      "id": "ari_low",
+      "label": "States and territories at Low ARI activity",
+      "value": 10
+    }
+  ]
+}
