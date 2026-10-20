@@ -61,7 +61,21 @@ One entry per model run. Each entry is the top of the file `evals/run_evals.py` 
 - `questions`, `median_input_tokens`, `median_output_tokens` are shown as given.
 - Any `null` cell shows **"Not run yet"**. The site never computes or estimates a value.
 - There is no checker-catches column (no summary key for it).
-- With 2+ runs, the best value per column is highlighted (max for rates except false refusals; min for false refusals, times, tokens).
+- **History:** `runs[]` is appended on each rerun, oldest first. The site shows one column per run in file order
+  (first run labelled "first run", last "latest").
+- With 2+ runs there is one extra column, **"Change · latest vs first · computed"**: latest minus first, shown only when
+  both values are numbers (otherwise "—"). Rates in percentage points (pp), times via the duration formatter, counts as-is.
+  If `questions` differs between the two runs, a note says the change is not like-for-like. Nothing else is computed.
+
+## Data freshness strip (no file of its own)
+Built only from dates already in the data:
+- `dashboard.json` → `as_of`.
+- `replay.json` → the last recorded `get_data_freshness` tool output: `output.rows[] = {table, latest_week, age_days, stale}`
+  (backend/agent/tools.py). Shown as `table latest_week`, "no data" if `latest_week` is null.
+- If no freshness output was recorded: each tool output's `source_table` with its latest `output.as_of`.
+- **Stale** = `rows[].stale === true` or the table appears in any `response.checker.stale_tables`. The site applies no threshold
+  of its own (the 14-day rule lives in the backend). `age_days` is not shown because it is relative to recording time.
+- No data at all → the strip is hidden.
 
 ## 3. `data/backtest.json` — section (c)
 ```json
