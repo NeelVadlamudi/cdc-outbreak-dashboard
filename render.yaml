@@ -4,14 +4,21 @@ services:
     name: cdc-outbreak-api
     env: python
     plan: free
-    buildCommand: "cd backend && pip install -r requirements.txt"
-    startCommand: "cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT"
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn backend.main:app --host 0.0.0.0 --port $PORT"
     envVars:
       - key: PYTHON_VERSION
         value: 3.10.0
       # Required for downloading/updating CDC datasets on production
       - key: APP_ENV
         value: production
+      # Set to the frontend's public URL in the Render dashboard
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: ADMIN_API_KEY
+        generateValue: true
+      - key: LOG_LEVEL
+        value: INFO
 
   # React Frontend Service
   - type: web
