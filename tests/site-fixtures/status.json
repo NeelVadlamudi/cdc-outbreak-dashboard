@@ -1,0 +1,28 @@
+{
+  "_label": "EXAMPLE fixture \u2014 not real data",
+  "generated_at": "2000-01-01T06:05:00Z",
+  "run": {
+    "result": "alert",
+    "started_at": "2000-01-01T06:00:00Z",
+    "finished_at": "2000-01-01T06:05:00Z",
+    "url": "https://example.com/run/1",
+    "commit": "EXAMPLE",
+    "steps": {
+      "refresh": "success",
+      "eval": "success"
+    }
+  },
+  "eval": null,
+  "backtest": null,
+  "freshness": {
+    "stale_after_days": 14,
+    "tables": []
+  },
+  "alerts": [
+    {
+      "kind": "stale",
+      "title": "Stale data: EXAMPLE table",
+      "detail": "EXAMPLE detail."
+    }
+  ]
+}
