@@ -182,7 +182,9 @@
     if (d.target) meta.push(el("span", { class: "chip", text: d.target }));
     if (d.mae_unit) meta.push(el("span", { class: "chip", text: `MAE in ${d.mae_unit}` }));
     if (isNum(d.n_origins)) meta.push(el("span", { class: "chip", text: `${int(d.n_origins)} forecast origins` }));
-    body.replaceChildren(el("div", { class: "charts" }, lineChart("MAE", models, "mae", fmtMae), lineChart("WMAPE", models, "wmape", (v) => `${(v * 100).toFixed(0)}%`)),
+    const notes = Array.isArray(d.notes) ? d.notes.filter((n) => typeof n === "string" && n) : [];
+    const noteList = notes.length ? el("ul", { class: "bt-notes" }, notes.map((n) => el("li", { text: n }))) : "";
+    body.replaceChildren(noteList, el("div", { class: "charts" }, lineChart("MAE", models, "mae", fmtMae), lineChart("WMAPE", models, "wmape", (v) => `${(v * 100).toFixed(0)}%`)),
       legend, el("details", {}, el("summary", { text: "Show numbers" }), el("div", { class: "scroll" }, table)), meta.length ? el("div", { class: "meta" }, meta) : "");
   }
 

@@ -55,3 +55,19 @@ The uncertainty band is the validation MAE times a growth factor, not a fitted
 interval; its coverage ranges from 0% to 100% across viruses and horizons.
 
 These forecasting issues are documented here and not yet fixed.
+
+## Forecast fixes (model version 2)
+
+Changes to the LSTM, all shared by the app and `evals/backtest.py` through `fit_lstm` and `predict_lstm`:
+
+- Each 12-week window is scaled by its own mean. The model no longer uses whole-history z-scores.
+- The season feature is the ISO calendar week of each point, used in both training and forecasting. Before, forecasting used the window position.
+- The series is split wherever consecutive weeks are not 7 days apart, so no sample spans the FluSurv-NET gap (2025-05-03 to 2025-10-04).
+
+Backtest h1 MAE before and after, in rate per 100,000 (12 origins):
+
+| Series | LSTM v1 | LSTM v2 | Last value |
+|---|---|---|---|
+| FluSurv-NET | 2.287 | 0.164 | 0.033 |
+
+The full table is in `evals/results/backtest.json`. In both versions the LSTM still loses to last week's value at every horizon on every series. The output of `get_forecast` and the site's notes now say so.

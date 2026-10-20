@@ -1,31 +1,41 @@
 {
-  "run_at": "2026-10-20T15:10:20Z",
+  "run_at": "2026-10-20T15:51:45Z",
   "target": "Weekly RESP-NET hospitalization rate, overall population, 1-4 weeks ahead",
   "mae_unit": "rate per 100,000",
   "n_origins": 12,
+  "notes": [
+    "LSTM on COVID-NET does not beat last week's value at any horizon.",
+    "XGBoost on COVID-NET does not beat last week's value at any horizon.",
+    "LSTM on FluSurv-NET does not beat last week's value at any horizon.",
+    "XGBoost on FluSurv-NET does not beat last week's value at any horizon.",
+    "LSTM on RSV-NET does not beat last week's value at any horizon.",
+    "XGBoost on RSV-NET beats last week's value only at h1.",
+    "LSTM on Combined does not beat last week's value at any horizon.",
+    "XGBoost on Combined does not beat last week's value at any horizon."
+  ],
   "models": [
     {
       "model": "LSTM \u00b7 COVID-NET",
       "horizons": [
         {
           "h": 1,
-          "mae": 0.533,
-          "wmape": 0.914
+          "mae": 0.296,
+          "wmape": 0.508
         },
         {
           "h": 2,
-          "mae": 0.538,
-          "wmape": 0.807
+          "mae": 0.335,
+          "wmape": 0.502
         },
         {
           "h": 3,
-          "mae": 0.502,
-          "wmape": 0.676
+          "mae": 0.384,
+          "wmape": 0.518
         },
         {
           "h": 4,
-          "mae": 0.634,
-          "wmape": 0.81
+          "mae": 0.399,
+          "wmape": 0.509
         }
       ]
     },
@@ -84,23 +94,23 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 2.287,
-          "wmape": 11.93
+          "mae": 0.164,
+          "wmape": 0.858
         },
         {
           "h": 2,
-          "mae": 2.088,
-          "wmape": 8.351
+          "mae": 0.203,
+          "wmape": 0.811
         },
         {
           "h": 3,
-          "mae": 1.974,
-          "wmape": 6.234
+          "mae": 0.28,
+          "wmape": 0.883
         },
         {
           "h": 4,
-          "mae": 1.93,
-          "wmape": 5.262
+          "mae": 0.308,
+          "wmape": 0.839
         }
       ]
     },
@@ -159,23 +169,23 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.735,
-          "wmape": 22.065
+          "mae": 0.056,
+          "wmape": 1.683
         },
         {
           "h": 2,
-          "mae": 0.778,
-          "wmape": 31.108
+          "mae": 0.065,
+          "wmape": 2.596
         },
         {
           "h": 3,
-          "mae": 0.899,
-          "wmape": 35.955
+          "mae": 0.067,
+          "wmape": 2.675
         },
         {
           "h": 4,
-          "mae": 1.073,
-          "wmape": 32.186
+          "mae": 0.07,
+          "wmape": 2.114
         }
       ]
     },
@@ -234,23 +244,23 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 3.423,
-          "wmape": 4.279
+          "mae": 0.526,
+          "wmape": 0.658
         },
         {
           "h": 2,
-          "mae": 3.655,
-          "wmape": 3.881
+          "mae": 0.678,
+          "wmape": 0.72
         },
         {
           "h": 3,
-          "mae": 3.593,
-          "wmape": 3.343
+          "mae": 0.839,
+          "wmape": 0.781
         },
         {
           "h": 4,
-          "mae": 4.317,
-          "wmape": 3.674
+          "mae": 0.918,
+          "wmape": 0.781
         }
       ]
     },
