@@ -1,5 +1,7 @@
 # CDC Outbreak Dashboard
 
+**Live site:** https://neelvadlamudi.github.io/cdc-outbreak-dashboard/ · **Portfolio:** https://neelvadlamudi.github.io/neelresume/
+
 A dashboard for U.S. respiratory virus surveillance data (COVID-19, influenza and RSV). The backend downloads public CDC datasets through the Socrata Open Data API (SODA), stores them in a local DuckDB file and serves them through a FastAPI application. The frontend is a React application built with Vite.
 
 <img src="assets/dashboard_preview.png" alt="Dashboard preview" width="100%" />
