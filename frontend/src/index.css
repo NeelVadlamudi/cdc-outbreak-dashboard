@@ -926,4 +926,3 @@ body {
 .agent-inputs { color: var(--text-secondary); font-family: ui-monospace, monospace; }
 .agent-rows { color: var(--text-muted); }
 .agent-error { color: #b91c1c; }
-@media (max-width: 900px) { .ask-grid { grid-template-columns: 1fr !important; } }

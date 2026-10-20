@@ -59,7 +59,6 @@ export async function askAgent(question, { signal } = {}) {
   }
   return adaptAskResponse(await res.json());
 }
-export const getWeeklyBrief = () => fetchAPI("/weekly-brief");
 
 // ─── Phase 2D: Simulator ────────────────────────────────────────────
 export const runSimulator = (params) =>
