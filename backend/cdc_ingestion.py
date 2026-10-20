@@ -4,9 +4,7 @@ Fetches live data from 4 CDC datasets (incl. county-level wastewater), transform
 """
 
 import logging
-import os
 from datetime import datetime, timedelta
-from pathlib import Path
 
 import duckdb
 import httpx
@@ -14,7 +12,7 @@ import pandas as pd
 
 logger = logging.getLogger(__name__)
 
-DB_PATH = os.path.join(Path(__file__).parent.parent, "data", "cdc_surveillance.duckdb")
+from backend.config import DB_PATH  # noqa: E402
 
 # CDC SODA API endpoints (no auth required)
 CDC_DATASETS = {
@@ -91,37 +89,60 @@ def ingest_ari_activity(data: list):
         conn.close()
 
 
+async def fetch_hospitalization_recent(since: str = "2023-09-01") -> list:
+    """Fetch observed weekly RESP-NET rates since a date (current CDC schema)."""
+    config = CDC_DATASETS["hospitalization_rates"]
+    where = (
+        "date_type='Week Ending Date' AND data_type in ('Weekly Rate','Cumulative Rate') "
+        f"AND rate_type='Observed' AND date>'{since}'"
+    )
+    all_data = []
+    offset = 0
+    async with httpx.AsyncClient(timeout=120.0) as client:
+        while True:
+            response = await client.get(
+                config["url"],
+                params={"$where": where, "$limit": 50000, "$offset": offset, "$order": ":id"},
+            )
+            response.raise_for_status()
+            batch = response.json()
+            all_data.extend(batch)
+            logger.info(f"Fetched {len(batch)} hospitalization records (total: {len(all_data)})")
+            if len(batch) < 50000:
+                break
+            offset += 50000
+    return all_data
+
+
 def ingest_hospitalization_rates(data: list):
-    """Load RESP-NET hospitalization data into DuckDB."""
+    """Load RESP-NET observed rates into DuckDB, one row per week with weekly and cumulative rates."""
     if not data:
         return
-
+    raw = pd.DataFrame(data)
+    raw = raw[raw["date"].str.len() >= 10].copy()
+    raw["estimate"] = pd.to_numeric(raw["estimate"], errors="coerce")
+    keys = ["surveillance_network", "season", "date", "age_category", "sex", "race", "state"]
+    wide = raw.pivot_table(index=keys, columns="data_type", values="estimate", aggfunc="first").reset_index()
+    df = pd.DataFrame({  # noqa: F841 (read by DuckDB below)
+        "surveillance_network": wide["surveillance_network"],
+        "season": wide["season"],
+        "week_ending_date": pd.to_datetime(wide["date"].str[:10]).dt.date,
+        "mmwr_year": pd.to_datetime(wide["date"].str[:10]).dt.year,
+        "mmwr_week": 0,
+        "age_group": wide["age_category"],
+        "sex": wide["sex"],
+        "race_ethnicity": wide["race"],
+        "site": wide["state"],
+        "weekly_rate": wide.get("Weekly Rate"),
+        "cumulative_rate": wide.get("Cumulative Rate"),
+        "rate_type": "Observed",
+    }).drop_duplicates(
+        subset=["surveillance_network", "week_ending_date", "age_group", "sex", "race_ethnicity", "site"], keep="last"
+    )
     conn = duckdb.connect(DB_PATH)
     try:
-        for record in data:
-            try:
-                conn.execute("""
-                    INSERT OR REPLACE INTO hospitalization_rates
-                    (surveillance_network, season, week_ending_date, mmwr_year, mmwr_week,
-                     age_group, sex, race_ethnicity, site, weekly_rate, cumulative_rate, rate_type)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """, [
-                    record.get("surveillance_network", ""),
-                    record.get("season", ""),
-                    record.get("week_ending_date", "")[:10] if record.get("week_ending_date") else None,
-                    int(record.get("mmwr_year", 0)),
-                    int(record.get("mmwr_week", 0)),
-                    record.get("age_group", "Overall"),
-                    record.get("sex", "Overall"),
-                    record.get("race_ethnicity", "Overall"),
-                    record.get("site", ""),
-                    float(record.get("weekly_rate", 0)) if record.get("weekly_rate") else 0,
-                    float(record.get("cumulative_rate", 0)) if record.get("cumulative_rate") else 0,
-                    record.get("rate_type", ""),
-                ])
-            except (ValueError, TypeError):
-                continue
-
+        conn.execute("DELETE FROM hospitalization_rates")
+        conn.execute("INSERT INTO hospitalization_rates SELECT * FROM df")
         count = conn.execute("SELECT COUNT(*) FROM hospitalization_rates").fetchone()[0]
         logger.info(f"Hospitalization Rates: {count} total records in DB")
     finally:
@@ -231,22 +252,19 @@ async def run_full_ingestion():
     """Run complete data ingestion pipeline for all CDC datasets."""
     logger.info("CDC data ingestion started at %s", datetime.now().isoformat())
 
-    try:
-        # Fetch all datasets
-        ari_data = await fetch_all_pages("ari_activity")
-        hosp_data = await fetch_all_pages("hospitalization_rates")
-        positivity_data = await fetch_all_pages("test_positivity")
-        # Fetch wastewater — only last 90 days (SODA $where filter)
-        wastewater_data = await fetch_wastewater_recent(days=365)
-
-        # Ingest into DuckDB
-        ingest_ari_activity(ari_data)
-        ingest_hospitalization_rates(hosp_data)
-        ingest_test_positivity(positivity_data)
-        ingest_wastewater(wastewater_data)
-
-        logger.info("CDC data ingestion finished at %s", datetime.now().isoformat())
-        return True
-    except Exception as e:
-        logger.exception("Ingestion failed: %s", e)
-        return False
+    steps = [
+        ("ari_activity", lambda: fetch_all_pages("ari_activity"), ingest_ari_activity),
+        ("hospitalization_rates", fetch_hospitalization_recent, ingest_hospitalization_rates),
+        ("test_positivity", lambda: fetch_all_pages("test_positivity"), ingest_test_positivity),
+        ("wastewater_sites", lambda: fetch_wastewater_recent(days=365), ingest_wastewater),
+    ]
+    ok = True
+    for name, fetch, ingest in steps:
+        # Each dataset loads on its own so one failure does not block the others.
+        try:
+            ingest(await fetch())
+        except Exception as e:
+            ok = False
+            logger.exception("Ingestion failed for %s: %s", name, e)
+    logger.info("CDC data ingestion finished at %s", datetime.now().isoformat())
+    return ok

@@ -4,9 +4,7 @@ Queries DuckDB for context, injects into LLM prompt, generates natural language 
 """
 
 import logging
-import os
 from datetime import datetime
-from pathlib import Path
 
 import duckdb
 
@@ -14,7 +12,7 @@ from backend.config import OLLAMA_MODEL
 
 logger = logging.getLogger(__name__)
 
-DB_PATH = os.path.join(Path(__file__).parent.parent, "data", "cdc_surveillance.duckdb")
+from backend.config import DB_PATH  # noqa: E402
 
 # Try importing ollama — graceful fallback if not running
 try:

@@ -8,3 +8,6 @@ frontend/dist/
 *.duckdb
 *.duckdb.wal
 .DS_Store
+
+# Agent review queue (written at runtime)
+evals/review_queue.jsonl
