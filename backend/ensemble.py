@@ -124,10 +124,8 @@ def xgb_forecast(virus: str = "COVID-NET") -> dict:
     model_path = os.path.join(MODEL_DIR, f"xgb_{safe_name}.json")
     importance_path = os.path.join(MODEL_DIR, f"xgb_importance_{safe_name}.json")
 
-    if not os.path.exists(model_path):
-        result = train_xgboost(virus)
-        if result.get("status") != "trained":
-            return {"status": "no_model", "detail": "Insufficient data"}
+    if not os.path.exists(model_path) or not os.path.exists(importance_path):
+        return {"status": "no_model", "detail": "No trained model. Train it from the command line (see README)."}
 
     model = xgb.XGBRegressor()
     model.load_model(model_path)

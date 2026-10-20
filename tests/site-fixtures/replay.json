@@ -26,9 +26,19 @@
                 },
                 {
                   "table": "example_wastewater",
+                  "latest_week": "2000-01-01",
+                  "age_days": 3,
+                  "stale": false,
+                  "dataset": "EXAMPLE-current",
+                  "legacy": false
+                },
+                {
+                  "table": "example_wastewater",
                   "latest_week": null,
                   "age_days": null,
-                  "stale": true
+                  "stale": true,
+                  "dataset": "EXAMPLE-old (legacy)",
+                  "legacy": true
                 }
               ]
             }
@@ -87,9 +97,7 @@
         "checker": {
           "passed": true,
           "unverified": [],
-          "stale_tables": [
-            "example_wastewater"
-          ]
+          "stale_tables": []
         }
       }
     },

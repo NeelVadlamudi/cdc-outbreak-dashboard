@@ -287,6 +287,35 @@ def get_wastewater(state: str | None = None, pathogen: str | None = None, county
         return _result(rows, "wastewater_sites", as_of, scope=scope, total_sites=total_sites, legacy=legacy)
 
 
+def backtest_vs_last_value(net: str) -> dict:
+    """Per model: did it beat the last-week value in the latest backtest, horizon by horizon."""
+    try:
+        with open(config.BACKTEST_PATH) as f:
+            bt = json.load(f)
+    except (OSError, ValueError):
+        return {}
+    by_name = {m["model"]: {p["h"]: p["mae"] for p in m["horizons"]} for m in bt.get("models", [])}
+    base = by_name.get(f"Last value · {net}")
+    if not base:
+        return {}
+    out = {}
+    for key, label in (("lstm", "LSTM"), ("xgboost", "XGBoost")):
+        maes = by_name.get(f"{label} · {net}")
+        if not maes:
+            continue
+        beaten = [h for h, mae in maes.items() if mae is not None and base.get(h) is not None and mae < base[h]]
+        if not beaten:
+            note = "In the backtest this model did not beat simply repeating last week's value at any horizon (1-4 weeks)."
+        elif len(beaten) == len(maes):
+            note = "In the backtest this model beat repeating last week's value at every horizon."
+        else:
+            note = (f"In the backtest this model beat repeating last week's value only at {len(beaten)} of "
+                    f"{len(maes)} horizons; at the others last week's value was more accurate.")
+        out[key] = {"beats_last_value": len(beaten) == len(maes), "note": note,
+                    "backtest_run_at": bt.get("run_at")}
+    return out
+
+
 def get_forecast(virus: str) -> dict:
     """Stored LSTM and XGBoost 4-week forecasts with their validation MAE. Never trains."""
     with _connect() as conn:
@@ -315,7 +344,12 @@ def get_forecast(virus: str) -> dict:
             rows += [{"model": "xgboost", "validation_mae": res["mae"], **f} for f in res.get("forecasts", [])]
     if not rows:
         return {"error": f"No trained forecast is stored for {net}. Training runs from the command line."}
-    return _result(rows, "models", as_of, virus=net, units="rate per 100,000")
+    vs = backtest_vs_last_value(net)
+    for r in rows:
+        if r["model"] in vs:
+            r["beats_last_value"] = vs[r["model"]]["beats_last_value"]
+    extra = {"backtest": vs} if vs else {}
+    return _result(rows, "models", as_of, virus=net, units="rate per 100,000", **extra)
 
 
 def get_data_freshness() -> dict:
