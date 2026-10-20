@@ -133,7 +133,8 @@ def query(sql: str, params=None):
             result = conn.execute(sql, params).fetchdf()
         else:
             result = conn.execute(sql).fetchdf()
-        return result.to_dict(orient="records")
+        # NULLs come back as NaN; JSON needs None
+        return result.astype(object).where(result.notna(), None).to_dict(orient="records")
     finally:
         conn.close()
 
