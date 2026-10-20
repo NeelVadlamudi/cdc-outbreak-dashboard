@@ -86,12 +86,14 @@ Built only from dates already in the data:
   "target": "string?, what was forecast",
   "mae_unit": "string?, unit of MAE",
   "n_origins": 0,
+  "notes": ["string?, plain sentences shown above the charts"],
   "models": [
     { "model": "string", "horizons": [ { "h": 1, "mae": 0.0, "wmape": 0.0 } ] }
   ]
 }
 ```
 `h` is 1–4 (weeks ahead). `wmape` is a 0–1 fraction. Omit or null a horizon you didn't score.
+`notes` is optional; the page lists each string as written (the backtest writes one per model and series saying whether it beats repeating last week's value).
 
 ## 4. `data/replay.json` — section (d)
 Each item wraps one **unmodified** `POST /api/agent/ask` response (same shape as the API section below),
