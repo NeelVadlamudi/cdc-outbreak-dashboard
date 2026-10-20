@@ -160,7 +160,7 @@ def get_hospitalization_rate(network: str, age_group: str = "Overall", weeks: in
         )
         rows = _rows(cur)
         as_of = rows[0]["week_end"] if rows else None
-        return _result(rows, "hospitalization_rates", as_of, network=net, age_group=age)
+        return _result(rows, "hospitalization_rates", as_of, network=net, age_group=age, units="rate per 100,000")
 
 
 def get_test_positivity(pathogen: str | None = None, week: str | None = None) -> dict:
@@ -248,7 +248,7 @@ def get_forecast(virus: str) -> dict:
             rows += [{"model": "xgboost", "validation_mae": res["mae"], **f} for f in res.get("forecasts", [])]
     if not rows:
         return {"error": f"No trained forecast is stored for {net}. Training runs from the command line."}
-    return _result(rows, "models", as_of, virus=net)
+    return _result(rows, "models", as_of, virus=net, units="rate per 100,000")
 
 
 def get_data_freshness() -> dict:
