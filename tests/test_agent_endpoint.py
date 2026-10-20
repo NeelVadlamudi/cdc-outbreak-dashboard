@@ -57,4 +57,4 @@ def test_agent_ask_stale_is_refused(fixture_db, monkeypatch, tmp_path):
     ]
     body = _client(monkeypatch, tmp_path, messages).post("/api/agent/ask", json={"question": "Ohio wastewater?"}).json()
     assert body["status"] == "refused"
-    assert body["checker"]["stale_tables"] == ["wastewater_activity"]
+    assert body["checker"]["stale_tables"] == ["wastewater_sites"]

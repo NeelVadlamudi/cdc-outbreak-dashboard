@@ -96,19 +96,15 @@ def init_database():
         )
     """)
 
-    # Wastewater Viral Activity Level by site and pathogen (current NWSS dataset)
+    # wastewater_sites holds both NWSS datasets, told apart by source_dataset:
+    #   atcp-73re  current Wastewater Viral Activity Level (pathogen, wval, wval_category)
+    #   2ew6-ywp6  legacy SARS-CoV-2 metrics (ptc_15d, percentile); no records after 2025-09-07
+    for column, kind in (("pathogen", "VARCHAR"), ("wval", "DOUBLE"), ("wval_category", "VARCHAR"),
+                         ("source_dataset", "VARCHAR")):
+        conn.execute(f"ALTER TABLE wastewater_sites ADD COLUMN IF NOT EXISTS {column} {kind}")
     conn.execute("""
-        CREATE TABLE IF NOT EXISTS wastewater_activity (
-            week_end DATE,
-            state_territory VARCHAR,
-            site VARCHAR,
-            counties_served VARCHAR,
-            population_served BIGINT,
-            source VARCHAR,
-            pathogen VARCHAR,
-            wval DOUBLE,
-            wval_category VARCHAR
-        )
+        UPDATE wastewater_sites SET source_dataset = '2ew6-ywp6', pathogen = 'SARS-CoV-2'
+        WHERE source_dataset IS NULL
     """)
 
     # Anomaly detection results
