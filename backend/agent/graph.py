@@ -89,7 +89,7 @@ def _text(message) -> str:
 def _stale_tables(trace: list) -> list[dict]:
     used = {t["output"].get("source_table") for t in trace}
     fresh = data_tools.get_data_freshness()["rows"]
-    return [r for r in fresh if r["stale"] and r["table"] in used]
+    return [r for r in fresh if r["stale"] and r["table"] in used and not r.get("legacy")]
 
 
 def run_agent(question: str, model=None, setting: str | None = None) -> dict:

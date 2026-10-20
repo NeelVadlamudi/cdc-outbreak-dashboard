@@ -19,17 +19,33 @@
       }
     },
     {
-      "model": "EXAMPLE-model-b-long-name",
-      "date": "2000-01-01",
+      "model": "EXAMPLE-model-a",
+      "date": "2000-01-02",
       "summary": {
-        "questions": 10,
-        "numeric_accuracy": 40.0,
+        "questions": 60,
+        "numeric_accuracy": 55.5,
         "tool_choice": null,
-        "correct_refusals": 90.0,
-        "false_refusals": null,
-        "grounded_answers": 70.0,
-        "median_s": 0.85,
-        "p95_s": null,
+        "correct_refusals": 70.0,
+        "false_refusals": 12.0,
+        "grounded_answers": null,
+        "median_s": 2.31,
+        "p95_s": 3.0,
+        "median_input_tokens": null,
+        "median_output_tokens": null
+      }
+    },
+    {
+      "model": "EXAMPLE-model-a",
+      "date": "2000-01-03",
+      "summary": {
+        "questions": 60,
+        "numeric_accuracy": 58.0,
+        "tool_choice": 90.0,
+        "correct_refusals": null,
+        "false_refusals": 10.5,
+        "grounded_answers": null,
+        "median_s": 2.0,
+        "p95_s": 3.5,
         "median_input_tokens": null,
         "median_output_tokens": null
       }
