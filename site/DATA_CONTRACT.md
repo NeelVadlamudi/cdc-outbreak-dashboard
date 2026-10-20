@@ -132,7 +132,16 @@ Shown per answer: status flag, answer, `as_of`, `elapsed_s`, `model`, stale tabl
 ```json
 { "url": "https://<render-app>.onrender.com/ask" }
 ```
-Must be `https://`. If `live` is not listed in `index.json` (or the URL is missing or not https), the whole "Try it live" section is **hidden**, not disabled. When shown, the button reads "Try it live · may take a minute to wake".
+Must be `https://`.
+
+The API on Render (`render.yaml`) accepts `POST <render url>/api/agent/ask` and `POST <render url>/api/mirage/ask` from the Pages origin `https://neelvadlamudi.github.io`:
+- CORS allows that origin only, with methods `GET` and `POST` and the `Content-Type` header.
+- The request body is `{question}`, and the response is the Ask contract below.
+- `GET <render url>/api/health` is a cheap way to wake the service first.
+- The free instance sleeps when idle, so the first call can take about a minute.
+- Today the site uses `url` only as a link. `live.json` is not written yet.
+
+If `live` is not listed in `index.json` (or the URL is missing or not https), the whole "Try it live" section is **hidden**, not disabled. When shown, the button reads "Try it live · may take a minute to wake".
 
 ## 6. `data/status.json` — nightly run status strip
 Written by `scripts/nightly_status.py` at the end of every nightly run (`.github/workflows/nightly.yml`).

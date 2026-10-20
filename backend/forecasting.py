@@ -18,15 +18,24 @@ from pathlib import Path
 
 import duckdb
 import numpy as np
-import torch
-import torch.nn as nn
+
+try:  # PyTorch is optional (not installed on the Render free tier); without it forecasts return no_model
+    import torch
+    import torch.nn as nn
+except ImportError:
+    torch = None
+    nn = None
 
 from backend.config import DB_PATH  # noqa: E402
 
 MODEL_DIR = os.path.join(Path(__file__).parent.parent, "models")
 
 
-class LSTMForecaster(nn.Module):
+_Module = nn.Module if nn is not None else object
+NO_TORCH = {"status": "no_model", "detail": "PyTorch is not installed on this server, so LSTM forecasts are unavailable."}
+
+
+class LSTMForecaster(_Module):
     """LSTM neural network for multi-step time-series forecasting."""
 
     def __init__(self, input_size=6, hidden_size=64, num_layers=2, output_size=4, dropout=0.2):
@@ -188,6 +197,8 @@ def _paths(virus: str):
 
 def train_model(virus: str = "COVID-NET") -> dict:
     """Train the LSTM for one network and save it. Run from the command line or the training endpoint."""
+    if torch is None:
+        return dict(NO_TORCH)
     dates, values = get_training_data(virus)
     if len(values) < 30:
         return {"status": "insufficient_data", "samples": len(values)}
@@ -205,6 +216,8 @@ def train_model(virus: str = "COVID-NET") -> dict:
 
 def generate_forecast(virus: str = "COVID-NET") -> dict:
     """4-week forecast from a saved model. Never trains; returns no_model if none is saved."""
+    if torch is None:
+        return dict(NO_TORCH)
     model_path, params_path = _paths(virus)
     if not (os.path.exists(model_path) and os.path.exists(params_path)):
         return {"status": "no_model", "detail": "No trained model. Train it from the command line (see README)."}
