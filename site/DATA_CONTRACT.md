@@ -12,7 +12,7 @@ Committed default: `{ "available": [] }`.
 
 Conventions for every file:
 - Timestamps: ISO 8601 with zone (`2026-10-21T06:00:00Z`). Shown in America/New_York.
-- Rates/percentages: **fractions 0–1** (`0.873`) everywhere except `eval.json`, which keeps run_evals.py percentages 0–100.
+- Rates/percentages: **fractions 0–1** (`0.873`) everywhere except `eval.json` and `mirage_eval.json`, which keep the eval runners' percentages 0–100.
 - Durations: agent responses use **seconds** (`elapsed_s`), as the API does. `eval.json` uses seconds (`median_s`, `p95_s`). The site formats both (two largest units).
 - `null` or omitted = not measured. Never write `0` for "unknown".
 
@@ -161,6 +161,7 @@ Listed in `index.json` as `"status"` (`scripts/publish_eval.py` and `scripts/nig
     "stale_after_days": 14,
     "tables": [ { "table": "string", "dataset": "string?", "legacy": false, "latest_week": "YYYY-MM-DD", "age_days": 0, "stale": false } ]
   },
+  "mirage_eval": "same shape as eval, for the Mirage audit eval (summary keys as mirage_eval.json); null if it did not run",
   "alerts": [ { "kind": "score_drop | stale | step_failed", "title": "string", "detail": "string" } ]
 }
 ```
@@ -177,6 +178,94 @@ Listed in `index.json` as `"status"` (`scripts/publish_eval.py` and `scripts/nig
   detail; "No open alerts" when the array is empty). Missing file → "Not run yet". The site computes nothing from it.
 - `backtest` is `null` if no backtest file exists. Each alert also opens a GitHub issue labelled `nightly-alert`;
   if an open issue with the same title exists, the run comments on it instead.
+
+## 7. Mirage audit agent files (not rendered yet; for the review screen and audit pages)
+All four files are listed in `index.json` when written. Figures are synthetic Mirage data (clubs Everett, Dedham and Waltham; DC Avon).
+
+### 7a. `data/mirage_eval.json`: 30-question audit eval
+Same layout as `eval.json` (`{run_at, runs[]}`, oldest first, optional `scoring_changed`). Written by `scripts/publish_mirage.py`.
+```json
+{
+  "run_at": "ISO-8601",
+  "runs": [
+    {
+      "model": "string",
+      "date": "YYYY-MM-DD",
+      "scoring_changed": "boolean?",
+      "summary": {
+        "question_set": "mirage-q30-v1",
+        "questions": 30,
+        "overall_correct": 0.0,
+        "numeric_accuracy": 0.0,
+        "case_and_step": 0.0,
+        "proposal_accuracy": 0.0,
+        "unrequested_proposals": 0.0,
+        "tool_choice": 0.0,
+        "blocked_proposals": 0,
+        "correct_refusals": 0.0,
+        "false_refusals": 0.0,
+        "grounded_answers": 0.0,
+        "median_s": 0.0,
+        "p95_s": 0.0
+      }
+    }
+  ]
+}
+```
+- Rates are percentages 0–100 with 1 decimal, or `null` if there were no questions of that kind. `blocked_proposals` is a count.
+- `overall_correct`: every check on the question passed.
+- `numeric_accuracy`: the expected values appear in the answer.
+- `case_and_step`: the answer names the case and the next step.
+- `proposal_accuracy`: propose questions where a proposal with the right SKU and action was written.
+- `unrequested_proposals`: proposals made when none was asked for. Lower is better.
+- `blocked_proposals`: proposals that `propose_action` refused, either because the action did not match the counts or because the reason cited numbers not in the tool results.
+- `false_refusals` is lower-is-better, as in `eval.json`.
+- Only compare runs with the same `question_set`.
+
+### 7b. `data/mirage_replay.json`: the recorded answers of the latest audit eval
+```json
+{ "recorded_at": "ISO-8601",
+  "answers": [ { "id": "w01", "type": "gaps|why|position|po|wos|propose|refusal|multi", "question": "string",
+                 "response": { "...": "POST /api/mirage/ask body, below" }, "correct": true } ] }
+```
+
+### 7c. `data/mirage_audit.json`: one full audit, recorded through the API
+Written by `scripts/record_mirage_audit.py`. `steps[]` are in order:
+1. `ask`: the question and the full answer.
+2. `queue`: the waiting proposals.
+3. `approve_without_key`: rejected with status 401.
+4. `approve`: status 200.
+5. `decide_again`: status 409, because a decision is final.
+6. `audit_log`: the log rows for that proposal.
+```json
+{ "recorded_at": "ISO-8601",
+  "steps": [ { "step": "ask", "request": { "method": "POST", "path": "/api/mirage/ask", "body": {} },
+               "status_code": 200, "response": {} } ] }
+```
+`request.headers["X-API-Key"]` is always the placeholder `"<ADMIN_API_KEY>"`. `status_code` is present on the decision steps.
+
+### 7d. `data/mirage_proposals.json`: the review queue and audit log (fixture for the approval screen)
+```json
+{ "generated_at": "ISO-8601",
+  "proposals": [ { "id": 1, "created_at": "ISO-8601", "club": "Everett", "store_id": "101", "sku_id": "184220",
+                   "sku_name": "Paper Towels 12pk", "action": "recount|pull_to_floor|reorder", "reason": "string",
+                   "status": "waiting for approval|approved|rejected", "decided_by": "string|null", "decided_at": "ISO-8601|null" } ],
+  "audit_log": [ { "id": 1, "proposal_id": 1, "decision": "approved|rejected", "decided_by": "string",
+                   "decided_at": "ISO-8601", "note": "string|null" } ],
+  "source": "string", "second_answer": { "question": "string", "status": "string", "answer": "string" } }
+```
+- The static site cannot approve anything. Approval goes through the API below. In this file, the recorded decider is `"Demo reviewer"`.
+- `status` `"waiting for approval"` is the only state that shows Approve and Reject buttons.
+
+### Mirage API (for a live review screen)
+- `POST /api/mirage/ask` with `{question}` returns the same body as `/api/agent/ask`, plus `proposals[]`. Each proposal is `{proposal_id, club, sku_id, sku_name, action, status}`.
+- `GET /api/mirage/proposals?status=waiting for approval` returns `{proposals: [...]}`, with rows as in 7d.
+- `GET /api/mirage/audit-log?proposal_id=1` returns `{audit_log: [...]}`.
+- `POST /api/proposals/{id}/approve` and `POST /api/proposals/{id}/reject`:
+  - Header `X-API-Key: <ADMIN_API_KEY>`. Body `{decided_by: "name", note?: "string"}`.
+  - Returns 200 `{proposal, audit: [...]}`.
+  - Errors: 401 for a missing or wrong key; 422 for an empty `decided_by`; 404 for an unknown id; 409 if the proposal was already decided; 503 if `ADMIN_API_KEY` is not set on the server.
+- No endpoint or tool changes a Mirage count. Approval records the decision only.
 
 ## API contract used by the React Ask page
 `POST /api/agent/ask` body `{ "question": "..." }` → (PR #2, `backend/agent/graph.py::run_agent`)

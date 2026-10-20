@@ -1,0 +1,4 @@
+store_id,store_name,sku_count,units_sold_window,on_hand_units_before,sell_through,skus_under_1_wos_before,skus_under_1_wos_after,skus_over_4_wos_before,skus_over_4_wos_after
+101,warehouse_1,40,3346,990,0.7717,15,11,5,4
+102,warehouse_2,40,3150,1052,0.7496,12,10,5,5
+103,warehouse_3,40,2754,1076,0.7191,13,11,5,5
