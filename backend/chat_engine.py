@@ -1,6 +1,6 @@
 """
-LLM + RAG Engine — Local AI insights using Ollama + Mistral.
-Queries DuckDB for context, injects into LLM prompt, generates natural language insights.
+Data chat engine: answers with a local Ollama model (Mistral by default).
+Queries DuckDB for context, adds it to the prompt and returns a plain-language answer.
 """
 
 import logging
@@ -200,7 +200,7 @@ CURRENT DATA:
 
 
 def generate_rule_based_response(question: str, context: str) -> dict:
-    """Intelligent rule-based response when LLM is not available."""
+    """Rule-based answer when the local model is not available."""
     q = question.lower()
 
     conn = duckdb.connect(DB_PATH, read_only=True)
