@@ -118,6 +118,9 @@ def main():
                           backtest=load(args.backtest), fresh_rows=rows, run_url=args.run_url,
                           commit=args.commit, started_at=args.started_at)
     args.out.write_text(json.dumps(status, indent=2) + "\n")
+    from publish_eval import ensure_index
+
+    ensure_index(args.out.parent, "status")
     print(json.dumps({"result": status["run"]["result"], "alerts": [a["title"] for a in status["alerts"]]}))
 
 
