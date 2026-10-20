@@ -4,15 +4,15 @@ Main entry point with lifespan events, CORS, and route mounting.
 """
 
 import logging
+from contextlib import asynccontextmanager
 
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from contextlib import asynccontextmanager
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
+from backend.cdc_ingestion import run_full_ingestion
 from backend.config import ALLOWED_ORIGINS, configure_logging
 from backend.database import init_database
-from backend.cdc_ingestion import run_full_ingestion
 from backend.routes import router
 
 configure_logging()

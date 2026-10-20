@@ -3,14 +3,15 @@ LSTM-based Time-Series Forecasting for CDC Surveillance Data.
 Uses PyTorch to predict hospitalization rates and test positivity trends.
 """
 
+import json
+import os
+from datetime import datetime, timedelta
+from pathlib import Path
+
+import duckdb
 import numpy as np
 import torch
 import torch.nn as nn
-from datetime import datetime, timedelta
-import duckdb
-import os
-from pathlib import Path
-import json
 
 DB_PATH = os.path.join(Path(__file__).parent.parent, "data", "cdc_surveillance.duckdb")
 MODEL_DIR = os.path.join(Path(__file__).parent.parent, "models")

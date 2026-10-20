@@ -4,13 +4,13 @@ Fetches live data from 4 CDC datasets (incl. county-level wastewater), transform
 """
 
 import logging
-
-import httpx
-import duckdb
 import os
-import pandas as pd
 from datetime import datetime, timedelta
 from pathlib import Path
+
+import duckdb
+import httpx
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 

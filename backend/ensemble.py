@@ -3,14 +3,14 @@ Ensemble ML Models: XGBoost + Anomaly Detection + Season Comparison.
 Complements the LSTM forecaster with gradient boosting and outlier detection.
 """
 
+import json
+import os
+from datetime import datetime
+from pathlib import Path
+
+import duckdb
 import numpy as np
 import xgboost as xgb
-from sklearn.ensemble import IsolationForest
-from datetime import datetime
-import duckdb
-import os
-import json
-from pathlib import Path
 
 DB_PATH = os.path.join(Path(__file__).parent.parent, "data", "cdc_surveillance.duckdb")
 MODEL_DIR = os.path.join(Path(__file__).parent.parent, "models")

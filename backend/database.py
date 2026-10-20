@@ -4,10 +4,10 @@ Lightweight, embedded OLAP database — perfect for analytical queries on time-s
 """
 
 import logging
-
-import duckdb
 import os
 from pathlib import Path
+
+import duckdb
 
 logger = logging.getLogger(__name__)
 
