@@ -475,9 +475,10 @@
         out.replaceChildren(
           el("p", { class: "live-answer", text: String(j.answer ?? "") }),
           el("p", { class: "note", text: [j.status, j.as_of ? `data as of ${j.as_of}` : null].filter(Boolean).join(" · ") }));
-      } catch {
+      } catch (e) {
+        console.warn(e);
         setState("error");
-        out.replaceChildren(el("p", { class: "note", text: "Couldn't reach the live API. It may be waking up, so try again in a minute." }));
+        out.replaceChildren(el("p", { class: "note", text: "Something went wrong on this page. Please reload and try again." }));
       } finally { button.disabled = false; }
     });
     $("[data-body]", sec).replaceChildren(
