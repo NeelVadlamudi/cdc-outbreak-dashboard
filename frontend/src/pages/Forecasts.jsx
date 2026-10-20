@@ -14,8 +14,12 @@ export default function Forecasts() {
   const [forecast, setForecast] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const selectVirus = (key) => {
     setLoading(true);
+    setSelectedVirus(key);
+  };
+
+  useEffect(() => {
     getForecast(selectedVirus)
       .then(res => setForecast(res))
       .catch(console.error)
@@ -53,7 +57,7 @@ export default function Forecasts() {
           <button
             key={v.key}
             className={`filter-btn ${selectedVirus === v.key ? 'active' : ''}`}
-            onClick={() => setSelectedVirus(v.key)}
+            onClick={() => selectVirus(v.key)}
           >
             {v.icon} {v.label}
           </button>
