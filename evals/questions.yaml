@@ -10,6 +10,8 @@
 # '2ew6-ywp6' (legacy SARS-CoV-2 metrics, ending 2025-09-07).
 # Hospitalization rates are per 100,000, overall population unless stated.
 
+# version: question set id; bump it whenever questions or expected_sql change.
+version: cdc-q60-v1
 snapshot: evals/snapshot.duckdb
 
 questions:

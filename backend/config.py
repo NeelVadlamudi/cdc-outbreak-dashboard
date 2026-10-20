@@ -24,6 +24,10 @@ OLLAMA_AGENT_MODEL = os.getenv("OLLAMA_AGENT_MODEL", "qwen2.5:7b")
 INGEST_ON_STARTUP = os.getenv("INGEST_ON_STARTUP", "true").lower() != "false"
 
 # Data older than this many days is flagged as stale by the agent.
+BACKTEST_PATH = os.getenv(
+    "BACKTEST_PATH",
+    os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "evals", "results", "backtest.json"),
+)
 STALE_AFTER_DAYS = int(os.getenv("STALE_AFTER_DAYS", "14"))
 
 # Origins allowed to call the API from a browser (comma-separated).
