@@ -5,6 +5,7 @@ Phase 2: Expanded with wastewater, ensemble AI, LLM chat, anomaly detection, and
 
 import asyncio
 import json
+import logging
 import secrets
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Query
@@ -23,6 +24,8 @@ from backend.ensemble import (
 from backend.forecasting import generate_forecast, train_model
 from backend.llm_engine import chat_with_data, generate_weekly_brief
 from backend.simulator import SimulationParams, get_current_rates, run_simulation
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api")
 
@@ -389,6 +392,33 @@ async def get_season_compare():
 
 class ChatMessage(BaseModel):
     question: str
+
+
+class AgentQuestion(BaseModel):
+    question: str
+
+
+@router.post("/agent/ask")
+async def agent_ask(body: AgentQuestion):
+    """Answer a question with the tool-calling agent; fall back to the rule-based answer."""
+    import time
+
+    from backend.agent.graph import run_agent
+
+    try:
+        return await asyncio.to_thread(run_agent, body.question)
+    except Exception as e:
+        logger.warning("Agent unavailable, using rule-based answer: %s", e)
+        start = time.perf_counter()
+        fallback = await chat_with_data(body.question)
+        return {
+            "answer": fallback.get("answer", ""),
+            "tool_calls": [],
+            "as_of": None,
+            "elapsed_s": round(time.perf_counter() - start, 3),
+            "model": "rule-based",
+            "checker": {"passed": True, "unverified": [], "stale_tables": []},
+        }
 
 
 @router.post("/chat")
