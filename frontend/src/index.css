@@ -921,7 +921,12 @@ body {
 .agent-meta { display: flex; flex-wrap: wrap; gap: 12px; font-size: 11px; color: var(--text-muted); border-top: 1px solid var(--border-subtle); padding-top: 10px; font-family: ui-monospace, monospace; }
 .agent-calls-toggle { display: inline-flex; gap: 6px; align-items: center; background: none; border: 0; color: var(--text-secondary); cursor: pointer; font-size: 12px; padding: 0; }
 .agent-calls-list { margin: 8px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 12px; }
-.agent-calls-list li { display: flex; flex-wrap: wrap; gap: 4px 10px; overflow-wrap: anywhere; }
+.agent-calls-list li { display: flex; flex-direction: column; gap: 3px; overflow-wrap: anywhere; min-width: 0; }
+.agent-call-head { display: flex; flex-wrap: wrap; gap: 4px 10px; }
+.agent-output-scroll { overflow-x: auto; max-width: 100%; margin-top: 4px; }
+.agent-output-table { border-collapse: collapse; font-size: 11px; font-family: ui-monospace, monospace; }
+.agent-output-table th, .agent-output-table td { padding: 3px 8px; border-bottom: 1px solid var(--border-subtle); text-align: left; white-space: nowrap; }
+.agent-output-table th { color: var(--text-muted); font-weight: 500; }
 .agent-tool { font-weight: 600; }
 .agent-inputs { color: var(--text-secondary); font-family: ui-monospace, monospace; }
 .agent-rows { color: var(--text-muted); }

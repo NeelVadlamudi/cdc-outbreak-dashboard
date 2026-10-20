@@ -1,4 +1,4 @@
-{ "_label": "EXAMPLE fixture — not real data", "generated_at": "2026-01-01T06:00:00Z", "as_of_week": "EXAMPLE-W01",
+{ "_label": "EXAMPLE fixture — not real data", "generated_at": "2026-01-01T06:00:00Z", "as_of": "2000-01-01",
   "metrics": [
     { "id": "ex1", "label": "EXAMPLE metric A", "value": 1234, "unit": "per 100k" },
     { "id": "ex2", "label": "EXAMPLE metric B", "value": 0.111, "format": "pct", "change_text": "EXAMPLE change text" },
