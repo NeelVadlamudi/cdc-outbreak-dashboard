@@ -12,8 +12,8 @@ Committed default: `{ "available": [] }`.
 
 Conventions for every file:
 - Timestamps: ISO 8601 with zone (`2026-10-21T06:00:00Z`). Shown in America/New_York.
-- Rates/percentages: **fractions 0–1** (`0.873`, not `87.3`).
-- Durations: agent responses use **seconds** (`elapsed_s`), as the API does. `eval.json` `ms_per_answer` is milliseconds. The site formats both (two largest units).
+- Rates/percentages: **fractions 0–1** (`0.873`) everywhere except `eval.json`, which keeps run_evals.py percentages 0–100.
+- Durations: agent responses use **seconds** (`elapsed_s`), as the API does. `eval.json` uses seconds (`median_s`, `p95_s`). The site formats both (two largest units).
 - `null` or omitted = not measured. Never write `0` for "unknown".
 
 ## 1. `data/dashboard.json` — section (a)
@@ -29,27 +29,39 @@ Conventions for every file:
 `format: "pct"` means `value` is a 0–1 fraction. Integers are shown with separators; others with `decimals` (default 1).
 
 ## 2. `data/eval.json` — section (b)
+One entry per model run. Each entry is the top of the file `evals/run_evals.py` already writes
+(`{model, date, summary, ...}`); `rows`/`responses` may be included and are ignored.
 ```json
 {
   "run_at": "ISO-8601",
-  "n_questions": 0,
-  "dataset_version": "string?",
-  "rows": [
+  "runs": [
     {
       "model": "string",
-      "numeric_accuracy": 0.0,
-      "tool_choice": 0.0,
-      "correct_refusals": 0.0,
-      "false_refusals": 0.0,
-      "grounded": 0.0,
-      "checker_catches": 0,
-      "ms_per_answer": 0,
-      "tokens_per_answer": 0
+      "date": "YYYY-MM-DD",
+      "summary": {
+        "questions": 0,
+        "numeric_accuracy": 0.0,
+        "tool_choice": 0.0,
+        "correct_refusals": 0.0,
+        "false_refusals": 0.0,
+        "grounded_answers": 0.0,
+        "median_s": 0.0,
+        "p95_s": 0.0,
+        "median_input_tokens": 0,
+        "median_output_tokens": 0
+      }
     }
   ]
 }
 ```
-All rate fields are 0–1. `checker_catches` is a count. With 2+ rows the best value per column is highlighted (max for rates, min for false refusals / time / tokens).
+`summary` keys are exactly `summarize()` in `evals/run_evals.py`:
+- Rates (`numeric_accuracy`, `tool_choice`, `correct_refusals`, `false_refusals`, `grounded_answers`) are **percentages 0–100, 1 decimal**,
+  `null` when there were no questions to count. Shown as given with a `%` sign.
+- `median_s`, `p95_s` are **seconds**; shown with the duration formatter (e.g. "1.9 s").
+- `questions`, `median_input_tokens`, `median_output_tokens` are shown as given.
+- Any `null` cell shows **"Not run yet"**. The site never computes or estimates a value.
+- There is no checker-catches column (no summary key for it).
+- With 2+ runs, the best value per column is highlighted (max for rates except false refusals; min for false refusals, times, tokens).
 
 ## 3. `data/backtest.json` — section (c)
 ```json

@@ -75,35 +75,39 @@
         m.change_text ? el("div", { class: "ch", text: m.change_text }) : null))));
   }
 
-  /* (b) Eval table */
+  /* (b) Eval table. Keys are exactly evals/run_evals.py summarize() output.
+     Rates are already percentages 0-100 (1 dp): shown as given + "%". null => "Not run yet". */
+  const asGiven = (v) => (isNum(v) ? String(v) : null);
+  const pctGiven = (v) => (isNum(v) ? `${v.toFixed(1)}%` : null); // already 1 dp; toFixed only restores a trailing ".0"
   const EVAL_COLS = [
-    ["numeric_accuracy", "Numeric accuracy", pct, "max"],
-    ["tool_choice", "Tool choice", pct, "max"],
-    ["correct_refusals", "Correct refusals", pct, "max"],
-    ["false_refusals", "False refusals", pct, "min"],
-    ["grounded", "Grounded answers", pct, "max"],
-    ["checker_catches", "Checker catches", int, null],
-    ["ms_per_answer", "Time / answer", fmtDuration, "min"],
-    ["tokens_per_answer", "Tokens / answer", int, "min"],
+    ["questions", "Questions", asGiven, null],
+    ["numeric_accuracy", "Numeric accuracy", pctGiven, "max"],
+    ["tool_choice", "Tool choice", pctGiven, "max"],
+    ["correct_refusals", "Correct refusals", pctGiven, "max"],
+    ["false_refusals", "False refusals", pctGiven, "min"],
+    ["grounded_answers", "Grounded answers", pctGiven, "max"],
+    ["median_s", "Median time / answer", secsFmt, "min"],
+    ["p95_s", "p95 time / answer", secsFmt, "min"],
+    ["median_input_tokens", "Median input tokens", asGiven, "min"],
+    ["median_output_tokens", "Median output tokens", asGiven, "min"],
   ];
+  function secsFmt(v) { return isNum(v) ? fmtDuration(v * 1000) : null; }
+  const evalCell = (s) => (s == null ? el("td", { class: "na", text: NOT_RUN }) : el("td", { text: s }));
   function renderEval(sec, d) {
     const body = $("[data-body]", sec);
-    const rows = d && Array.isArray(d.rows) ? d.rows.filter((r) => r && r.model) : [];
-    if (!rows.length) return notRun(body, "data/eval.json");
+    const runs = d && Array.isArray(d.runs) ? d.runs.filter((r) => r && r.model && r.summary && typeof r.summary === "object") : [];
+    if (!runs.length) return notRun(body, "data/eval.json");
     const best = {};
     for (const [k, , , dir] of EVAL_COLS) {
-      if (!dir || rows.length < 2) continue;
-      const vals = rows.map((r) => r[k]).filter(isNum);
-      if (vals.length) best[k] = dir === "max" ? Math.max(...vals) : Math.min(...vals);
+      if (!dir || runs.length < 2) continue;
+      const vals = runs.map((r) => r.summary[k]).filter(isNum);
+      if (vals.length > 1) best[k] = dir === "max" ? Math.max(...vals) : Math.min(...vals);
     }
     const table = el("table", {},
       el("thead", {}, el("tr", {}, el("th", { scope: "col", text: "Model" }), EVAL_COLS.map(([, h]) => el("th", { scope: "col", text: h })))),
-      el("tbody", {}, rows.map((r) => el("tr", {}, el("td", { text: r.model }),
-        EVAL_COLS.map(([k, , f]) => { const c = cell(f(r[k])); if (isNum(r[k]) && best[k] === r[k]) c.classList.add("best"); return c; })))));
-    const meta = [];
-    if (isNum(d.n_questions)) meta.push(el("span", { class: "chip", text: `${int(d.n_questions)} questions` }));
-    if (d.dataset_version) meta.push(el("span", { class: "chip", text: d.dataset_version }));
-    body.replaceChildren(el("div", { class: "scroll" }, table), meta.length ? el("div", { class: "meta" }, meta) : "");
+      el("tbody", {}, runs.map((r) => el("tr", {}, el("td", { text: r.date ? `${r.model} · ${r.date}` : r.model }),
+        EVAL_COLS.map(([k, , f]) => { const v = r.summary[k]; const c = evalCell(f(v)); if (isNum(v) && best[k] === v) c.classList.add("best"); return c; })))));
+    body.replaceChildren(el("div", { class: "scroll" }, table));
   }
 
   /* (c) Backtest chart: MAE and WMAPE per model across horizons 1–4 */
