@@ -49,7 +49,8 @@
         "p95_s": 2.48,
         "median_input_tokens": null,
         "median_output_tokens": null
-      }
+      },
+      "scoring_changed": true
     },
     {
       "model": "gemini-3.5-flash-lite",
