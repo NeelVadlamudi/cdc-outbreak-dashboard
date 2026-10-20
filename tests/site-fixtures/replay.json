@@ -10,6 +10,30 @@
         "answer": "EXAMPLE answer text.",
         "tool_calls": [
           {
+            "tool": "get_data_freshness",
+            "inputs": {},
+            "rows_returned": 2,
+            "elapsed_s": 0.01,
+            "output": {
+              "as_of": "2000-01-01",
+              "source_table": "all",
+              "rows": [
+                {
+                  "table": "example_table",
+                  "latest_week": "2000-01-01",
+                  "age_days": 3,
+                  "stale": false
+                },
+                {
+                  "table": "example_wastewater",
+                  "latest_week": null,
+                  "age_days": null,
+                  "stale": true
+                }
+              ]
+            }
+          },
+          {
             "tool": "EXAMPLE_query_tool",
             "inputs": {
               "pathogen": "EXAMPLE"
@@ -64,7 +88,7 @@
           "passed": true,
           "unverified": [],
           "stale_tables": [
-            "example_table"
+            "example_wastewater"
           ]
         }
       }
