@@ -23,6 +23,11 @@ jobs:
         run: ruff check .
       - name: Test
         run: make test
+      - name: Mirage checks and audit eval (rescore the recorded run)
+        run: |
+          python mirage/vendor/scripts/verify_kpis.py
+          python mirage/vendor/scripts/verify_allocation.py
+          python evals/mirage/run_mirage_evals.py --model ci --from-file "$(ls evals/mirage/results/*.json | sort | tail -1)" --no-write
 
   frontend:
     runs-on: ubuntu-latest

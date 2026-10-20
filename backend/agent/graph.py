@@ -23,11 +23,15 @@ PROMPT_VERSION = "system_v1"
 SYSTEM_PROMPT = (Path(__file__).parent / "prompts" / f"{PROMPT_VERSION}.md").read_text()
 
 
-def langchain_tools() -> list[StructuredTool]:
-    """The data tools as LangChain tools (same functions the MCP server exposes)."""
+def langchain_tools(toolset=None) -> list[StructuredTool]:
+    """A toolset's tools as LangChain tools. Default: the CDC data tools (same functions the MCP server exposes).
+
+    A toolset is any module or object with TOOLS = {name: (fn, schema)}, call_tool(name, args) and dumps(result).
+    """
+    toolset = toolset or data_tools
     return [
         StructuredTool.from_function(fn, name=name, description=fn.__doc__, args_schema=schema)
-        for name, (fn, schema) in data_tools.TOOLS.items()
+        for name, (fn, schema) in toolset.TOOLS.items()
     ]
 
 
@@ -37,8 +41,9 @@ class AgentState(TypedDict):
     tool_calls_made: int
 
 
-def build_graph(model):
-    bound = model.bind_tools(langchain_tools())
+def build_graph(model, toolset=None):
+    toolset = toolset or data_tools
+    bound = model.bind_tools(langchain_tools(toolset))
 
     def model_node(state: AgentState):
         start = time.perf_counter()
@@ -66,7 +71,7 @@ def build_graph(model):
                 elapsed = 0.0
             else:
                 start = time.perf_counter()
-                output = data_tools.call_tool(call["name"], call.get("args") or {})
+                output = toolset.call_tool(call["name"], call.get("args") or {})
                 elapsed = time.perf_counter() - start
                 made += 1
                 logger.info("tool call", extra={
@@ -81,7 +86,7 @@ def build_graph(model):
                     "elapsed_s": round(elapsed, 3),
                     "output": output,
                 })
-            messages.append(ToolMessage(content=data_tools.dumps(output), tool_call_id=call["id"]))
+            messages.append(ToolMessage(content=toolset.dumps(output), tool_call_id=call["id"]))
         return {"messages": messages, "trace": trace, "tool_calls_made": made}
 
     def route(state: AgentState):
@@ -110,13 +115,16 @@ def _stale_tables(trace: list) -> list[dict]:
     return [r for r in fresh if r["stale"] and r["table"] in used and not r.get("legacy")]
 
 
-def run_agent(question: str, model=None, setting: str | None = None) -> dict:
+def run_agent(question: str, model=None, setting: str | None = None, toolset=None,
+              system_prompt: str | None = None, prompt_version: str | None = None,
+              check_freshness: bool = True) -> dict:
+    """Run one question. Defaults are the CDC agent; the Mirage audit agent passes its own toolset and prompt."""
     start = time.perf_counter()
     model = model or get_chat_model(setting)
-    graph = build_graph(model)
+    graph = build_graph(model, toolset)
     state = graph.invoke(
         {
-            "messages": [SystemMessage(SYSTEM_PROMPT), HumanMessage(question)],
+            "messages": [SystemMessage(system_prompt or SYSTEM_PROMPT), HumanMessage(question)],
             "trace": [],
             "tool_calls_made": 0,
         },
@@ -127,7 +135,7 @@ def run_agent(question: str, model=None, setting: str | None = None) -> dict:
     outputs = [t["output"] for t in trace]
     checker = check_numbers(answer, outputs, question)
 
-    stale = _stale_tables(trace)
+    stale = _stale_tables(trace) if check_freshness else []
     if stale:
         names = ", ".join(f"{r['table']} (latest {r['latest_week']})" for r in stale)
         answer = f"Warning: this data is more than 14 days old: {names}. " + answer
@@ -162,7 +170,7 @@ def run_agent(question: str, model=None, setting: str | None = None) -> dict:
         "as_of": as_of,
         "elapsed_s": round(time.perf_counter() - start, 3),
         "model": label,
-        "prompt_version": PROMPT_VERSION,
+        "prompt_version": prompt_version or PROMPT_VERSION,
         "checker": checker,
     }
 

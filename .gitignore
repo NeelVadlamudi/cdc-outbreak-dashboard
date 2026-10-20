@@ -14,3 +14,6 @@ evals/review_queue.jsonl
 
 # site/data is published nightly output
 !site/data/
+mirage/mirage.duckdb*
+data/mirage_state.duckdb*
+!mirage/vendor/data/

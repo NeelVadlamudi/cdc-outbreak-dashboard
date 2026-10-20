@@ -1,0 +1,21 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "date": "2026-10-20",
+  "source": "evals/mirage/results/gemini-3.5-flash-lite_2026-10-20.json",
+  "summary": {
+    "question_set": "mirage-q30-v1",
+    "questions": 30,
+    "overall_correct": 96.7,
+    "numeric_accuracy": 94.4,
+    "case_and_step": 100.0,
+    "proposal_accuracy": 100.0,
+    "unrequested_proposals": 0.0,
+    "tool_choice": 100.0,
+    "blocked_proposals": 1,
+    "correct_refusals": 100.0,
+    "false_refusals": 4.0,
+    "grounded_answers": 100.0,
+    "median_s": 1.71,
+    "p95_s": 2.68
+  }
+}

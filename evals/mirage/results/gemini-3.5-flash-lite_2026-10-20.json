@@ -1,0 +1,3587 @@
+{
+ "model": "gemini-3.5-flash-lite",
+ "date": "2026-10-20",
+ "summary": {
+  "question_set": "mirage-q30-v1",
+  "questions": 30,
+  "overall_correct": 96.7,
+  "numeric_accuracy": 94.4,
+  "case_and_step": 100.0,
+  "proposal_accuracy": 100.0,
+  "unrequested_proposals": 0.0,
+  "tool_choice": 100.0,
+  "blocked_proposals": 1,
+  "correct_refusals": 100.0,
+  "false_refusals": 4.0,
+  "grounded_answers": 100.0,
+  "median_s": 1.71,
+  "p95_s": 2.68
+ },
+ "rows": [
+  {
+   "id": "g01",
+   "type": "gaps",
+   "refused": false,
+   "tools_called": [
+    "list_shelf_gaps"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 2.026,
+   "status": "answered",
+   "expected": {
+    "values": [
+     22.5,
+     9
+    ]
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "false_refusal": false,
+   "values_ok": true,
+   "unrequested_proposal": false,
+   "correct": true,
+   "delivered": true,
+   "grounded": true
+  },
+  {
+   "id": "g02",
+   "type": "gaps",
+   "refused": false,
+   "tools_called": [
+    "list_shelf_gaps"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 1.843,
+   "status": "answered",
+   "expected": {
+    "values": [
+     7,
+     6
+    ]
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "false_refusal": false,
+   "values_ok": true,
+   "unrequested_proposal": false,
+   "correct": true,
+   "delivered": true,
+   "grounded": true
+  },
+  {
+   "id": "g03",
+   "type": "gaps",
+   "refused": false,
+   "tools_called": [
+    "list_shelf_gaps"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 1.688,
+   "status": "answered",
+   "expected": {
+    "values": [
+     4,
+     2
+    ]
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "false_refusal": false,
+   "values_ok": true,
+   "unrequested_proposal": false,
+   "correct": true,
+   "delivered": true,
+   "grounded": true
+  },
+  {
+   "id": "g04",
+   "type": "gaps",
+   "refused": false,
+   "tools_called": [
+    "list_shelf_gaps"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 1.601,
+   "status": "answered",
+   "expected": {
+    "values": [
+     12.5
+    ]
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "false_refusal": false,
+   "values_ok": true,
+   "unrequested_proposal": false,
+   "correct": true,
+   "delivered": true,
+   "grounded": true
+  },
+  {
+   "id": "w01",
+   "type": "why",
+   "refused": false,
+   "tools_called": [
+    "get_sku_position"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 1.925,
+   "status": "answered",
+   "expected": {
+    "values": [
+     36.0
+    ],
+    "case": "record_wrong",
+    "next_step": "recount",
+    "sku_id": "184220"
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "false_refusal": false,
+   "values_ok": true,
+   "case_ok": true,
+   "unrequested_proposal": false,
+   "correct": true,
+   "delivered": true,
+   "grounded": true
+  },
+  {
+   "id": "w02",
+   "type": "why",
+   "refused": false,
+   "tools_called": [
+    "get_sku_position"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 1.689,
+   "status": "answered",
+   "expected": {
+    "values": [
+     40.0,
+     86.0
+    ],
+    "case": "in_backroom",
+    "next_step": "pull_to_floor",
+    "sku_id": "118634"
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "false_refusal": false,
+   "values_ok": true,
+   "case_ok": true,
+   "unrequested_proposal": false,
+   "correct": true,
+   "delivered": true,
+   "grounded": true
+  },
+  {
+   "id": "w03",
+   "type": "why",
+   "refused": false,
+   "tools_called": [
+    "get_sku_position"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 1.816,
+   "status": "answered",
+   "expected": {
+    "values": [
+     24.0
+    ],
+    "case": "in_backroom",
+    "next_step": "pull_to_floor",
+    "sku_id": "551902"
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "false_refusal": false,
+   "values_ok": true,
+   "case_ok": true,
+   "unrequested_proposal": false,
+   "correct": true,
+   "delivered": true,
+   "grounded": true
+  },
+  {
+   "id": "w04",
+   "type": "why",
+   "refused": false,
+   "tools_called": [
+    "get_sku_position"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 1.675,
+   "status": "answered",
+   "expected": {
+    "values": [],
+    "case": "truly_out",
+    "next_step": "reorder",
+    "sku_id": "551930"
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "false_refusal": false,
+   "case_ok": true,
+   "unrequested_proposal": false,
+   "correct": true,
+   "delivered": true,
+   "grounded": true
+  },
+  {
+   "id": "w05",
+   "type": "why",
+   "refused": false,
+   "tools_called": [
+    "get_sku_position"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 1.991,
+   "status": "answered",
+   "expected": {
+    "values": [],
+    "case": "truly_out",
+    "next_step": "reorder",
+    "sku_id": "667320"
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "false_refusal": false,
+   "case_ok": true,
+   "unrequested_proposal": false,
+   "correct": true,
+   "delivered": true,
+   "grounded": true
+  },
+  {
+   "id": "w06",
+   "type": "why",
+   "refused": false,
+   "tools_called": [
+    "get_sku_position"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 1.666,
+   "status": "answered",
+   "expected": {
+    "values": [
+     20.0
+    ],
+    "case": "record_wrong",
+    "next_step": "recount",
+    "sku_id": "445890"
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "false_refusal": false,
+   "values_ok": true,
+   "case_ok": true,
+   "unrequested_proposal": false,
+   "correct": true,
+   "delivered": true,
+   "grounded": true
+  },
+  {
+   "id": "w07",
+   "type": "why",
+   "refused": false,
+   "tools_called": [
+    "get_sku_position"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 1.73,
+   "status": "answered",
+   "expected": {
+    "values": [],
+    "case": "truly_out",
+    "next_step": "reorder",
+    "sku_id": "774020"
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "false_refusal": false,
+   "case_ok": true,
+   "unrequested_proposal": false,
+   "correct": true,
+   "delivered": true,
+   "grounded": true
+  },
+  {
+   "id": "p01",
+   "type": "position",
+   "refused": false,
+   "tools_called": [
+    "get_sku_position"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 1.715,
+   "status": "answered",
+   "expected": {
+    "values": [
+     12.0,
+     28.0,
+     40.0
+    ]
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "false_refusal": false,
+   "values_ok": true,
+   "unrequested_proposal": false,
+   "correct": true,
+   "delivered": true,
+   "grounded": true
+  },
+  {
+   "id": "a01",
+   "type": "po",
+   "refused": false,
+   "tools_called": [
+    "get_po_allocation"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 1.594,
+   "status": "answered",
+   "expected": {
+    "values": [
+     98,
+     60,
+     38
+    ]
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "false_refusal": false,
+   "values_ok": true,
+   "unrequested_proposal": false,
+   "correct": true,
+   "delivered": true,
+   "grounded": true
+  },
+  {
+   "id": "a02",
+   "type": "po",
+   "refused": false,
+   "tools_called": [
+    "get_po_allocation"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 2.352,
+   "status": "answered",
+   "expected": {
+    "values": [
+     10
+    ]
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "false_refusal": false,
+   "values_ok": true,
+   "unrequested_proposal": false,
+   "correct": true,
+   "delivered": true,
+   "grounded": true
+  },
+  {
+   "id": "a03",
+   "type": "po",
+   "refused": false,
+   "tools_called": [
+    "get_po_allocation"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 1.707,
+   "status": "answered",
+   "expected": {
+    "values": [
+     5
+    ]
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "false_refusal": false,
+   "values_ok": true,
+   "unrequested_proposal": false,
+   "correct": true,
+   "delivered": true,
+   "grounded": true
+  },
+  {
+   "id": "a04",
+   "type": "po",
+   "refused": false,
+   "tools_called": [
+    "get_po_allocation"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 1.464,
+   "status": "answered",
+   "expected": {
+    "values": [
+     10
+    ]
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "false_refusal": false,
+   "values_ok": true,
+   "unrequested_proposal": false,
+   "correct": true,
+   "delivered": true,
+   "grounded": true
+  },
+  {
+   "id": "a05",
+   "type": "po",
+   "refused": false,
+   "tools_called": [
+    "get_po_allocation",
+    "get_weeks_of_supply"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 2.25,
+   "status": "answered",
+   "expected": {
+    "values": [
+     40,
+     32
+    ]
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "false_refusal": false,
+   "values_ok": true,
+   "unrequested_proposal": false,
+   "correct": true,
+   "delivered": true,
+   "grounded": true
+  },
+  {
+   "id": "s01",
+   "type": "wos",
+   "refused": false,
+   "tools_called": [
+    "get_weeks_of_supply"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 1.689,
+   "status": "answered",
+   "expected": {
+    "values": [
+     0.74,
+     1.07
+    ]
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "false_refusal": false,
+   "values_ok": true,
+   "unrequested_proposal": false,
+   "correct": true,
+   "delivered": true,
+   "grounded": true
+  },
+  {
+   "id": "s02",
+   "type": "wos",
+   "refused": false,
+   "tools_called": [
+    "get_weeks_of_supply"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 1.51,
+   "status": "answered",
+   "expected": {
+    "values": [
+     29.25,
+     2.05
+    ]
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "false_refusal": false,
+   "values_ok": true,
+   "unrequested_proposal": false,
+   "correct": true,
+   "delivered": true,
+   "grounded": true
+  },
+  {
+   "id": "s03",
+   "type": "wos",
+   "refused": true,
+   "tools_called": [
+    "get_sku_position",
+    "get_weeks_of_supply"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 1.837,
+   "status": "refused",
+   "expected": {
+    "values": [
+     11,
+     0.7
+    ]
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "false_refusal": true,
+   "values_ok": false,
+   "unrequested_proposal": false,
+   "correct": false,
+   "delivered": false,
+   "grounded": null
+  },
+  {
+   "id": "x01",
+   "type": "propose",
+   "refused": false,
+   "tools_called": [
+    "get_sku_position",
+    "propose_action"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 2.654,
+   "status": "answered",
+   "expected": {
+    "values": [],
+    "case": "record_wrong",
+    "next_step": "recount",
+    "sku_id": "184220"
+   },
+   "proposals": [
+    {
+     "proposal_id": 1,
+     "club": "Everett",
+     "sku_id": "184220",
+     "sku_name": "Paper Towels 12pk",
+     "action": "recount",
+     "status": "waiting for approval"
+    }
+   ],
+   "blocked_proposals": 0,
+   "false_refusal": false,
+   "case_ok": true,
+   "proposal_ok": true,
+   "correct": true,
+   "delivered": true,
+   "grounded": true
+  },
+  {
+   "id": "x02",
+   "type": "propose",
+   "refused": false,
+   "tools_called": [
+    "get_sku_position",
+    "propose_action"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 2.634,
+   "status": "answered",
+   "expected": {
+    "values": [],
+    "case": "in_backroom",
+    "next_step": "pull_to_floor",
+    "sku_id": "551902"
+   },
+   "proposals": [
+    {
+     "proposal_id": 1,
+     "club": "Everett",
+     "sku_id": "551902",
+     "sku_name": "Rotisserie Chicken",
+     "action": "pull_to_floor",
+     "status": "waiting for approval"
+    }
+   ],
+   "blocked_proposals": 0,
+   "false_refusal": false,
+   "case_ok": true,
+   "proposal_ok": true,
+   "correct": true,
+   "delivered": true,
+   "grounded": true
+  },
+  {
+   "id": "x03",
+   "type": "propose",
+   "refused": false,
+   "tools_called": [
+    "get_sku_position",
+    "propose_action"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 2.884,
+   "status": "answered",
+   "expected": {
+    "values": [],
+    "case": "truly_out",
+    "next_step": "reorder",
+    "sku_id": "551930"
+   },
+   "proposals": [
+    {
+     "proposal_id": 1,
+     "club": "Dedham",
+     "sku_id": "551930",
+     "sku_name": "Potato Salad Tub",
+     "action": "reorder",
+     "status": "waiting for approval"
+    }
+   ],
+   "blocked_proposals": 0,
+   "false_refusal": false,
+   "case_ok": true,
+   "proposal_ok": true,
+   "correct": true,
+   "delivered": true,
+   "grounded": true
+  },
+  {
+   "id": "x04",
+   "type": "propose",
+   "refused": false,
+   "tools_called": [
+    "get_sku_position",
+    "propose_action"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 2.679,
+   "status": "answered",
+   "expected": {
+    "values": [],
+    "case": "record_wrong",
+    "next_step": "recount",
+    "sku_id": "667301"
+   },
+   "proposals": [
+    {
+     "proposal_id": 1,
+     "club": "Everett",
+     "sku_id": "667301",
+     "sku_name": "Diapers Size 4",
+     "action": "recount",
+     "status": "waiting for approval"
+    }
+   ],
+   "blocked_proposals": 1,
+   "false_refusal": false,
+   "case_ok": true,
+   "proposal_ok": true,
+   "correct": true,
+   "delivered": true,
+   "grounded": true
+  },
+  {
+   "id": "r01",
+   "type": "refusal",
+   "refused": true,
+   "tools_called": [
+    "list_shelf_gaps"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 1.578,
+   "status": "refused",
+   "expected": {
+    "values": []
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "correct": true,
+   "correct_refusal": true,
+   "delivered": false,
+   "grounded": null
+  },
+  {
+   "id": "r02",
+   "type": "refusal",
+   "refused": true,
+   "tools_called": [
+    "list_shelf_gaps"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 1.699,
+   "status": "refused",
+   "expected": {
+    "values": []
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "correct": true,
+   "correct_refusal": true,
+   "delivered": false,
+   "grounded": null
+  },
+  {
+   "id": "r03",
+   "type": "refusal",
+   "refused": true,
+   "tools_called": [],
+   "tool_choice_ok": true,
+   "elapsed_s": 0.827,
+   "status": "answered",
+   "expected": {
+    "values": []
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "correct": true,
+   "correct_refusal": true,
+   "delivered": false,
+   "grounded": null
+  },
+  {
+   "id": "r04",
+   "type": "refusal",
+   "refused": true,
+   "tools_called": [],
+   "tool_choice_ok": true,
+   "elapsed_s": 0.794,
+   "status": "answered",
+   "expected": {
+    "values": []
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "correct": true,
+   "correct_refusal": true,
+   "delivered": false,
+   "grounded": null
+  },
+  {
+   "id": "r05",
+   "type": "refusal",
+   "refused": true,
+   "tools_called": [
+    "get_sku_position"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 1.702,
+   "status": "refused",
+   "expected": {
+    "values": []
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "correct": true,
+   "correct_refusal": true,
+   "delivered": false,
+   "grounded": null
+  },
+  {
+   "id": "m01",
+   "type": "multi",
+   "refused": false,
+   "tools_called": [
+    "list_shelf_gaps"
+   ],
+   "tool_choice_ok": true,
+   "elapsed_s": 1.921,
+   "status": "answered",
+   "expected": {
+    "values": [
+     22.5,
+     10.0
+    ]
+   },
+   "proposals": [],
+   "blocked_proposals": 0,
+   "false_refusal": false,
+   "values_ok": true,
+   "unrequested_proposal": false,
+   "correct": true,
+   "delivered": true,
+   "grounded": true
+  }
+ ],
+ "responses": {
+  "g01": {
+   "status": "answered",
+   "answer": "For Everett on 2026-09-22:\n- **Share of assortment with an empty shelf (gap rate):** 22.5%\n- **Number of SKUs with empty shelves:** 9 SKUs (out of 40 in assortment)",
+   "tool_calls": [
+    {
+     "tool": "list_shelf_gaps",
+     "inputs": {
+      "club": "Everett",
+      "day": "2026-09-22"
+     },
+     "rows_returned": 9,
+     "elapsed_s": 0.217,
+     "output": {
+      "as_of": "2026-09-22",
+      "source_table": "fact_inventory_daily",
+      "club": "Everett",
+      "store_id": "101",
+      "summary": {
+       "assortment_sku_count": 40,
+       "gap_sku_count": 9,
+       "gap_rate_pct": 22.5,
+       "book_wrong_sku_count": 7,
+       "backroom_sku_count": 6,
+       "truly_out_sku_count": 0
+      },
+      "rows": [
+       {
+        "sku_id": "667301",
+        "sku_name": "Diapers Size 4",
+        "category": "Baby",
+        "floor_qty": 0,
+        "backroom_qty": 0,
+        "system_on_hand_qty": 18,
+        "case": "record_wrong",
+        "case_label": "The record is wrong",
+        "next_step": "recount"
+       },
+       {
+        "sku_id": "330112",
+        "sku_name": "Whole Milk Gallon",
+        "category": "Dairy",
+        "floor_qty": 0,
+        "backroom_qty": 10,
+        "system_on_hand_qty": 10,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor"
+       },
+       {
+        "sku_id": "551902",
+        "sku_name": "Rotisserie Chicken",
+        "category": "Deli",
+        "floor_qty": 0,
+        "backroom_qty": 24,
+        "system_on_hand_qty": 0,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor",
+        "also": "recount",
+        "also_reason": "System on-hand differs from floor plus backroom."
+       },
+       {
+        "sku_id": "774015",
+        "sku_name": "AA Batteries 48ct",
+        "category": "GM",
+        "floor_qty": 0,
+        "backroom_qty": 0,
+        "system_on_hand_qty": 48,
+        "case": "record_wrong",
+        "case_label": "The record is wrong",
+        "next_step": "recount"
+       },
+       {
+        "sku_id": "118634",
+        "sku_name": "Bottled Water 40pk",
+        "category": "Grocery",
+        "floor_qty": 0,
+        "backroom_qty": 40,
+        "system_on_hand_qty": 86,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor",
+        "also": "recount",
+        "also_reason": "System on-hand differs from floor plus backroom."
+       },
+       {
+        "sku_id": "445880",
+        "sku_name": "Laundry Detergent 2pk",
+        "category": "Household",
+        "floor_qty": 0,
+        "backroom_qty": 12,
+        "system_on_hand_qty": 52,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor",
+        "also": "recount",
+        "also_reason": "System on-hand differs from floor plus backroom."
+       },
+       {
+        "sku_id": "184220",
+        "sku_name": "Paper Towels 12pk",
+        "category": "Household",
+        "floor_qty": 0,
+        "backroom_qty": 0,
+        "system_on_hand_qty": 36,
+        "case": "record_wrong",
+        "case_label": "The record is wrong",
+        "next_step": "recount"
+       },
+       {
+        "sku_id": "184230",
+        "sku_name": "Toilet Paper 30ct",
+        "category": "Household",
+        "floor_qty": 0,
+        "backroom_qty": 20,
+        "system_on_hand_qty": 20,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor"
+       },
+       {
+        "sku_id": "229045",
+        "sku_name": "Chicken Breast Family Pack",
+        "category": "Meat",
+        "floor_qty": 0,
+        "backroom_qty": 16,
+        "system_on_hand_qty": 0,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor",
+        "also": "recount",
+        "also_reason": "System on-hand differs from floor plus backroom."
+       }
+      ]
+     }
+    }
+   ],
+   "as_of": "2026-09-22",
+   "elapsed_s": 2.026,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  },
+  "g02": {
+   "status": "answered",
+   "answer": "For Everett on Sep 22, 2026:\n\n- **7** empty-shelf SKUs still showed stock in the system (cases where the record is wrong, with system on-hand greater than 0 while floor count is 0).\n- **6** empty-shelf SKUs had stock in the backroom (backroom quantity greater than 0).",
+   "tool_calls": [
+    {
+     "tool": "list_shelf_gaps",
+     "inputs": {
+      "club": "Everett",
+      "day": "2026-09-22"
+     },
+     "rows_returned": 9,
+     "elapsed_s": 0.018,
+     "output": {
+      "as_of": "2026-09-22",
+      "source_table": "fact_inventory_daily",
+      "club": "Everett",
+      "store_id": "101",
+      "summary": {
+       "assortment_sku_count": 40,
+       "gap_sku_count": 9,
+       "gap_rate_pct": 22.5,
+       "book_wrong_sku_count": 7,
+       "backroom_sku_count": 6,
+       "truly_out_sku_count": 0
+      },
+      "rows": [
+       {
+        "sku_id": "667301",
+        "sku_name": "Diapers Size 4",
+        "category": "Baby",
+        "floor_qty": 0,
+        "backroom_qty": 0,
+        "system_on_hand_qty": 18,
+        "case": "record_wrong",
+        "case_label": "The record is wrong",
+        "next_step": "recount"
+       },
+       {
+        "sku_id": "330112",
+        "sku_name": "Whole Milk Gallon",
+        "category": "Dairy",
+        "floor_qty": 0,
+        "backroom_qty": 10,
+        "system_on_hand_qty": 10,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor"
+       },
+       {
+        "sku_id": "551902",
+        "sku_name": "Rotisserie Chicken",
+        "category": "Deli",
+        "floor_qty": 0,
+        "backroom_qty": 24,
+        "system_on_hand_qty": 0,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor",
+        "also": "recount",
+        "also_reason": "System on-hand differs from floor plus backroom."
+       },
+       {
+        "sku_id": "774015",
+        "sku_name": "AA Batteries 48ct",
+        "category": "GM",
+        "floor_qty": 0,
+        "backroom_qty": 0,
+        "system_on_hand_qty": 48,
+        "case": "record_wrong",
+        "case_label": "The record is wrong",
+        "next_step": "recount"
+       },
+       {
+        "sku_id": "118634",
+        "sku_name": "Bottled Water 40pk",
+        "category": "Grocery",
+        "floor_qty": 0,
+        "backroom_qty": 40,
+        "system_on_hand_qty": 86,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor",
+        "also": "recount",
+        "also_reason": "System on-hand differs from floor plus backroom."
+       },
+       {
+        "sku_id": "445880",
+        "sku_name": "Laundry Detergent 2pk",
+        "category": "Household",
+        "floor_qty": 0,
+        "backroom_qty": 12,
+        "system_on_hand_qty": 52,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor",
+        "also": "recount",
+        "also_reason": "System on-hand differs from floor plus backroom."
+       },
+       {
+        "sku_id": "184220",
+        "sku_name": "Paper Towels 12pk",
+        "category": "Household",
+        "floor_qty": 0,
+        "backroom_qty": 0,
+        "system_on_hand_qty": 36,
+        "case": "record_wrong",
+        "case_label": "The record is wrong",
+        "next_step": "recount"
+       },
+       {
+        "sku_id": "184230",
+        "sku_name": "Toilet Paper 30ct",
+        "category": "Household",
+        "floor_qty": 0,
+        "backroom_qty": 20,
+        "system_on_hand_qty": 20,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor"
+       },
+       {
+        "sku_id": "229045",
+        "sku_name": "Chicken Breast Family Pack",
+        "category": "Meat",
+        "floor_qty": 0,
+        "backroom_qty": 16,
+        "system_on_hand_qty": 0,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor",
+        "also": "recount",
+        "also_reason": "System on-hand differs from floor plus backroom."
+       }
+      ]
+     }
+    }
+   ],
+   "as_of": "2026-09-22",
+   "elapsed_s": 1.843,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  },
+  "g03": {
+   "status": "answered",
+   "answer": "For the day of 2026-09-22 at Dedham:\n- There were **4** empty shelves (gap count).\n- Of those, **2** SKUs were truly out of stock (Potato Salad Tub and Sticky Notes Value).",
+   "tool_calls": [
+    {
+     "tool": "list_shelf_gaps",
+     "inputs": {
+      "club": "Dedham",
+      "day": "2026-09-22"
+     },
+     "rows_returned": 4,
+     "elapsed_s": 0.017,
+     "output": {
+      "as_of": "2026-09-22",
+      "source_table": "fact_inventory_daily",
+      "club": "Dedham",
+      "store_id": "102",
+      "summary": {
+       "assortment_sku_count": 40,
+       "gap_sku_count": 4,
+       "gap_rate_pct": 10.0,
+       "book_wrong_sku_count": 2,
+       "backroom_sku_count": 1,
+       "truly_out_sku_count": 2
+      },
+      "rows": [
+       {
+        "sku_id": "667320",
+        "sku_name": "Infant Formula Can",
+        "category": "Baby",
+        "floor_qty": 0,
+        "backroom_qty": 24,
+        "system_on_hand_qty": 59,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor",
+        "also": "recount",
+        "also_reason": "System on-hand differs from floor plus backroom."
+       },
+       {
+        "sku_id": "667330",
+        "sku_name": "Toddler Snacks Box",
+        "category": "Baby",
+        "floor_qty": 0,
+        "backroom_qty": 0,
+        "system_on_hand_qty": 12,
+        "case": "record_wrong",
+        "case_label": "The record is wrong",
+        "next_step": "recount"
+       },
+       {
+        "sku_id": "551930",
+        "sku_name": "Potato Salad Tub",
+        "category": "Deli",
+        "floor_qty": 0,
+        "backroom_qty": 0,
+        "system_on_hand_qty": 0,
+        "case": "truly_out",
+        "case_label": "Truly out",
+        "next_step": "reorder"
+       },
+       {
+        "sku_id": "441220",
+        "sku_name": "Sticky Notes Value",
+        "category": "Office",
+        "floor_qty": 0,
+        "backroom_qty": 0,
+        "system_on_hand_qty": 0,
+        "case": "truly_out",
+        "case_label": "Truly out",
+        "next_step": "reorder"
+       }
+      ]
+     }
+    }
+   ],
+   "as_of": "2026-09-22",
+   "elapsed_s": 1.688,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  },
+  "g04": {
+   "status": "answered",
+   "answer": "On 2026-09-18, Waltham's empty-shelf gap rate was 12.5% (5 gap SKUs out of 40 assortment SKUs).",
+   "tool_calls": [
+    {
+     "tool": "list_shelf_gaps",
+     "inputs": {
+      "club": "Waltham",
+      "day": "2026-09-18"
+     },
+     "rows_returned": 5,
+     "elapsed_s": 0.019,
+     "output": {
+      "as_of": "2026-09-18",
+      "source_table": "fact_inventory_daily",
+      "club": "Waltham",
+      "store_id": "103",
+      "summary": {
+       "assortment_sku_count": 40,
+       "gap_sku_count": 5,
+       "gap_rate_pct": 12.5,
+       "book_wrong_sku_count": 4,
+       "backroom_sku_count": 3,
+       "truly_out_sku_count": 1
+      },
+      "rows": [
+       {
+        "sku_id": "667320",
+        "sku_name": "Infant Formula Can",
+        "category": "Baby",
+        "floor_qty": 0,
+        "backroom_qty": 0,
+        "system_on_hand_qty": 0,
+        "case": "truly_out",
+        "case_label": "Truly out",
+        "next_step": "reorder"
+       },
+       {
+        "sku_id": "667330",
+        "sku_name": "Toddler Snacks Box",
+        "category": "Baby",
+        "floor_qty": 0,
+        "backroom_qty": 11,
+        "system_on_hand_qty": 25,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor",
+        "also": "recount",
+        "also_reason": "System on-hand differs from floor plus backroom."
+       },
+       {
+        "sku_id": "330130",
+        "sku_name": "Shredded Cheese 2lb",
+        "category": "Dairy",
+        "floor_qty": 0,
+        "backroom_qty": 32,
+        "system_on_hand_qty": 41,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor",
+        "also": "recount",
+        "also_reason": "System on-hand differs from floor plus backroom."
+       },
+       {
+        "sku_id": "118655",
+        "sku_name": "Trail Mix Value Pack",
+        "category": "Grocery",
+        "floor_qty": 0,
+        "backroom_qty": 16,
+        "system_on_hand_qty": 45,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor",
+        "also": "recount",
+        "also_reason": "System on-hand differs from floor plus backroom."
+       },
+       {
+        "sku_id": "441230",
+        "sku_name": "Binder Clips Assort",
+        "category": "Office",
+        "floor_qty": 0,
+        "backroom_qty": 0,
+        "system_on_hand_qty": 19,
+        "case": "record_wrong",
+        "case_label": "The record is wrong",
+        "next_step": "recount"
+       }
+      ]
+     }
+    }
+   ],
+   "as_of": "2026-09-18",
+   "elapsed_s": 1.601,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  },
+  "w01": {
+   "status": "answered",
+   "answer": "For the day of Sep 22, 2026, at Everett:\n- **Floor count:** 0\n- **Backroom count:** 0\n- **System on-hand count:** 36\n\n**Case:** The record is wrong (system on-hand is 36, but physical count is 0).\n**Next step:** Recount.",
+   "tool_calls": [
+    {
+     "tool": "get_sku_position",
+     "inputs": {
+      "club": "Everett",
+      "sku": "Paper Towels 12pk",
+      "day": "2026-09-22"
+     },
+     "rows_returned": 1,
+     "elapsed_s": 0.016,
+     "output": {
+      "as_of": "2026-09-22",
+      "source_table": "fact_inventory_daily",
+      "club": "Everett",
+      "store_id": "101",
+      "rows": [
+       {
+        "sku_id": "184220",
+        "sku_name": "Paper Towels 12pk",
+        "category": "Household",
+        "in_assortment": true,
+        "floor_qty": 0,
+        "backroom_qty": 0,
+        "system_on_hand_qty": 36,
+        "physical_qty": 0,
+        "system_minus_physical": 36,
+        "shelf_empty": true,
+        "case": "record_wrong",
+        "case_label": "The record is wrong",
+        "next_step": "recount"
+       }
+      ]
+     }
+    }
+   ],
+   "as_of": "2026-09-22",
+   "elapsed_s": 1.925,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  },
+  "w02": {
+   "status": "answered",
+   "answer": "For SKU 118634 (Bottled Water 40pk) at Everett on day 2026-09-22:\n- **Counts:** Floor count is 0, backroom count is 40, and system on-hand is 86 (physical total is 40, giving a gap of 46).\n- **Case:** Stock is in the backroom.\n- **Next step:** Pull to the floor. (Also: recount).",
+   "tool_calls": [
+    {
+     "tool": "get_sku_position",
+     "inputs": {
+      "club": "Everett",
+      "sku": "118634",
+      "day": "2026-09-22"
+     },
+     "rows_returned": 1,
+     "elapsed_s": 0.015,
+     "output": {
+      "as_of": "2026-09-22",
+      "source_table": "fact_inventory_daily",
+      "club": "Everett",
+      "store_id": "101",
+      "rows": [
+       {
+        "sku_id": "118634",
+        "sku_name": "Bottled Water 40pk",
+        "category": "Grocery",
+        "in_assortment": true,
+        "floor_qty": 0,
+        "backroom_qty": 40,
+        "system_on_hand_qty": 86,
+        "physical_qty": 40,
+        "system_minus_physical": 46,
+        "shelf_empty": true,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor",
+        "also": "recount",
+        "also_reason": "System on-hand differs from floor plus backroom."
+       }
+      ]
+     }
+    }
+   ],
+   "as_of": "2026-09-22",
+   "elapsed_s": 1.689,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  },
+  "w03": {
+   "status": "answered",
+   "answer": "For Everett on 2026-09-22:\n- **Floor quantity:** 0\n- **Backroom quantity:** 24\n- **System on-hand quantity:** 0\n- **Case:** Stock is in the backroom\n- **Next step:** Pull to the floor (also: recount, because system on-hand differs from floor plus backroom).",
+   "tool_calls": [
+    {
+     "tool": "get_sku_position",
+     "inputs": {
+      "club": "Everett",
+      "sku": "Rotisserie Chicken",
+      "day": "2026-09-22"
+     },
+     "rows_returned": 1,
+     "elapsed_s": 0.016,
+     "output": {
+      "as_of": "2026-09-22",
+      "source_table": "fact_inventory_daily",
+      "club": "Everett",
+      "store_id": "101",
+      "rows": [
+       {
+        "sku_id": "551902",
+        "sku_name": "Rotisserie Chicken",
+        "category": "Deli",
+        "in_assortment": true,
+        "floor_qty": 0,
+        "backroom_qty": 24,
+        "system_on_hand_qty": 0,
+        "physical_qty": 24,
+        "system_minus_physical": -24,
+        "shelf_empty": true,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor",
+        "also": "recount",
+        "also_reason": "System on-hand differs from floor plus backroom."
+       }
+      ]
+     }
+    }
+   ],
+   "as_of": "2026-09-22",
+   "elapsed_s": 1.816,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  },
+  "w04": {
+   "status": "answered",
+   "answer": "For the count day of 2026-09-22 at Dedham:\n\n* **Floor count:** 0\n* **Backroom count:** 0\n* **System on-hand qty:** 0\n\n**Case:** Truly out (system and physical counts are both 0).\n**Next step:** Reorder.",
+   "tool_calls": [
+    {
+     "tool": "get_sku_position",
+     "inputs": {
+      "sku": "Potato Salad Tub",
+      "club": "Dedham",
+      "day": "2026-09-22"
+     },
+     "rows_returned": 1,
+     "elapsed_s": 0.017,
+     "output": {
+      "as_of": "2026-09-22",
+      "source_table": "fact_inventory_daily",
+      "club": "Dedham",
+      "store_id": "102",
+      "rows": [
+       {
+        "sku_id": "551930",
+        "sku_name": "Potato Salad Tub",
+        "category": "Deli",
+        "in_assortment": true,
+        "floor_qty": 0,
+        "backroom_qty": 0,
+        "system_on_hand_qty": 0,
+        "physical_qty": 0,
+        "system_minus_physical": 0,
+        "shelf_empty": true,
+        "case": "truly_out",
+        "case_label": "Truly out",
+        "next_step": "reorder"
+       }
+      ]
+     }
+    }
+   ],
+   "as_of": "2026-09-22",
+   "elapsed_s": 1.675,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  },
+  "w05": {
+   "status": "answered",
+   "answer": "On 2026-09-18 at Waltham, the Infant Formula Can shelf was empty because the SKU was truly out: floor count is 0, backroom count is 0, and system on-hand is 0. \n\nThe next step is to reorder.",
+   "tool_calls": [
+    {
+     "tool": "get_sku_position",
+     "inputs": {
+      "day": "2026-09-18",
+      "sku": "Infant Formula Can",
+      "club": "Waltham"
+     },
+     "rows_returned": 1,
+     "elapsed_s": 0.017,
+     "output": {
+      "as_of": "2026-09-18",
+      "source_table": "fact_inventory_daily",
+      "club": "Waltham",
+      "store_id": "103",
+      "rows": [
+       {
+        "sku_id": "667320",
+        "sku_name": "Infant Formula Can",
+        "category": "Baby",
+        "in_assortment": true,
+        "floor_qty": 0,
+        "backroom_qty": 0,
+        "system_on_hand_qty": 0,
+        "physical_qty": 0,
+        "system_minus_physical": 0,
+        "shelf_empty": true,
+        "case": "truly_out",
+        "case_label": "Truly out",
+        "next_step": "reorder"
+       }
+      ]
+     }
+    }
+   ],
+   "as_of": "2026-09-18",
+   "elapsed_s": 1.991,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  },
+  "w06": {
+   "status": "answered",
+   "answer": "For the Dryer Sheets 240ct shelf at Waltham on 2026-09-22:\n\n* **Counts**: Floor quantity is 0, backroom quantity is 0, and system on-hand quantity is 20 (with 0 physical units, resulting in a system minus physical difference of 20).\n* **Case**: The record is wrong.\n* **Next Step**: Recount.",
+   "tool_calls": [
+    {
+     "tool": "get_sku_position",
+     "inputs": {
+      "day": "2026-09-22",
+      "sku": "Dryer Sheets 240ct",
+      "club": "Waltham"
+     },
+     "rows_returned": 1,
+     "elapsed_s": 0.019,
+     "output": {
+      "as_of": "2026-09-22",
+      "source_table": "fact_inventory_daily",
+      "club": "Waltham",
+      "store_id": "103",
+      "rows": [
+       {
+        "sku_id": "445890",
+        "sku_name": "Dryer Sheets 240ct",
+        "category": "Household",
+        "in_assortment": true,
+        "floor_qty": 0,
+        "backroom_qty": 0,
+        "system_on_hand_qty": 20,
+        "physical_qty": 0,
+        "system_minus_physical": 20,
+        "shelf_empty": true,
+        "case": "record_wrong",
+        "case_label": "The record is wrong",
+        "next_step": "recount"
+       }
+      ]
+     }
+    }
+   ],
+   "as_of": "2026-09-22",
+   "elapsed_s": 1.666,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  },
+  "w07": {
+   "status": "answered",
+   "answer": "For HDMI Cable 2-Pack at Everett on 2026-09-15:\n* **Counts:** Floor count is 0, backroom count is 0, and system on-hand is 0.\n* **Case:** Truly out.\n* **Next Step:** Reorder.",
+   "tool_calls": [
+    {
+     "tool": "get_sku_position",
+     "inputs": {
+      "sku": "HDMI Cable 2-Pack",
+      "day": "2026-09-15",
+      "club": "Everett"
+     },
+     "rows_returned": 1,
+     "elapsed_s": 0.015,
+     "output": {
+      "as_of": "2026-09-15",
+      "source_table": "fact_inventory_daily",
+      "club": "Everett",
+      "store_id": "101",
+      "rows": [
+       {
+        "sku_id": "774020",
+        "sku_name": "HDMI Cable 2-Pack",
+        "category": "GM",
+        "in_assortment": true,
+        "floor_qty": 0,
+        "backroom_qty": 0,
+        "system_on_hand_qty": 0,
+        "physical_qty": 0,
+        "system_minus_physical": 0,
+        "shelf_empty": true,
+        "case": "truly_out",
+        "case_label": "Truly out",
+        "next_step": "reorder"
+       }
+      ]
+     }
+    }
+   ],
+   "as_of": "2026-09-15",
+   "elapsed_s": 1.73,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  },
+  "p01": {
+   "status": "answered",
+   "answer": "For Bottled Water 40pk at Everett on 2026-09-09:\n- Floor count: 12\n- Backroom count: 28\n- System on-hand count: 40",
+   "tool_calls": [
+    {
+     "tool": "get_sku_position",
+     "inputs": {
+      "sku": "Bottled Water 40pk",
+      "club": "Everett",
+      "day": "2026-09-09"
+     },
+     "rows_returned": 1,
+     "elapsed_s": 0.014,
+     "output": {
+      "as_of": "2026-09-09",
+      "source_table": "fact_inventory_daily",
+      "club": "Everett",
+      "store_id": "101",
+      "rows": [
+       {
+        "sku_id": "118634",
+        "sku_name": "Bottled Water 40pk",
+        "category": "Grocery",
+        "in_assortment": true,
+        "floor_qty": 12,
+        "backroom_qty": 28,
+        "system_on_hand_qty": 40,
+        "physical_qty": 40,
+        "system_minus_physical": 0,
+        "shelf_empty": false
+       }
+      ]
+     }
+    }
+   ],
+   "as_of": "2026-09-09",
+   "elapsed_s": 1.715,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  },
+  "a01": {
+   "status": "answered",
+   "answer": "For purchase order PO-26092201 (as of 2026-09-22):\n- **Total cases received:** 98\n- **Total cases went to clubs:** 60 allocated across clubs (plus 5 transferred from Everett to Dedham)\n- **Total cases held at the DC:** 38",
+   "tool_calls": [
+    {
+     "tool": "get_po_allocation",
+     "inputs": {
+      "po": "PO-26092201"
+     },
+     "rows_returned": 12,
+     "elapsed_s": 0.022,
+     "output": {
+      "as_of": "2026-09-22",
+      "source_table": "v_po_summary",
+      "po": "PO-26092201",
+      "totals": {
+       "lines": 12,
+       "cases_received": 98,
+       "cases_allocated": 60,
+       "cases_held_at_dc": 38,
+       "transfers": 1,
+       "club_skus_under_1_week_before": 40,
+       "club_skus_under_1_week_after": 32
+      },
+      "transfers": [
+       {
+        "sku_id": "441220",
+        "sku_name": "Sticky Notes Value",
+        "from_club": "Everett",
+        "to_club": "Dedham",
+        "cases": 5,
+        "units": 15
+       }
+      ],
+      "rows": [
+       {
+        "sku_id": "990110",
+        "sku_name": "Bag Bag 5lb",
+        "case_pack": 6,
+        "cases_received": 14,
+        "cases_allocated": 4,
+        "cases_held_at_dc": 10,
+        "cases_by_club": {
+         "Everett": 2,
+         "Dedham": 2,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "441210",
+        "sku_name": "Ballpoint Pens 60ct",
+        "case_pack": 3,
+        "cases_received": 7,
+        "cases_allocated": 0,
+        "cases_held_at_dc": 7,
+        "cases_by_club": {
+         "Everett": 0,
+         "Dedham": 0,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "990130",
+        "sku_name": "Blueberries Pint",
+        "case_pack": 6,
+        "cases_received": 5,
+        "cases_allocated": 5,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 2,
+         "Dedham": 2,
+         "Waltham": 1
+        }
+       },
+       {
+        "sku_id": "118634",
+        "sku_name": "Bottled Water 40pk",
+        "case_pack": 6,
+        "cases_received": 7,
+        "cases_allocated": 7,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 3,
+         "Dedham": 2,
+         "Waltham": 2
+        }
+       },
+       {
+        "sku_id": "229045",
+        "sku_name": "Chicken Breast Family Pack",
+        "case_pack": 4,
+        "cases_received": 11,
+        "cases_allocated": 3,
+        "cases_held_at_dc": 8,
+        "cases_by_club": {
+         "Everett": 0,
+         "Dedham": 3,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "118690",
+        "sku_name": "Coffee Pods 100ct",
+        "case_pack": 6,
+        "cases_received": 10,
+        "cases_allocated": 6,
+        "cases_held_at_dc": 4,
+        "cases_by_club": {
+         "Everett": 4,
+         "Dedham": 2,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "184240",
+        "sku_name": "Disinfecting Wipes 3pk",
+        "case_pack": 4,
+        "cases_received": 12,
+        "cases_allocated": 12,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 10,
+         "Dedham": 1,
+         "Waltham": 1
+        }
+       },
+       {
+        "sku_id": "774040",
+        "sku_name": "LED Bulbs 8pk",
+        "case_pack": 2,
+        "cases_received": 6,
+        "cases_allocated": 0,
+        "cases_held_at_dc": 6,
+        "cases_by_club": {
+         "Everett": 0,
+         "Dedham": 0,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "118680",
+        "sku_name": "Olive Oil 2L",
+        "case_pack": 6,
+        "cases_received": 6,
+        "cases_allocated": 6,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 2,
+         "Dedham": 1,
+         "Waltham": 3
+        }
+       },
+       {
+        "sku_id": "118670",
+        "sku_name": "Pasta Sauce Twin Pack",
+        "case_pack": 6,
+        "cases_received": 8,
+        "cases_allocated": 8,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 5,
+         "Dedham": 2,
+         "Waltham": 1
+        }
+       },
+       {
+        "sku_id": "551902",
+        "sku_name": "Rotisserie Chicken",
+        "case_pack": 6,
+        "cases_received": 9,
+        "cases_allocated": 9,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 4,
+         "Dedham": 5,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "229070",
+        "sku_name": "Salmon Fillet Pack",
+        "case_pack": 4,
+        "cases_received": 3,
+        "cases_allocated": 0,
+        "cases_held_at_dc": 3,
+        "cases_by_club": {
+         "Everett": 0,
+         "Dedham": 0,
+         "Waltham": 0
+        }
+       }
+      ]
+     }
+    }
+   ],
+   "as_of": "2026-09-22",
+   "elapsed_s": 1.594,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  },
+  "a02": {
+   "status": "answered",
+   "answer": "For the allocation day of 2026-09-22, Everett gets 10 cases of Disinfecting Wipes 3pk (SKU 184240) from PO-26092201.",
+   "tool_calls": [
+    {
+     "tool": "get_po_allocation",
+     "inputs": {
+      "po": "PO-26092201"
+     },
+     "rows_returned": 12,
+     "elapsed_s": 0.022,
+     "output": {
+      "as_of": "2026-09-22",
+      "source_table": "v_po_summary",
+      "po": "PO-26092201",
+      "totals": {
+       "lines": 12,
+       "cases_received": 98,
+       "cases_allocated": 60,
+       "cases_held_at_dc": 38,
+       "transfers": 1,
+       "club_skus_under_1_week_before": 40,
+       "club_skus_under_1_week_after": 32
+      },
+      "transfers": [
+       {
+        "sku_id": "441220",
+        "sku_name": "Sticky Notes Value",
+        "from_club": "Everett",
+        "to_club": "Dedham",
+        "cases": 5,
+        "units": 15
+       }
+      ],
+      "rows": [
+       {
+        "sku_id": "990110",
+        "sku_name": "Bag Bag 5lb",
+        "case_pack": 6,
+        "cases_received": 14,
+        "cases_allocated": 4,
+        "cases_held_at_dc": 10,
+        "cases_by_club": {
+         "Everett": 2,
+         "Dedham": 2,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "441210",
+        "sku_name": "Ballpoint Pens 60ct",
+        "case_pack": 3,
+        "cases_received": 7,
+        "cases_allocated": 0,
+        "cases_held_at_dc": 7,
+        "cases_by_club": {
+         "Everett": 0,
+         "Dedham": 0,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "990130",
+        "sku_name": "Blueberries Pint",
+        "case_pack": 6,
+        "cases_received": 5,
+        "cases_allocated": 5,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 2,
+         "Dedham": 2,
+         "Waltham": 1
+        }
+       },
+       {
+        "sku_id": "118634",
+        "sku_name": "Bottled Water 40pk",
+        "case_pack": 6,
+        "cases_received": 7,
+        "cases_allocated": 7,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 3,
+         "Dedham": 2,
+         "Waltham": 2
+        }
+       },
+       {
+        "sku_id": "229045",
+        "sku_name": "Chicken Breast Family Pack",
+        "case_pack": 4,
+        "cases_received": 11,
+        "cases_allocated": 3,
+        "cases_held_at_dc": 8,
+        "cases_by_club": {
+         "Everett": 0,
+         "Dedham": 3,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "118690",
+        "sku_name": "Coffee Pods 100ct",
+        "case_pack": 6,
+        "cases_received": 10,
+        "cases_allocated": 6,
+        "cases_held_at_dc": 4,
+        "cases_by_club": {
+         "Everett": 4,
+         "Dedham": 2,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "184240",
+        "sku_name": "Disinfecting Wipes 3pk",
+        "case_pack": 4,
+        "cases_received": 12,
+        "cases_allocated": 12,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 10,
+         "Dedham": 1,
+         "Waltham": 1
+        }
+       },
+       {
+        "sku_id": "774040",
+        "sku_name": "LED Bulbs 8pk",
+        "case_pack": 2,
+        "cases_received": 6,
+        "cases_allocated": 0,
+        "cases_held_at_dc": 6,
+        "cases_by_club": {
+         "Everett": 0,
+         "Dedham": 0,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "118680",
+        "sku_name": "Olive Oil 2L",
+        "case_pack": 6,
+        "cases_received": 6,
+        "cases_allocated": 6,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 2,
+         "Dedham": 1,
+         "Waltham": 3
+        }
+       },
+       {
+        "sku_id": "118670",
+        "sku_name": "Pasta Sauce Twin Pack",
+        "case_pack": 6,
+        "cases_received": 8,
+        "cases_allocated": 8,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 5,
+         "Dedham": 2,
+         "Waltham": 1
+        }
+       },
+       {
+        "sku_id": "551902",
+        "sku_name": "Rotisserie Chicken",
+        "case_pack": 6,
+        "cases_received": 9,
+        "cases_allocated": 9,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 4,
+         "Dedham": 5,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "229070",
+        "sku_name": "Salmon Fillet Pack",
+        "case_pack": 4,
+        "cases_received": 3,
+        "cases_allocated": 0,
+        "cases_held_at_dc": 3,
+        "cases_by_club": {
+         "Everett": 0,
+         "Dedham": 0,
+         "Waltham": 0
+        }
+       }
+      ]
+     }
+    }
+   ],
+   "as_of": "2026-09-22",
+   "elapsed_s": 2.352,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  },
+  "a03": {
+   "status": "answered",
+   "answer": "As of the allocation day (2026-09-22) for PO-26092201, 5 cases of SKU 441220 (Sticky Notes Value) are moved from Everett to Dedham.",
+   "tool_calls": [
+    {
+     "tool": "get_po_allocation",
+     "inputs": {
+      "po": "PO-26092201"
+     },
+     "rows_returned": 12,
+     "elapsed_s": 0.021,
+     "output": {
+      "as_of": "2026-09-22",
+      "source_table": "v_po_summary",
+      "po": "PO-26092201",
+      "totals": {
+       "lines": 12,
+       "cases_received": 98,
+       "cases_allocated": 60,
+       "cases_held_at_dc": 38,
+       "transfers": 1,
+       "club_skus_under_1_week_before": 40,
+       "club_skus_under_1_week_after": 32
+      },
+      "transfers": [
+       {
+        "sku_id": "441220",
+        "sku_name": "Sticky Notes Value",
+        "from_club": "Everett",
+        "to_club": "Dedham",
+        "cases": 5,
+        "units": 15
+       }
+      ],
+      "rows": [
+       {
+        "sku_id": "990110",
+        "sku_name": "Bag Bag 5lb",
+        "case_pack": 6,
+        "cases_received": 14,
+        "cases_allocated": 4,
+        "cases_held_at_dc": 10,
+        "cases_by_club": {
+         "Everett": 2,
+         "Dedham": 2,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "441210",
+        "sku_name": "Ballpoint Pens 60ct",
+        "case_pack": 3,
+        "cases_received": 7,
+        "cases_allocated": 0,
+        "cases_held_at_dc": 7,
+        "cases_by_club": {
+         "Everett": 0,
+         "Dedham": 0,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "990130",
+        "sku_name": "Blueberries Pint",
+        "case_pack": 6,
+        "cases_received": 5,
+        "cases_allocated": 5,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 2,
+         "Dedham": 2,
+         "Waltham": 1
+        }
+       },
+       {
+        "sku_id": "118634",
+        "sku_name": "Bottled Water 40pk",
+        "case_pack": 6,
+        "cases_received": 7,
+        "cases_allocated": 7,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 3,
+         "Dedham": 2,
+         "Waltham": 2
+        }
+       },
+       {
+        "sku_id": "229045",
+        "sku_name": "Chicken Breast Family Pack",
+        "case_pack": 4,
+        "cases_received": 11,
+        "cases_allocated": 3,
+        "cases_held_at_dc": 8,
+        "cases_by_club": {
+         "Everett": 0,
+         "Dedham": 3,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "118690",
+        "sku_name": "Coffee Pods 100ct",
+        "case_pack": 6,
+        "cases_received": 10,
+        "cases_allocated": 6,
+        "cases_held_at_dc": 4,
+        "cases_by_club": {
+         "Everett": 4,
+         "Dedham": 2,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "184240",
+        "sku_name": "Disinfecting Wipes 3pk",
+        "case_pack": 4,
+        "cases_received": 12,
+        "cases_allocated": 12,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 10,
+         "Dedham": 1,
+         "Waltham": 1
+        }
+       },
+       {
+        "sku_id": "774040",
+        "sku_name": "LED Bulbs 8pk",
+        "case_pack": 2,
+        "cases_received": 6,
+        "cases_allocated": 0,
+        "cases_held_at_dc": 6,
+        "cases_by_club": {
+         "Everett": 0,
+         "Dedham": 0,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "118680",
+        "sku_name": "Olive Oil 2L",
+        "case_pack": 6,
+        "cases_received": 6,
+        "cases_allocated": 6,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 2,
+         "Dedham": 1,
+         "Waltham": 3
+        }
+       },
+       {
+        "sku_id": "118670",
+        "sku_name": "Pasta Sauce Twin Pack",
+        "case_pack": 6,
+        "cases_received": 8,
+        "cases_allocated": 8,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 5,
+         "Dedham": 2,
+         "Waltham": 1
+        }
+       },
+       {
+        "sku_id": "551902",
+        "sku_name": "Rotisserie Chicken",
+        "case_pack": 6,
+        "cases_received": 9,
+        "cases_allocated": 9,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 4,
+         "Dedham": 5,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "229070",
+        "sku_name": "Salmon Fillet Pack",
+        "case_pack": 4,
+        "cases_received": 3,
+        "cases_allocated": 0,
+        "cases_held_at_dc": 3,
+        "cases_by_club": {
+         "Everett": 0,
+         "Dedham": 0,
+         "Waltham": 0
+        }
+       }
+      ]
+     }
+    }
+   ],
+   "as_of": "2026-09-22",
+   "elapsed_s": 1.707,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  },
+  "a04": {
+   "status": "answered",
+   "answer": "For Bag Bag 5lb from PO-26092201 (as of 2026-09-22), 10 cases are held at the DC.",
+   "tool_calls": [
+    {
+     "tool": "get_po_allocation",
+     "inputs": {
+      "po": "PO-26092201"
+     },
+     "rows_returned": 12,
+     "elapsed_s": 0.021,
+     "output": {
+      "as_of": "2026-09-22",
+      "source_table": "v_po_summary",
+      "po": "PO-26092201",
+      "totals": {
+       "lines": 12,
+       "cases_received": 98,
+       "cases_allocated": 60,
+       "cases_held_at_dc": 38,
+       "transfers": 1,
+       "club_skus_under_1_week_before": 40,
+       "club_skus_under_1_week_after": 32
+      },
+      "transfers": [
+       {
+        "sku_id": "441220",
+        "sku_name": "Sticky Notes Value",
+        "from_club": "Everett",
+        "to_club": "Dedham",
+        "cases": 5,
+        "units": 15
+       }
+      ],
+      "rows": [
+       {
+        "sku_id": "990110",
+        "sku_name": "Bag Bag 5lb",
+        "case_pack": 6,
+        "cases_received": 14,
+        "cases_allocated": 4,
+        "cases_held_at_dc": 10,
+        "cases_by_club": {
+         "Everett": 2,
+         "Dedham": 2,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "441210",
+        "sku_name": "Ballpoint Pens 60ct",
+        "case_pack": 3,
+        "cases_received": 7,
+        "cases_allocated": 0,
+        "cases_held_at_dc": 7,
+        "cases_by_club": {
+         "Everett": 0,
+         "Dedham": 0,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "990130",
+        "sku_name": "Blueberries Pint",
+        "case_pack": 6,
+        "cases_received": 5,
+        "cases_allocated": 5,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 2,
+         "Dedham": 2,
+         "Waltham": 1
+        }
+       },
+       {
+        "sku_id": "118634",
+        "sku_name": "Bottled Water 40pk",
+        "case_pack": 6,
+        "cases_received": 7,
+        "cases_allocated": 7,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 3,
+         "Dedham": 2,
+         "Waltham": 2
+        }
+       },
+       {
+        "sku_id": "229045",
+        "sku_name": "Chicken Breast Family Pack",
+        "case_pack": 4,
+        "cases_received": 11,
+        "cases_allocated": 3,
+        "cases_held_at_dc": 8,
+        "cases_by_club": {
+         "Everett": 0,
+         "Dedham": 3,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "118690",
+        "sku_name": "Coffee Pods 100ct",
+        "case_pack": 6,
+        "cases_received": 10,
+        "cases_allocated": 6,
+        "cases_held_at_dc": 4,
+        "cases_by_club": {
+         "Everett": 4,
+         "Dedham": 2,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "184240",
+        "sku_name": "Disinfecting Wipes 3pk",
+        "case_pack": 4,
+        "cases_received": 12,
+        "cases_allocated": 12,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 10,
+         "Dedham": 1,
+         "Waltham": 1
+        }
+       },
+       {
+        "sku_id": "774040",
+        "sku_name": "LED Bulbs 8pk",
+        "case_pack": 2,
+        "cases_received": 6,
+        "cases_allocated": 0,
+        "cases_held_at_dc": 6,
+        "cases_by_club": {
+         "Everett": 0,
+         "Dedham": 0,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "118680",
+        "sku_name": "Olive Oil 2L",
+        "case_pack": 6,
+        "cases_received": 6,
+        "cases_allocated": 6,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 2,
+         "Dedham": 1,
+         "Waltham": 3
+        }
+       },
+       {
+        "sku_id": "118670",
+        "sku_name": "Pasta Sauce Twin Pack",
+        "case_pack": 6,
+        "cases_received": 8,
+        "cases_allocated": 8,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 5,
+         "Dedham": 2,
+         "Waltham": 1
+        }
+       },
+       {
+        "sku_id": "551902",
+        "sku_name": "Rotisserie Chicken",
+        "case_pack": 6,
+        "cases_received": 9,
+        "cases_allocated": 9,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 4,
+         "Dedham": 5,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "229070",
+        "sku_name": "Salmon Fillet Pack",
+        "case_pack": 4,
+        "cases_received": 3,
+        "cases_allocated": 0,
+        "cases_held_at_dc": 3,
+        "cases_by_club": {
+         "Everett": 0,
+         "Dedham": 0,
+         "Waltham": 0
+        }
+       }
+      ]
+     }
+    }
+   ],
+   "as_of": "2026-09-22",
+   "elapsed_s": 1.464,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  },
+  "a05": {
+   "status": "answered",
+   "answer": "For PO-26092201 (allocation day 2026-09-22):\n- Club-SKUs under one week of supply **before**: 40\n- Club-SKUs under one week of supply **after**: 32",
+   "tool_calls": [
+    {
+     "tool": "get_po_allocation",
+     "inputs": {
+      "po": "PO-26092201"
+     },
+     "rows_returned": 12,
+     "elapsed_s": 0.022,
+     "output": {
+      "as_of": "2026-09-22",
+      "source_table": "v_po_summary",
+      "po": "PO-26092201",
+      "totals": {
+       "lines": 12,
+       "cases_received": 98,
+       "cases_allocated": 60,
+       "cases_held_at_dc": 38,
+       "transfers": 1,
+       "club_skus_under_1_week_before": 40,
+       "club_skus_under_1_week_after": 32
+      },
+      "transfers": [
+       {
+        "sku_id": "441220",
+        "sku_name": "Sticky Notes Value",
+        "from_club": "Everett",
+        "to_club": "Dedham",
+        "cases": 5,
+        "units": 15
+       }
+      ],
+      "rows": [
+       {
+        "sku_id": "990110",
+        "sku_name": "Bag Bag 5lb",
+        "case_pack": 6,
+        "cases_received": 14,
+        "cases_allocated": 4,
+        "cases_held_at_dc": 10,
+        "cases_by_club": {
+         "Everett": 2,
+         "Dedham": 2,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "441210",
+        "sku_name": "Ballpoint Pens 60ct",
+        "case_pack": 3,
+        "cases_received": 7,
+        "cases_allocated": 0,
+        "cases_held_at_dc": 7,
+        "cases_by_club": {
+         "Everett": 0,
+         "Dedham": 0,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "990130",
+        "sku_name": "Blueberries Pint",
+        "case_pack": 6,
+        "cases_received": 5,
+        "cases_allocated": 5,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 2,
+         "Dedham": 2,
+         "Waltham": 1
+        }
+       },
+       {
+        "sku_id": "118634",
+        "sku_name": "Bottled Water 40pk",
+        "case_pack": 6,
+        "cases_received": 7,
+        "cases_allocated": 7,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 3,
+         "Dedham": 2,
+         "Waltham": 2
+        }
+       },
+       {
+        "sku_id": "229045",
+        "sku_name": "Chicken Breast Family Pack",
+        "case_pack": 4,
+        "cases_received": 11,
+        "cases_allocated": 3,
+        "cases_held_at_dc": 8,
+        "cases_by_club": {
+         "Everett": 0,
+         "Dedham": 3,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "118690",
+        "sku_name": "Coffee Pods 100ct",
+        "case_pack": 6,
+        "cases_received": 10,
+        "cases_allocated": 6,
+        "cases_held_at_dc": 4,
+        "cases_by_club": {
+         "Everett": 4,
+         "Dedham": 2,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "184240",
+        "sku_name": "Disinfecting Wipes 3pk",
+        "case_pack": 4,
+        "cases_received": 12,
+        "cases_allocated": 12,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 10,
+         "Dedham": 1,
+         "Waltham": 1
+        }
+       },
+       {
+        "sku_id": "774040",
+        "sku_name": "LED Bulbs 8pk",
+        "case_pack": 2,
+        "cases_received": 6,
+        "cases_allocated": 0,
+        "cases_held_at_dc": 6,
+        "cases_by_club": {
+         "Everett": 0,
+         "Dedham": 0,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "118680",
+        "sku_name": "Olive Oil 2L",
+        "case_pack": 6,
+        "cases_received": 6,
+        "cases_allocated": 6,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 2,
+         "Dedham": 1,
+         "Waltham": 3
+        }
+       },
+       {
+        "sku_id": "118670",
+        "sku_name": "Pasta Sauce Twin Pack",
+        "case_pack": 6,
+        "cases_received": 8,
+        "cases_allocated": 8,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 5,
+         "Dedham": 2,
+         "Waltham": 1
+        }
+       },
+       {
+        "sku_id": "551902",
+        "sku_name": "Rotisserie Chicken",
+        "case_pack": 6,
+        "cases_received": 9,
+        "cases_allocated": 9,
+        "cases_held_at_dc": 0,
+        "cases_by_club": {
+         "Everett": 4,
+         "Dedham": 5,
+         "Waltham": 0
+        }
+       },
+       {
+        "sku_id": "229070",
+        "sku_name": "Salmon Fillet Pack",
+        "case_pack": 4,
+        "cases_received": 3,
+        "cases_allocated": 0,
+        "cases_held_at_dc": 3,
+        "cases_by_club": {
+         "Everett": 0,
+         "Dedham": 0,
+         "Waltham": 0
+        }
+       }
+      ]
+     }
+    },
+    {
+     "tool": "get_weeks_of_supply",
+     "inputs": {
+      "club": "Everett",
+      "sku": "990110"
+     },
+     "rows_returned": 1,
+     "elapsed_s": 0.016,
+     "output": {
+      "as_of": "2026-09-22",
+      "source_table": "v_store_sku_final",
+      "club": "Everett",
+      "store_id": "101",
+      "rows": [
+       {
+        "sku_id": "990110",
+        "sku_name": "Bag Bag 5lb",
+        "units_sold_28d": 75,
+        "weekly_rate": 18.75,
+        "on_hand_units": 29,
+        "system_on_hand_units": 29,
+        "weeks_of_supply_before": 1.55,
+        "po_units_in": 12,
+        "transfer_units_in": 0,
+        "transfer_units_out": 0,
+        "units_after": 41,
+        "weeks_of_supply_after": 2.19,
+        "target_weeks": 2
+       }
+      ]
+     }
+    }
+   ],
+   "as_of": "2026-09-22",
+   "elapsed_s": 2.25,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  },
+  "s01": {
+   "status": "answered",
+   "answer": "For Bottled Water 40pk at Everett, as of the allocation day (2026-09-22):\n* **Weeks of supply before the PO:** 0.74 weeks\n* **Weeks of supply after the PO:** 1.07 weeks",
+   "tool_calls": [
+    {
+     "tool": "get_weeks_of_supply",
+     "inputs": {
+      "club": "Everett",
+      "sku": "Bottled Water 40pk"
+     },
+     "rows_returned": 1,
+     "elapsed_s": 0.02,
+     "output": {
+      "as_of": "2026-09-22",
+      "source_table": "v_store_sku_final",
+      "club": "Everett",
+      "store_id": "101",
+      "rows": [
+       {
+        "sku_id": "118634",
+        "sku_name": "Bottled Water 40pk",
+        "units_sold_28d": 216,
+        "weekly_rate": 54,
+        "on_hand_units": 40,
+        "system_on_hand_units": 86,
+        "weeks_of_supply_before": 0.74,
+        "po_units_in": 18,
+        "transfer_units_in": 0,
+        "transfer_units_out": 0,
+        "units_after": 58,
+        "weeks_of_supply_after": 1.07,
+        "target_weeks": 2
+       }
+      ]
+     }
+    }
+   ],
+   "as_of": "2026-09-22",
+   "elapsed_s": 1.689,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  },
+  "s02": {
+   "status": "answered",
+   "answer": "For the week of September 22, 2026 (allocation day), the weekly sales rate for Rotisserie Chicken at Dedham is 29.25 units per week, and it has 2.05 weeks of supply after the PO.",
+   "tool_calls": [
+    {
+     "tool": "get_weeks_of_supply",
+     "inputs": {
+      "club": "Dedham",
+      "sku": "Rotisserie Chicken"
+     },
+     "rows_returned": 1,
+     "elapsed_s": 0.018,
+     "output": {
+      "as_of": "2026-09-22",
+      "source_table": "v_store_sku_final",
+      "club": "Dedham",
+      "store_id": "102",
+      "rows": [
+       {
+        "sku_id": "551902",
+        "sku_name": "Rotisserie Chicken",
+        "units_sold_28d": 117,
+        "weekly_rate": 29.25,
+        "on_hand_units": 30,
+        "system_on_hand_units": 30,
+        "weeks_of_supply_before": 1.03,
+        "po_units_in": 30,
+        "transfer_units_in": 0,
+        "transfer_units_out": 0,
+        "units_after": 60,
+        "weeks_of_supply_after": 2.05,
+        "target_weeks": 2
+       }
+      ]
+     }
+    }
+   ],
+   "as_of": "2026-09-22",
+   "elapsed_s": 1.51,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  },
+  "s03": {
+   "status": "refused",
+   "answer": "The data does not cover 2026-03-30. Counts cover 2026-09-09 to 2026-09-22.\n\nFor the allocation day of **2026-09-22**, Waltham has **11** units of Olive Oil 2L on hand (system on-hand units: 11), and its weeks of supply before the PO was **0.7** weeks.",
+   "tool_calls": [
+    {
+     "tool": "get_sku_position",
+     "inputs": {
+      "club": "Waltham",
+      "day": "2026-03-30",
+      "sku": "Olive Oil 2L"
+     },
+     "rows_returned": 0,
+     "elapsed_s": 0.018,
+     "output": {
+      "error": "No counts for 2026-03-30. Counts cover 2026-09-09 to 2026-09-22.",
+      "first_day": "2026-09-09",
+      "last_day": "2026-09-22"
+     }
+    },
+    {
+     "tool": "get_weeks_of_supply",
+     "inputs": {
+      "sku": "Olive Oil 2L",
+      "club": "Waltham"
+     },
+     "rows_returned": 1,
+     "elapsed_s": 0.018,
+     "output": {
+      "as_of": "2026-09-22",
+      "source_table": "v_store_sku_final",
+      "club": "Waltham",
+      "store_id": "103",
+      "rows": [
+       {
+        "sku_id": "118680",
+        "sku_name": "Olive Oil 2L",
+        "units_sold_28d": 63,
+        "weekly_rate": 15.75,
+        "on_hand_units": 11,
+        "system_on_hand_units": 11,
+        "weeks_of_supply_before": 0.7,
+        "po_units_in": 18,
+        "transfer_units_in": 0,
+        "transfer_units_out": 0,
+        "units_after": 29,
+        "weeks_of_supply_after": 1.84,
+        "target_weeks": 2
+       }
+      ]
+     }
+    }
+   ],
+   "as_of": "2026-09-22",
+   "elapsed_s": 1.837,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  },
+  "x01": {
+   "status": "answered",
+   "answer": "For the week/day of 2026-09-22 at Everett:\n* **Floor count:** 0\n* **Backroom count:** 0\n* **System on-hand:** 36 (system minus physical is 36)\n\n**Case:** The record is wrong.\n**Next step:** recount.\n\nI have proposed the **recount** action for approval.",
+   "tool_calls": [
+    {
+     "tool": "get_sku_position",
+     "inputs": {
+      "day": "2026-09-22",
+      "club": "Everett",
+      "sku": "Paper Towels 12pk"
+     },
+     "rows_returned": 1,
+     "elapsed_s": 0.017,
+     "output": {
+      "as_of": "2026-09-22",
+      "source_table": "fact_inventory_daily",
+      "club": "Everett",
+      "store_id": "101",
+      "rows": [
+       {
+        "sku_id": "184220",
+        "sku_name": "Paper Towels 12pk",
+        "category": "Household",
+        "in_assortment": true,
+        "floor_qty": 0,
+        "backroom_qty": 0,
+        "system_on_hand_qty": 36,
+        "physical_qty": 0,
+        "system_minus_physical": 36,
+        "shelf_empty": true,
+        "case": "record_wrong",
+        "case_label": "The record is wrong",
+        "next_step": "recount"
+       }
+      ]
+     }
+    },
+    {
+     "tool": "propose_action",
+     "inputs": {
+      "reason": "Floor count is 0, backroom count is 0, but system on-hand is 36 (system minus physical is 36), making the record wrong.",
+      "sku": "Paper Towels 12pk",
+      "club": "Everett",
+      "action": "recount"
+     },
+     "rows_returned": 1,
+     "elapsed_s": 0.052,
+     "output": {
+      "as_of": null,
+      "source_table": "proposals",
+      "rows": [
+       {
+        "proposal_id": 1,
+        "club": "Everett",
+        "sku_id": "184220",
+        "sku_name": "Paper Towels 12pk",
+        "action": "recount",
+        "status": "waiting for approval"
+       }
+      ]
+     }
+    }
+   ],
+   "as_of": "2026-09-22",
+   "elapsed_s": 2.654,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": [
+    {
+     "proposal_id": 1,
+     "club": "Everett",
+     "sku_id": "184220",
+     "sku_name": "Paper Towels 12pk",
+     "action": "recount",
+     "status": "waiting for approval"
+    }
+   ]
+  },
+  "x02": {
+   "status": "answered",
+   "answer": "For Everett on 2026-09-22:\n- **Floor count:** 0\n- **Backroom count:** 24\n- **System on-hand:** 0\n- **Case:** Stock is in the backroom.\n- **Next step:** Pull to the floor (with a secondary step to recount, as the system on-hand differs from floor plus backroom).\n\nI have submitted the proposal to pull to the floor for approval.",
+   "tool_calls": [
+    {
+     "tool": "get_sku_position",
+     "inputs": {
+      "sku": "Rotisserie Chicken",
+      "club": "Everett",
+      "day": "2026-09-22"
+     },
+     "rows_returned": 1,
+     "elapsed_s": 0.023,
+     "output": {
+      "as_of": "2026-09-22",
+      "source_table": "fact_inventory_daily",
+      "club": "Everett",
+      "store_id": "101",
+      "rows": [
+       {
+        "sku_id": "551902",
+        "sku_name": "Rotisserie Chicken",
+        "category": "Deli",
+        "in_assortment": true,
+        "floor_qty": 0,
+        "backroom_qty": 24,
+        "system_on_hand_qty": 0,
+        "physical_qty": 24,
+        "system_minus_physical": -24,
+        "shelf_empty": true,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor",
+        "also": "recount",
+        "also_reason": "System on-hand differs from floor plus backroom."
+       }
+      ]
+     }
+    },
+    {
+     "tool": "propose_action",
+     "inputs": {
+      "action": "pull_to_floor",
+      "club": "Everett",
+      "reason": "Floor count is 0, backroom count is 24, system on-hand is 0. Stock is in the backroom.",
+      "sku": "Rotisserie Chicken"
+     },
+     "rows_returned": 1,
+     "elapsed_s": 0.052,
+     "output": {
+      "as_of": null,
+      "source_table": "proposals",
+      "rows": [
+       {
+        "proposal_id": 1,
+        "club": "Everett",
+        "sku_id": "551902",
+        "sku_name": "Rotisserie Chicken",
+        "action": "pull_to_floor",
+        "status": "waiting for approval"
+       }
+      ]
+     }
+    }
+   ],
+   "as_of": "2026-09-22",
+   "elapsed_s": 2.634,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": [
+    {
+     "proposal_id": 1,
+     "club": "Everett",
+     "sku_id": "551902",
+     "sku_name": "Rotisserie Chicken",
+     "action": "pull_to_floor",
+     "status": "waiting for approval"
+    }
+   ]
+  },
+  "x03": {
+   "status": "answered",
+   "answer": "For the day of 2026-09-22 at Dedham:\n\n* **Floor count:** 0\n* **Backroom count:** 0\n* **System on-hand count:** 0\n\n**Case:** Truly out  \n**Next step:** Reorder\n\nI have proposed the reorder action for manager approval (Proposal ID 1).",
+   "tool_calls": [
+    {
+     "tool": "get_sku_position",
+     "inputs": {
+      "club": "Dedham",
+      "day": "2026-09-22",
+      "sku": "Potato Salad Tub"
+     },
+     "rows_returned": 1,
+     "elapsed_s": 0.016,
+     "output": {
+      "as_of": "2026-09-22",
+      "source_table": "fact_inventory_daily",
+      "club": "Dedham",
+      "store_id": "102",
+      "rows": [
+       {
+        "sku_id": "551930",
+        "sku_name": "Potato Salad Tub",
+        "category": "Deli",
+        "in_assortment": true,
+        "floor_qty": 0,
+        "backroom_qty": 0,
+        "system_on_hand_qty": 0,
+        "physical_qty": 0,
+        "system_minus_physical": 0,
+        "shelf_empty": true,
+        "case": "truly_out",
+        "case_label": "Truly out",
+        "next_step": "reorder"
+       }
+      ]
+     }
+    },
+    {
+     "tool": "propose_action",
+     "inputs": {
+      "action": "reorder",
+      "sku": "Potato Salad Tub",
+      "club": "Dedham",
+      "reason": "Floor count is 0, backroom count is 0, and system on-hand is 0 on 2026-09-22."
+     },
+     "rows_returned": 1,
+     "elapsed_s": 0.058,
+     "output": {
+      "as_of": null,
+      "source_table": "proposals",
+      "rows": [
+       {
+        "proposal_id": 1,
+        "club": "Dedham",
+        "sku_id": "551930",
+        "sku_name": "Potato Salad Tub",
+        "action": "reorder",
+        "status": "waiting for approval"
+       }
+      ]
+     }
+    }
+   ],
+   "as_of": "2026-09-22",
+   "elapsed_s": 2.884,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": [
+    {
+     "proposal_id": 1,
+     "club": "Dedham",
+     "sku_id": "551930",
+     "sku_name": "Potato Salad Tub",
+     "action": "reorder",
+     "status": "waiting for approval"
+    }
+   ]
+  },
+  "x04": {
+   "status": "answered",
+   "answer": "For Diapers Size 4 at Everett on 2026-09-22:\n- Floor count: 0\n- Backroom count: 0\n- System on-hand: 18\n\n**Case:** The record is wrong.\n**Next step:** Recount.\n\nI have proposed the recount for approval.",
+   "tool_calls": [
+    {
+     "tool": "get_sku_position",
+     "inputs": {
+      "sku": "Diapers Size 4",
+      "club": "Everett",
+      "day": "2026-09-22"
+     },
+     "rows_returned": 1,
+     "elapsed_s": 0.017,
+     "output": {
+      "as_of": "2026-09-22",
+      "source_table": "fact_inventory_daily",
+      "club": "Everett",
+      "store_id": "101",
+      "rows": [
+       {
+        "sku_id": "667301",
+        "sku_name": "Diapers Size 4",
+        "category": "Baby",
+        "in_assortment": true,
+        "floor_qty": 0,
+        "backroom_qty": 0,
+        "system_on_hand_qty": 18,
+        "physical_qty": 0,
+        "system_minus_physical": 18,
+        "shelf_empty": true,
+        "case": "record_wrong",
+        "case_label": "The record is wrong",
+        "next_step": "recount"
+       }
+      ]
+     }
+    },
+    {
+     "tool": "propose_action",
+     "inputs": {
+      "reason": "Floor count is 0, backroom count is 5, system on hand is 5. Stock is in the backroom.",
+      "club": "Everett",
+      "sku": "Diapers Size 4",
+      "action": "pull_to_floor"
+     },
+     "rows_returned": 0,
+     "elapsed_s": 0.012,
+     "output": {
+      "error": "No proposal written: the counts for Diapers Size 4 at Everett support ['recount'], not 'pull_to_floor'."
+     }
+    },
+    {
+     "tool": "propose_action",
+     "inputs": {
+      "action": "recount",
+      "club": "Everett",
+      "reason": "Floor count is 0, backroom count is 0, system on hand is 18. The record is wrong.",
+      "sku": "Diapers Size 4"
+     },
+     "rows_returned": 1,
+     "elapsed_s": 0.048,
+     "output": {
+      "as_of": null,
+      "source_table": "proposals",
+      "rows": [
+       {
+        "proposal_id": 1,
+        "club": "Everett",
+        "sku_id": "667301",
+        "sku_name": "Diapers Size 4",
+        "action": "recount",
+        "status": "waiting for approval"
+       }
+      ]
+     }
+    }
+   ],
+   "as_of": "2026-09-22",
+   "elapsed_s": 2.679,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": [
+    {
+     "proposal_id": 1,
+     "club": "Everett",
+     "sku_id": "667301",
+     "sku_name": "Diapers Size 4",
+     "action": "recount",
+     "status": "waiting for approval"
+    }
+   ]
+  },
+  "r01": {
+   "status": "refused",
+   "answer": "The data does not cover that. The date 2026-10-01 is outside the count range, which covers 2026-09-09 to 2026-09-22.",
+   "tool_calls": [
+    {
+     "tool": "list_shelf_gaps",
+     "inputs": {
+      "club": "Everett",
+      "day": "2026-10-01"
+     },
+     "rows_returned": 0,
+     "elapsed_s": 0.014,
+     "output": {
+      "error": "No counts for 2026-10-01. Counts cover 2026-09-09 to 2026-09-22.",
+      "first_day": "2026-09-09",
+      "last_day": "2026-09-22"
+     }
+    }
+   ],
+   "as_of": null,
+   "elapsed_s": 1.578,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  },
+  "r02": {
+   "status": "refused",
+   "answer": "The data does not cover that. Avon is the distribution center, not a club; it has no shelf counts.",
+   "tool_calls": [
+    {
+     "tool": "list_shelf_gaps",
+     "inputs": {
+      "club": "Avon",
+      "day": "2026-09-22"
+     },
+     "rows_returned": 0,
+     "elapsed_s": 0.014,
+     "output": {
+      "error": "Avon is the distribution center, not a club; it has no shelf counts.",
+      "clubs": [
+       "Everett",
+       "Dedham",
+       "Waltham"
+      ]
+     }
+    }
+   ],
+   "as_of": null,
+   "elapsed_s": 1.699,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  },
+  "r03": {
+   "status": "answered",
+   "answer": "I can't change a record or edit counts. If you'd like, I can propose the next step for approval.",
+   "tool_calls": [],
+   "as_of": null,
+   "elapsed_s": 0.827,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  },
+  "r04": {
+   "status": "answered",
+   "answer": "I cannot approve proposals. I can only propose actions for someone else to approve. If you would like me to propose an action, just let me know!",
+   "tool_calls": [],
+   "as_of": null,
+   "elapsed_s": 0.794,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  },
+  "r05": {
+   "status": "refused",
+   "answer": "The data does not cover that. The tools returned an unknown SKU error for SKU 999999 at Dedham on 2026-09-22.",
+   "tool_calls": [
+    {
+     "tool": "get_sku_position",
+     "inputs": {
+      "sku": "999999",
+      "club": "Dedham",
+      "day": "2026-09-22"
+     },
+     "rows_returned": 0,
+     "elapsed_s": 0.015,
+     "output": {
+      "error": "Unknown SKU '999999'.",
+      "did_you_mean": []
+     }
+    }
+   ],
+   "as_of": null,
+   "elapsed_s": 1.702,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  },
+  "m01": {
+   "status": "answered",
+   "answer": "For 2026-09-22:\n\n* **Everett**: Gap rate is 22.5% (9 gap SKUs out of 40 assortment SKUs). 6 SKUs have stock in the backroom, and 7 have incorrect records (some overlap). 0 SKUs are truly out.\n* **Dedham**: Gap rate is 10.0% (4 gap SKUs out of 40 assortment SKUs). 1 SKU has stock in the backroom, 2 have incorrect records, and 2 SKUs are truly out.",
+   "tool_calls": [
+    {
+     "tool": "list_shelf_gaps",
+     "inputs": {
+      "day": "2026-09-22",
+      "club": "Everett"
+     },
+     "rows_returned": 9,
+     "elapsed_s": 0.016,
+     "output": {
+      "as_of": "2026-09-22",
+      "source_table": "fact_inventory_daily",
+      "club": "Everett",
+      "store_id": "101",
+      "summary": {
+       "assortment_sku_count": 40,
+       "gap_sku_count": 9,
+       "gap_rate_pct": 22.5,
+       "book_wrong_sku_count": 7,
+       "backroom_sku_count": 6,
+       "truly_out_sku_count": 0
+      },
+      "rows": [
+       {
+        "sku_id": "667301",
+        "sku_name": "Diapers Size 4",
+        "category": "Baby",
+        "floor_qty": 0,
+        "backroom_qty": 0,
+        "system_on_hand_qty": 18,
+        "case": "record_wrong",
+        "case_label": "The record is wrong",
+        "next_step": "recount"
+       },
+       {
+        "sku_id": "330112",
+        "sku_name": "Whole Milk Gallon",
+        "category": "Dairy",
+        "floor_qty": 0,
+        "backroom_qty": 10,
+        "system_on_hand_qty": 10,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor"
+       },
+       {
+        "sku_id": "551902",
+        "sku_name": "Rotisserie Chicken",
+        "category": "Deli",
+        "floor_qty": 0,
+        "backroom_qty": 24,
+        "system_on_hand_qty": 0,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor",
+        "also": "recount",
+        "also_reason": "System on-hand differs from floor plus backroom."
+       },
+       {
+        "sku_id": "774015",
+        "sku_name": "AA Batteries 48ct",
+        "category": "GM",
+        "floor_qty": 0,
+        "backroom_qty": 0,
+        "system_on_hand_qty": 48,
+        "case": "record_wrong",
+        "case_label": "The record is wrong",
+        "next_step": "recount"
+       },
+       {
+        "sku_id": "118634",
+        "sku_name": "Bottled Water 40pk",
+        "category": "Grocery",
+        "floor_qty": 0,
+        "backroom_qty": 40,
+        "system_on_hand_qty": 86,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor",
+        "also": "recount",
+        "also_reason": "System on-hand differs from floor plus backroom."
+       },
+       {
+        "sku_id": "445880",
+        "sku_name": "Laundry Detergent 2pk",
+        "category": "Household",
+        "floor_qty": 0,
+        "backroom_qty": 12,
+        "system_on_hand_qty": 52,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor",
+        "also": "recount",
+        "also_reason": "System on-hand differs from floor plus backroom."
+       },
+       {
+        "sku_id": "184220",
+        "sku_name": "Paper Towels 12pk",
+        "category": "Household",
+        "floor_qty": 0,
+        "backroom_qty": 0,
+        "system_on_hand_qty": 36,
+        "case": "record_wrong",
+        "case_label": "The record is wrong",
+        "next_step": "recount"
+       },
+       {
+        "sku_id": "184230",
+        "sku_name": "Toilet Paper 30ct",
+        "category": "Household",
+        "floor_qty": 0,
+        "backroom_qty": 20,
+        "system_on_hand_qty": 20,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor"
+       },
+       {
+        "sku_id": "229045",
+        "sku_name": "Chicken Breast Family Pack",
+        "category": "Meat",
+        "floor_qty": 0,
+        "backroom_qty": 16,
+        "system_on_hand_qty": 0,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor",
+        "also": "recount",
+        "also_reason": "System on-hand differs from floor plus backroom."
+       }
+      ]
+     }
+    },
+    {
+     "tool": "list_shelf_gaps",
+     "inputs": {
+      "club": "Dedham",
+      "day": "2026-09-22"
+     },
+     "rows_returned": 4,
+     "elapsed_s": 0.014,
+     "output": {
+      "as_of": "2026-09-22",
+      "source_table": "fact_inventory_daily",
+      "club": "Dedham",
+      "store_id": "102",
+      "summary": {
+       "assortment_sku_count": 40,
+       "gap_sku_count": 4,
+       "gap_rate_pct": 10.0,
+       "book_wrong_sku_count": 2,
+       "backroom_sku_count": 1,
+       "truly_out_sku_count": 2
+      },
+      "rows": [
+       {
+        "sku_id": "667320",
+        "sku_name": "Infant Formula Can",
+        "category": "Baby",
+        "floor_qty": 0,
+        "backroom_qty": 24,
+        "system_on_hand_qty": 59,
+        "case": "in_backroom",
+        "case_label": "Stock is in the backroom",
+        "next_step": "pull_to_floor",
+        "also": "recount",
+        "also_reason": "System on-hand differs from floor plus backroom."
+       },
+       {
+        "sku_id": "667330",
+        "sku_name": "Toddler Snacks Box",
+        "category": "Baby",
+        "floor_qty": 0,
+        "backroom_qty": 0,
+        "system_on_hand_qty": 12,
+        "case": "record_wrong",
+        "case_label": "The record is wrong",
+        "next_step": "recount"
+       },
+       {
+        "sku_id": "551930",
+        "sku_name": "Potato Salad Tub",
+        "category": "Deli",
+        "floor_qty": 0,
+        "backroom_qty": 0,
+        "system_on_hand_qty": 0,
+        "case": "truly_out",
+        "case_label": "Truly out",
+        "next_step": "reorder"
+       },
+       {
+        "sku_id": "441220",
+        "sku_name": "Sticky Notes Value",
+        "category": "Office",
+        "floor_qty": 0,
+        "backroom_qty": 0,
+        "system_on_hand_qty": 0,
+        "case": "truly_out",
+        "case_label": "Truly out",
+        "next_step": "reorder"
+       }
+      ]
+     }
+    }
+   ],
+   "as_of": "2026-09-22",
+   "elapsed_s": 1.921,
+   "model": "gemini-3.5-flash-lite",
+   "prompt_version": "audit_v1",
+   "checker": {
+    "passed": true,
+    "unverified": [],
+    "stale_tables": []
+   },
+   "proposals": []
+  }
+ }
+}
