@@ -25,7 +25,7 @@ main{display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
 .metric{border:1px solid var(--line2);border-radius:10px;padding:12px 14px;min-width:0}
 .metric .lab{color:var(--mute);font-size:13px}
 .metric .val{font:500 clamp(28px,4vw,38px)/1.1 var(--num);margin:6px 0 2px;overflow-wrap:anywhere}
-.metric .unit{font:400 12px var(--mono);color:var(--mute);margin-left:4px}
+.metric .unit{display:block;font:400 12px/1.35 var(--mono);color:var(--mute);margin-top:2px}
 .metric .ch{font:400 12px var(--mono);color:var(--mute)}
 .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line2);border-radius:10px}
 table{border-collapse:collapse;width:100%;font-size:13.5px}
