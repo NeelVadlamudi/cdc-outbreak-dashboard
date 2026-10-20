@@ -24,6 +24,8 @@ jobs:
       CDC_DB_PATH: ${{ github.workspace }}/data/cdc_surveillance.duckdb
       LOG_FORMAT: json
       EVAL_MODEL: gemini-3.5-flash-lite
+      # The eval sends 60 questions in a few minutes to a local server; the public limits are for Render.
+      RATE_LIMITS_ENABLED: "false"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
