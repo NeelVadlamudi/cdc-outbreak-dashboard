@@ -51,11 +51,11 @@ for (const [label, get] of [["fixture", fx], ["real site/data", real]]) {
     assert.deepEqual(keys(d), ["audit_log", "generated_at", "proposals", "second_answer", "source"]);
     for (const p of d.proposals) { assert.deepEqual(Object.keys(p).sort(), [...PROPOSAL_KEYS].sort()); assert.ok(STATUSES.includes(p.status)); assert.ok(ACTIONS.includes(p.action)); }
     for (const a of d.audit_log) assert.deepEqual(Object.keys(a).sort(), [...AUDIT_KEYS].sort());
-    const sa = d.second_answer, req = ["answer", "question", "status"], opt = ["tool_calls", "proposal_id"];
+    const sa = d.second_answer, req = ["answer", "question", "status"], opt = ["as_of", "tool_calls", "proposal_id"];
     assert.ok(req.every((k) => k in sa), "second_answer required keys");
     assert.ok(Object.keys(sa).every((k) => req.includes(k) || opt.includes(k)), Object.keys(sa).join(","));
     if ("tool_calls" in sa) assert.ok(Array.isArray(sa.tool_calls));
-    if ("proposal_id" in sa) assert.ok(Number.isInteger(sa.proposal_id));
+    if ("proposal_id" in sa) assert.ok(sa.proposal_id === null || Number.isInteger(sa.proposal_id));
   });
   test(`7c mirage_audit steps in order, placeholder key only (${label})`, (t) => {
     const d = get("mirage_audit"); if (!d) return t.skip("not written");

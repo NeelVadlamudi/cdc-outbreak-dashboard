@@ -1,1 +1,1 @@
-{"available": ["dashboard", "eval", "backtest", "replay", "status", "mirage_audit", "mirage_proposals", "mirage_eval", "mirage_replay"]}
+{"available": ["dashboard", "eval", "backtest", "replay", "status", "mirage_audit", "mirage_proposals", "mirage_eval", "mirage_replay", "live"]}
