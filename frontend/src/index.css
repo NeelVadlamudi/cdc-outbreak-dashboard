@@ -932,6 +932,3 @@ body {
 .agent-rows { color: var(--text-muted); }
 .agent-error { color: #b91c1c; }
 
-/* Mirage review */
-.mirage-table{border-collapse:collapse;width:100%}
-.mirage-table th,.mirage-table td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--border-color, #e5e7eb);white-space:nowrap}

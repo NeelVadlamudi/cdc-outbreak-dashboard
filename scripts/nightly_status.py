@@ -22,10 +22,6 @@ from backend import config  # noqa: E402
 DROP_POINTS = 5.0
 HIGHER_IS_BETTER = ["numeric_accuracy", "tool_choice", "correct_refusals", "grounded_answers"]
 LOWER_IS_BETTER = ["false_refusals"]
-# Mirage audit eval (evals/mirage): same rule, its own baseline (evals/mirage/baseline.json)
-MIRAGE_HIGHER = ["overall_correct", "numeric_accuracy", "case_and_step", "proposal_accuracy", "tool_choice",
-                 "correct_refusals", "grounded_answers"]
-MIRAGE_LOWER = ["false_refusals", "unrequested_proposals"]
 
 
 def now_z() -> str:
@@ -74,8 +70,7 @@ def eval_block(result: dict | None, baseline: dict | None, label: str, alerts: l
 
 
 def build_status(*, steps: dict, eval_result: dict | None, baseline: dict | None, backtest: dict | None,
-                 fresh_rows: list[dict], run_url: str | None, commit: str | None, started_at: str | None,
-                 mirage_result: dict | None = None, mirage_baseline: dict | None = None) -> dict:
+                 fresh_rows: list[dict], run_url: str | None, commit: str | None, started_at: str | None) -> dict:
     alerts = []
     for name, outcome in steps.items():
         if outcome not in ("success", "skipped"):
@@ -83,7 +78,6 @@ def build_status(*, steps: dict, eval_result: dict | None, baseline: dict | None
                            "detail": f"The {name} step finished with outcome '{outcome}'."})
 
     cdc_eval = eval_block(eval_result, baseline, "Eval", alerts)
-    mirage_eval = eval_block(mirage_result, mirage_baseline, "Mirage audit eval", alerts, MIRAGE_HIGHER, MIRAGE_LOWER)
 
     stale = [r for r in fresh_rows if r.get("stale") and not r.get("legacy")]
     for r in stale:
@@ -99,7 +93,6 @@ def build_status(*, steps: dict, eval_result: dict | None, baseline: dict | None
         "run": {"result": result, "started_at": started_at, "finished_at": now_z(),
                 "url": run_url, "commit": commit, "steps": steps},
         "eval": cdc_eval,
-        "mirage_eval": mirage_eval,
         "backtest": ({"run_at": backtest.get("run_at"), "data_through": backtest.get("data_through"),
                       "notes": backtest.get("notes", [])} if backtest else None),
         "freshness": {"stale_after_days": config.STALE_AFTER_DAYS,
@@ -114,8 +107,6 @@ def main():
     ap.add_argument("--db", default=config.DB_PATH)
     ap.add_argument("--eval-result", type=Path)
     ap.add_argument("--baseline", type=Path, default=ROOT / "evals" / "baseline.json")
-    ap.add_argument("--mirage-result", type=Path)
-    ap.add_argument("--mirage-baseline", type=Path, default=ROOT / "evals" / "mirage" / "baseline.json")
     ap.add_argument("--backtest", type=Path, default=ROOT / "evals" / "results" / "backtest.json")
     ap.add_argument("--step", action="append", default=[], help="name=outcome, e.g. refresh=success")
     ap.add_argument("--run-url")
@@ -133,8 +124,7 @@ def main():
         steps.setdefault("freshness", f"error: {type(e).__name__}")
     status = build_status(steps=steps, eval_result=load(args.eval_result), baseline=load(args.baseline),
                           backtest=load(args.backtest), fresh_rows=rows, run_url=args.run_url,
-                          commit=args.commit, started_at=args.started_at,
-                          mirage_result=load(args.mirage_result), mirage_baseline=load(args.mirage_baseline))
+                          commit=args.commit, started_at=args.started_at)
     args.out.write_text(json.dumps(status, indent=2) + "\n")
     from publish_eval import ensure_index
 

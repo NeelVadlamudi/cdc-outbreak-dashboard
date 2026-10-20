@@ -15,7 +15,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.cdc_ingestion import run_full_ingestion
 from backend.config import ALLOWED_ORIGINS, ENABLE_API_DOCS, INGEST_ON_STARTUP, configure_logging, request_id_var
 from backend.database import init_database
-from backend.mirage_routes import router as mirage_router
 from backend.routes import router
 
 configure_logging()
@@ -92,7 +91,6 @@ async def request_log(request: Request, call_next):
 
 # Mount routes
 app.include_router(router)
-app.include_router(mirage_router)
 
 
 @app.get("/api/health")

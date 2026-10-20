@@ -90,30 +90,6 @@ make lint   # run ruff
 make eval   # placeholder until an evaluation suite exists
 ```
 
-## Mirage audit agent
-
-The audit agent answers questions about shelf gaps at the Mirage warehouse clubs (synthetic data from https://github.com/NeelVadlamudi/mirage, vendored at commit `ca12b53` in `mirage/vendor`). For example: "Why is Paper Towels 12pk empty at Everett on 2026-09-22?"
-
-It compares the floor count, the backroom count and the system on-hand figure, then names the case and proposes the next step:
-- the record is wrong: recount;
-- the stock is in the backroom: pull to the floor;
-- it is truly out: reorder.
-
-It never changes a record.
-
-It uses the same agent loop, number checker, JSON logs, CI and nightly job as the CDC agent. It runs on Gemini Flash-Lite by default, or on Ollama with `AGENT_MODEL=ollama-local`.
-
-- **Read-only tools** (`mirage/tools.py`): `list_shelf_gaps(club, day)`, `get_sku_position(club, sku, day)`, `get_po_allocation(po)` and `get_weeks_of_supply(club, sku)`. They query a DuckDB copy of the Mirage tables that is opened read-only (`mirage/build_db.py`).
-- **One write tool**, `propose_action(club, sku, action, reason)`. It only adds a row with status `waiting for approval` to a `proposals` table in a separate database (`MIRAGE_STATE_DB`). It writes nothing unless the action matches the case that the read tools found for that club and SKU earlier in the run, and every number in the reason appears in those tool results.
-- **Approval:** `POST /api/proposals/{id}/approve` and `/reject` need `X-API-Key: <ADMIN_API_KEY>` and the deciding person's name. Each decision is written to `audit_log` with who decided and when. A decision is final; a second one returns 409.
-- **Eval:** `evals/mirage/` has 30 questions. Expected values are recomputed from the raw CSVs with the logic of Mirage's `verify_kpis.py` and `verify_allocation.py`. The check day must still give 22.5%, 7 and 6, and the PO 98 / 60 / 38, or the eval stops. CI runs both Mirage checks and rescores the recorded run; the nightly job runs the eval live on Gemini.
-
-```bash
-python evals/mirage/run_mirage_evals.py --model gemini-3.5-flash-lite        # live, 30 questions
-python evals/mirage/run_mirage_evals.py --model ollama --setting ollama-local
-python scripts/record_mirage_audit.py   # one full audit: question, tool calls, proposal, approval, audit log
-```
-
 ## Running locally on an 8 GB Mac
 
 The agent can run fully offline on Ollama instead of Gemini. `qwen2.5:3b` (Q4_K_M, about 1.9 GB on disk) fits in 8 GB of memory alongside the API and a browser.
@@ -132,12 +108,12 @@ cp .env.example .env
 
 pip install -r requirements.txt
 uvicorn backend.main:app --port 8000
-cd frontend && npm install && npm run dev   # http://localhost:5173/ask and /review
+cd frontend && npm install && npm run dev   # http://localhost:5173/ask
 ```
 
 - No API key is needed. Nothing leaves the machine.
 - Close other heavy apps. If memory runs short, macOS swaps and answers slow down a lot.
-- Expect lower accuracy than Gemini Flash-Lite. The measured numbers for `qwen2.5:3b` are in the eval tables on the site (`site/data/eval.json` and `mirage_eval.json`). They were measured on an 8-core Linux CPU with no GPU, so speed on a Mac will differ.
+- Expect lower accuracy than Gemini Flash-Lite. The measured numbers for `qwen2.5:3b` are in the eval tables on the site (`site/data/eval.json`). They were measured on an 8-core Linux CPU with no GPU, so speed on a Mac will differ.
 - To run the evals against it:
 
 ```bash
@@ -145,8 +121,6 @@ cp evals/snapshot.duckdb /tmp/snap.duckdb
 CDC_DB_PATH=/tmp/snap.duckdb INGEST_ON_STARTUP=false RATE_LIMITS_ENABLED=false AGENT_MODEL=ollama-local OLLAMA_AGENT_MODEL=qwen2.5:3b \
   uvicorn backend.main:app --port 8000 &
 python evals/run_evals.py --model qwen2.5:3b --url http://localhost:8000
-RATE_LIMITS_ENABLED=false AGENT_MODEL=ollama-local OLLAMA_AGENT_MODEL=qwen2.5:3b \
-  python evals/mirage/run_mirage_evals.py --model qwen2.5:3b --setting ollama-local
 ```
 
 ## Nightly run
@@ -178,17 +152,14 @@ The API logs one JSON object per line by default (`LOG_FORMAT=json`; set `LOG_FO
 
 - **Service:** `cdc-outbreak-api` runs on the free plan (512 MB, sleeps when idle) with Python 3.12.
 - **Packages:** it installs `requirements-render.txt`, which leaves out torch, xgboost, scikit-learn, ollama and the test tools. Without torch and xgboost, the forecast endpoints and `get_forecast` return `no_model`, the same response as when no model is trained.
-- **Memory:** measured locally on Python 3.12, `pip install` peaks at 141 MB RSS. Startup plus a set of requests, including one agent question each on the CDC and Mirage agents, peaks at 209 MB.
+- **Memory:** measured locally on Python 3.12, `pip install` peaks at 141 MB RSS. Startup plus a set of requests peaked at 209 MB. That was measured while the service also carried the Mirage audit agent (one question each on both agents); the audit agent now runs from https://github.com/NeelVadlamudi/mirage.
 - **Database:** at start it copies `evals/snapshot.duckdb` to `/tmp` and serves that copy with `INGEST_ON_STARTUP=false`. A full CDC pull would block startup and peaks at about 240 MB by itself. The nightly GitHub Actions job refreshes the published data instead.
 - **Health check:** `GET /api/health`.
 - **CORS:** `ALLOWED_ORIGINS` is `https://neelvadlamudi.github.io`, so the Pages site can call `POST <render url>/api/agent/ask`.
 - **Secrets:** set `GEMINI_API_KEY` in the Render dashboard. Render generates `ADMIN_API_KEY`.
-- **Mirage proposals:** these live in `/tmp` on Render, so they reset whenever the service restarts or sleeps.
 - **Rate limits** (`backend/ratelimit.py`, in memory, reset on restart). Each address gets:
   - `POST /api/agent/ask` and `/api/chat`: 6 a minute and 60 a day, with 800 a day across all callers.
-  - `POST /api/mirage/ask`: 4 a minute and 30 a day, with 300 a day in total.
   - `GET /api/weekly-brief`: 10 a minute and 100 a day.
-  - Mirage proposals: 3 a minute and 10 a day per address, and 50 a day in total.
   - Over a limit, the API returns `429` with `Retry-After` and a plain `detail` message. The `RATE_*` env vars change the numbers; `RATE_LIMITS_ENABLED=false` turns them off (the nightly eval does this).
 - **API docs:** `ENABLE_API_DOCS=false` in `render.yaml`, so `/docs`, `/redoc` and `/openapi.json` return 404 on Render. They stay on locally.
 
