@@ -33,8 +33,20 @@ def test_positivity_specific_week(fixture_db):
 
 def test_wastewater_state(fixture_db):
     out = call_tool("get_wastewater", {"state": "Ohio"})
-    assert out["rows"][0]["avg_percentile"] == 50.0
+    assert out["source_table"] == "wastewater_activity"
     assert out["rows"][0]["site_count"] == 2
+    assert out["rows"][0]["sites_high_or_very_high"] == 1
+    legacy = out["legacy"]
+    # sentinel values (percentile 999, ptc_15d -99) are excluded
+    assert legacy["site_count"] == 3
+    assert legacy["avg_percentile"] == 50.0
+    assert legacy["median_ptc_15d_percent"] == 2.0
+
+
+def test_wastewater_national(fixture_db):
+    out = call_tool("get_wastewater", {})
+    assert out["scope"] == "national"
+    assert out["total_sites"] == 3
 
 
 def test_forecast_without_model_is_error(fixture_db, monkeypatch, tmp_path):
@@ -48,6 +60,7 @@ def test_forecast_without_model_is_error(fixture_db, monkeypatch, tmp_path):
 def test_freshness_flags_stale_wastewater(fixture_db):
     rows = {r["table"]: r for r in call_tool("get_data_freshness", {})["rows"]}
     assert rows["wastewater_sites"]["stale"] is True
+    assert rows["wastewater_activity"]["stale"] is True
 
 
 def test_invalid_inputs(fixture_db):
