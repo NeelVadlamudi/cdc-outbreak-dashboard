@@ -16,13 +16,13 @@ import {
 const navItems = [
   { section: "Dashboard", items: [
     { path: "/", label: "Command Center", icon: LayoutDashboard },
-    { path: "/map", label: "Geo-Spatial Intel", icon: Map },
+    { path: "/map", label: "State map", icon: Map },
     { path: "/wastewater", label: "Bio-Surveillance", icon: TestTubes },
   ]},
-  { section: "Intelligence", items: [
-    { path: "/forecasts", label: "Predictive Engine", icon: Bot },
-    { path: "/advanced", label: "Quantum Insights", icon: Microscope },
-    { path: "/ask", label: "Neural Interface", icon: MessageSquare },
+  { section: "Analysis", items: [
+    { path: "/forecasts", label: "Forecasts", icon: Bot },
+    { path: "/advanced", label: "Advanced analytics", icon: Microscope },
+    { path: "/ask", label: "Ask the data", icon: MessageSquare },
   ]},
   { section: "Tools", items: [
     { path: "/simulator", label: "Surge Matrix", icon: Hospital },
@@ -45,7 +45,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
               <Activity size={24} strokeWidth={2.5} />
             </div>
             <div className="sidebar-logo-text">
-              <div className="sidebar-logo-title">CDC Outbreak AI</div>
+              <div className="sidebar-logo-title">CDC Respiratory Virus Dashboard</div>
               <div className="sidebar-logo-subtitle">Surveillance Dashboard</div>
             </div>
             {/* Mobile close button inside header if open */}

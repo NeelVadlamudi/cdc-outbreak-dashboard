@@ -86,9 +86,9 @@ export default function AdvancedAnalytics() {
       <div className="page-header fade-in">
         <div className="page-header-row">
           <div>
-            <h1 className="page-title">Quantum Insights</h1>
+            <h1 className="page-title">Advanced analytics</h1>
             <p className="page-subtitle">
-              Ensemble AI models, anomaly detection, age-stratified analysis, and season comparisons
+              Ensemble models, anomaly detection, age-stratified analysis, and season comparisons
             </p>
           </div>
         </div>

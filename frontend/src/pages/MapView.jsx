@@ -123,7 +123,7 @@ export default function MapView() {
     return (
       <div className="loading-page">
         <div className="loading-spinner" />
-        <div className="loading-page-text">Loading geospatial intelligence...</div>
+        <div className="loading-page-text">Loading the state map...</div>
       </div>
     );
   }
@@ -165,7 +165,7 @@ export default function MapView() {
       <div className="page-header fade-in">
         <div className="page-header-row">
           <div>
-            <h1 className="page-title">Geo-Spatial Intel</h1>
+            <h1 className="page-title">State map</h1>
             <p className="page-subtitle">
               Interactive 3D WebGL projection — click any node for historic viral activity
             </p>
@@ -330,7 +330,7 @@ export default function MapView() {
               height: '350px', color: 'var(--text-muted)', textAlign: 'center',
             }}>
               <GlobeIcon size={48} strokeWidth={1} style={{ marginBottom: '16px', color: '#D1D5DB' }} />
-              <p style={{ fontSize: '15px', fontWeight: 500 }}>Select a geolocated node on the globe to access deep intelligence traces.</p>
+              <p style={{ fontSize: '15px', fontWeight: 500 }}>Select a state on the map to see its latest data.</p>
             </div>
           )}
         </div>
