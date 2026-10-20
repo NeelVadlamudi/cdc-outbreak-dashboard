@@ -79,3 +79,5 @@ table.evalhist thead th:first-child{text-align:left}
 td.delta{color:var(--mute);font-style:italic}
 th.delta-h .runhd{font-style:italic}
 .meta .chip{white-space:normal;line-height:1.35}
+.subhead{font:400 12px var(--mono);color:var(--mute);margin:18px 0 8px;text-transform:uppercase;letter-spacing:.04em}
+table.evalpast td:first-child{white-space:normal;min-width:150px;max-width:220px}
