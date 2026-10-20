@@ -2,6 +2,7 @@
   "_label": "EXAMPLE — test fixture only, not real agent output. Never imported by shipped code.",
   "ok": {
     "answer": "EXAMPLE answer text.",
+    "status": "answered",
     "tool_calls": [
       { "tool": "EXAMPLE_query_tool", "inputs": { "virus": "EXAMPLE", "state": "EX" }, "rows": 3, "ms": 120 },
       { "tool": "EXAMPLE_forecast_tool", "inputs": { "horizon": 1 } }
@@ -9,8 +10,16 @@
     "as_of_week": "EXAMPLE-week",
     "elapsed_ms": 1400
   },
-  "refusal": {
-    "answer": "Could not verify that from the data.",
+  "refused": {
+    "answer": "EXAMPLE refused answer.",
+    "status": "refused",
+    "tool_calls": [],
+    "as_of_week": "EXAMPLE-week",
+    "elapsed_ms": 850
+  },
+  "unverified": {
+    "answer": "EXAMPLE unverified answer.",
+    "status": "unverified",
     "tool_calls": [],
     "as_of_week": "EXAMPLE-week",
     "elapsed_ms": 125000

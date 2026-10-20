@@ -1,21 +1,21 @@
 /**
  * Single adapter for POST /api/agent/ask.
  * If bob renames a field, change it ONLY here (FIELDS below).
- * Contract: { answer, tool_calls: [ {tool, inputs, rows?, ms?} ], as_of_week, elapsed_ms }
+ * Contract: { answer, status, tool_calls: [ {tool, inputs, rows?, ms?} ], as_of_week, elapsed_ms }
+ * status: "answered" | "refused" | "unverified" (missing or unknown -> "answered")
  */
 export const ASK_ENDPOINT = "/agent/ask";
 
 export const FIELDS = {
   answer: "answer",
+  status: "status",
   toolCalls: "tool_calls",
   asOfWeek: "as_of_week",
   elapsedMs: "elapsed_ms",
   call: { tool: "tool", inputs: "inputs", rows: "rows", ms: "ms" },
 };
 
-// Answers that start with these phrases render as a refusal / could-not-verify card.
-// Optional backend flag `status: "refused" | "unverified"` wins if present.
-const REFUSAL_PATTERNS = [/^\s*i (can(?:no|')t|could ?n[o']t) verify/i, /^\s*could not verify/i, /^\s*i (can(?:no|')t|won'?t) answer/i, /^\s*refus/i];
+export const STATUSES = ["answered", "refused", "unverified"];
 
 const num = (v) => (typeof v === "number" && Number.isFinite(v) ? v : null);
 
@@ -23,9 +23,7 @@ export function adaptAskResponse(raw) {
   if (!raw || typeof raw !== "object") throw new Error("Empty response from the agent");
   const answer = typeof raw[FIELDS.answer] === "string" ? raw[FIELDS.answer] : "";
   const calls = Array.isArray(raw[FIELDS.toolCalls]) ? raw[FIELDS.toolCalls] : [];
-  const status = raw.status === "refused" || raw.status === "unverified"
-    ? raw.status
-    : REFUSAL_PATTERNS.some((re) => re.test(answer)) ? (/verify/i.test(answer.slice(0, 40)) ? "unverified" : "refused") : "ok";
+  const status = STATUSES.includes(raw[FIELDS.status]) ? raw[FIELDS.status] : "answered";
   return {
     answer,
     status,
