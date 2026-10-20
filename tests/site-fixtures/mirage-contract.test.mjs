@@ -65,9 +65,13 @@ for (const [label, get] of [["fixture", fx], ["real site/data", real]]) {
   });
 }
 test("static site makes no write calls and holds no key", () => {
+  // Only data/ files, plus the read-only live ask (POST {question} to /api/agent/ask, §5).
   const fetches = [...js.matchAll(/fetch\(([^,)]+)/g)].map((m) => m[1].trim());
-  assert.ok(fetches.length > 0 && fetches.every((f) => /^[`"]data\//.test(f)), fetches.join(" | "));
-  assert.ok(!/method\s*:/.test(js), "no request methods");
+  const ask = "`${base}/api/agent/ask`";
+  assert.ok(fetches.length > 0 && fetches.every((f) => /^[`"]data\//.test(f) || f === ask), fetches.join(" | "));
+  assert.equal(fetches.filter((f) => f === ask).length, 1, "one live ask call");
+  assert.deepEqual([...js.matchAll(/method\s*:\s*"([A-Z]+)"/g)].map((m) => m[1]), ["POST"], "only the ask POST");
+  assert.ok(!/\/api\/mirage/.test(js), "no Mirage API calls");
   assert.ok(!/X-API-Key|ADMIN_API_KEY|\/api\/proposals|localStorage|sessionStorage/.test(js));
 });
 test("Demo reviewer gets a visible Demo label in site.js", () => {
