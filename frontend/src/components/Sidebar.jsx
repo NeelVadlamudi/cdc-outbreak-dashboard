@@ -9,6 +9,7 @@ import {
   Hospital, 
   LineChart, 
   Activity,
+  ClipboardCheck,
   X
 } from "lucide-react";
 
@@ -26,6 +27,7 @@ const navItems = [
   { section: "Tools", items: [
     { path: "/simulator", label: "Surge Matrix", icon: Hospital },
     { path: "/analytics", label: "Data Core", icon: LineChart },
+    { path: "/review", label: "Mirage review", icon: ClipboardCheck },
   ]},
 ];
 

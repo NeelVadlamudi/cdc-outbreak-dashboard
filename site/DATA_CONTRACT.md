@@ -130,7 +130,7 @@ Shown per answer: status flag, answer, `as_of`, `elapsed_s`, `model`, stale tabl
 
 ## 5. `data/live.json` — section (e)
 ```json
-{ "url": "https://<render-app>.onrender.com/ask" }
+{ "url": "https://cdc-outbreak-api.onrender.com" }
 ```
 Must be `https://`.
 
@@ -138,8 +138,8 @@ The API on Render (`render.yaml`) accepts `POST <render url>/api/agent/ask` and 
 - CORS allows that origin only, with methods `GET` and `POST` and the `Content-Type` header.
 - The request body is `{question}`, and the response is the Ask contract below.
 - `GET <render url>/api/health` is a cheap way to wake the service first.
-- The free instance sleeps when idle, so the first call can take about a minute.
-- Today the site uses `url` only as a link. `live.json` is not written yet.
+- The free instance sleeps after about 15 minutes idle. The first call after that can take about 50 seconds while it wakes; later calls are fast.
+- `url` is the API base. The page links to it, and code calls `${url}/api/agent/ask`.
 
 If `live` is not listed in `index.json` (or the URL is missing or not https), the whole "Try it live" section is **hidden**, not disabled. When shown, the button reads "Try it live · may take a minute to wake".
 
@@ -188,7 +188,7 @@ Listed in `index.json` as `"status"` (`scripts/publish_eval.py` and `scripts/nig
 - `backtest` is `null` if no backtest file exists. Each alert also opens a GitHub issue labelled `nightly-alert`;
   if an open issue with the same title exists, the run comments on it instead.
 
-## 7. Mirage audit agent files (not rendered yet; for the review screen and audit pages)
+## 7. Mirage audit agent files (rendered in the Mirage sections of the site)
 All four files are listed in `index.json` when written. Figures are synthetic Mirage data (clubs Everett, Dedham and Waltham; DC Avon).
 
 ### 7a. `data/mirage_eval.json`: 30-question audit eval
@@ -261,10 +261,24 @@ Written by `scripts/record_mirage_audit.py`. `steps[]` are in order:
                    "status": "waiting for approval|approved|rejected", "decided_by": "string|null", "decided_at": "ISO-8601|null" } ],
   "audit_log": [ { "id": 1, "proposal_id": 1, "decision": "approved|rejected", "decided_by": "string",
                    "decided_at": "ISO-8601", "note": "string|null" } ],
-  "source": "string", "second_answer": { "question": "string", "status": "string", "answer": "string" } }
+  "source": "string", "second_answer": { "question": "string", "status": "string", "answer": "string",
+                                         "tool_calls": "[...]? as in /api/agent/ask", "proposal_id": "integer?" } }
 ```
+- `second_answer` comes from the second recorded `POST /api/mirage/ask` call. It has the same fields as that response:
+  - `tool_calls[]`: `{tool, inputs, rows_returned, elapsed_s, output}`, as in `/api/agent/ask`.
+  - `as_of`: as in that response.
+  - `proposal_id`: the id of the proposal that answer wrote, matching a row in `proposals[]`. It is `null` if the answer made no proposal.
 - The static site cannot approve anything. Approval goes through the API below. In this file, the recorded decider is `"Demo reviewer"`.
 - `status` `"waiting for approval"` is the only state that shows Approve and Reject buttons.
+
+### How the site shows §7 (site/assets/site.js, `renderMirage*`)
+- `mirage_eval.json` → "Mirage · eval scores": headline `overall_correct` on `questions`, the latest run's summary keys as given (rates + "%", `blocked_proposals` as a count, times via the duration formatter), history and a change column with the same rules as §2 (same `question_set`, not across `scoring_changed`).
+- `mirage_replay.json` → "Mirage · recorded answers": question, answer, and per answer every tool-output row that has `case`/`case_label` and `next_step` (Recount / Pull to floor / Reorder, plus `also` and `also_reason`); `output.summary` and `output.totals` are shown as labelled values exactly as given. Under any summary with case counts (`book_wrong_sku_count`, `backroom_sku_count`, `truly_out_sku_count`) the note "Categories can overlap" is shown, because one SKU can have a wrong record and backroom stock at once, so the counts may sum past `gap_sku_count`; `response.proposals[]` as chips; tool calls, rows and `transfers` behind toggles.
+- `mirage_proposals.json` → "Mirage · review queue" (read-only): proposals with `status` "waiting for approval", every proposal with its status, the `audit_log` rows, `second_answer` and `source`. When `second_answer.tool_calls` is present it is rendered with the same answer card as the replay (case and next step, tool calls and rows behind toggles) and `proposal_id` as a proposal chip; without them only the question and answer are shown.
+- `mirage_audit.json` → "Mirage · audit log": each step in order with method and path, `status_code`, `detail`, and the proposal and audit rows it returned. Header values are never shown, only the header name.
+- Any `decided_by` equal to "Demo reviewer" carries a visible "Demo" label.
+- The static site has no write call and no key; approve and reject exist only in the React app (`/review`, `frontend/src/pages/MirageReview.jsx`), with the admin key typed in at runtime and kept in memory only.
+- A missing file shows "Not run yet".
 
 ### Mirage API (for a live review screen)
 - `POST /api/mirage/ask` with `{question}` returns the same body as `/api/agent/ask`, plus `proposals[]`. Each proposal is `{proposal_id, club, sku_id, sku_name, action, status}`.
