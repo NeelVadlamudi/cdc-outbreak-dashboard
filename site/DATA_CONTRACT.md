@@ -70,7 +70,7 @@ One entry per model run. Each entry is the top of the file `evals/run_evals.py` 
   (a) has the same question set: equal `summary.question_set` when either run has one (`QSET_ID_KEYS` in site.js);
   the `questions` count is used only when neither has an id; and
   (b) is not before a scoring change. A run marks a scoring change with `scoring_changed: true`
-  (`scripts/publish_eval.py --scoring-changed` writes it; older entries may only have a `note` that starts "Scoring changed"). Runs before the latest such run are never compared.
+  (`scripts/publish_eval.py --scoring-changed` writes it). The `note` text is display-only and never parsed. Runs before the latest such run are never compared.
   Shown only when both values are numbers, else "—". Rates in percentage points (pp), times via the duration formatter,
   counts as-is. Nothing else is computed.
 - **Notes:** the latest run's `note` is shown above the headline; earlier runs' notes are numbered footnotes under the
