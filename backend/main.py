@@ -11,7 +11,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from backend.cdc_ingestion import run_full_ingestion
-from backend.config import ALLOWED_ORIGINS, configure_logging
+from backend.config import ALLOWED_ORIGINS, INGEST_ON_STARTUP, configure_logging
 from backend.database import init_database
 from backend.routes import router
 
@@ -30,18 +30,22 @@ async def lifespan(app: FastAPI):
     # Initialize database
     init_database()
 
-    # Run initial data ingestion
-    await run_full_ingestion()
+    if INGEST_ON_STARTUP:
+        # Run initial data ingestion
+        await run_full_ingestion()
 
-    # Schedule periodic refresh (every 60 minutes)
-    scheduler.add_job(run_full_ingestion, "interval", minutes=60, id="cdc_refresh")
-    scheduler.start()
-    logger.info("Scheduled data refresh every 60 minutes")
+        # Schedule periodic refresh (every 60 minutes)
+        scheduler.add_job(run_full_ingestion, "interval", minutes=60, id="cdc_refresh")
+        scheduler.start()
+        logger.info("Scheduled data refresh every 60 minutes")
+    else:
+        logger.info("INGEST_ON_STARTUP is false; serving the database as is")
 
     yield
 
     # Shutdown
-    scheduler.shutdown()
+    if scheduler.running:
+        scheduler.shutdown()
     logger.info("Dashboard shutting down")
 
 

@@ -53,6 +53,7 @@ All settings are read from environment variables. `.env.example` lists each one.
 | `ALLOWED_ORIGINS` | Comma-separated origins allowed by CORS | `http://localhost:5173` |
 | `ADMIN_API_KEY` | Key required in the `X-API-Key` header for the training endpoints; if unset, training is disabled | unset |
 | `CDC_DB_PATH` | DuckDB file the app reads and writes | `data/cdc_surveillance.duckdb` |
+| `INGEST_ON_STARTUP` | Set to `false` to serve `CDC_DB_PATH` without downloading new data | `true` |
 | `AGENT_MODEL` | `gemini-flash-lite` or `ollama-local` | `gemini-flash-lite` |
 | `GEMINI_API_KEY` | Gemini API key for the agent | unset |
 | `GEMINI_MODEL_ID` | Gemini model id | `gemini-3.5-flash-lite` |
