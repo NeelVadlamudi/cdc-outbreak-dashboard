@@ -28,9 +28,17 @@ CDC_DATASETS = {
         "url": "https://data.cdc.gov/resource/seuz-s2cv.json",
         "description": "Percent Positive Tests for Viral Respiratory Pathogens",
     },
+    # Legacy NWSS SARS-CoV-2 metric dataset; CDC stopped adding records after 2025-09-07.
+    # Kept for the frozen eval snapshot and the older wastewater pages; no longer ingested.
     "wastewater_sites": {
         "url": "https://data.cdc.gov/resource/2ew6-ywp6.json",
-        "description": "NWSS Wastewater Surveillance — County-Level Viral Activity",
+        "description": "NWSS Wastewater Surveillance — County-Level Viral Activity (legacy)",
+    },
+    # Current NWSS dataset: weekly site-level Wastewater Viral Activity Level (WVAL)
+    # for SARS-CoV-2, influenza A and RSV.
+    "wastewater_activity": {
+        "url": "https://data.cdc.gov/resource/atcp-73re.json",
+        "description": "CDC Wastewater Viral Activity Level for SARS-CoV-2, Influenza A and RSV",
     },
 }
 
@@ -248,6 +256,61 @@ def ingest_wastewater(data: list):
         conn.close()
 
 
+async def fetch_wastewater_activity(days: int = 120) -> list:
+    """Fetch recent site-level wastewater viral activity levels."""
+    since = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
+    config = CDC_DATASETS["wastewater_activity"]
+    all_data, offset = [], 0
+    async with httpx.AsyncClient(timeout=120.0) as client:
+        while True:
+            response = await client.get(
+                config["url"],
+                params={"$where": f"week_end>='{since}'", "$limit": 50000, "$offset": offset, "$order": ":id"},
+            )
+            response.raise_for_status()
+            batch = response.json()
+            all_data.extend(batch)
+            logger.info(f"Fetched {len(batch)} wastewater activity records (total: {len(all_data)})")
+            if len(batch) < 50000:
+                break
+            offset += 50000
+    return all_data
+
+
+def wastewater_activity_frame(data: list) -> pd.DataFrame:
+    """Shape raw atcp-73re records into the wastewater_activity table."""
+    w = pd.DataFrame(data)
+    if w.empty:
+        return w
+    df = pd.DataFrame({
+        "week_end": pd.to_datetime(w["week_end"].str[:10]).dt.date,
+        "state_territory": w.get("state_territory"),
+        "site": w.get("site"),
+        "counties_served": w.get("counties_served"),
+        "population_served": pd.to_numeric(w.get("population_served"), errors="coerce").astype("Int64"),
+        "source": w.get("source"),
+        "pathogen": w.get("pathogen_target"),
+        "wval": pd.to_numeric(w.get("site_wval"), errors="coerce"),
+        "wval_category": w.get("site_wval_category"),
+    })
+    return df.drop_duplicates(subset=["week_end", "site", "pathogen"], keep="last")
+
+
+def ingest_wastewater_activity(data: list):
+    """Replace the wastewater_activity table with freshly fetched records."""
+    df = wastewater_activity_frame(data)  # noqa: F841 (read by DuckDB below)
+    if df.empty:
+        return
+    conn = duckdb.connect(DB_PATH)
+    try:
+        conn.execute("DELETE FROM wastewater_activity")
+        conn.execute("INSERT INTO wastewater_activity SELECT * FROM df")
+        count = conn.execute("SELECT COUNT(*) FROM wastewater_activity").fetchone()[0]
+        logger.info(f"Wastewater activity: {count} records")
+    finally:
+        conn.close()
+
+
 async def run_full_ingestion():
     """Run complete data ingestion pipeline for all CDC datasets."""
     logger.info("CDC data ingestion started at %s", datetime.now().isoformat())
@@ -256,7 +319,7 @@ async def run_full_ingestion():
         ("ari_activity", lambda: fetch_all_pages("ari_activity"), ingest_ari_activity),
         ("hospitalization_rates", fetch_hospitalization_recent, ingest_hospitalization_rates),
         ("test_positivity", lambda: fetch_all_pages("test_positivity"), ingest_test_positivity),
-        ("wastewater_sites", lambda: fetch_wastewater_recent(days=365), ingest_wastewater),
+        ("wastewater_activity", fetch_wastewater_activity, ingest_wastewater_activity),
     ]
     ok = True
     for name, fetch, ingest in steps:
