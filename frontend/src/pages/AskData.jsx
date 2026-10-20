@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { Bot, ArrowRight, Activity, AlertTriangle } from "lucide-react";
-import { askAgent, getWeeklyBrief } from "../api";
+import { Bot, ArrowRight, AlertTriangle } from "lucide-react";
+import { askAgent } from "../api";
 import AgentAnswer from "../components/AgentAnswer";
 
 const SUGGESTED_QUESTIONS = [
@@ -16,12 +16,7 @@ export default function AskData() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [brief, setBrief] = useState(null);
   const chatEndRef = useRef(null);
-
-  useEffect(() => {
-    getWeeklyBrief().then(setBrief).catch(() => {});
-  }, []);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -56,7 +51,7 @@ export default function AskData() {
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "24px" }} className="fade-in ask-grid">
+      <div className="fade-in">
         <div className="card" style={{ display: "flex", flexDirection: "column", minHeight: "600px", padding: 0 }}>
           <div style={{ flex: 1, overflowY: "auto", padding: "24px" }}>
             {messages.length === 0 && (
@@ -157,22 +152,6 @@ export default function AskData() {
               </button>
             </div>
           </div>
-        </div>
-
-        <div>
-          <div className="card fade-in">
-            <div className="card-header" style={{ marginBottom: "16px" }}>
-              <span className="card-title"><Activity size={18} /> Weekly Health Brief</span>
-            </div>
-            {brief ? (
-              <div style={{ fontSize: "14px", lineHeight: 1.6, whiteSpace: "pre-wrap", color: "var(--text-secondary)" }}>
-                {brief.brief}
-              </div>
-            ) : (
-              <p style={{ color: "var(--text-muted)", fontSize: "14px" }}>Loading brief...</p>
-            )}
-          </div>
-
         </div>
       </div>
     </div>
