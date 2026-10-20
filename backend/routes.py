@@ -3,9 +3,12 @@ FastAPI REST API routes for the CDC Outbreak Dashboard.
 Phase 2: Expanded with wastewater, ensemble AI, LLM chat, anomaly detection, and simulator.
 """
 
-from fastapi import APIRouter, Query
+import secrets
+
+from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
+from backend.config import ADMIN_API_KEY
 from backend.database import query
 from backend.forecasting import generate_forecast, train_model
 from backend.ensemble import (
@@ -22,6 +25,14 @@ router = APIRouter(prefix="/api")
 
 
 # ─── Helper ──────────────────────────────────────────────────────────────────
+
+def require_api_key(x_api_key: str | None = Header(default=None)):
+    """Reject the request unless X-API-Key matches ADMIN_API_KEY."""
+    if not ADMIN_API_KEY:
+        raise HTTPException(status_code=503, detail="Training is disabled: ADMIN_API_KEY is not set")
+    if not x_api_key or not secrets.compare_digest(x_api_key, ADMIN_API_KEY):
+        raise HTTPException(status_code=401, detail="Invalid or missing API key")
+
 
 def serialize_dates(results, date_fields=None):
     """Convert date objects to ISO strings for JSON serialization."""
@@ -157,7 +168,7 @@ async def get_forecast(virus: str = "COVID-NET"):
     return generate_forecast(virus)
 
 
-@router.post("/forecast/train/{virus}")
+@router.post("/forecast/train/{virus}", dependencies=[Depends(require_api_key)])
 async def trigger_training(virus: str = "COVID-NET"):
     """Trigger LSTM model training for a specific virus."""
     return train_model(virus)
@@ -333,7 +344,7 @@ async def get_ensemble_forecast(virus: str = "COVID-NET"):
     return xgb_forecast(virus)
 
 
-@router.post("/ensemble/train/{virus}")
+@router.post("/ensemble/train/{virus}", dependencies=[Depends(require_api_key)])
 async def trigger_xgb_training(virus: str = "COVID-NET"):
     """Train XGBoost model for a specific virus."""
     return train_xgboost(virus)
