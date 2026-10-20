@@ -139,7 +139,18 @@ The API logs one JSON object per line by default (`LOG_FORMAT=json`; set `LOG_FO
 
 ## Deployment
 
-`render.yaml` defines a Render web service for the API and a static site for the frontend. The `Dockerfile` builds the frontend and runs the API with `uvicorn backend.main:app`.
+`render.yaml` is a Render Blueprint for the API only. The site is served from GitHub Pages.
+
+- **Service:** `cdc-outbreak-api` runs on the free plan (512 MB, sleeps when idle) with Python 3.12.
+- **Packages:** it installs `requirements-render.txt`, which leaves out torch, xgboost, scikit-learn, ollama and the test tools. Without torch and xgboost, the forecast endpoints and `get_forecast` return `no_model`, the same response as when no model is trained.
+- **Memory:** measured locally on Python 3.12, `pip install` peaks at 141 MB RSS. Startup plus a set of requests, including one agent question each on the CDC and Mirage agents, peaks at 209 MB.
+- **Database:** at start it copies `evals/snapshot.duckdb` to `/tmp` and serves that copy with `INGEST_ON_STARTUP=false`. A full CDC pull would block startup and peaks at about 240 MB by itself. The nightly GitHub Actions job refreshes the published data instead.
+- **Health check:** `GET /api/health`.
+- **CORS:** `ALLOWED_ORIGINS` is `https://neelvadlamudi.github.io`, so the Pages site can call `POST <render url>/api/agent/ask`.
+- **Secrets:** set `GEMINI_API_KEY` in the Render dashboard. Render generates `ADMIN_API_KEY`.
+- **Mirage proposals:** these live in `/tmp` on Render, so they reset whenever the service restarts or sleeps.
+
+The `Dockerfile` builds the frontend and runs the API with `uvicorn backend.main:app`.
 
 ## Data source
 
