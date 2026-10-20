@@ -442,9 +442,31 @@
     // Hidden unless live.json is listed in index.json and holds an https URL.
     const url = d && typeof d.url === "string" && /^https:\/\//.test(d.url) ? d.url : null;
     if (!url) { sec.hidden = true; return; }
+    const base = url.replace(/\/+$/, "");
+    const input = el("input", { type: "text", name: "question", maxlength: "500", required: "", "aria-label": "Question", placeholder: "Ask about the CDC data" });
+    const button = el("button", { type: "submit", class: "btn" }, el("span", { text: "Ask" }));
+    const out = el("div", { class: "live-out", "aria-live": "polite" });
+    const form = el("form", { class: "live-ask" }, input, " ", button);
+    form.addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+      const question = input.value.trim(); if (!question) return;
+      button.disabled = true;
+      out.replaceChildren(el("p", { class: "note", text: "Asking… the first call can take about 50 s while the server wakes." }));
+      try {
+        const r = await fetch(`${base}/api/agent/ask`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question }) });
+        const j = await r.json();
+        if (!r.ok) throw new Error((j && j.detail) || `HTTP ${r.status}`);
+        out.replaceChildren(
+          el("p", { class: "live-answer", text: String(j.answer ?? "") }),
+          el("p", { class: "note", text: [j.status, j.as_of ? `data as of ${j.as_of}` : null].filter(Boolean).join(" · ") }));
+      } catch (e) {
+        out.replaceChildren(el("p", { class: "note", text: `Could not reach the live API (${e.message}). It may still be waking; try again.` }));
+      } finally { button.disabled = false; }
+    });
     $("[data-body]", sec).replaceChildren(
-      el("p", { class: "note", text: "Opens the hosted agent. It sleeps when idle, so the first question can be slow." }),
-      el("a", { class: "btn", href: url, rel: "noopener" }, el("span", { text: "Try it live" }), el("small", { text: "may take a minute to wake" })));
+      el("p", { class: "note", text: "Asks the hosted agent. The free server sleeps when idle, so the first call can take about 50 s while it wakes." }),
+      form, out,
+      el("p", { class: "note" }, el("a", { href: "app/review", text: "Review queue" }), " · ", el("a", { href: "app/ask", text: "Full Ask page" }), " · ", el("a", { href: url, rel: "noopener", text: "API" })));
     sec.hidden = false;
   }
 
