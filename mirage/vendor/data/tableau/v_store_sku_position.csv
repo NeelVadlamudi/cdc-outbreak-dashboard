@@ -1,0 +1,121 @@
+store_id,store_name,sku_id,sku_name,category,case_pack,units_sold_window,weekly_rate,on_hand_units,system_on_hand_units,wos,need_units
+101,warehouse_1,118634,Bottled Water 40pk,Grocery,6,216,54.0,40,86,0.7407407407407407,68
+101,warehouse_1,118640,Sparkling Water 24pk,Grocery,6,162,40.5,22,22,0.5432098765432098,59
+101,warehouse_1,118655,Trail Mix Value Pack,Grocery,6,170,42.5,28,28,0.6588235294117647,57
+101,warehouse_1,118670,Pasta Sauce Twin Pack,Grocery,6,154,38.5,33,33,0.8571428571428571,44
+101,warehouse_1,118680,Olive Oil 2L,Grocery,6,111,27.75,42,42,1.5135135135135136,14
+101,warehouse_1,118690,Coffee Pods 100ct,Grocery,6,108,27.0,30,30,1.1111111111111112,24
+101,warehouse_1,184220,Paper Towels 12pk,Household,4,128,32.0,0,36,0.0,64
+101,warehouse_1,184230,Toilet Paper 30ct,Household,4,161,40.25,20,20,0.4968944099378882,61
+101,warehouse_1,184240,Disinfecting Wipes 3pk,Household,4,153,38.25,19,19,0.49673202614379086,58
+101,warehouse_1,184250,Trash Bags 100ct,Household,4,74,18.5,19,19,1.027027027027027,18
+101,warehouse_1,229045,Chicken Breast Family Pack,Meat,4,32,8.0,16,0,2.0,0
+101,warehouse_1,229050,Chicken Breast Tray,Meat,4,72,18.0,23,23,1.2777777777777777,13
+101,warehouse_1,229060,Atlantic Salmon 2pk,Meat,4,44,11.0,15,15,1.3636363636363635,7
+101,warehouse_1,229070,Salmon Fillet Pack,Meat,4,39,9.75,30,30,3.076923076923077,0
+101,warehouse_1,330112,Whole Milk Gallon,Dairy,6,110,27.5,10,10,0.36363636363636365,45
+101,warehouse_1,330118,Greek Yogurt 12ct,Dairy,6,64,16.0,32,32,2.0,0
+101,warehouse_1,330120,Butter Quarters 4pk,Dairy,6,169,42.25,20,20,0.47337278106508873,65
+101,warehouse_1,330130,Shredded Cheese 2lb,Dairy,6,76,19.0,20,20,1.0526315789473684,18
+101,warehouse_1,441201,Copy Paper 5-Ream,Office,3,17,4.25,17,17,4.0,0
+101,warehouse_1,441210,Ballpoint Pens 60ct,Office,3,15,3.75,35,35,9.333333333333334,0
+101,warehouse_1,441220,Sticky Notes Value,Office,3,15,3.75,28,28,7.466666666666667,0
+101,warehouse_1,441230,Binder Clips Assort,Office,3,14,3.5,20,20,5.714285714285714,0
+101,warehouse_1,445880,Laundry Detergent 2pk,Household,4,68,17.0,12,52,0.7058823529411765,22
+101,warehouse_1,445890,Dryer Sheets 240ct,Household,4,67,16.75,29,29,1.7313432835820894,5
+101,warehouse_1,551902,Rotisserie Chicken,Deli,6,94,23.5,24,0,1.0212765957446808,23
+101,warehouse_1,551910,Macaroni Salad Tub,Deli,6,129,32.25,31,31,0.9612403100775194,34
+101,warehouse_1,551920,Turkey Club Sandwich,Deli,6,68,17.0,49,49,2.8823529411764706,0
+101,warehouse_1,551930,Potato Salad Tub,Deli,6,138,34.5,28,28,0.8115942028985508,41
+101,warehouse_1,667301,Diapers Size 4,Baby,4,52,13.0,0,18,0.0,26
+101,warehouse_1,667310,Baby Wipes Soft Pack,Baby,4,33,8.25,28,28,3.393939393939394,0
+101,warehouse_1,667320,Infant Formula Can,Baby,4,62,15.5,25,25,1.6129032258064515,6
+101,warehouse_1,667330,Toddler Snacks Box,Baby,4,51,12.75,36,36,2.823529411764706,0
+101,warehouse_1,774015,AA Batteries 48ct,GM,2,31,7.75,0,48,0.0,16
+101,warehouse_1,774020,HDMI Cable 2-Pack,GM,2,24,6.0,24,24,4.0,0
+101,warehouse_1,774030,Phone Charger Kit,GM,2,18,4.5,19,19,4.222222222222222,0
+101,warehouse_1,774040,LED Bulbs 8pk,GM,2,19,4.75,46,46,9.68421052631579,0
+101,warehouse_1,990101,Bananas Club Bunch,Produce,6,105,26.25,33,33,1.2571428571428571,20
+101,warehouse_1,990110,Bag Bag 5lb,Produce,6,75,18.75,29,29,1.5466666666666666,9
+101,warehouse_1,990120,Romaine Hearts 3pk,Produce,6,68,17.0,35,35,2.0588235294117645,0
+101,warehouse_1,990130,Blueberries Pint,Produce,6,140,35.0,23,23,0.6571428571428571,47
+102,warehouse_2,118634,Bottled Water 40pk,Grocery,6,166,41.5,34,34,0.8192771084337349,49
+102,warehouse_2,118640,Sparkling Water 24pk,Grocery,6,135,33.75,21,21,0.6222222222222222,47
+102,warehouse_2,118655,Trail Mix Value Pack,Grocery,6,132,33.0,30,30,0.9090909090909091,36
+102,warehouse_2,118670,Pasta Sauce Twin Pack,Grocery,6,100,25.0,28,28,1.12,22
+102,warehouse_2,118680,Olive Oil 2L,Grocery,6,102,25.5,41,41,1.607843137254902,10
+102,warehouse_2,118690,Coffee Pods 100ct,Grocery,6,96,24.0,36,36,1.5,12
+102,warehouse_2,184220,Paper Towels 12pk,Household,4,109,27.25,27,27,0.9908256880733946,28
+102,warehouse_2,184230,Toilet Paper 30ct,Household,4,113,28.25,37,37,1.3097345132743363,20
+102,warehouse_2,184240,Disinfecting Wipes 3pk,Household,4,99,24.75,44,44,1.7777777777777777,6
+102,warehouse_2,184250,Trash Bags 100ct,Household,4,70,17.5,19,19,1.0857142857142856,16
+102,warehouse_2,229045,Chicken Breast Family Pack,Meat,4,51,12.75,17,17,1.3333333333333333,9
+102,warehouse_2,229050,Chicken Breast Tray,Meat,4,72,18.0,26,26,1.4444444444444444,10
+102,warehouse_2,229060,Atlantic Salmon 2pk,Meat,4,43,10.75,23,23,2.13953488372093,0
+102,warehouse_2,229070,Salmon Fillet Pack,Meat,4,26,6.5,20,20,3.076923076923077,0
+102,warehouse_2,330112,Whole Milk Gallon,Dairy,6,102,25.5,32,32,1.2549019607843137,19
+102,warehouse_2,330118,Greek Yogurt 12ct,Dairy,6,61,15.25,22,22,1.4426229508196722,9
+102,warehouse_2,330120,Butter Quarters 4pk,Dairy,6,151,37.75,37,37,0.9801324503311258,39
+102,warehouse_2,330130,Shredded Cheese 2lb,Dairy,6,69,17.25,44,44,2.550724637681159,0
+102,warehouse_2,441201,Copy Paper 5-Ream,Office,3,33,8.25,45,45,5.454545454545454,0
+102,warehouse_2,441210,Ballpoint Pens 60ct,Office,3,20,5.0,38,38,7.6,0
+102,warehouse_2,441220,Sticky Notes Value,Office,3,26,6.5,0,0,0.0,13
+102,warehouse_2,441230,Binder Clips Assort,Office,3,29,7.25,24,24,3.310344827586207,0
+102,warehouse_2,445880,Laundry Detergent 2pk,Household,4,53,13.25,37,37,2.792452830188679,0
+102,warehouse_2,445890,Dryer Sheets 240ct,Household,4,55,13.75,19,19,1.3818181818181818,9
+102,warehouse_2,551902,Rotisserie Chicken,Deli,6,117,29.25,30,30,1.0256410256410255,29
+102,warehouse_2,551910,Macaroni Salad Tub,Deli,6,120,30.0,15,15,0.5,45
+102,warehouse_2,551920,Turkey Club Sandwich,Deli,6,86,21.5,26,26,1.2093023255813953,17
+102,warehouse_2,551930,Potato Salad Tub,Deli,6,128,32.0,0,0,0.0,64
+102,warehouse_2,667301,Diapers Size 4,Baby,4,86,21.5,11,11,0.5116279069767442,32
+102,warehouse_2,667310,Baby Wipes Soft Pack,Baby,4,51,12.75,26,26,2.0392156862745097,0
+102,warehouse_2,667320,Infant Formula Can,Baby,4,86,21.5,24,59,1.1162790697674418,19
+102,warehouse_2,667330,Toddler Snacks Box,Baby,4,67,16.75,0,12,0.0,34
+102,warehouse_2,774015,AA Batteries 48ct,GM,2,35,8.75,16,16,1.8285714285714285,2
+102,warehouse_2,774020,HDMI Cable 2-Pack,GM,2,31,7.75,42,42,5.419354838709677,0
+102,warehouse_2,774030,Phone Charger Kit,GM,2,27,6.75,46,46,6.814814814814815,0
+102,warehouse_2,774040,LED Bulbs 8pk,GM,2,25,6.25,32,32,5.12,0
+102,warehouse_2,990101,Bananas Club Bunch,Produce,6,123,30.75,21,21,0.6829268292682927,41
+102,warehouse_2,990110,Bag Bag 5lb,Produce,6,58,14.5,15,15,1.0344827586206897,14
+102,warehouse_2,990120,Romaine Hearts 3pk,Produce,6,65,16.25,38,38,2.3384615384615386,0
+102,warehouse_2,990130,Blueberries Pint,Produce,6,132,33.0,9,9,0.2727272727272727,57
+103,warehouse_3,118634,Bottled Water 40pk,Grocery,6,112,28.0,19,19,0.6785714285714286,37
+103,warehouse_3,118640,Sparkling Water 24pk,Grocery,6,81,20.25,36,36,1.7777777777777777,5
+103,warehouse_3,118655,Trail Mix Value Pack,Grocery,6,89,22.25,40,40,1.797752808988764,5
+103,warehouse_3,118670,Pasta Sauce Twin Pack,Grocery,6,70,17.5,21,21,1.2,14
+103,warehouse_3,118680,Olive Oil 2L,Grocery,6,63,15.75,11,11,0.6984126984126984,21
+103,warehouse_3,118690,Coffee Pods 100ct,Grocery,6,67,16.75,49,49,2.925373134328358,0
+103,warehouse_3,184220,Paper Towels 12pk,Household,4,80,20.0,33,33,1.65,7
+103,warehouse_3,184230,Toilet Paper 30ct,Household,4,102,25.5,7,7,0.27450980392156865,44
+103,warehouse_3,184240,Disinfecting Wipes 3pk,Household,4,83,20.75,37,37,1.783132530120482,5
+103,warehouse_3,184250,Trash Bags 100ct,Household,4,34,8.5,42,42,4.9411764705882355,0
+103,warehouse_3,229045,Chicken Breast Family Pack,Meat,4,47,11.75,39,39,3.3191489361702127,0
+103,warehouse_3,229050,Chicken Breast Tray,Meat,4,62,15.5,24,24,1.5483870967741935,7
+103,warehouse_3,229060,Atlantic Salmon 2pk,Meat,4,55,13.75,16,30,1.1636363636363636,12
+103,warehouse_3,229070,Salmon Fillet Pack,Meat,4,32,8.0,36,36,4.5,0
+103,warehouse_3,330112,Whole Milk Gallon,Dairy,6,98,24.5,16,16,0.6530612244897959,33
+103,warehouse_3,330118,Greek Yogurt 12ct,Dairy,6,66,16.5,43,43,2.606060606060606,0
+103,warehouse_3,330120,Butter Quarters 4pk,Dairy,6,134,33.5,19,19,0.5671641791044776,48
+103,warehouse_3,330130,Shredded Cheese 2lb,Dairy,6,72,18.0,40,40,2.2222222222222223,0
+103,warehouse_3,441201,Copy Paper 5-Ream,Office,3,42,10.5,26,26,2.4761904761904763,0
+103,warehouse_3,441210,Ballpoint Pens 60ct,Office,3,23,5.75,31,31,5.391304347826087,0
+103,warehouse_3,441220,Sticky Notes Value,Office,3,44,11.0,39,39,3.5454545454545454,0
+103,warehouse_3,441230,Binder Clips Assort,Office,3,28,7.0,29,29,4.142857142857143,0
+103,warehouse_3,445880,Laundry Detergent 2pk,Household,4,36,9.0,16,16,1.7777777777777777,2
+103,warehouse_3,445890,Dryer Sheets 240ct,Household,4,58,14.5,0,20,0.0,29
+103,warehouse_3,551902,Rotisserie Chicken,Deli,6,84,21.0,40,40,1.9047619047619047,2
+103,warehouse_3,551910,Macaroni Salad Tub,Deli,6,117,29.25,26,26,0.8888888888888888,33
+103,warehouse_3,551920,Turkey Club Sandwich,Deli,6,69,17.25,13,13,0.7536231884057971,22
+103,warehouse_3,551930,Potato Salad Tub,Deli,6,115,28.75,22,22,0.7652173913043478,36
+103,warehouse_3,667301,Diapers Size 4,Baby,4,50,12.5,24,37,1.92,1
+103,warehouse_3,667310,Baby Wipes Soft Pack,Baby,4,25,6.25,40,40,6.4,0
+103,warehouse_3,667320,Infant Formula Can,Baby,4,55,13.75,11,11,0.8,17
+103,warehouse_3,667330,Toddler Snacks Box,Baby,4,72,18.0,31,31,1.7222222222222223,5
+103,warehouse_3,774015,AA Batteries 48ct,GM,2,62,15.5,13,13,0.8387096774193549,18
+103,warehouse_3,774020,HDMI Cable 2-Pack,GM,2,51,12.75,17,17,1.3333333333333333,9
+103,warehouse_3,774030,Phone Charger Kit,GM,2,46,11.5,22,22,1.9130434782608696,1
+103,warehouse_3,774040,LED Bulbs 8pk,GM,2,54,13.5,27,27,2.0,0
+103,warehouse_3,990101,Bananas Club Bunch,Produce,6,107,26.75,24,24,0.897196261682243,30
+103,warehouse_3,990110,Bag Bag 5lb,Produce,6,70,17.5,45,45,2.5714285714285716,0
+103,warehouse_3,990120,Romaine Hearts 3pk,Produce,6,66,16.5,25,25,1.5151515151515151,8
+103,warehouse_3,990130,Blueberries Pint,Produce,6,133,33.25,27,27,0.8120300751879699,40

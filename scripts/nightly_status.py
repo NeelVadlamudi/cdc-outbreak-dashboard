@@ -22,19 +22,26 @@ from backend import config  # noqa: E402
 DROP_POINTS = 5.0
 HIGHER_IS_BETTER = ["numeric_accuracy", "tool_choice", "correct_refusals", "grounded_answers"]
 LOWER_IS_BETTER = ["false_refusals"]
+# Mirage audit eval (evals/mirage): same rule, its own baseline (evals/mirage/baseline.json)
+MIRAGE_HIGHER = ["overall_correct", "numeric_accuracy", "case_and_step", "proposal_accuracy", "tool_choice",
+                 "correct_refusals", "grounded_answers"]
+MIRAGE_LOWER = ["false_refusals", "unrequested_proposals"]
 
 
 def now_z() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
-def score_drops(summary: dict, baseline: dict, points: float = DROP_POINTS) -> list[dict]:
+def score_drops(summary: dict, baseline: dict, points: float = DROP_POINTS,
+                higher: list | None = None, lower: list | None = None) -> list[dict]:
+    higher = HIGHER_IS_BETTER if higher is None else higher
+    lower = LOWER_IS_BETTER if lower is None else lower
     drops = []
-    for key in HIGHER_IS_BETTER + LOWER_IS_BETTER:
+    for key in higher + lower:
         new, old = summary.get(key), baseline.get(key)
         if not isinstance(new, (int, float)) or not isinstance(old, (int, float)):
             continue
-        worse = (old - new) if key in HIGHER_IS_BETTER else (new - old)
+        worse = (old - new) if key in higher else (new - old)
         if worse > points:
             drops.append({"metric": key, "baseline": old, "value": new, "change": round(new - old, 1)})
     return drops
@@ -48,28 +55,35 @@ def freshness(db_path: str) -> list[dict]:
     return tools.get_data_freshness()["rows"]
 
 
+def eval_block(result: dict | None, baseline: dict | None, label: str, alerts: list,
+               higher: list | None = None, lower: list | None = None) -> dict | None:
+    if not result:
+        return None
+    s = result["summary"]
+    block = {"model": result["model"], "date": result["date"], "question_set": s.get("question_set"),
+             "summary": s, "baseline": None, "drops": []}
+    if baseline and baseline["summary"].get("question_set") == s.get("question_set"):
+        drops = score_drops(s, baseline["summary"], higher=higher, lower=lower)
+        block["baseline"] = {"date": baseline["date"], "model": baseline["model"], "summary": baseline["summary"]}
+        block["drops"] = drops
+        for d in drops:
+            alerts.append({"kind": "score_drop", "title": f"{label} score drop: {d['metric']}",
+                           "detail": f"{d['metric']} was {d['value']} against a baseline of {d['baseline']} "
+                                     f"({d['change']:+} points; alert threshold {DROP_POINTS:g})."})
+    return block
+
+
 def build_status(*, steps: dict, eval_result: dict | None, baseline: dict | None, backtest: dict | None,
-                 fresh_rows: list[dict], run_url: str | None, commit: str | None, started_at: str | None) -> dict:
+                 fresh_rows: list[dict], run_url: str | None, commit: str | None, started_at: str | None,
+                 mirage_result: dict | None = None, mirage_baseline: dict | None = None) -> dict:
     alerts = []
     for name, outcome in steps.items():
         if outcome not in ("success", "skipped"):
             alerts.append({"kind": "step_failed", "title": f"Nightly step failed: {name}",
                            "detail": f"The {name} step finished with outcome '{outcome}'."})
 
-    eval_block = None
-    if eval_result:
-        s = eval_result["summary"]
-        eval_block = {"model": eval_result["model"], "date": eval_result["date"],
-                      "question_set": s.get("question_set"), "summary": s, "baseline": None, "drops": []}
-        if baseline and baseline["summary"].get("question_set") == s.get("question_set"):
-            drops = score_drops(s, baseline["summary"])
-            eval_block["baseline"] = {"date": baseline["date"], "model": baseline["model"],
-                                      "summary": baseline["summary"]}
-            eval_block["drops"] = drops
-            for d in drops:
-                alerts.append({"kind": "score_drop", "title": f"Eval score drop: {d['metric']}",
-                               "detail": f"{d['metric']} was {d['value']} against a baseline of {d['baseline']} "
-                                         f"({d['change']:+} points; alert threshold {DROP_POINTS:g})."})
+    cdc_eval = eval_block(eval_result, baseline, "Eval", alerts)
+    mirage_eval = eval_block(mirage_result, mirage_baseline, "Mirage audit eval", alerts, MIRAGE_HIGHER, MIRAGE_LOWER)
 
     stale = [r for r in fresh_rows if r.get("stale") and not r.get("legacy")]
     for r in stale:
@@ -84,7 +98,8 @@ def build_status(*, steps: dict, eval_result: dict | None, baseline: dict | None
         "generated_at": now_z(),
         "run": {"result": result, "started_at": started_at, "finished_at": now_z(),
                 "url": run_url, "commit": commit, "steps": steps},
-        "eval": eval_block,
+        "eval": cdc_eval,
+        "mirage_eval": mirage_eval,
         "backtest": ({"run_at": backtest.get("run_at"), "data_through": backtest.get("data_through"),
                       "notes": backtest.get("notes", [])} if backtest else None),
         "freshness": {"stale_after_days": config.STALE_AFTER_DAYS,
@@ -99,6 +114,8 @@ def main():
     ap.add_argument("--db", default=config.DB_PATH)
     ap.add_argument("--eval-result", type=Path)
     ap.add_argument("--baseline", type=Path, default=ROOT / "evals" / "baseline.json")
+    ap.add_argument("--mirage-result", type=Path)
+    ap.add_argument("--mirage-baseline", type=Path, default=ROOT / "evals" / "mirage" / "baseline.json")
     ap.add_argument("--backtest", type=Path, default=ROOT / "evals" / "results" / "backtest.json")
     ap.add_argument("--step", action="append", default=[], help="name=outcome, e.g. refresh=success")
     ap.add_argument("--run-url")
@@ -116,7 +133,8 @@ def main():
         steps.setdefault("freshness", f"error: {type(e).__name__}")
     status = build_status(steps=steps, eval_result=load(args.eval_result), baseline=load(args.baseline),
                           backtest=load(args.backtest), fresh_rows=rows, run_url=args.run_url,
-                          commit=args.commit, started_at=args.started_at)
+                          commit=args.commit, started_at=args.started_at,
+                          mirage_result=load(args.mirage_result), mirage_baseline=load(args.mirage_baseline))
     args.out.write_text(json.dumps(status, indent=2) + "\n")
     from publish_eval import ensure_index
 
