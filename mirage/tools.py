@@ -284,6 +284,10 @@ def propose_action(club: str, sku: str, action: str, reason: str) -> dict:
         k, err = _resolve_sku(con, sku)
         if err:
             return err
+    from backend.ratelimit import allow_proposal
+    ok, why = allow_proposal()
+    if not ok:
+        return {"error": f"proposal not saved: {why}"}
     p = state.create_proposal(c["club"], c["store_id"], k["sku_id"], k["sku_name"], action, reason.strip())
     return {"as_of": None, "source_table": "proposals",
             "rows": [{"proposal_id": p["id"], "club": p["club"], "sku_id": p["sku_id"], "sku_name": p["sku_name"],
