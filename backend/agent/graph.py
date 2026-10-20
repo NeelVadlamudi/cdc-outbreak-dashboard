@@ -118,7 +118,7 @@ def _stale_tables(trace: list) -> list[dict]:
 def run_agent(question: str, model=None, setting: str | None = None, toolset=None,
               system_prompt: str | None = None, prompt_version: str | None = None,
               check_freshness: bool = True) -> dict:
-    """Run one question. Defaults are the CDC agent; the Mirage audit agent passes its own toolset and prompt."""
+    """Run one question. Defaults are the CDC tools and prompt; a caller can pass its own toolset and prompt."""
     start = time.perf_counter()
     model = model or get_chat_model(setting)
     graph = build_graph(model, toolset)

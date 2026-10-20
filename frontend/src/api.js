@@ -76,18 +76,3 @@ export function createEventSource(onMessage) {
   es.onerror = () => es.close();
   return es;
 }
-
-// ─── Mirage review (DATA_CONTRACT.md §7). The admin key is passed in per call, never stored. ──
-import { proposalsPath, auditLogPath, decisionRequest, decisionError } from "./mirage/contract.js";
-export const getMirageProposals = (status) => fetchAPI(proposalsPath(status));
-export const getMirageAuditLog = (proposalId) => fetchAPI(auditLogPath(proposalId));
-export async function decideProposal(id, decision, { key, decidedBy, note }) {
-  const { path, init } = decisionRequest(id, decision, { key, decidedBy, note });
-  const res = await fetch(`${API_BASE}${path}`, init);
-  if (!res.ok) {
-    let detail = "";
-    try { detail = (await res.json())?.detail ?? ""; } catch { /* non-JSON */ }
-    throw new Error(decisionError(res.status, typeof detail === "string" ? detail : ""));
-  }
-  return res.json();
-}

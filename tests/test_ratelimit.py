@@ -1,4 +1,4 @@
-"""Rate limits on the model endpoints, the proposal cap, and the docs flag."""
+"""Rate limits on the model endpoints and the docs flag."""
 
 import importlib
 
@@ -65,18 +65,11 @@ def test_client_ip_prefers_cloudflare_header():
 
 
 def test_model_routes_are_limited():
-    from backend.mirage_routes import router as mirage_router
     from backend.routes import router
     deps = {r.path: [d.call.__qualname__ for d in r.dependant.dependencies]
-            for rt in (router, mirage_router) for r in rt.routes if hasattr(r, "dependant")}
-    for path in ("/api/agent/ask", "/api/chat", "/api/weekly-brief", "/api/mirage/ask"):
+            for r in router.routes if hasattr(r, "dependant")}
+    for path in ("/api/agent/ask", "/api/chat", "/api/weekly-brief"):
         assert any("limited" in q for q in deps[path]), path
-
-
-def test_proposal_cap(monkeypatch):
-    monkeypatch.setitem(ratelimit.LIMITS, "proposal", (0, 0, 2))
-    assert [ratelimit.allow_proposal()[0] for _ in range(3)] == [True, True, False]
-    assert ratelimit.allow_proposal()[1] == "The demo has reached its daily limit. Try again tomorrow."
 
 
 def test_docs_flag(monkeypatch):

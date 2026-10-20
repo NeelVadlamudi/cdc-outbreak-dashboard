@@ -40,7 +40,7 @@ jobs:
           cp -r site/. _site/
           cp -r frontend/dist _site/app
           # Pages has no SPA fallback, so give each route its own entry file.
-          for r in review ask map forecasts analytics simulator wastewater advanced; do
+          for r in ask map forecasts analytics simulator wastewater advanced; do
             mkdir -p "_site/app/$r" && cp _site/app/index.html "_site/app/$r/index.html"
           done
       - uses: actions/upload-pages-artifact@v3

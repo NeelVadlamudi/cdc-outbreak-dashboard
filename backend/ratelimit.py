@@ -4,7 +4,6 @@ In-memory and per process: the Render free plan runs one instance, and a restart
 which is fine for a demo. Limits come from env vars so tests and local runs can change them.
 """
 
-import contextvars
 import math
 import os
 import threading
@@ -12,8 +11,6 @@ import time
 from collections import defaultdict, deque
 
 from fastapi import HTTPException, Request
-
-client_ip_var: contextvars.ContextVar[str] = contextvars.ContextVar("client_ip", default="unknown")
 
 
 def _int(name: str, default: int) -> int:
@@ -78,9 +75,7 @@ limiter = Limiter()
 # bucket: (per IP per minute, per IP per day, all callers per day)
 LIMITS = {
     "ask": (_int("RATE_ASK_PER_MIN", 6), _int("RATE_ASK_PER_DAY", 60), _int("RATE_ASK_GLOBAL_PER_DAY", 800)),
-    "mirage": (_int("RATE_MIRAGE_PER_MIN", 4), _int("RATE_MIRAGE_PER_DAY", 30), _int("RATE_MIRAGE_GLOBAL_PER_DAY", 300)),
     "brief": (_int("RATE_BRIEF_PER_MIN", 10), _int("RATE_BRIEF_PER_DAY", 100), _int("RATE_BRIEF_GLOBAL_PER_DAY", 1000)),
-    "proposal": (_int("RATE_PROPOSAL_PER_MIN", 3), _int("RATE_PROPOSAL_PER_DAY", 10), _int("RATE_PROPOSAL_GLOBAL_PER_DAY", 50)),
 }
 
 MESSAGES = {
@@ -94,18 +89,9 @@ def limited(bucket: str):
     """FastAPI dependency: 429 with Retry-After when the caller is over the limit for this bucket."""
     def dep(request: Request):
         ip = client_ip(request)
-        client_ip_var.set(ip)
         if not enabled():
             return
         ok, retry, reason = limiter.hit(bucket, ip, *LIMITS[bucket])
         if not ok:
             raise HTTPException(429, MESSAGES[reason].format(s=retry), headers={"Retry-After": str(retry)})
     return dep
-
-
-def allow_proposal() -> tuple[bool, str]:
-    """Separate cap on Mirage proposal rows, keyed on the IP of the request that runs the audit."""
-    if not enabled():
-        return True, ""
-    ok, retry, reason = limiter.hit("proposal", client_ip_var.get(), *LIMITS["proposal"])
-    return ok, ("" if ok else MESSAGES[reason].format(s=retry))
