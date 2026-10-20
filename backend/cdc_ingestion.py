@@ -4,9 +4,7 @@ Fetches live data from 4 CDC datasets (incl. county-level wastewater), transform
 """
 
 import logging
-import os
 from datetime import datetime, timedelta
-from pathlib import Path
 
 import duckdb
 import httpx
@@ -14,7 +12,7 @@ import pandas as pd
 
 logger = logging.getLogger(__name__)
 
-DB_PATH = os.path.join(Path(__file__).parent.parent, "data", "cdc_surveillance.duckdb")
+from backend.config import DB_PATH  # noqa: E402
 
 # CDC SODA API endpoints (no auth required)
 CDC_DATASETS = {
@@ -95,7 +93,7 @@ async def fetch_hospitalization_recent(since: str = "2023-09-01") -> list:
     """Fetch observed weekly RESP-NET rates since a date (current CDC schema)."""
     config = CDC_DATASETS["hospitalization_rates"]
     where = (
-        "date_type='Week Ending Date' AND data_type='Weekly Rate' "
+        "date_type='Week Ending Date' AND data_type in ('Weekly Rate','Cumulative Rate') "
         f"AND rate_type='Observed' AND date>'{since}'"
     )
     all_data = []
@@ -117,37 +115,30 @@ async def fetch_hospitalization_recent(since: str = "2023-09-01") -> list:
 
 
 def ingest_hospitalization_rates(data: list):
-    """Load RESP-NET weekly hospitalization rates into DuckDB."""
-    rows = []
-    for record in data:
-        date = (record.get("date") or "")[:10]
-        if len(date) != 10 or record.get("estimate") in (None, ""):
-            continue
-        try:
-            rows.append({
-                "surveillance_network": record.get("surveillance_network", ""),
-                "season": record.get("season", ""),
-                "week_ending_date": date,
-                "mmwr_year": int(date[:4]),
-                "mmwr_week": 0,
-                "age_group": record.get("age_category", "Overall"),
-                "sex": record.get("sex", "All"),
-                "race_ethnicity": record.get("race", "All"),
-                "site": record.get("state", ""),
-                "weekly_rate": float(record["estimate"]),
-                "cumulative_rate": None,
-                "rate_type": record.get("rate_type", ""),
-            })
-        except (ValueError, TypeError):
-            continue
-    if not rows:
+    """Load RESP-NET observed rates into DuckDB, one row per week with weekly and cumulative rates."""
+    if not data:
         return
-
-    df = pd.DataFrame(rows).drop_duplicates(
-        subset=["surveillance_network", "week_ending_date", "age_group", "sex", "race_ethnicity", "site"],
-        keep="last",
+    raw = pd.DataFrame(data)
+    raw = raw[raw["date"].str.len() >= 10].copy()
+    raw["estimate"] = pd.to_numeric(raw["estimate"], errors="coerce")
+    keys = ["surveillance_network", "season", "date", "age_category", "sex", "race", "state"]
+    wide = raw.pivot_table(index=keys, columns="data_type", values="estimate", aggfunc="first").reset_index()
+    df = pd.DataFrame({  # noqa: F841 (read by DuckDB below)
+        "surveillance_network": wide["surveillance_network"],
+        "season": wide["season"],
+        "week_ending_date": pd.to_datetime(wide["date"].str[:10]).dt.date,
+        "mmwr_year": pd.to_datetime(wide["date"].str[:10]).dt.year,
+        "mmwr_week": 0,
+        "age_group": wide["age_category"],
+        "sex": wide["sex"],
+        "race_ethnicity": wide["race"],
+        "site": wide["state"],
+        "weekly_rate": wide.get("Weekly Rate"),
+        "cumulative_rate": wide.get("Cumulative Rate"),
+        "rate_type": "Observed",
+    }).drop_duplicates(
+        subset=["surveillance_network", "week_ending_date", "age_group", "sex", "race_ethnicity", "site"], keep="last"
     )
-    df["week_ending_date"] = pd.to_datetime(df["week_ending_date"]).dt.date
     conn = duckdb.connect(DB_PATH)
     try:
         conn.execute("DELETE FROM hospitalization_rates")
