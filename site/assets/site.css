@@ -81,3 +81,18 @@ th.delta-h .runhd{font-style:italic}
 .meta .chip{white-space:normal;line-height:1.35}
 .subhead{font:400 12px var(--mono);color:var(--mute);margin:18px 0 8px;text-transform:uppercase;letter-spacing:.04em}
 table.evalpast td:first-child{white-space:normal;min-width:150px;max-width:220px}
+.btgroup{margin-top:18px}
+.btgroup:first-of-type{margin-top:6px}
+.btgroup .subhead{margin-top:0}
+.legend i.dash{background:repeating-linear-gradient(90deg,#6b6b70 0 4px,transparent 4px 7px)!important}
+table.bt td.beats{color:var(--acc)}
+table.bt td.loses{color:var(--mute)}
+table.bt td .mark{font-size:10px}
+table.bt tr.baserow td{color:var(--ink);background:rgba(255,255,255,.03)}
+table.bt tr.baserow td:first-child{background:#111113}
+.btkey .beats{color:var(--acc);font-family:var(--mono)}
+.freshness .chip.legacy{color:var(--dim);border-style:dashed}
+.freshness .chip.legacy b{color:var(--mute)}
+.freshness .chip{white-space:normal;line-height:1.35;max-width:100%}
+.bt-notes { margin: 0 0 1rem; padding-left: 1.2rem; }
+.bt-notes li { margin: .2rem 0; }

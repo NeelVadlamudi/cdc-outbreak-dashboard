@@ -52,6 +52,12 @@ _DATE_RE = re.compile(
     re.IGNORECASE,
 )
 _NUM_RE = re.compile(r"(?<![\w.])-?\d[\d,]*(?:\.\d+)?")
+# Names that contain digits but are not figures: pathogens, subtypes, model ids.
+_NAME_RE = re.compile(
+    r"\b(?:COVID-19|SARS-CoV-2|H\dN\d+|H\d+|N\d+|RSV-NET|COVID-NET|FluSurv-NET|"
+    r"gemini-[\w.-]+|qwen[\w.:-]*|llama[\w.:-]*)\b",
+    re.IGNORECASE,
+)
 
 
 # ---------- parsing helpers ----------
@@ -60,10 +66,15 @@ def strip_dates(text: str) -> str:
     return _DATE_RE.sub(" ", text)
 
 
+def strip_names(text: str) -> str:
+    return _NAME_RE.sub(" ", text)
+
+
 def numbers_in(text: str) -> list[float]:
-    """Numbers in free text, ignoring dates. '1,162' -> 1162, '3.6%' -> 3.6."""
+    """Numbers in free text, ignoring dates and names such as COVID-19.
+    '1,162' -> 1162, '3.6%' -> 3.6."""
     out = []
-    for m in _NUM_RE.findall(strip_dates(text)):
+    for m in _NUM_RE.findall(strip_dates(strip_names(text))):
         try:
             out.append(float(m.replace(",", "")))
         except ValueError:
@@ -103,14 +114,27 @@ def matches(value, candidates: list[float], tol: float) -> bool:
     return any(abs(c - value) <= tol + 1e-9 for c in candidates)
 
 
+def _sum_or_difference(n: float, values: list[float], tol: float) -> bool:
+    """n (or -n) equals a + b or a - b for two different tool values."""
+    for v in (n, -n):
+        for k in values:
+            for a in (v + k, v - k):
+                if abs(a - k) > tol and matches(a, values, tol):
+                    return True
+    return False
+
+
 def grounded(answer: str, question: str, tool_calls: list) -> bool:
-    """Every number in the answer appears in a tool result after rounding.
-    Numbers already in the question are allowed."""
-    source = tool_output_numbers(tool_calls) + numbers_in(question)
+    """Every number in the answer appears in a tool result after rounding, or is
+    the sum or difference of two tool values. Numbers already in the question are allowed."""
+    tool_values = tool_output_numbers(tool_calls)
+    source = tool_values + numbers_in(question)
     for n in numbers_in(answer):
         decimals = 0 if n == int(n) else len(repr(n).split(".")[1])
         tol = 0.5 * 10 ** -decimals
-        if not matches(n, source, tol) and not matches(-n, source, tol):
+        if matches(n, source, tol) or matches(-n, source, tol):
+            continue
+        if not _sum_or_difference(n, tool_values, tol):
             return False
     return True
 
@@ -159,7 +183,9 @@ def score_one(q: dict, expected: list | None, resp: dict) -> dict:
         r["correct"] = (not refused) and all(value_found(v, answer, tol) for v in expected)
         r["false_refusal"] = refused
     else:
-        no_number = not numbers_in(answer.replace(q["question"], ""))
+        # Numbers and dates that are already in the question do not count.
+        allowed = set(numbers_in(q["question"]))
+        no_number = not [n for n in numbers_in(answer.replace(q["question"], "")) if n not in allowed]
         r["correct"] = refused and no_number
         r["correct_refusal"] = r["correct"]
     r["delivered"] = bool(answer.strip()) and not refused
@@ -175,12 +201,13 @@ def pct(n: int, d: int):
     return round(100.0 * n / d, 1) if d else None
 
 
-def summarize(rows: list[dict]) -> dict:
+def summarize(rows: list[dict], question_set: str | None = None) -> dict:
     ans = [r for r in rows if r["type"] != "refusal"]
     unans = [r for r in rows if r["type"] == "refusal"]
     delivered = [r for r in rows if r["delivered"]]
     times = sorted(r["elapsed_s"] for r in rows if r.get("elapsed_s") is not None)
     s = {
+        "question_set": question_set,
         "questions": len(rows),
         "numeric_accuracy": pct(sum(r["correct"] for r in ans), len(ans)),
         "tool_choice": pct(sum(r["tool_choice_ok"] for r in rows), len(rows)),
@@ -200,7 +227,7 @@ def markdown(model: str, day: str, summary: dict, rows: list[dict]) -> str:
     lines = [f"# Eval results: {model}, {day}", "",
              "| Score | Value |", "|---|---|"]
     labels = {
-        "questions": "Questions", "numeric_accuracy": "Numeric accuracy (%)",
+        "question_set": "Question set", "questions": "Questions", "numeric_accuracy": "Numeric accuracy (%)",
         "tool_choice": "Tool choice (%)", "correct_refusals": "Correct refusals (%)",
         "false_refusals": "False refusals (%)", "grounded_answers": "Grounded answers (%)",
         "median_s": "Median time (s)", "p95_s": "p95 time (s)",
@@ -240,6 +267,16 @@ def load_responses(path: Path) -> dict:
     return data
 
 
+def result_base(out_dir: Path, model: str, day: str) -> Path:
+    """<model>_<date>, then <model>_<date>_2, _3 ... so an earlier run is never overwritten."""
+    stem = f"{re.sub(r'[^A-Za-z0-9_.-]', '-', model)}_{day}"
+    base, n = out_dir / stem, 1
+    while base.with_name(base.name + ".json").exists():
+        n += 1
+        base = out_dir / f"{stem}_{n}"
+    return base
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Run and score the agent evals.")
     ap.add_argument("--model", required=True, help="label used in the results file name")
@@ -251,7 +288,9 @@ def main(argv=None) -> int:
     ap.add_argument("--timeout", type=float, default=120)
     args = ap.parse_args(argv)
 
-    questions = yaml.safe_load(args.questions.read_text())["questions"]
+    qdoc = yaml.safe_load(args.questions.read_text())
+    questions = qdoc["questions"]
+    question_set = qdoc.get("version")
     expected = expected_values(questions, args.snapshot)
 
     if args.from_file:
@@ -263,10 +302,10 @@ def main(argv=None) -> int:
             print(f"{q['id']}: {responses[q['id']].get('elapsed_s')}s", file=sys.stderr)
 
     rows = [score_one(q, expected.get(q["id"]), responses.get(q["id"], {})) for q in questions]
-    summary = summarize(rows)
+    summary = summarize(rows, question_set)
     day = date.today().isoformat()
     args.out_dir.mkdir(parents=True, exist_ok=True)
-    base = args.out_dir / f"{re.sub(r'[^A-Za-z0-9_.-]', '-', args.model)}_{day}"
+    base = result_base(args.out_dir, args.model, day)
     base.with_name(base.name + ".json").write_text(json.dumps(
         {"model": args.model, "date": day, "summary": summary,
          "rows": rows, "responses": responses}, indent=2, default=str))

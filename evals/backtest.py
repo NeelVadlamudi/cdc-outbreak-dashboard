@@ -14,7 +14,6 @@ sum actual, 0-1) and coverage (share of actuals inside the app's band, 0-1).
 """
 
 import argparse
-import copy
 import json
 import sys
 from datetime import datetime, timezone
@@ -23,14 +22,13 @@ from pathlib import Path
 import duckdb
 import numpy as np
 import torch
-import torch.nn as nn
 import xgboost as xgb
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 from backend import config  # noqa: E402
 from backend.ensemble import create_xgb_features  # noqa: E402
-from backend.forecasting import LSTMForecaster, create_features  # noqa: E402
+from backend.forecasting import fit_lstm, predict_lstm  # noqa: E402
 
 VIRUSES = ["COVID-NET", "FluSurv-NET", "RSV-NET", "Combined"]
 H = 4
@@ -51,57 +49,21 @@ def load_series(con, virus):
     return [r[0] for r in rows], np.array([r[1] for r in rows], dtype=np.float32)
 
 
-# ---- LSTM: same steps as forecasting.train_model and generate_forecast ----
+# ---- LSTM: the app's own fit and predict functions (backend/forecasting.py) ----
 
-def lstm_fit_predict(series):
-    mean_val = float(np.mean(series))
-    std_val = float(np.std(series)) + 1e-8
-    norm = (series - mean_val) / std_val
-    X, y = create_features(norm)
-    split = int(len(X) * 0.8)
-    Xt, Xv = torch.FloatTensor(X[:split]), torch.FloatTensor(X[split:])
-    yt, yv = torch.FloatTensor(y[:split]), torch.FloatTensor(y[split:])
-    model = LSTMForecaster(input_size=5, hidden_size=64, num_layers=2, output_size=4)
-    opt = torch.optim.Adam(model.parameters(), lr=0.001)
-    loss_fn = nn.MSELoss()
-    best, best_state, patience = float("inf"), None, 0
-    for _ in range(100):
-        model.train()
-        opt.zero_grad()
-        loss = loss_fn(model(Xt), yt)
-        loss.backward()
-        opt.step()
-        model.eval()
-        with torch.no_grad():
-            v = loss_fn(model(Xv), yv).item()
-        if v < best:
-            best, best_state, patience = v, copy.deepcopy(model.state_dict()), 0
-        else:
-            patience += 1
-            if patience >= 15:
-                break
-    # train_model reports MAE from the final weights and saves the best ones
-    with torch.no_grad():
-        mae = float(np.mean(np.abs(model(Xv).numpy() * std_val + mean_val - (y[split:] * std_val + mean_val))))
-    model.load_state_dict(best_state)
-    model.eval()
-    window = norm[-12:]
-    feats = []
-    for j in range(len(window)):
-        val = window[j]
-        lag1 = window[j - 1] if j > 0 else val
-        lag2 = window[j - 2] if j > 1 else val
-        feats.append([val, lag1, lag2, float(np.mean(window[max(0, j - 3):j + 1])), float(np.sin(2 * np.pi * j / 52))])
-    with torch.no_grad():
-        pred = model(torch.FloatTensor(np.array([feats], dtype=np.float32))).numpy()[0]
-    pred = np.maximum(pred * std_val + mean_val, 0)
-    bands = [mae * (1 + i * 0.3) for i in range(H)]
-    return pred.tolist(), bands
+def lstm_fit_predict(dates, series, seed=0):
+    model, mae = fit_lstm(dates, series, seed=seed)
+    if model is None:
+        return None, None
+    pred = predict_lstm(model, dates, series)
+    if pred is None:
+        return None, None
+    return pred, [mae * (1 + i * 0.3) for i in range(H)]
 
 
 # ---- XGBoost: same steps as ensemble.train_xgboost and xgb_forecast ----
 
-def xgb_fit_predict(series):
+def xgb_fit_predict(dates, series, seed=0):
     X, y = create_xgb_features([{"rate": float(v)} for v in series])
     names = list(X[0].keys())
     Xa = np.array([[f[k] for k in names] for f in X])
@@ -123,7 +85,7 @@ def xgb_fit_predict(series):
     return out, [mae * (1 + i * 0.25) for i in range(H)]
 
 
-def naive_predict(series):
+def naive_predict(dates, series, seed=0):
     return [float(series[-1])] * H, None
 
 
@@ -147,8 +109,9 @@ def run(db_path, n_origins):
             act = [[] for _ in range(H)]
             cov = [[] for _ in range(H)]
             for o in origins:
-                torch.manual_seed(o)
-                pred, band = fn(series[:o])
+                pred, band = fn(dates[:o], series[:o], seed=o)
+                if pred is None:
+                    continue
                 for h in range(H):
                     a = float(series[o + h])
                     err[h].append(abs(pred[h] - a))
@@ -157,6 +120,9 @@ def run(db_path, n_origins):
                         cov[h].append(pred[h] - band[h] <= a <= pred[h] + band[h])
             horizons = []
             for h in range(H):
+                if not act[h]:
+                    horizons.append({"h": h + 1, "mae": None, "wmape": None, "coverage": None})
+                    continue
                 total = sum(act[h])
                 horizons.append({
                     "h": h + 1,
@@ -184,6 +150,29 @@ def run(db_path, n_origins):
     }
 
 
+def baseline_notes(models):
+    """Plain sentences: which models beat repeating last week's value, per series."""
+    by = {m["model"]: {p["h"]: p["mae"] for p in m["horizons"]} for m in models}
+    notes = []
+    for virus in VIRUSES:
+        base = by.get(f"Last value · {virus}")
+        if not base:
+            continue
+        for name in ("LSTM", "XGBoost"):
+            maes = by.get(f"{name} · {virus}")
+            if not maes:
+                continue
+            won = [h for h, v in maes.items() if v is not None and base.get(h) is not None and v < base[h]]
+            if not won:
+                notes.append(f"{name} on {virus} does not beat last week's value at any horizon.")
+            elif len(won) < len(maes):
+                hs = ", ".join(f"h{h}" for h in won)
+                notes.append(f"{name} on {virus} beats last week's value only at {hs}.")
+            else:
+                notes.append(f"{name} on {virus} beats last week's value at every horizon.")
+    return notes
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--db", default=config.DB_PATH)
@@ -192,12 +181,14 @@ def main():
     ap.add_argument("--site-out", type=Path, help="also write the site/data/backtest.json subset (DATA_CONTRACT.md section 3)")
     args = ap.parse_args()
     result = run(args.db, args.origins)
+    result["notes"] = baseline_notes(result["models"])
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(result, indent=2))
     if args.site_out:
         site = {k: result[k] for k in ("run_at", "target", "mae_unit", "n_origins")}
         site["models"] = [{"model": m["model"], "horizons": [{k: p[k] for k in ("h", "mae", "wmape")} for p in m["horizons"]]}
                           for m in result["models"]]
+        site["notes"] = baseline_notes(result["models"])
         args.site_out.write_text(json.dumps(site, indent=2))
     for m in result["models"]:
         cells = "  ".join(f"h{p['h']} mae={p['mae']} wmape={p['wmape']} cov={p['coverage']}" for p in m["horizons"])
