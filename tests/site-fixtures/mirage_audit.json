@@ -1,0 +1,225 @@
+{
+ "_label": "EXAMPLE fixture for tests only. Never copy into site/data/.",
+ "recorded_at": "2000-01-01T15:15:00Z",
+ "steps": [
+  {
+   "step": "ask",
+   "request": {
+    "method": "POST",
+    "path": "/api/mirage/ask",
+    "body": {
+     "question": "EXAMPLE ask?"
+    }
+   },
+   "response": {
+    "status": "answered",
+    "answer": "EXAMPLE: **Case:** The record is wrong. **Next step:** Recount.",
+    "tool_calls": [
+     {
+      "tool": "get_sku_position",
+      "inputs": {
+       "day": "2000-01-01",
+       "club": "EXAMPLE-club",
+       "sku": "EXAMPLE Towels"
+      },
+      "rows_returned": 1,
+      "elapsed_s": 0.1,
+      "output": {
+       "as_of": "2000-01-01",
+       "source_table": "fact_inventory_daily",
+       "club": "EXAMPLE-club",
+       "store_id": "001",
+       "rows": [
+        {
+         "sku_id": "000001",
+         "sku_name": "EXAMPLE Towels",
+         "category": "EX",
+         "floor_qty": 0,
+         "backroom_qty": 0,
+         "system_on_hand_qty": 5,
+         "case": "record_wrong",
+         "case_label": "The record is wrong",
+         "next_step": "recount"
+        }
+       ]
+      }
+     },
+     {
+      "tool": "propose_action",
+      "inputs": {
+       "club": "EXAMPLE-club",
+       "sku": "EXAMPLE Towels",
+       "action": "reorder",
+       "reason": "EXAMPLE"
+      },
+      "rows_returned": 0,
+      "elapsed_s": 0.01,
+      "output": {
+       "error": "No proposal written: EXAMPLE."
+      }
+     },
+     {
+      "tool": "propose_action",
+      "inputs": {
+       "club": "EXAMPLE-club",
+       "sku": "EXAMPLE Towels",
+       "action": "recount",
+       "reason": "EXAMPLE"
+      },
+      "rows_returned": 1,
+      "elapsed_s": 0.02,
+      "output": {
+       "as_of": null,
+       "source_table": "proposals",
+       "rows": [
+        {
+         "proposal_id": 1,
+         "club": "EXAMPLE-club",
+         "sku_id": "000001",
+         "sku_name": "EXAMPLE Towels",
+         "action": "recount",
+         "status": "waiting for approval"
+        }
+       ]
+      }
+     }
+    ],
+    "as_of": "2000-01-01",
+    "elapsed_s": 1.5,
+    "model": "EXAMPLE-model",
+    "prompt_version": "EXAMPLE",
+    "checker": {
+     "passed": true,
+     "unverified": [],
+     "stale_tables": []
+    },
+    "proposals": [
+     {
+      "proposal_id": 1,
+      "club": "EXAMPLE-club",
+      "sku_id": "000001",
+      "sku_name": "EXAMPLE Towels",
+      "action": "recount",
+      "status": "waiting for approval"
+     }
+    ]
+   }
+  },
+  {
+   "step": "queue",
+   "request": {
+    "method": "GET",
+    "path": "/api/mirage/proposals?status=waiting for approval"
+   },
+   "response": {
+    "proposals": [
+     {
+      "id": 1,
+      "created_at": "2000-01-01T15:00:00Z",
+      "club": "EXAMPLE-club",
+      "store_id": "001",
+      "sku_id": "000001",
+      "sku_name": "EXAMPLE Towels",
+      "action": "recount",
+      "reason": "EXAMPLE reason one.",
+      "status": "waiting for approval",
+      "decided_by": null,
+      "decided_at": null
+     }
+    ]
+   }
+  },
+  {
+   "step": "approve_without_key",
+   "request": {
+    "method": "POST",
+    "path": "/api/proposals/1/approve",
+    "body": {
+     "decided_by": "Demo reviewer",
+     "note": "EXAMPLE note."
+    }
+   },
+   "status_code": 401,
+   "response": {
+    "detail": "Missing or wrong X-API-Key."
+   }
+  },
+  {
+   "step": "approve",
+   "request": {
+    "method": "POST",
+    "path": "/api/proposals/1/approve",
+    "body": {
+     "decided_by": "Demo reviewer",
+     "note": "EXAMPLE note."
+    },
+    "headers": {
+     "X-API-Key": "<ADMIN_API_KEY>"
+    }
+   },
+   "status_code": 200,
+   "response": {
+    "proposal": {
+     "id": 1,
+     "created_at": "2000-01-01T15:00:00Z",
+     "club": "EXAMPLE-club",
+     "store_id": "001",
+     "sku_id": "000001",
+     "sku_name": "EXAMPLE Towels",
+     "action": "recount",
+     "reason": "EXAMPLE reason one.",
+     "status": "approved",
+     "decided_by": "Demo reviewer",
+     "decided_at": "2000-01-01T15:05:00Z"
+    },
+    "audit": [
+     {
+      "id": 1,
+      "proposal_id": 1,
+      "decision": "approved",
+      "decided_by": "Demo reviewer",
+      "decided_at": "2000-01-01T15:05:00Z",
+      "note": "EXAMPLE note."
+     }
+    ]
+   }
+  },
+  {
+   "step": "decide_again",
+   "request": {
+    "method": "POST",
+    "path": "/api/proposals/1/reject",
+    "body": {
+     "decided_by": "Demo reviewer",
+     "note": "EXAMPLE note."
+    },
+    "headers": {
+     "X-API-Key": "<ADMIN_API_KEY>"
+    }
+   },
+   "status_code": 409,
+   "response": {
+    "detail": "proposal 1 is already approved"
+   }
+  },
+  {
+   "step": "audit_log",
+   "request": {
+    "method": "GET",
+    "path": "/api/mirage/audit-log?proposal_id=1"
+   },
+   "response": {
+    "audit_log": [
+     {
+      "id": 1,
+      "proposal_id": 1,
+      "decision": "approved",
+      "decided_by": "Demo reviewer",
+      "decided_at": "2000-01-01T15:05:00Z",
+      "note": "EXAMPLE note."
+     }
+    ]
+   }
+  }
+ ]
+}

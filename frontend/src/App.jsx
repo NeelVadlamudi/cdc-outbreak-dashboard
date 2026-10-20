@@ -11,6 +11,7 @@ import Wastewater from "./pages/Wastewater";
 import AdvancedAnalytics from "./pages/AdvancedAnalytics";
 import AskData from "./pages/AskData";
 import Simulator from "./pages/Simulator";
+import MirageReview from "./pages/MirageReview";
 import CustomCursor from "./components/CustomCursor";
 
 // Module-scope alias: core no-unused-vars does not see JSX member use (<MotionDiv>).
@@ -42,6 +43,7 @@ function AppRoutes() {
         <Route path="/ask" element={<PageTransition><AskData /></PageTransition>} />
         <Route path="/simulator" element={<PageTransition><Simulator /></PageTransition>} />
         <Route path="/wastewater" element={<PageTransition><Wastewater /></PageTransition>} />
+        <Route path="/review" element={<PageTransition><MirageReview /></PageTransition>} />
         <Route path="/advanced" element={<PageTransition><AdvancedAnalytics /></PageTransition>} />
       </Routes>
     </AnimatePresence>
