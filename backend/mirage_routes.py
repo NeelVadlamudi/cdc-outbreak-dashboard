@@ -8,10 +8,11 @@ import asyncio
 import logging
 import secrets
 
-from fastapi import APIRouter, Header, HTTPException
+from fastapi import APIRouter, Depends, Header, HTTPException
 from pydantic import BaseModel, Field
 
 from backend import config
+from backend.ratelimit import limited
 from mirage import state
 
 router = APIRouter(prefix="/api")
@@ -34,7 +35,7 @@ def _require_admin(key: str | None):
         raise HTTPException(401, "Missing or wrong X-API-Key.")
 
 
-@router.post("/mirage/ask")
+@router.post("/mirage/ask", dependencies=[Depends(limited("mirage"))])
 async def mirage_ask(body: AuditQuestion):
     from mirage.agent import run_audit
 

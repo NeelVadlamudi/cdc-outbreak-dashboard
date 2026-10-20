@@ -142,10 +142,10 @@ cd frontend && npm install && npm run dev   # http://localhost:5173/ask and /rev
 
 ```bash
 cp evals/snapshot.duckdb /tmp/snap.duckdb
-CDC_DB_PATH=/tmp/snap.duckdb INGEST_ON_STARTUP=false AGENT_MODEL=ollama-local OLLAMA_AGENT_MODEL=qwen2.5:3b \
+CDC_DB_PATH=/tmp/snap.duckdb INGEST_ON_STARTUP=false RATE_LIMITS_ENABLED=false AGENT_MODEL=ollama-local OLLAMA_AGENT_MODEL=qwen2.5:3b \
   uvicorn backend.main:app --port 8000 &
 python evals/run_evals.py --model qwen2.5:3b --url http://localhost:8000
-AGENT_MODEL=ollama-local OLLAMA_AGENT_MODEL=qwen2.5:3b \
+RATE_LIMITS_ENABLED=false AGENT_MODEL=ollama-local OLLAMA_AGENT_MODEL=qwen2.5:3b \
   python evals/mirage/run_mirage_evals.py --model qwen2.5:3b --setting ollama-local
 ```
 
@@ -184,6 +184,13 @@ The API logs one JSON object per line by default (`LOG_FORMAT=json`; set `LOG_FO
 - **CORS:** `ALLOWED_ORIGINS` is `https://neelvadlamudi.github.io`, so the Pages site can call `POST <render url>/api/agent/ask`.
 - **Secrets:** set `GEMINI_API_KEY` in the Render dashboard. Render generates `ADMIN_API_KEY`.
 - **Mirage proposals:** these live in `/tmp` on Render, so they reset whenever the service restarts or sleeps.
+- **Rate limits** (`backend/ratelimit.py`, in memory, reset on restart). Each address gets:
+  - `POST /api/agent/ask` and `/api/chat`: 6 a minute and 60 a day, with 800 a day across all callers.
+  - `POST /api/mirage/ask`: 4 a minute and 30 a day, with 300 a day in total.
+  - `GET /api/weekly-brief`: 10 a minute and 100 a day.
+  - Mirage proposals: 3 a minute and 10 a day per address, and 50 a day in total.
+  - Over a limit, the API returns `429` with `Retry-After` and a plain `detail` message. The `RATE_*` env vars change the numbers; `RATE_LIMITS_ENABLED=false` turns them off (the nightly eval does this).
+- **API docs:** `ENABLE_API_DOCS=false` in `render.yaml`, so `/docs`, `/redoc` and `/openapi.json` return 404 on Render. They stay on locally.
 
 The `Dockerfile` builds the frontend and runs the API with `uvicorn backend.main:app`.
 
