@@ -105,11 +105,14 @@
   };
   const KIND = { questions: "n", numeric_accuracy: "pct", tool_choice: "pct", correct_refusals: "pct", false_refusals: "pct",
     grounded_answers: "pct", median_s: "s", p95_s: "s", median_input_tokens: "n", median_output_tokens: "n" };
+  // Question-set id wins; the questions count is only the fallback when neither summary carries an id.
   function sameQuestionSet(a, b) {
-    if (!isNum(a.questions) || a.questions !== b.questions) return false;
-    for (const k of QSET_ID_KEYS) if (k in a || k in b) { if (a[k] == null || a[k] !== b[k]) return false; }
-    return true;
+    for (const k of QSET_ID_KEYS) if (a[k] != null || b[k] != null) return a[k] != null && a[k] === b[k];
+    return isNum(a.questions) && a.questions === b.questions;
   }
+  // A run marks a scoring change with scoring_changed: true, or (as publish_eval.py writes today) a note that starts
+  // "Scoring changed". No change is computed across that boundary.
+  const scoringChanged = (r) => r.scoring_changed === true || (typeof r.note === "string" && /^\s*scoring changed/i.test(r.note));
   const runLabel = (r) => [r.model, r.date].filter(Boolean).join(" · ");
   function renderEval(sec, d) {
     const body = $("[data-body]", sec);
@@ -117,10 +120,12 @@
     if (!runs.length) return notRun(body, "data/eval.json");
     const latest = runs[runs.length - 1], earlier = runs.slice(0, -1);
     let base = null;
-    for (let i = earlier.length - 1; i >= 0; i--) if (sameQuestionSet(latest.summary, earlier[i].summary)) { base = earlier[i]; break; }
+    let floor = 0; // earliest index comparable with the latest run under the current scoring
+    for (let i = runs.length - 1; i >= 0; i--) if (scoringChanged(runs[i])) { floor = i; break; }
+    for (let i = earlier.length - 1; i >= floor; i--) if (sameQuestionSet(latest.summary, earlier[i].summary)) { base = earlier[i]; break; }
     const head = el("tr", {}, el("th", { scope: "col", text: "Score" }),
       el("th", { scope: "col" }, el("span", { class: "runhd", text: latest.model }), el("span", { class: "runsub", text: [latest.date, latest.summary.question_set, "latest run"].filter(Boolean).join(" · ") })),
-      base ? el("th", { scope: "col", class: "delta-h" }, el("span", { class: "runhd", text: "Change · computed" }), el("span", { class: "runsub", text: `vs ${runLabel(base)}, same question set` })) : null);
+      base ? el("th", { scope: "col", class: "delta-h" }, el("span", { class: "runhd", text: "Change · computed" }), el("span", { class: "runsub", text: "vs earlier run ↓" })) : null);
     const rows = EVAL_COLS.map(([k, label, f]) => {
       const z = latest.summary[k], a = base ? base.summary[k] : null;
       const dc = !base ? null : isNum(a) && isNum(z)
@@ -129,13 +134,22 @@
       return el("tr", {}, el("th", { scope: "row", text: label }), evalCell(f(z)), dc);
     });
     const parts = [el("div", { class: "scroll" }, el("table", { class: "evalhist" }, el("thead", {}, head), el("tbody", {}, rows)))];
+    const noted = [...earlier].reverse().filter((r) => typeof r.note === "string" && r.note);
     if (earlier.length) {
       const hist = el("table", { class: "evalpast" },
         el("thead", {}, el("tr", {}, el("th", { scope: "col", text: "Earlier run" }), EVAL_COLS.map(([, h]) => el("th", { scope: "col", text: h })))),
-        el("tbody", {}, [...earlier].reverse().map((r) => el("tr", {}, el("td", { text: runLabel(r), title: typeof r.note === "string" ? r.note : "" }), EVAL_COLS.map(([k, , f]) => evalCell(f(r.summary[k])))))));
+        el("tbody", {}, [...earlier].reverse().map((r) => {
+          const n = noted.indexOf(r);
+          return el("tr", { class: scoringChanged(r) ? "scoring-break" : null },
+            el("td", {}, [runLabel(r), r.summary.question_set ? el("span", { class: "runsub", text: r.summary.question_set }) : null, n >= 0 ? el("sup", { class: "fn", text: ` ${n + 1}` }) : null]),
+            EVAL_COLS.map(([k, , f]) => evalCell(f(r.summary[k]))));
+        })));
       parts.push(el("h3", { class: "subhead", text: `History · ${earlier.length} earlier run${earlier.length === 1 ? "" : "s"}` }), el("div", { class: "scroll" }, hist));
+      if (noted.length) parts.push(el("ol", { class: "fnotes" }, noted.map((r) => el("li", {}, el("b", { text: `${runLabel(r)}: ` }), r.note))));
     }
-    if (base) parts.push(el("div", { class: "meta" }, el("span", { class: "chip", text: "pp = percentage points" })));
+    if (base) parts.push(el("div", { class: "meta" },
+      el("span", { class: "chip cmpbase", text: `Change compares with ${runLabel(base)}${base.summary.question_set ? ` (${base.summary.question_set})` : ""}: same question set and scoring` }),
+      el("span", { class: "chip", text: "pp = percentage points" })));
     if (typeof latest.note === "string" && latest.note) parts.unshift(el("p", { class: "note", text: latest.note }));
     body.replaceChildren(...parts);
   }
@@ -287,7 +301,7 @@
 
   /* Freshness strip: only dates that exist in the data. Staleness only from the data's own flags
      (get_data_freshness rows[].stale, checker.stale_tables); no thresholds here. */
-  function renderFreshness(dash, replay) {
+  function renderFreshness(dash, replay, status) {
     const strip = $("#freshness");
     const items = new Map(); // table -> {date, stale}
     const answers = replay && Array.isArray(replay.answers) ? replay.answers : [];
@@ -305,6 +319,9 @@
         }
       }
     }
+    // status.json carries the nightly run's own get_data_freshness rows; prefer them over recorded answers.
+    const nightly = status && status.freshness && Array.isArray(status.freshness.tables) && status.freshness.tables.length ? status.freshness.tables : null;
+    if (nightly) { fresh = nightly; staleFlag.clear(); }
     if (fresh) {
       items.clear();
       // get_data_freshness can return one row per wastewater dataset; key by table + dataset so none overwrite each other.
@@ -322,13 +339,33 @@
     for (const [t, v] of [...items].sort((x, y) => (x[1].legacy - y[1].legacy) || x[0].localeCompare(y[0])))
       chips.push(el("span", { class: v.legacy ? "chip legacy" : v.stale ? "chip stale" : "chip" }, `${t} `, el("b", { text: v.date ?? "no data" }), v.stale ? " · stale" : ""));
     if (!chips.length) { strip.hidden = true; return; }
-    const rec = replay && replay.recorded_at ? ` (from answers recorded ${fmtDate(replay.recorded_at)})` : "";
-    strip.replaceChildren(el("span", { class: "fr-lab", text: "Data as of" }), ...chips, fresh || staleFlag.size ? el("span", { class: "fr-note", text: `Stale flags come from the agent's own checks${rec}.` }) : "");
+    const rec = nightly && status.generated_at ? ` (nightly run, ${fmtDate(status.generated_at)})` : replay && replay.recorded_at ? ` (from answers recorded ${fmtDate(replay.recorded_at)})` : "";
+    strip.replaceChildren(el("span", { class: "fr-lab", text: "Data as of" }), ...chips, fresh || staleFlag.size ? el("span", { class: "fr-note", text: `Dates and stale flags come from the data's own freshness check${rec}.` }) : "");
     strip.hidden = false;
   }
 
+  /* Nightly status strip: data/status.json written by scripts/nightly_status.py (DATA_CONTRACT.md §6).
+     Only fields present are shown; nothing is computed. */
+  const RESULT_TEXT = { success: "Passed", alert: "Passed with alerts", failure: "Failed" };
+  function renderStatus(d) {
+    const strip = $("#status");
+    const run = d && d.run && typeof d.run === "object" ? d.run : null;
+    if (!run) { strip.replaceChildren(el("span", { class: "fr-lab", text: "Nightly run" }), el("span", { class: "chip", text: NOT_RUN })); return; }
+    const kids = [el("span", { class: "fr-lab", text: "Nightly run" })];
+    if (typeof run.result === "string") kids.push(el("span", { class: `chip res-${run.result in RESULT_TEXT ? run.result : "other"}`, text: RESULT_TEXT[run.result] || run.result }));
+    if (run.finished_at) kids.push(el("span", { class: "chip" }, "finished ", el("b", { text: fmtDate(run.finished_at) })));
+    if (typeof run.url === "string" && /^https:\/\//.test(run.url)) kids.push(el("a", { class: "chip link", href: run.url, rel: "noopener", text: "View run ↗" }));
+    if (Array.isArray(d.alerts)) {
+      if (!d.alerts.length) kids.push(el("span", { class: "chip", text: "No open alerts" }));
+      else kids.push(el("ul", { class: "alerts" }, d.alerts.map((a) => el("li", {},
+        a.kind ? el("span", { class: "chip acc", text: a.kind }) : null, " ", el("b", { text: a.title || "" }), a.detail ? el("span", { class: "ad", text: ` — ${a.detail}` }) : null))));
+    }
+    strip.replaceChildren(...kids);
+  }
+
   const SECTIONS = [["dashboard", "#sec-dashboard", renderDashboard], ["eval", "#sec-eval", renderEval], ["backtest", "#sec-backtest", renderBacktest], ["replay", "#sec-replay", renderReplay], ["live", "#sec-live", renderLive]];
-  Promise.all([load("dashboard"), load("replay")]).then(([dsh, rp]) => renderFreshness(dsh, rp)).catch(() => { $("#freshness").hidden = true; });
+  load("status").then(renderStatus).catch(() => renderStatus(null));
+  Promise.all([load("dashboard"), load("replay"), load("status")]).then(([dsh, rp, st]) => renderFreshness(dsh, rp, st)).catch(() => { $("#freshness").hidden = true; });
   for (const [name, sel, fn] of SECTIONS) {
     const sec = $(sel);
     load(name).then((d) => { if (name !== "live") stamp(sec, d); try { fn(sec, d); } catch (e) { notRun($("[data-body]", sec), `data/${name}.json could not be read`); console.warn(e); } });
