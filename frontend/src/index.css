@@ -1,5 +1,5 @@
 /* ================================================
-   CDC Live Respiratory Virus AI Dashboard
+   CDC Respiratory Virus Dashboard
    Premium Design System — Premium Light Mode
    ================================================ */
 
@@ -744,7 +744,7 @@ body {
   fill: var(--text-primary) !important;
 }
 
-/* Chat Bubbles (Ask AI) */
+/* Chat bubbles (Ask the data) */
 .chat-message {
   display: flex;
   gap: 16px;

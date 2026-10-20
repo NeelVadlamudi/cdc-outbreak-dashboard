@@ -1,6 +1,6 @@
 """
 FastAPI REST API routes for the CDC Outbreak Dashboard.
-Phase 2: Expanded with wastewater, ensemble AI, LLM chat, anomaly detection, and simulator.
+Phase 2: Expanded with wastewater, ensemble models, data chat, anomaly detection, and simulator.
 """
 
 import asyncio
@@ -12,6 +12,7 @@ from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
+from backend.chat_engine import chat_with_data, generate_weekly_brief
 from backend.config import ADMIN_API_KEY
 from backend.database import query
 from backend.ensemble import (
@@ -22,7 +23,6 @@ from backend.ensemble import (
     xgb_forecast,
 )
 from backend.forecasting import generate_forecast, train_model
-from backend.llm_engine import chat_with_data, generate_weekly_brief
 from backend.ratelimit import limited
 from backend.simulator import SimulationParams, get_current_rates, run_simulation
 
@@ -403,7 +403,7 @@ async def get_wastewater_states(
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# PHASE 2B: Advanced AI (XGBoost, Anomalies, Age Heatmap, Season Compare)
+# PHASE 2B: Advanced analytics (XGBoost, Anomalies, Age Heatmap, Season Compare)
 # ═══════════════════════════════════════════════════════════════════════════════
 
 @router.get("/ensemble/forecast/{virus}")
@@ -449,7 +449,7 @@ async def get_season_compare():
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# PHASE 2C: LLM + RAG Chat
+# PHASE 2C: Data chat
 # ═══════════════════════════════════════════════════════════════════════════════
 
 class ChatMessage(BaseModel):
@@ -486,7 +486,7 @@ async def agent_ask(body: AgentQuestion):
 
 @router.post("/chat", dependencies=[Depends(limited("ask"))])
 async def chat_endpoint(msg: ChatMessage):
-    """RAG-powered chat — ask questions about the surveillance data."""
+    """Data chat: ask questions about the surveillance data."""
     result = await chat_with_data(msg.question)
     return result
 
