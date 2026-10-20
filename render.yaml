@@ -1,39 +1,38 @@
+# Render Blueprint: the API only (the site is on GitHub Pages).
+# Free plan: 512 MB RAM, sleeps when idle. Installs requirements-render.txt (no torch, xgboost, ollama or test tools),
+# so forecast endpoints and the get_forecast tool return no_model, as they do when no model is trained.
 services:
-  # Python Backend Service
   - type: web
     name: cdc-outbreak-api
-    env: python
+    runtime: python
     plan: free
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "uvicorn backend.main:app --host 0.0.0.0 --port $PORT"
+    buildCommand: pip install -r requirements-render.txt
+    # The app writes to its database at startup (schema check), so it serves a copy of the committed snapshot
+    # and leaves the file in the repo untouched. /tmp is wiped on every restart, so each cold start begins
+    # from the same snapshot.
+    startCommand: cp evals/snapshot.duckdb /tmp/cdc_surveillance.duckdb && uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
     envVars:
       - key: PYTHON_VERSION
-        value: 3.10.0
-      # Required for downloading/updating CDC datasets on production
-      - key: APP_ENV
-        value: production
-      # Set to the frontend's public URL in the Render dashboard
+        value: 3.12.15
+      - key: CDC_DB_PATH
+        value: /tmp/cdc_surveillance.duckdb
+      # false: serve the snapshot as is. A full CDC pull blocks startup until it finishes (about 20 s locally,
+      # longer on a free instance) and peaks at about 240 MB by itself, and the hourly refresh would repeat
+      # that inside the same 512 MB service. The nightly GitHub Actions job refreshes the published data instead.
+      - key: INGEST_ON_STARTUP
+        value: "false"
+      - key: AGENT_MODEL
+        value: gemini-flash-lite
       - key: ALLOWED_ORIGINS
+        value: https://neelvadlamudi.github.io
+      - key: GEMINI_API_KEY
         sync: false
       - key: ADMIN_API_KEY
         generateValue: true
+      - key: MIRAGE_DB_PATH
+        value: /tmp/mirage.duckdb
+      - key: MIRAGE_STATE_DB
+        value: /tmp/mirage_state.duckdb
       - key: LOG_LEVEL
         value: INFO
-
-  # React Frontend Service
-  - type: web
-    name: cdc-outbreak-dashboard
-    env: static
-    buildCommand: "cd frontend && npm install && npm run build"
-    staticPublishPath: "./frontend/dist"
-    envVars:
-      - key: VITE_API_URL
-        fromService:
-          type: web
-          name: cdc-outbreak-api
-          envVarKey: RENDER_EXTERNAL_URL
-        # Appends /api to the end of the URL
-        property: url_with_path
-        value: /api
-      - key: NODE_VERSION
-        value: 18.17.0
