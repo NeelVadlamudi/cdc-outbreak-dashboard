@@ -150,3 +150,32 @@ table.mtable th,table.mtable td{text-align:left}
 #sec-mirage-eval table.evalhist th[scope=row]{white-space:normal;min-width:8.5em}
 table.proposals td:nth-child(3),table.proposals td:nth-child(4){min-width:120px}
 .kvwrap .overlap{font:400 11.5px var(--mono);color:var(--dim);margin:4px 0 0}
+
+/* Try it live (PR #10 markup: form.live-ask > input + button.btn; div.live-out[aria-live] > p.live-answer + p.note).
+   States come only from the existing DOM: loading = the Ask button is disabled; answered = .live-out has .live-answer;
+   error = .live-out has only a .note while the button is enabled again. No JS changes. */
+.live-ask{display:flex;gap:8px;align-items:stretch;margin:4px 0 12px;min-width:0}
+.live-ask input{flex:1 1 auto;min-width:0;font:300 15px/1.4 var(--sans);color:var(--ink);background:rgba(255,255,255,.03);
+  border:1px solid var(--line);border-radius:10px;padding:11px 14px}
+.live-ask input::placeholder{color:var(--dim)}
+.live-ask input:focus-visible{outline:none;border-color:rgba(243,148,68,.6)}
+.live-ask .btn{flex:0 0 auto;justify-content:center;font:400 14px var(--sans);cursor:pointer}
+.live-ask .btn:disabled{cursor:progress;color:var(--mute);border-color:var(--line);background:transparent}
+.live-out{min-width:0;max-width:100%;overflow-wrap:anywhere}
+.live-out:empty{display:none}
+.live-out > p{margin:0}
+/* answered */
+.live-out:has(.live-answer){background:var(--panel);-webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4);
+  border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:0 0 12px}
+.live-answer{font:300 15px/1.6 var(--sans);color:var(--ink);white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;max-height:60vh;overflow-y:auto}
+.live-out:has(.live-answer) > .note{font:400 11.5px var(--mono);color:var(--mute);margin-top:10px;padding-top:8px;border-top:1px solid var(--line2)}
+/* loading: readable for the ~50 s cold start; a slow hairline sweep, no spinner */
+.live-ask:has(.btn:disabled) + .live-out{position:relative;border:1px solid var(--line2);border-radius:12px;padding:14px 16px 16px;margin:0 0 12px;overflow:hidden}
+.live-ask:has(.btn:disabled) + .live-out > .note{font:400 13px/1.5 var(--mono);color:var(--ink)}
+.live-ask:has(.btn:disabled) + .live-out::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:30%;background:var(--acc);opacity:.8;animation:live-sweep 2.4s ease-in-out infinite}
+@keyframes live-sweep{0%{transform:translateX(-100%)}100%{transform:translateX(340%)}}
+@media (prefers-reduced-motion:reduce){.live-ask:has(.btn:disabled) + .live-out::after{animation:none;width:100%;opacity:.35}}
+/* error: only a note, button enabled again */
+.live-ask:not(:has(.btn:disabled)) + .live-out:not(:has(.live-answer)):has(> .note){border:1px solid var(--line2);border-left:2px solid var(--acc);border-radius:12px;padding:12px 14px;margin:0 0 12px}
+.live-ask:not(:has(.btn:disabled)) + .live-out:not(:has(.live-answer)) > .note{color:var(--ink)}
+@media (max-width:480px){.live-ask{flex-direction:column}.live-ask .btn{width:100%}}
