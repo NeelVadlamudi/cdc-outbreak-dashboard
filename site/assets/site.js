@@ -181,12 +181,13 @@
 
   /* (e) Try it live */
   function renderLive(sec, d) {
-    const body = $("[data-body]", sec);
+    // Hidden unless live.json is listed in index.json and holds an https URL.
     const url = d && typeof d.url === "string" && /^https:\/\//.test(d.url) ? d.url : null;
-    const label = el("span", { text: "Try it live" }), small = el("small", { text: "may take a minute to wake" });
-    const btn = url ? el("a", { class: "btn", href: url, rel: "noopener" }, label, small)
-      : el("a", { class: "btn", "aria-disabled": "true", role: "link" }, label, el("small", { text: `may take a minute to wake · ${NOT_RUN}` }));
-    body.replaceChildren(el("p", { class: "note", text: "Opens the hosted agent. It sleeps when idle, so the first question can be slow." }), btn);
+    if (!url) { sec.hidden = true; return; }
+    $("[data-body]", sec).replaceChildren(
+      el("p", { class: "note", text: "Opens the hosted agent. It sleeps when idle, so the first question can be slow." }),
+      el("a", { class: "btn", href: url, rel: "noopener" }, el("span", { text: "Try it live" }), el("small", { text: "may take a minute to wake" })));
+    sec.hidden = false;
   }
 
   const SECTIONS = [["dashboard", "#sec-dashboard", renderDashboard], ["eval", "#sec-eval", renderEval], ["backtest", "#sec-backtest", renderBacktest], ["replay", "#sec-replay", renderReplay], ["live", "#sec-live", renderLive]];

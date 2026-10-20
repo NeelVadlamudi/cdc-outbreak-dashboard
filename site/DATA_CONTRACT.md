@@ -74,7 +74,7 @@ Each answer is exactly the `POST /api/agent/ask` response, plus `question` and o
     {
       "question": "string",
       "answer": "string",
-      "status": "ok | refused | unverified (optional)",
+      "status": "answered | refused | unverified",
       "tool_calls": [ { "tool": "string", "inputs": {}, "rows": 0, "ms": 0 } ],
       "as_of_week": "string",
       "elapsed_ms": 0,
@@ -89,12 +89,21 @@ Record real eval answers only. `rows` and `ms` per call are optional.
 ```json
 { "url": "https://<render-app>.onrender.com/ask" }
 ```
-Must be `https://`. Missing → button is disabled and reads "may take a minute to wake · Not run yet".
+Must be `https://`. If `live` is not listed in `index.json` (or the URL is missing or not https), the whole "Try it live" section is **hidden**, not disabled. When shown, the button reads "Try it live · may take a minute to wake".
 
 ## API contract used by the React Ask page
 `POST /api/agent/ask` body `{ "question": "..." }` →
-`{ answer, tool_calls: [ {tool, inputs, rows?, ms?} ], as_of_week, elapsed_ms }`, optional `status: "refused" | "unverified"`.
+`{ answer, status, tool_calls: [ {tool, inputs, rows?, ms?} ], as_of_week, elapsed_ms }`.
+
+`status` (top-level) drives the UI state:
+| value | UI |
+|---|---|
+| `"answered"` | normal answer |
+| `"refused"` | flagged "Agent declined to answer" |
+| `"unverified"` | flagged "Could not verify" |
+| missing / anything else | treated as `"answered"` |
+
+The UI does not inspect the answer text to decide this; only `status` counts.
 Field names live in one place: `frontend/src/agent/contract.js` (`FIELDS`). Non-2xx → error state; a JSON `detail` is shown.
-Without `status`, an answer starting "Could not verify…", "I can't verify…", "I can't answer…" is shown as a refusal.
 
 Example shapes for tests live in `tests/site-fixtures/` and are labelled EXAMPLE. Never copy them into `site/data/`.
