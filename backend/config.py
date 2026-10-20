@@ -85,3 +85,6 @@ def configure_logging() -> None:
     root = logging.getLogger()
     root.handlers[:] = [handler]
     root.setLevel(LOG_LEVEL)
+
+# Serve /docs, /redoc and /openapi.json. render.yaml sets this to false for the public API.
+ENABLE_API_DOCS = os.getenv("ENABLE_API_DOCS", "true").strip().lower() in ("1", "true", "yes")

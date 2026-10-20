@@ -23,6 +23,7 @@ from backend.ensemble import (
 )
 from backend.forecasting import generate_forecast, train_model
 from backend.llm_engine import chat_with_data, generate_weekly_brief
+from backend.ratelimit import limited
 from backend.simulator import SimulationParams, get_current_rates, run_simulation
 
 logger = logging.getLogger(__name__)
@@ -459,7 +460,7 @@ class AgentQuestion(BaseModel):
     question: str
 
 
-@router.post("/agent/ask")
+@router.post("/agent/ask", dependencies=[Depends(limited("ask"))])
 async def agent_ask(body: AgentQuestion):
     """Answer a question with the tool-calling agent; fall back to the rule-based answer."""
     import time
@@ -483,14 +484,14 @@ async def agent_ask(body: AgentQuestion):
         }
 
 
-@router.post("/chat")
+@router.post("/chat", dependencies=[Depends(limited("ask"))])
 async def chat_endpoint(msg: ChatMessage):
     """RAG-powered chat — ask questions about the surveillance data."""
     result = await chat_with_data(msg.question)
     return result
 
 
-@router.get("/weekly-brief")
+@router.get("/weekly-brief", dependencies=[Depends(limited("brief"))])
 async def get_weekly_brief():
     """Get auto-generated weekly health brief."""
     return generate_weekly_brief()

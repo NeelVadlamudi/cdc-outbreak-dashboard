@@ -13,7 +13,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from backend.cdc_ingestion import run_full_ingestion
-from backend.config import ALLOWED_ORIGINS, INGEST_ON_STARTUP, configure_logging, request_id_var
+from backend.config import ALLOWED_ORIGINS, ENABLE_API_DOCS, INGEST_ON_STARTUP, configure_logging, request_id_var
 from backend.database import init_database
 from backend.mirage_routes import router as mirage_router
 from backend.routes import router
@@ -57,6 +57,9 @@ app = FastAPI(
     description="Real-time outbreak prediction using CDC SODA API data + LSTM neural networks",
     version="1.0.0",
     lifespan=lifespan,
+    docs_url="/docs" if ENABLE_API_DOCS else None,
+    redoc_url="/redoc" if ENABLE_API_DOCS else None,
+    openapi_url="/openapi.json" if ENABLE_API_DOCS else None,
 )
 
 # CORS — only the frontend origin(s) set in ALLOWED_ORIGINS
@@ -114,7 +117,7 @@ async def root():
         "name": "CDC Live Respiratory Virus AI Dashboard",
         "version": "1.0.0",
         "status": "operational",
-        "docs": "/docs",
+        "docs": "/docs" if ENABLE_API_DOCS else None,
         "endpoints": {
             "dashboard_summary": "/api/dashboard-summary",
             "ari_activity": "/api/ari-activity",
