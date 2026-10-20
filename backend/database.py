@@ -3,9 +3,13 @@ DuckDB database management for CDC outbreak data.
 Lightweight, embedded OLAP database — perfect for analytical queries on time-series surveillance data.
 """
 
+import logging
+
 import duckdb
 import os
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 DB_PATH = os.path.join(Path(__file__).parent.parent, "data", "cdc_surveillance.duckdb")
 
@@ -108,7 +112,7 @@ def init_database():
     """)
 
     conn.close()
-    print("✅ Database initialized successfully")
+    logger.info("Database initialized")
 
 
 def query(sql: str, params=None):

@@ -3,14 +3,20 @@ CDC Live Respiratory Virus AI Dashboard — FastAPI Application
 Main entry point with lifespan events, CORS, and route mounting.
 """
 
+import logging
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
+from backend.config import configure_logging
 from backend.database import init_database
 from backend.cdc_ingestion import run_full_ingestion
 from backend.routes import router
+
+configure_logging()
+logger = logging.getLogger(__name__)
 
 # Scheduler for periodic data refresh
 scheduler = AsyncIOScheduler()
@@ -19,7 +25,7 @@ scheduler = AsyncIOScheduler()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan — initialize DB and fetch initial data."""
-    print("\n🏥 CDC Outbreak Dashboard — Starting up...")
+    logger.info("CDC Outbreak Dashboard starting up")
 
     # Initialize database
     init_database()
@@ -30,13 +36,13 @@ async def lifespan(app: FastAPI):
     # Schedule periodic refresh (every 60 minutes)
     scheduler.add_job(run_full_ingestion, "interval", minutes=60, id="cdc_refresh")
     scheduler.start()
-    print("⏰ Scheduled data refresh every 60 minutes\n")
+    logger.info("Scheduled data refresh every 60 minutes")
 
     yield
 
     # Shutdown
     scheduler.shutdown()
-    print("\n🛑 Dashboard shutting down...")
+    logger.info("Dashboard shutting down")
 
 
 app = FastAPI(
