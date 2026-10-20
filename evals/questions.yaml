@@ -5,8 +5,9 @@
 #                   every value must be in the answer within tolerance
 # type: refusal  -> the data cannot answer it; correct if the agent declines
 #                   and gives no number
-# Snapshot window: weeks ending 2026-07-25 to 2026-10-10. wastewater_activity (current NWSS
-# viral activity levels) covers the same weeks; wastewater_sites (legacy NWSS metrics) ends 2025-09-07.
+# Snapshot window: weeks ending 2026-07-25 to 2026-10-10. wastewater_sites holds two NWSS
+# datasets: source_dataset 'atcp-73re' (current viral activity levels, same weeks) and
+# '2ew6-ywp6' (legacy SARS-CoV-2 metrics, ending 2025-09-07).
 # Hospitalization rates are per 100,000, overall population unless stated.
 
 snapshot: evals/snapshot.duckdb
@@ -96,7 +97,7 @@ questions:
   - id: n11
     type: number
     question: How many wastewater sites reported viral activity data for any pathogen nationally in the latest week?
-    expected_sql: SELECT COUNT(DISTINCT site) FROM wastewater_activity WHERE 1=1 AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)
+    expected_sql: SELECT COUNT(DISTINCT wwtp_id) FROM wastewater_sites WHERE source_dataset = 'atcp-73re' AND 1=1 AND date_end = (SELECT MAX(date_end) FROM wastewater_sites WHERE source_dataset = 'atcp-73re')
     tolerance: 0
     expected_tools:
     - get_wastewater
@@ -104,7 +105,7 @@ questions:
   - id: n12
     type: number
     question: In the legacy NWSS SARS-CoV-2 wastewater metrics, which end on 2025-09-07, what was the median 15-day percent change across New York sites in that last week?
-    expected_sql: SELECT ROUND(MEDIAN(ptc_15d), 1) FROM wastewater_sites WHERE wwtp_jurisdiction = 'New York' AND date_end = (SELECT MAX(date_end) FROM wastewater_sites) AND ptc_15d NOT IN (-99, 2147483647)
+    expected_sql: SELECT ROUND(MEDIAN(ptc_15d), 1) FROM wastewater_sites WHERE source_dataset = '2ew6-ywp6' AND wwtp_jurisdiction = 'New York' AND date_end = (SELECT MAX(date_end) FROM wastewater_sites WHERE source_dataset = '2ew6-ywp6') AND ptc_15d NOT IN (-99, 2147483647)
     tolerance: 0.5
     expected_tools:
     - get_wastewater
@@ -240,7 +241,7 @@ questions:
   - id: n29
     type: number
     question: How many wastewater sites reported SARS-CoV-2 nationally in the latest week?
-    expected_sql: SELECT COUNT(DISTINCT site) FROM wastewater_activity WHERE pathogen = 'SARS-CoV-2' AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)
+    expected_sql: SELECT COUNT(DISTINCT wwtp_id) FROM wastewater_sites WHERE source_dataset = 'atcp-73re' AND pathogen = 'SARS-CoV-2' AND date_end = (SELECT MAX(date_end) FROM wastewater_sites WHERE source_dataset = 'atcp-73re')
     tolerance: 0
     expected_tools:
     - get_wastewater
@@ -248,7 +249,7 @@ questions:
   - id: n30
     type: number
     question: How many wastewater sites reported influenza A nationally in the latest week?
-    expected_sql: SELECT COUNT(DISTINCT site) FROM wastewater_activity WHERE pathogen = 'Influenza A virus' AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)
+    expected_sql: SELECT COUNT(DISTINCT wwtp_id) FROM wastewater_sites WHERE source_dataset = 'atcp-73re' AND pathogen = 'Influenza A virus' AND date_end = (SELECT MAX(date_end) FROM wastewater_sites WHERE source_dataset = 'atcp-73re')
     tolerance: 0
     expected_tools:
     - get_wastewater
@@ -256,7 +257,7 @@ questions:
   - id: n31
     type: number
     question: How many wastewater sites reported RSV nationally in the latest week?
-    expected_sql: SELECT COUNT(DISTINCT site) FROM wastewater_activity WHERE pathogen = 'RSV' AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)
+    expected_sql: SELECT COUNT(DISTINCT wwtp_id) FROM wastewater_sites WHERE source_dataset = 'atcp-73re' AND pathogen = 'RSV' AND date_end = (SELECT MAX(date_end) FROM wastewater_sites WHERE source_dataset = 'atcp-73re')
     tolerance: 0
     expected_tools:
     - get_wastewater
@@ -264,7 +265,7 @@ questions:
   - id: n32
     type: number
     question: How many wastewater sites in New York reported SARS-CoV-2 in the latest week?
-    expected_sql: SELECT COUNT(DISTINCT site) FROM wastewater_activity WHERE pathogen = 'SARS-CoV-2' AND state_territory = 'New York' AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)
+    expected_sql: SELECT COUNT(DISTINCT wwtp_id) FROM wastewater_sites WHERE source_dataset = 'atcp-73re' AND pathogen = 'SARS-CoV-2' AND wwtp_jurisdiction = 'New York' AND date_end = (SELECT MAX(date_end) FROM wastewater_sites WHERE source_dataset = 'atcp-73re')
     tolerance: 0
     expected_tools:
     - get_wastewater
@@ -272,7 +273,7 @@ questions:
   - id: n33
     type: number
     question: How many wastewater sites in California reported data for any pathogen in the latest week?
-    expected_sql: SELECT COUNT(DISTINCT site) FROM wastewater_activity WHERE state_territory = 'California' AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)
+    expected_sql: SELECT COUNT(DISTINCT wwtp_id) FROM wastewater_sites WHERE source_dataset = 'atcp-73re' AND wwtp_jurisdiction = 'California' AND date_end = (SELECT MAX(date_end) FROM wastewater_sites WHERE source_dataset = 'atcp-73re')
     tolerance: 0
     expected_tools:
     - get_wastewater
@@ -280,7 +281,7 @@ questions:
   - id: n34
     type: number
     question: How many wastewater sites nationally were at High or Very High SARS-CoV-2 activity in the latest week?
-    expected_sql: SELECT COUNT(DISTINCT site) FROM wastewater_activity WHERE pathogen = 'SARS-CoV-2' AND wval_category IN ('High', 'Very High') AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)
+    expected_sql: SELECT COUNT(DISTINCT wwtp_id) FROM wastewater_sites WHERE source_dataset = 'atcp-73re' AND pathogen = 'SARS-CoV-2' AND wval_category IN ('High', 'Very High') AND date_end = (SELECT MAX(date_end) FROM wastewater_sites WHERE source_dataset = 'atcp-73re')
     tolerance: 0
     expected_tools:
     - get_wastewater
@@ -288,7 +289,7 @@ questions:
   - id: n35
     type: number
     question: What was the median SARS-CoV-2 wastewater viral activity level across Texas sites in the latest week?
-    expected_sql: SELECT ROUND(MEDIAN(wval), 2) FROM wastewater_activity WHERE pathogen = 'SARS-CoV-2' AND state_territory = 'Texas' AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)
+    expected_sql: SELECT ROUND(MEDIAN(wval), 2) FROM wastewater_sites WHERE source_dataset = 'atcp-73re' AND pathogen = 'SARS-CoV-2' AND wwtp_jurisdiction = 'Texas' AND date_end = (SELECT MAX(date_end) FROM wastewater_sites WHERE source_dataset = 'atcp-73re')
     tolerance: 0.01
     expected_tools:
     - get_wastewater
@@ -296,7 +297,7 @@ questions:
   - id: n36
     type: number
     question: In the legacy NWSS SARS-CoV-2 wastewater metrics, which end on 2025-09-07, how many sites reported nationally in that last week?
-    expected_sql: SELECT COUNT(DISTINCT wwtp_id) FROM wastewater_sites WHERE date_end = (SELECT MAX(date_end) FROM wastewater_sites)
+    expected_sql: SELECT COUNT(DISTINCT wwtp_id) FROM wastewater_sites WHERE source_dataset = '2ew6-ywp6' AND date_end = (SELECT MAX(date_end) FROM wastewater_sites WHERE source_dataset = '2ew6-ywp6')
     tolerance: 0
     expected_tools:
     - get_wastewater
@@ -332,7 +333,7 @@ questions:
   - id: m04
     type: multi
     question: In the latest week, how many wastewater sites reported SARS-CoV-2, and what was COVID-19 test positivity?
-    expected_sql: SELECT (SELECT COUNT(DISTINCT site) FROM wastewater_activity WHERE pathogen = 'SARS-CoV-2' AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)) AS sites, (SELECT percent_test_positivity FROM test_positivity WHERE pathogen = 'COVID-19' AND week_end = DATE '2026-10-10') AS positivity
+    expected_sql: SELECT (SELECT COUNT(DISTINCT wwtp_id) FROM wastewater_sites WHERE source_dataset = 'atcp-73re' AND pathogen = 'SARS-CoV-2' AND date_end = (SELECT MAX(date_end) FROM wastewater_sites WHERE source_dataset = 'atcp-73re')) AS sites, (SELECT percent_test_positivity FROM test_positivity WHERE pathogen = 'COVID-19' AND week_end = DATE '2026-10-10') AS positivity
     tolerance: 0.05
     expected_tools:
     - get_wastewater
@@ -341,7 +342,7 @@ questions:
   - id: m05
     type: multi
     question: For the latest week, what was Ohio's respiratory illness activity level, and how many Ohio wastewater sites reported data for any pathogen?
-    expected_sql: SELECT (SELECT label FROM ari_activity WHERE geography = 'Ohio' AND week_end = DATE '2026-10-10') AS level, (SELECT COUNT(DISTINCT site) FROM wastewater_activity WHERE state_territory = 'Ohio' AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)) AS sites
+    expected_sql: SELECT (SELECT label FROM ari_activity WHERE geography = 'Ohio' AND week_end = DATE '2026-10-10') AS level, (SELECT COUNT(DISTINCT wwtp_id) FROM wastewater_sites WHERE source_dataset = 'atcp-73re' AND wwtp_jurisdiction = 'Ohio' AND date_end = (SELECT MAX(date_end) FROM wastewater_sites WHERE source_dataset = 'atcp-73re')) AS sites
     tolerance: 0
     expected_tools:
     - get_ari_level
@@ -368,7 +369,7 @@ questions:
   - id: m08
     type: multi
     question: In the latest week, how many states were at Very Low respiratory illness activity, and how many wastewater sites nationally were at High or Very High SARS-CoV-2 activity?
-    expected_sql: SELECT (SELECT COUNT(*) FROM ari_activity WHERE label = 'Very Low' AND week_end = DATE '2026-10-10') AS states, (SELECT COUNT(DISTINCT site) FROM wastewater_activity WHERE pathogen = 'SARS-CoV-2' AND wval_category IN ('High', 'Very High') AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)) AS sites
+    expected_sql: SELECT (SELECT COUNT(*) FROM ari_activity WHERE label = 'Very Low' AND week_end = DATE '2026-10-10') AS states, (SELECT COUNT(DISTINCT wwtp_id) FROM wastewater_sites WHERE source_dataset = 'atcp-73re' AND pathogen = 'SARS-CoV-2' AND wval_category IN ('High', 'Very High') AND date_end = (SELECT MAX(date_end) FROM wastewater_sites WHERE source_dataset = 'atcp-73re')) AS sites
     tolerance: 0
     expected_tools:
     - list_states_at_level
@@ -386,7 +387,7 @@ questions:
   - id: m10
     type: multi
     question: For the latest week, what was Texas's respiratory illness activity level, and how many Texas wastewater sites reported SARS-CoV-2?
-    expected_sql: SELECT (SELECT label FROM ari_activity WHERE geography = 'Texas' AND week_end = DATE '2026-10-10') AS level, (SELECT COUNT(DISTINCT site) FROM wastewater_activity WHERE pathogen = 'SARS-CoV-2' AND state_territory = 'Texas' AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)) AS sites
+    expected_sql: SELECT (SELECT label FROM ari_activity WHERE geography = 'Texas' AND week_end = DATE '2026-10-10') AS level, (SELECT COUNT(DISTINCT wwtp_id) FROM wastewater_sites WHERE source_dataset = 'atcp-73re' AND pathogen = 'SARS-CoV-2' AND wwtp_jurisdiction = 'Texas' AND date_end = (SELECT MAX(date_end) FROM wastewater_sites WHERE source_dataset = 'atcp-73re')) AS sites
     tolerance: 0
     expected_tools:
     - get_ari_level
@@ -395,7 +396,7 @@ questions:
   - id: m11
     type: multi
     question: In the latest week, what was influenza test positivity, and how many wastewater sites nationally reported influenza A?
-    expected_sql: SELECT (SELECT percent_test_positivity FROM test_positivity WHERE pathogen = 'Influenza' AND week_end = DATE '2026-10-10') AS positivity, (SELECT COUNT(DISTINCT site) FROM wastewater_activity WHERE pathogen = 'Influenza A virus' AND week_end = (SELECT MAX(week_end) FROM wastewater_activity)) AS sites
+    expected_sql: SELECT (SELECT percent_test_positivity FROM test_positivity WHERE pathogen = 'Influenza' AND week_end = DATE '2026-10-10') AS positivity, (SELECT COUNT(DISTINCT wwtp_id) FROM wastewater_sites WHERE source_dataset = 'atcp-73re' AND pathogen = 'Influenza A virus' AND date_end = (SELECT MAX(date_end) FROM wastewater_sites WHERE source_dataset = 'atcp-73re')) AS sites
     tolerance: 0.05
     expected_tools:
     - get_test_positivity
