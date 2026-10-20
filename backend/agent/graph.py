@@ -1,6 +1,7 @@
 """Agent loop: a model node and a tool node, at most MAX_TOOL_CALLS tool calls."""
 
 import json
+import logging
 import time
 from pathlib import Path
 from typing import Annotated, TypedDict
@@ -13,6 +14,8 @@ from langgraph.graph.message import add_messages
 from backend.agent import tools as data_tools
 from backend.agent.checker import UNVERIFIED_MESSAGE, check_numbers, queue_for_review
 from backend.agent.models import get_chat_model, model_label
+
+logger = logging.getLogger(__name__)
 
 MAX_TOOL_CALLS = 6
 REFUSAL_PHRASES = ("the data does not cover", "can't answer", "cannot answer", "can not answer", "out of date", "not available", "no data")
@@ -38,10 +41,20 @@ def build_graph(model):
     bound = model.bind_tools(langchain_tools())
 
     def model_node(state: AgentState):
+        start = time.perf_counter()
         if state["tool_calls_made"] >= MAX_TOOL_CALLS:
             note = HumanMessage("Tool limit reached. Answer now from the tool results above.")
-            return {"messages": [model.invoke(state["messages"] + [note])]}
-        return {"messages": [bound.invoke(state["messages"])]}
+            msg = model.invoke(state["messages"] + [note])
+        else:
+            msg = bound.invoke(state["messages"])
+        usage = getattr(msg, "usage_metadata", None) or {}
+        logger.info("model call", extra={
+            "event": "model_call", "model": getattr(model, "_label", None),
+            "elapsed_s": round(time.perf_counter() - start, 3),
+            "tool_calls_requested": [c["name"] for c in getattr(msg, "tool_calls", []) or []],
+            "input_tokens": usage.get("input_tokens"), "output_tokens": usage.get("output_tokens"),
+        })
+        return {"messages": [msg]}
 
     def tool_node(state: AgentState):
         last = state["messages"][-1]
@@ -56,6 +69,11 @@ def build_graph(model):
                 output = data_tools.call_tool(call["name"], call.get("args") or {})
                 elapsed = time.perf_counter() - start
                 made += 1
+                logger.info("tool call", extra={
+                    "event": "tool_call", "tool": call["name"], "inputs": call.get("args") or {},
+                    "rows_returned": len(output.get("rows", [])), "error": output.get("error"),
+                    "elapsed_s": round(elapsed, 3),
+                })
                 trace.append({
                     "tool": call["name"],
                     "inputs": call.get("args") or {},
@@ -131,6 +149,12 @@ def run_agent(question: str, model=None, setting: str | None = None) -> dict:
     else:
         status = "answered"
 
+    elapsed_total = round(time.perf_counter() - start, 3)
+    logger.info("agent answer", extra={
+        "event": "agent_answer", "status": status, "model": label, "tool_calls": len(trace),
+        "unverified": len(checker.get("unverified", [])), "stale_tables": checker["stale_tables"],
+        "elapsed_s": elapsed_total,
+    })
     return {
         "status": status,
         "answer": answer,

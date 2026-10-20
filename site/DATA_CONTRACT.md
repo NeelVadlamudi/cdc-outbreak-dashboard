@@ -127,6 +127,47 @@ Shown per answer: status flag, answer, `as_of`, `elapsed_s`, `model`, stale tabl
 ```
 Must be `https://`. If `live` is not listed in `index.json` (or the URL is missing or not https), the whole "Try it live" section is **hidden**, not disabled. When shown, the button reads "Try it live · may take a minute to wake".
 
+## 6. `data/status.json` — nightly run status (not a page section yet)
+Written by `scripts/nightly_status.py` at the end of every nightly run (`.github/workflows/nightly.yml`).
+It is not listed in `index.json`; the page does not render it yet.
+```json
+{
+  "generated_at": "ISO-8601",
+  "run": {
+    "result": "success | alert | failure",
+    "started_at": "ISO-8601?",
+    "finished_at": "ISO-8601",
+    "url": "string?, link to the Actions run",
+    "commit": "string?, commit the run started from",
+    "steps": { "refresh": "success", "backtest": "success", "dashboard": "success", "eval": "success" }
+  },
+  "eval": {
+    "model": "string",
+    "date": "YYYY-MM-DD",
+    "question_set": "string?, e.g. cdc-q60-v1",
+    "summary": { "...": "same keys as eval.json runs[].summary" },
+    "baseline": { "model": "string", "date": "YYYY-MM-DD", "summary": {} },
+    "drops": [ { "metric": "numeric_accuracy", "baseline": 0.0, "value": 0.0, "change": 0.0 } ]
+  },
+  "backtest": { "run_at": "ISO-8601", "data_through": "YYYY-MM-DD", "notes": ["string"] },
+  "freshness": {
+    "stale_after_days": 14,
+    "tables": [ { "table": "string", "dataset": "string?", "legacy": false, "latest_week": "YYYY-MM-DD", "age_days": 0, "stale": false } ]
+  },
+  "alerts": [ { "kind": "score_drop | stale | step_failed", "title": "string", "detail": "string" } ]
+}
+```
+- `run.result`: `failure` if any step did not succeed, otherwise `alert` if `alerts` is non-empty, otherwise `success`.
+  Step outcomes are the GitHub Actions values (`success`, `failure`, `skipped`, `cancelled`).
+- `eval` is `null` when the eval did not run. `eval.baseline` is `null` when `evals/baseline.json` has a different
+  `question_set`; no drop is computed across sets.
+- `drops` lists rates more than 5 points worse than the baseline: lower for `numeric_accuracy`, `tool_choice`,
+  `correct_refusals` and `grounded_answers`, higher for `false_refusals`. `change` is value minus baseline, in points.
+- `freshness.tables` is the `get_data_freshness` output for the refreshed database. `age_days` is relative to the run date.
+  Legacy rows are listed but never raise a stale alert.
+- `backtest` is `null` if no backtest file exists. Each alert also opens a GitHub issue labelled `nightly-alert`;
+  if an open issue with the same title exists, the run comments on it instead.
+
 ## API contract used by the React Ask page
 `POST /api/agent/ask` body `{ "question": "..." }` → (PR #2, `backend/agent/graph.py::run_agent`)
 ```json
