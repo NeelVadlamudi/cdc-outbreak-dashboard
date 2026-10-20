@@ -261,15 +261,16 @@ Written by `scripts/record_mirage_audit.py`. `steps[]` are in order:
                    "status": "waiting for approval|approved|rejected", "decided_by": "string|null", "decided_at": "ISO-8601|null" } ],
   "audit_log": [ { "id": 1, "proposal_id": 1, "decision": "approved|rejected", "decided_by": "string",
                    "decided_at": "ISO-8601", "note": "string|null" } ],
-  "source": "string", "second_answer": { "question": "string", "status": "string", "answer": "string" } }
+  "source": "string", "second_answer": { "question": "string", "status": "string", "answer": "string",
+                                         "tool_calls": "[...]? as in /api/agent/ask", "proposal_id": "integer?" } }
 ```
 - The static site cannot approve anything. Approval goes through the API below. In this file, the recorded decider is `"Demo reviewer"`.
 - `status` `"waiting for approval"` is the only state that shows Approve and Reject buttons.
 
 ### How the site shows §7 (site/assets/site.js, `renderMirage*`)
 - `mirage_eval.json` → "Mirage · eval scores": headline `overall_correct` on `questions`, the latest run's summary keys as given (rates + "%", `blocked_proposals` as a count, times via the duration formatter), history and a change column with the same rules as §2 (same `question_set`, not across `scoring_changed`).
-- `mirage_replay.json` → "Mirage · recorded answers": question, answer, and per answer every tool-output row that has `case`/`case_label` and `next_step` (Recount / Pull to floor / Reorder, plus `also` and `also_reason`); `output.summary` and `output.totals` are shown as labelled values exactly as given; `response.proposals[]` as chips; tool calls, rows and `transfers` behind toggles.
-- `mirage_proposals.json` → "Mirage · review queue" (read-only): proposals with `status` "waiting for approval", every proposal with its status, the `audit_log` rows, `second_answer` and `source`.
+- `mirage_replay.json` → "Mirage · recorded answers": question, answer, and per answer every tool-output row that has `case`/`case_label` and `next_step` (Recount / Pull to floor / Reorder, plus `also` and `also_reason`); `output.summary` and `output.totals` are shown as labelled values exactly as given. Under any summary with case counts (`book_wrong_sku_count`, `backroom_sku_count`, `truly_out_sku_count`) the note "Categories can overlap" is shown, because one SKU can have a wrong record and backroom stock at once, so the counts may sum past `gap_sku_count`; `response.proposals[]` as chips; tool calls, rows and `transfers` behind toggles.
+- `mirage_proposals.json` → "Mirage · review queue" (read-only): proposals with `status` "waiting for approval", every proposal with its status, the `audit_log` rows, `second_answer` and `source`. When `second_answer.tool_calls` is present it is rendered with the same answer card as the replay (case and next step, tool calls and rows behind toggles) and `proposal_id` as a proposal chip; without them only the question and answer are shown.
 - `mirage_audit.json` → "Mirage · audit log": each step in order with method and path, `status_code`, `detail`, and the proposal and audit rows it returned. Header values are never shown, only the header name.
 - Any `decided_by` equal to "Demo reviewer" carries a visible "Demo" label.
 - The static site has no write call and no key; approve and reject exist only in the React app (`/review`, `frontend/src/pages/MirageReview.jsx`), with the admin key typed in at runtime and kept in memory only.
