@@ -114,6 +114,41 @@ python evals/mirage/run_mirage_evals.py --model ollama --setting ollama-local
 python scripts/record_mirage_audit.py   # one full audit: question, tool calls, proposal, approval, audit log
 ```
 
+## Running locally on an 8 GB Mac
+
+The agent can run fully offline on Ollama instead of Gemini. `qwen2.5:3b` (Q4_K_M, about 1.9 GB on disk) fits in 8 GB of memory alongside the API and a browser.
+
+```bash
+brew install ollama            # or the app from ollama.com
+ollama serve &                 # the app starts this for you
+ollama pull qwen2.5:3b
+
+cp .env.example .env
+# in .env:
+#   AGENT_MODEL=ollama-local
+#   OLLAMA_AGENT_MODEL=qwen2.5:3b
+#   CDC_DB_PATH=evals/snapshot.duckdb   # optional: the eval snapshot, no network needed
+#   INGEST_ON_STARTUP=false
+
+pip install -r requirements.txt
+uvicorn backend.main:app --port 8000
+cd frontend && npm install && npm run dev   # http://localhost:5173/ask and /review
+```
+
+- No API key is needed. Nothing leaves the machine.
+- Close other heavy apps. If memory runs short, macOS swaps and answers slow down a lot.
+- Expect lower accuracy than Gemini Flash-Lite. The measured numbers for `qwen2.5:3b` are in the eval tables on the site (`site/data/eval.json` and `mirage_eval.json`). They were measured on an 8-core Linux CPU with no GPU, so speed on a Mac will differ.
+- To run the evals against it:
+
+```bash
+cp evals/snapshot.duckdb /tmp/snap.duckdb
+CDC_DB_PATH=/tmp/snap.duckdb INGEST_ON_STARTUP=false AGENT_MODEL=ollama-local OLLAMA_AGENT_MODEL=qwen2.5:3b \
+  uvicorn backend.main:app --port 8000 &
+python evals/run_evals.py --model qwen2.5:3b --url http://localhost:8000
+AGENT_MODEL=ollama-local OLLAMA_AGENT_MODEL=qwen2.5:3b \
+  python evals/mirage/run_mirage_evals.py --model qwen2.5:3b --setting ollama-local
+```
+
 ## Nightly run
 
 `.github/workflows/nightly.yml` runs daily at 09:17 UTC. You can also start it by hand from the Actions tab (workflow_dispatch). Each run does the following:
