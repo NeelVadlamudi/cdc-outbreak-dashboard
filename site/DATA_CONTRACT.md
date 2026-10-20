@@ -39,6 +39,7 @@ One entry per model run. Each entry is the top of the file `evals/run_evals.py` 
       "model": "string",
       "date": "YYYY-MM-DD",
       "note": "string?, shown above the table for the latest run",
+      "scoring_changed": "boolean?, true on the first run scored with a changed scorer",
       "summary": {
         "question_set": "string?, e.g. cdc-q60-v1",
         "questions": 0,
@@ -68,8 +69,8 @@ One entry per model run. Each entry is the top of the file `evals/run_evals.py` 
 - **Computed change:** the headline gets a "Change · computed" column only against the most recent earlier run that
   (a) has the same question set: equal `summary.question_set` when either run has one (`QSET_ID_KEYS` in site.js);
   the `questions` count is used only when neither has an id; and
-  (b) is not before a scoring change. A run marks a scoring change with `scoring_changed: true` (preferred) or, as
-  `scripts/publish_eval.py` writes today, a `note` that starts "Scoring changed". Runs before the latest such run are never compared.
+  (b) is not before a scoring change. A run marks a scoring change with `scoring_changed: true`
+  (`scripts/publish_eval.py --scoring-changed` writes it; older entries may only have a `note` that starts "Scoring changed"). Runs before the latest such run are never compared.
   Shown only when both values are numbers, else "—". Rates in percentage points (pp), times via the duration formatter,
   counts as-is. Nothing else is computed.
 - **Notes:** the latest run's `note` is shown above the headline; earlier runs' notes are numbered footnotes under the
@@ -135,7 +136,7 @@ Must be `https://`. If `live` is not listed in `index.json` (or the URL is missi
 
 ## 6. `data/status.json` — nightly run status strip
 Written by `scripts/nightly_status.py` at the end of every nightly run (`.github/workflows/nightly.yml`).
-Listed in `index.json` as `"status"` (static entry; the nightly writes the file every run). Rendered as the "Nightly run" strip under the header.
+Listed in `index.json` as `"status"` (`scripts/publish_eval.py` and `scripts/nightly_status.py` add the entry if missing; the nightly writes the file every run). Rendered as the "Nightly run" strip under the header.
 ```json
 {
   "generated_at": "ISO-8601",

@@ -50,3 +50,26 @@ def test_failed_step_is_failure():
     s = _status(BASE, steps={"refresh": "failure", "eval": "success", "backtest": "success"})
     assert s["run"]["result"] == "failure"
     json.dumps(s)
+
+
+def test_ensure_index_adds_status_once(tmp_path):
+    from publish_eval import ensure_index
+
+    (tmp_path / "index.json").write_text('{"available": ["eval"]}')
+    ensure_index(tmp_path, "status")
+    ensure_index(tmp_path, "status")
+    assert json.loads((tmp_path / "index.json").read_text())["available"] == ["eval", "status"]
+
+
+def test_publish_sets_scoring_changed(tmp_path):
+    from publish_eval import publish
+
+    res = {"model": "m", "date": "2026-10-21", "summary": {"questions": 1},
+           "rows": [{"id": "n1", "correct": True}], "responses": {"n1": {"response": {"answer": "x"}}}}
+    (tmp_path / "r.json").write_text(json.dumps(res))
+    q = tmp_path / "q.yaml"
+    q.write_text("questions:\n  - id: n1\n    question: Q?\n")
+    publish(tmp_path / "r.json", tmp_path, q, scoring_changed=True)
+    run = json.loads((tmp_path / "eval.json").read_text())["runs"][-1]
+    assert run["scoring_changed"] is True
+    assert "status" in json.loads((tmp_path / "index.json").read_text())["available"]
