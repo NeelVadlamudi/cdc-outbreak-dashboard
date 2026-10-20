@@ -1,0 +1,112 @@
+{
+  "generated_at": "2026-10-20T16:11:21Z",
+  "run": {
+    "result": "success",
+    "started_at": "2026-10-20T16:08:43Z",
+    "finished_at": "2026-10-20T16:11:21Z",
+    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/39454676027",
+    "commit": "367b6b814adf50b4e3dbf223b059d518f38b6371",
+    "steps": {
+      "refresh": "success",
+      "backtest": "success",
+      "dashboard": "success",
+      "eval": "success"
+    }
+  },
+  "eval": {
+    "model": "gemini-3.5-flash-lite",
+    "date": "2026-10-20",
+    "question_set": "cdc-q60-v1",
+    "summary": {
+      "question_set": "cdc-q60-v1",
+      "questions": 60,
+      "numeric_accuracy": 93.8,
+      "tool_choice": 100.0,
+      "correct_refusals": 91.7,
+      "false_refusals": 2.1,
+      "grounded_answers": 100.0,
+      "median_s": 1.66,
+      "p95_s": 2.04,
+      "median_input_tokens": null,
+      "median_output_tokens": null
+    },
+    "baseline": {
+      "date": "2026-10-20",
+      "model": "gemini-3.5-flash-lite",
+      "summary": {
+        "question_set": "cdc-q60-v1",
+        "questions": 60,
+        "numeric_accuracy": 91.7,
+        "tool_choice": 100.0,
+        "correct_refusals": 75.0,
+        "false_refusals": 6.2,
+        "grounded_answers": 100.0,
+        "median_s": 1.8,
+        "p95_s": 2.48,
+        "median_input_tokens": null,
+        "median_output_tokens": null
+      }
+    },
+    "drops": []
+  },
+  "backtest": {
+    "run_at": "2026-10-20T16:09:37Z",
+    "data_through": "2026-10-10",
+    "notes": [
+      "LSTM on COVID-NET does not beat last week's value at any horizon.",
+      "XGBoost on COVID-NET does not beat last week's value at any horizon.",
+      "LSTM on FluSurv-NET does not beat last week's value at any horizon.",
+      "XGBoost on FluSurv-NET does not beat last week's value at any horizon.",
+      "LSTM on RSV-NET does not beat last week's value at any horizon.",
+      "XGBoost on RSV-NET beats last week's value only at h1.",
+      "LSTM on Combined does not beat last week's value at any horizon.",
+      "XGBoost on Combined does not beat last week's value at any horizon."
+    ]
+  },
+  "freshness": {
+    "stale_after_days": 14,
+    "tables": [
+      {
+        "table": "ari_activity",
+        "dataset": null,
+        "legacy": null,
+        "latest_week": "2026-10-10",
+        "age_days": 10,
+        "stale": false
+      },
+      {
+        "table": "hospitalization_rates",
+        "dataset": null,
+        "legacy": null,
+        "latest_week": "2026-10-10",
+        "age_days": 10,
+        "stale": false
+      },
+      {
+        "table": "test_positivity",
+        "dataset": null,
+        "legacy": null,
+        "latest_week": "2026-10-10",
+        "age_days": 10,
+        "stale": false
+      },
+      {
+        "table": "wastewater_sites",
+        "dataset": "atcp-73re",
+        "legacy": false,
+        "latest_week": "2026-10-10",
+        "age_days": 10,
+        "stale": false
+      },
+      {
+        "table": "wastewater_sites",
+        "dataset": "2ew6-ywp6 (legacy)",
+        "legacy": true,
+        "latest_week": null,
+        "age_days": null,
+        "stale": true
+      }
+    ]
+  },
+  "alerts": []
+}

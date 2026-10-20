@@ -1,18 +1,8 @@
 {
-  "run_at": "2026-10-20T15:51:45Z",
+  "run_at": "2026-10-20T16:09:37Z",
   "target": "Weekly RESP-NET hospitalization rate, overall population, 1-4 weeks ahead",
   "mae_unit": "rate per 100,000",
   "n_origins": 12,
-  "notes": [
-    "LSTM on COVID-NET does not beat last week's value at any horizon.",
-    "XGBoost on COVID-NET does not beat last week's value at any horizon.",
-    "LSTM on FluSurv-NET does not beat last week's value at any horizon.",
-    "XGBoost on FluSurv-NET does not beat last week's value at any horizon.",
-    "LSTM on RSV-NET does not beat last week's value at any horizon.",
-    "XGBoost on RSV-NET beats last week's value only at h1.",
-    "LSTM on Combined does not beat last week's value at any horizon.",
-    "XGBoost on Combined does not beat last week's value at any horizon."
-  ],
   "models": [
     {
       "model": "LSTM \u00b7 COVID-NET",
@@ -44,23 +34,23 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.644,
-          "wmape": 1.104
+          "mae": 0.641,
+          "wmape": 1.098
         },
         {
           "h": 2,
-          "mae": 0.89,
-          "wmape": 1.335
+          "mae": 0.862,
+          "wmape": 1.294
         },
         {
           "h": 3,
-          "mae": 1.077,
-          "wmape": 1.452
+          "mae": 1.029,
+          "wmape": 1.387
         },
         {
           "h": 4,
-          "mae": 1.148,
-          "wmape": 1.466
+          "mae": 1.113,
+          "wmape": 1.421
         }
       ]
     },
@@ -119,23 +109,23 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.163,
-          "wmape": 0.849
+          "mae": 0.142,
+          "wmape": 0.743
         },
         {
           "h": 2,
-          "mae": 0.446,
-          "wmape": 1.784
+          "mae": 0.375,
+          "wmape": 1.5
         },
         {
           "h": 3,
-          "mae": 0.715,
-          "wmape": 2.258
+          "mae": 0.603,
+          "wmape": 1.904
         },
         {
           "h": 4,
-          "mae": 0.948,
-          "wmape": 2.585
+          "mae": 0.784,
+          "wmape": 2.137
         }
       ]
     },
@@ -194,23 +184,23 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.041,
-          "wmape": 1.242
+          "mae": 0.039,
+          "wmape": 1.172
         },
         {
           "h": 2,
-          "mae": 0.069,
-          "wmape": 2.768
+          "mae": 0.074,
+          "wmape": 2.978
         },
         {
           "h": 3,
-          "mae": 0.078,
-          "wmape": 3.121
+          "mae": 0.082,
+          "wmape": 3.268
         },
         {
           "h": 4,
-          "mae": 0.071,
-          "wmape": 2.127
+          "mae": 0.074,
+          "wmape": 2.23
         }
       ]
     },
@@ -269,23 +259,23 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.683,
-          "wmape": 0.854
+          "mae": 0.619,
+          "wmape": 0.774
         },
         {
           "h": 2,
-          "mae": 1.208,
-          "wmape": 1.282
+          "mae": 1.048,
+          "wmape": 1.113
         },
         {
           "h": 3,
-          "mae": 1.467,
-          "wmape": 1.364
+          "mae": 1.388,
+          "wmape": 1.291
         },
         {
           "h": 4,
-          "mae": 1.518,
-          "wmape": 1.292
+          "mae": 1.768,
+          "wmape": 1.504
         }
       ]
     },
@@ -314,5 +304,15 @@
         }
       ]
     }
+  ],
+  "notes": [
+    "LSTM on COVID-NET does not beat last week's value at any horizon.",
+    "XGBoost on COVID-NET does not beat last week's value at any horizon.",
+    "LSTM on FluSurv-NET does not beat last week's value at any horizon.",
+    "XGBoost on FluSurv-NET does not beat last week's value at any horizon.",
+    "LSTM on RSV-NET does not beat last week's value at any horizon.",
+    "XGBoost on RSV-NET beats last week's value only at h1.",
+    "LSTM on Combined does not beat last week's value at any horizon.",
+    "XGBoost on Combined does not beat last week's value at any horizon."
   ]
 }
