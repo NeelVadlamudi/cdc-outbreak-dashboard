@@ -111,45 +111,7 @@ sup.fn{color:var(--acc);font-family:var(--mono)}
 table.evalpast tr.scoring-break td{border-bottom:1px solid rgba(243,148,68,.35)}
 table.evalpast .runsub{display:block;font-size:11px;color:var(--dim)}
 
-/* Mirage */
-h2.group{font:500 20px/1.2 var(--sans);margin:28px 4px 4px;letter-spacing:-.01em}
-.group-note{margin:0 4px 14px}
-.headline{margin:0 0 12px;color:var(--mute);font-size:14px}
-.headline .big{font:400 30px/1 var(--num);color:var(--ink);margin-right:4px}
-.qa .qtype{font:400 11px var(--mono);color:var(--dim);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
-ul.cases{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px;font-size:13px}
-ul.cases li{overflow-wrap:anywhere;min-width:0}
-ul.cases .case{color:var(--mute)}
-ul.cases .also{color:var(--mute);font-size:12px}
-.chip.step{display:inline-block}
-dl.kv{display:flex;flex-wrap:wrap;gap:6px 14px;margin:6px 0 0;font:400 12px var(--mono)}
-dl.kv div{display:flex;gap:6px;min-width:0}
-dl.kv dt{color:var(--mute)}
-dl.kv dd{margin:0;color:var(--ink)}
-.chip.demo{margin-left:6px;color:#111;background:var(--acc);border-color:var(--acc)}
-.who{white-space:nowrap}
-.note.ro{border:1px solid var(--line2);border-radius:10px;padding:10px 12px;margin:0 0 4px}
-.pending{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
-.qa.prop .reason{color:var(--mute);font-size:13px;margin-top:6px;overflow-wrap:anywhere}
-table.mtable td{vertical-align:top}
-
-ol.steps{margin:0;padding-left:22px;display:grid;gap:14px;grid-template-columns:minmax(0,1fr)}
-ol.steps li.step{min-width:0}
-.stephead{display:flex;gap:8px;align-items:center;margin-bottom:4px}
-.stepname{font-weight:500}
-.req{font:400 12px var(--mono);overflow-wrap:anywhere;margin-bottom:6px}
-.req .in{color:var(--mute)}
-.step .detail{font:400 12.5px var(--mono);color:#ff8a80;margin:4px 0 6px}
-.step .facts{font:400 12px var(--mono);color:var(--mute);margin-bottom:6px}
-.step .scroll{margin-top:6px}
-table.mtable td{white-space:normal;overflow-wrap:anywhere}
-table.mtable td:nth-child(2),table.mtable td .chip,table.auditlog td:nth-child(5){white-space:nowrap}
-table.proposals td:nth-child(6),table.auditlog td:nth-child(6){min-width:200px}
 .qa .a code{font:400 12.5px var(--mono)}
-table.mtable th,table.mtable td{text-align:left}
-#sec-mirage-eval table.evalhist th[scope=row]{white-space:normal;min-width:8.5em}
-table.proposals td:nth-child(3),table.proposals td:nth-child(4){min-width:120px}
-.kvwrap .overlap{font:400 11.5px var(--mono);color:var(--dim);margin:4px 0 0}
 
 /* Try it live (PR #10 markup: form.live-ask > input + button.btn; div.live-out[aria-live] > p.live-answer + p.note).
    States come only from the existing DOM: loading = the Ask button is disabled; answered = .live-out has .live-answer;
