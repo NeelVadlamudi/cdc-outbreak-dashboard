@@ -44,9 +44,9 @@ export default function Forecasts() {
       <div className="page-header fade-in">
         <div className="page-header-row">
           <div>
-            <h1 className="page-title">Predictive Engine</h1>
+            <h1 className="page-title">Forecasts</h1>
             <p className="page-subtitle">
-              LSTM deep learning forecasts predicting hospitalization rates 4 weeks ahead
+              LSTM forecasts of hospitalization rates 4 weeks ahead
             </p>
           </div>
         </div>
@@ -177,7 +177,7 @@ export default function Forecasts() {
                 <div>
                   <div style={{ color: 'var(--text-secondary)', fontSize: '12px', fontWeight: 600, textTransform: 'uppercase', marginBottom: '6px' }}>Topology</div>
                   <div style={{ fontWeight: 700, fontSize: '15px' }}>LSTM (2 layers, 64 hidden units)</div>
-                  <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>PyTorch Deep Learning Engine</div>
+                  <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>PyTorch LSTM model</div>
                 </div>
                 <div>
                   <div style={{ color: 'var(--text-secondary)', fontSize: '12px', fontWeight: 600, textTransform: 'uppercase', marginBottom: '6px' }}>Features</div>

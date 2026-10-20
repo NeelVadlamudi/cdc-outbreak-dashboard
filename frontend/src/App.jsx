@@ -63,7 +63,7 @@ function App() {
             <div style={{ background: 'var(--accent-gradient)', width: 32, height: 32, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
               <Menu size={16} /> {/* Temporary icon */}
             </div>
-            CDC Outbreak AI
+            CDC Respiratory Virus Dashboard
           </div>
           <button className="mobile-menu-btn" onClick={() => setSidebarOpen(true)}>
             <Menu size={24} />

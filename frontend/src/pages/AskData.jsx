@@ -43,7 +43,7 @@ export default function AskData() {
       <div className="page-header fade-in" style={{ marginBottom: "20px" }}>
         <div className="page-header-row">
           <div>
-            <h1 className="page-title">Neural Interface</h1>
+            <h1 className="page-title">Live data question box</h1>
             <p className="page-subtitle">
               Answers come from tool calls on the CDC data; every call is listed under the answer
             </p>
