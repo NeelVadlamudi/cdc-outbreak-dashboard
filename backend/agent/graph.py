@@ -15,7 +15,7 @@ from backend.agent.checker import UNVERIFIED_MESSAGE, check_numbers, queue_for_r
 from backend.agent.models import get_chat_model, model_label
 
 MAX_TOOL_CALLS = 6
-REFUSAL_PHRASES = ("the data does not cover", "can't answer", "cannot answer", "can not answer", "out of date")
+REFUSAL_PHRASES = ("the data does not cover", "can't answer", "cannot answer", "can not answer", "out of date", "not available", "no data")
 PROMPT_VERSION = "system_v1"
 SYSTEM_PROMPT = (Path(__file__).parent / "prompts" / f"{PROMPT_VERSION}.md").read_text()
 
