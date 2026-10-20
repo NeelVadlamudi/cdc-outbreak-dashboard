@@ -195,13 +195,13 @@ def get_test_positivity(pathogen: str | None = None, week: str | None = None) ->
 # and ptc_15d of -99 or 2147483647. They are excluded here.
 _VALID_PERCENTILE = "percentile BETWEEN 0 AND 100"
 _VALID_PTC = "ptc_15d NOT IN (-99, 2147483647)"
+CURRENT_WW = "source_dataset = 'atcp-73re'"
+LEGACY_WW = "source_dataset = '2ew6-ywp6'"
 
 
 def _legacy_wastewater(conn, col, val) -> dict | None:
     """SARS-CoV-2 metrics from the legacy NWSS file (no records after 2025-09-07)."""
-    if not conn.execute("SELECT COUNT(*) FROM wastewater_sites").fetchone()[0]:
-        return None
-    where, params = ("1=1", []) if col is None else (f"{col} = ?", [val])
+    where, params = (LEGACY_WW, []) if col is None else (f"{LEGACY_WW} AND {col} = ?", [val])
     latest = conn.execute(f"SELECT MAX(date_end) FROM wastewater_sites WHERE {where}", params).fetchone()[0]
     if latest is None:
         return None
@@ -215,7 +215,7 @@ def _legacy_wastewater(conn, col, val) -> dict | None:
         params + [latest],
     ).fetchone()
     return {
-        "source_table": "wastewater_sites",
+        "source_dataset": "2ew6-ywp6 (legacy)",
         "pathogen": "SARS-CoV-2",
         "date_end": _jsonable(latest),
         "site_count": row[0],
@@ -231,54 +231,60 @@ def get_wastewater(state: str | None = None, pathogen: str | None = None, county
     with _connect() as conn:
         legacy_col, legacy_val = None, None
         if county_fips:
-            allowed = _distinct(conn, "wastewater_sites", "county_fips")
+            allowed = [r[0] for r in conn.execute(
+                f"SELECT DISTINCT county_fips FROM wastewater_sites WHERE {LEGACY_WW} AND county_fips IS NOT NULL"
+            ).fetchall()]
             if county_fips not in allowed:
                 return {"error": f"Unknown county_fips '{county_fips}'.", "allowed_count": len(allowed)}
             legacy = _legacy_wastewater(conn, "county_fips", county_fips)
             return _result([], "wastewater_sites", legacy and legacy["date_end"], legacy=legacy)
 
-        where, params = [], []
+        where, params = [CURRENT_WW], []
         scope = "national"
         if state:
-            allowed = _distinct(conn, "wastewater_activity", "state_territory")
+            allowed = [r[0] for r in conn.execute(
+                f"SELECT DISTINCT wwtp_jurisdiction FROM wastewater_sites WHERE {CURRENT_WW} ORDER BY 1").fetchall()]
             name = _match(state, allowed)
             if not name:
                 return _unknown("state", state, allowed)
-            where.append("state_territory = ?")
+            where.append("wwtp_jurisdiction = ?")
             params.append(name)
             scope = name
-            legacy_states = _distinct(conn, "wastewater_sites", "wwtp_jurisdiction")
+            legacy_states = [r[0] for r in conn.execute(
+                f"SELECT DISTINCT wwtp_jurisdiction FROM wastewater_sites WHERE {LEGACY_WW}").fetchall()]
             legacy_val = _match(name, legacy_states)
             legacy_col = "wwtp_jurisdiction" if legacy_val else None
         if pathogen:
-            allowed = _distinct(conn, "wastewater_activity", "pathogen")
+            allowed = [r[0] for r in conn.execute(
+                f"SELECT DISTINCT pathogen FROM wastewater_sites WHERE {CURRENT_WW} ORDER BY 1").fetchall()]
             p = _match(pathogen, allowed)
             if not p:
                 return _unknown("pathogen", pathogen, allowed)
             where.append("pathogen = ?")
             params.append(p)
-        clause = " AND ".join(where) if where else "1=1"
-        as_of = conn.execute(f"SELECT MAX(week_end) FROM wastewater_activity WHERE {clause}", params).fetchone()[0]
+        clause = " AND ".join(where)
+        as_of = conn.execute(f"SELECT MAX(date_end) FROM wastewater_sites WHERE {clause}", params).fetchone()[0]
         if as_of is None:
             return {"error": "The data does not cover wastewater for that selection."}
         cur = conn.execute(
             f"""
-            SELECT week_end, pathogen, COUNT(DISTINCT site) AS site_count,
+            SELECT date_end AS week_end, pathogen, COUNT(DISTINCT wwtp_id) AS site_count,
                    ROUND(MEDIAN(wval), 2) AS median_wval,
-                   COUNT(DISTINCT CASE WHEN wval_category IN ('High', 'Very High') THEN site END) AS sites_high_or_very_high
-            FROM wastewater_activity WHERE {clause} AND week_end = ?
-            GROUP BY week_end, pathogen ORDER BY pathogen
+                   COUNT(DISTINCT CASE WHEN wval_category IN ('High', 'Very High') THEN wwtp_id END)
+                       AS sites_high_or_very_high
+            FROM wastewater_sites WHERE {clause} AND date_end = ?
+            GROUP BY date_end, pathogen ORDER BY pathogen
             """,
             params + [as_of],
         )
         rows = _rows(cur)
         total_sites = conn.execute(
-            f"SELECT COUNT(DISTINCT site) FROM wastewater_activity WHERE {clause} AND week_end = ?", params + [as_of]
+            f"SELECT COUNT(DISTINCT wwtp_id) FROM wastewater_sites WHERE {clause} AND date_end = ?", params + [as_of]
         ).fetchone()[0]
         legacy = None
         if not pathogen or "sars" in pathogen.lower():
             legacy = _legacy_wastewater(conn, legacy_col, legacy_val) if (legacy_col or not state) else None
-        return _result(rows, "wastewater_activity", as_of, scope=scope, total_sites=total_sites, legacy=legacy)
+        return _result(rows, "wastewater_sites", as_of, scope=scope, total_sites=total_sites, legacy=legacy)
 
 
 def get_forecast(virus: str) -> dict:
@@ -313,26 +319,30 @@ def get_forecast(virus: str) -> dict:
 
 
 def get_data_freshness() -> dict:
-    """Latest week loaded per table and its age in days."""
+    """Latest week loaded per table (and per wastewater dataset) and its age in days."""
     checks = [
-        ("ari_activity", "week_end"),
-        ("hospitalization_rates", "week_ending_date"),
-        ("test_positivity", "week_end"),
-        ("wastewater_activity", "week_end"),
-        ("wastewater_sites", "date_end"),
+        ("ari_activity", "week_end", "1=1", None),
+        ("hospitalization_rates", "week_ending_date", "1=1", None),
+        ("test_positivity", "week_end", "1=1", None),
+        ("wastewater_sites", "date_end", CURRENT_WW, "atcp-73re"),
+        ("wastewater_sites", "date_end", LEGACY_WW, "2ew6-ywp6 (legacy)"),
     ]
     rows = []
     today = date.today()
     with _connect() as conn:
-        for table, col in checks:
-            latest = conn.execute(f"SELECT MAX({col}) FROM {table}").fetchone()[0]
+        for table, col, where, dataset in checks:
+            latest = conn.execute(f"SELECT MAX({col}) FROM {table} WHERE {where}").fetchone()[0]
             age = (today - latest).days if latest else None
-            rows.append({
+            row = {
                 "table": table,
                 "latest_week": _jsonable(latest),
                 "age_days": age,
                 "stale": age is None or age > config.STALE_AFTER_DAYS,
-            })
+            }
+            if dataset:
+                row["dataset"] = dataset
+                row["legacy"] = "legacy" in dataset
+            rows.append(row)
     as_of = max((r["latest_week"] for r in rows if r["latest_week"]), default=None)
     return _result(rows, "all", as_of)
 
