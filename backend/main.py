@@ -1,5 +1,5 @@
 """
-CDC Live Respiratory Virus AI Dashboard — FastAPI Application
+CDC Respiratory Virus Dashboard: FastAPI application
 Main entry point with lifespan events, CORS, and route mounting.
 """
 
@@ -53,8 +53,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="CDC Live Respiratory Virus AI Dashboard",
-    description="Real-time outbreak prediction using CDC SODA API data + LSTM neural networks",
+    title="CDC Respiratory Virus Dashboard",
+    description="Live CDC respiratory surveillance data, forecasts and a live data question box",
     version="1.0.0",
     lifespan=lifespan,
     docs_url="/docs" if ENABLE_API_DOCS else None,
@@ -114,7 +114,7 @@ async def health():
 @app.get("/")
 async def root():
     return {
-        "name": "CDC Live Respiratory Virus AI Dashboard",
+        "name": "CDC Respiratory Virus Dashboard",
         "version": "1.0.0",
         "status": "operational",
         "docs": "/docs" if ENABLE_API_DOCS else None,

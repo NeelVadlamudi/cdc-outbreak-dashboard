@@ -47,7 +47,7 @@ export default function Analytics() {
     return (
       <div className="loading-page">
         <div className="loading-spinner" />
-        <div className="loading-page-text">Loading deep analytics...</div>
+        <div className="loading-page-text">Loading analytics...</div>
       </div>
     );
   }

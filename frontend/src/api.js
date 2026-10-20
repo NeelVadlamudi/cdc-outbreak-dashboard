@@ -29,14 +29,14 @@ export const getWastewaterLatest = (pathogen = "SARS-CoV-2") => fetchAPI(`/waste
 export const getWastewaterCounty = (fips) => fetchAPI(`/wastewater/county/${fips}`);
 export const getWastewaterStates = (pathogen = "SARS-CoV-2") => fetchAPI(`/wastewater/states?pathogen=${encodeURIComponent(pathogen)}`);
 
-// ─── Phase 2B: Ensemble AI ──────────────────────────────────────────
+// ─── Phase 2B: Ensemble models ──────────────────────────────────────────
 export const getEnsembleForecast = (virus) => fetchAPI(`/ensemble/forecast/${encodeURIComponent(virus)}`);
 export const compareModels = (virus) => fetchAPI(`/ensemble/compare/${encodeURIComponent(virus)}`);
 export const getAnomalies = () => fetchAPI("/anomalies");
 export const getAgeHeatmap = (network) => fetchAPI(`/age-heatmap/${encodeURIComponent(network)}`);
 export const getSeasonComparison = () => fetchAPI("/season-comparison");
 
-// ─── Phase 2C: LLM Chat ─────────────────────────────────────────────
+// ─── Phase 2C: Data chat ─────────────────────────────────────────────
 export const chatWithData = (question) =>
   fetchAPI("/chat", {
     method: "POST",
