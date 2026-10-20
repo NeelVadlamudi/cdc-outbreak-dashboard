@@ -108,7 +108,7 @@ cp .env.example .env
 
 pip install -r requirements.txt
 uvicorn backend.main:app --port 8000
-cd frontend && npm install && npm run dev   # http://localhost:5173/ask and /review
+cd frontend && npm install && npm run dev   # http://localhost:5173/ask
 ```
 
 - No API key is needed. Nothing leaves the machine.
