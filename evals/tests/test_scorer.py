@@ -81,8 +81,34 @@ def test_summary_and_from_file(tmp_path):
     assert next(out.glob("fake_*.md")).read_text().startswith("# Eval results: fake")
 
 
-def test_results_filename_keeps_dotted_model_name(tmp_path):
-    from pathlib import Path
+def test_results_filename_keeps_dotted_model_name_and_never_overwrites(tmp_path):
+    first = ev.result_base(tmp_path, "gemini-3.5-flash-lite", "2026-10-20")
+    assert first.name == "gemini-3.5-flash-lite_2026-10-20"
+    first.with_name(first.name + ".json").write_text("{}")
+    second = ev.result_base(tmp_path, "gemini-3.5-flash-lite", "2026-10-20")
+    assert second.name == "gemini-3.5-flash-lite_2026-10-20_2"
 
-    base = Path(tmp_path) / "gemini-3.5-flash-lite_2026-10-20"
-    assert base.with_name(base.name + ".json").name == "gemini-3.5-flash-lite_2026-10-20.json"
+
+def test_refusal_ignores_pathogen_names_and_question_dates():
+    q = {"id": "r", "type": "refusal", "question": "What was COVID-19 test positivity for the week ending March 6, 2027?",
+         "expected_tools": []}
+    resp = {"answer": "The data does not cover COVID-19 or SARS-CoV-2 for March 6, 2027.", "tool_calls": []}
+    assert ev.score_one(q, None, resp)["correct"]
+    resp = {"answer": "The data does not cover that; national positivity was 5%.", "tool_calls": []}
+    assert not ev.score_one(q, None, resp)["correct"]
+
+
+def test_names_are_not_numbers():
+    assert ev.numbers_in("H5N1 and SARS-CoV-2 on gemini-3.5-flash-lite: 3.6%") == [3.6]
+
+
+def test_grounding_accepts_difference_of_two_tool_values():
+    calls = [call("get_test_positivity", {"rows": [{"v": 4.7}, {"v": 3.6}]})]
+    assert ev.grounded("It fell by 1.1 points.", "q", calls)
+    assert not ev.grounded("It fell by 2.3 points.", "q", calls)
+
+
+def test_summary_carries_question_set():
+    resp = {"answer": "3.6%", "tool_calls": [call("get_test_positivity", {"v": 3.6})], "elapsed_s": 1.0}
+    rows = [ev.score_one(Q_NUM, [3.6], resp)]
+    assert ev.summarize(rows, "cdc-q60-v1")["question_set"] == "cdc-q60-v1"
