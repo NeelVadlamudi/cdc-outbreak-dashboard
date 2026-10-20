@@ -1,0 +1,46 @@
+{
+ "_label": "EXAMPLE fixture for tests only. Never copy into site/data/.",
+ "run_at": "2000-01-02T06:00:00Z",
+ "runs": [
+  {
+   "model": "EXAMPLE-model",
+   "date": "2000-01-01",
+   "summary": {
+    "question_set": "EXAMPLE-mirage-v1",
+    "questions": 10,
+    "overall_correct": 80.0,
+    "numeric_accuracy": 90.0,
+    "case_and_step": 100.0,
+    "proposal_accuracy": 50.0,
+    "unrequested_proposals": 0.0,
+    "tool_choice": 100.0,
+    "blocked_proposals": 2,
+    "correct_refusals": null,
+    "false_refusals": 10.0,
+    "grounded_answers": 100.0,
+    "median_s": 1.2,
+    "p95_s": 2.5
+   }
+  },
+  {
+   "model": "EXAMPLE-model",
+   "date": "2000-01-02",
+   "summary": {
+    "question_set": "EXAMPLE-mirage-v1",
+    "questions": 10,
+    "overall_correct": 90.0,
+    "numeric_accuracy": 90.0,
+    "case_and_step": 100.0,
+    "proposal_accuracy": 50.0,
+    "unrequested_proposals": 0.0,
+    "tool_choice": 100.0,
+    "blocked_proposals": 1,
+    "correct_refusals": null,
+    "false_refusals": 10.0,
+    "grounded_answers": 100.0,
+    "median_s": 1.0,
+    "p95_s": 2.5
+   }
+  }
+ ]
+}
