@@ -93,37 +93,50 @@
   ];
   function secsFmt(v) { return isNum(v) ? fmtDuration(v * 1000) : null; }
   const evalCell = (s) => (s == null ? el("td", { class: "na", text: NOT_RUN }) : el("td", { text: s }));
-  /* Eval history: runs[] is appended on each rerun. One column per run, in file order.
-     The only computed value is "Change, latest vs first", shown only when both values exist,
-     and labelled as computed. */
+  /* Eval: runs[] is appended on each rerun (oldest first). The latest run is the headline table;
+     earlier runs are listed underneath as history. A computed change column appears only against the
+     most recent earlier run with the same question set: same `questions` count and, if a question-set id
+     key is present in both summaries, the same id. Never between different question sets. */
+  const QSET_ID_KEYS = []; // run_evals.py summarize() has no question-set id today; add the key name here if bob adds one.
   const DELTA = {
     pct: (x) => `${x > 0 ? "+" : x < 0 ? "−" : "±"}${Math.abs(x).toFixed(1)} pp`,
-    s: (x) => { const f = fmtDuration(Math.abs(x) * 1000); return `${x > 0 ? "+" : x < 0 ? "−" : "±"}${f}`; },
+    s: (x) => `${x > 0 ? "+" : x < 0 ? "−" : "±"}${fmtDuration(Math.abs(x) * 1000)}`,
     n: (x) => `${x > 0 ? "+" : x < 0 ? "−" : "±"}${Math.abs(x).toLocaleString("en-US")}`,
   };
   const KIND = { questions: "n", numeric_accuracy: "pct", tool_choice: "pct", correct_refusals: "pct", false_refusals: "pct",
     grounded_answers: "pct", median_s: "s", p95_s: "s", median_input_tokens: "n", median_output_tokens: "n" };
+  function sameQuestionSet(a, b) {
+    if (!isNum(a.questions) || a.questions !== b.questions) return false;
+    for (const k of QSET_ID_KEYS) if (k in a || k in b) { if (a[k] == null || a[k] !== b[k]) return false; }
+    return true;
+  }
+  const runLabel = (r) => [r.model, r.date].filter(Boolean).join(" · ");
   function renderEval(sec, d) {
     const body = $("[data-body]", sec);
     const runs = d && Array.isArray(d.runs) ? d.runs.filter((r) => r && r.model && r.summary && typeof r.summary === "object") : [];
     if (!runs.length) return notRun(body, "data/eval.json");
-    const first = runs[0], last = runs[runs.length - 1], showDelta = runs.length > 1;
+    const latest = runs[runs.length - 1], earlier = runs.slice(0, -1);
+    let base = null;
+    for (let i = earlier.length - 1; i >= 0; i--) if (sameQuestionSet(latest.summary, earlier[i].summary)) { base = earlier[i]; break; }
     const head = el("tr", {}, el("th", { scope: "col", text: "Score" }),
-      runs.map((r, i) => el("th", { scope: "col" }, el("span", { class: "runhd", text: r.model }), el("span", { class: "runsub", text: [r.date, i === 0 ? "first run" : i === runs.length - 1 ? "latest" : `run ${i + 1}`].filter(Boolean).join(" · ") }))),
-      showDelta ? el("th", { scope: "col", class: "delta-h" }, el("span", { class: "runhd", text: "Change" }), el("span", { class: "runsub", text: "latest vs first · computed" })) : null);
+      el("th", { scope: "col" }, el("span", { class: "runhd", text: latest.model }), el("span", { class: "runsub", text: [latest.date, "latest run"].filter(Boolean).join(" · ") })),
+      base ? el("th", { scope: "col", class: "delta-h" }, el("span", { class: "runhd", text: "Change · computed" }), el("span", { class: "runsub", text: `vs ${runLabel(base)}, same question set` })) : null);
     const rows = EVAL_COLS.map(([k, label, f]) => {
-      const a = first.summary[k], z = last.summary[k];
-      let dc = null;
-      if (showDelta) {
-        dc = isNum(a) && isNum(z) ? el("td", { class: "delta", title: "Computed: latest minus first", text: DELTA[KIND[k]](Math.round((z - a) * 100) / 100) }) : el("td", { class: "na", text: "—" });
-      }
-      return el("tr", {}, el("th", { scope: "row", text: label }), runs.map((r) => evalCell(f(r.summary[k]))), dc);
+      const z = latest.summary[k], a = base ? base.summary[k] : null;
+      const dc = !base ? null : isNum(a) && isNum(z)
+        ? el("td", { class: "delta", title: "Computed: latest minus earlier run", text: DELTA[KIND[k]](Math.round((z - a) * 100) / 100) })
+        : el("td", { class: "na", text: "—" });
+      return el("tr", {}, el("th", { scope: "row", text: label }), evalCell(f(z)), dc);
     });
-    const notes = [];
-    if (showDelta && isNum(first.summary.questions) && isNum(last.summary.questions) && first.summary.questions !== last.summary.questions)
-      notes.push(el("span", { class: "chip", text: `question sets differ (${first.summary.questions} vs ${last.summary.questions}); change is not like-for-like` }));
-    if (showDelta) notes.push(el("span", { class: "chip", text: "pp = percentage points" }));
-    body.replaceChildren(el("div", { class: "scroll" }, el("table", { class: "evalhist" }, el("thead", {}, head), el("tbody", {}, rows))), notes.length ? el("div", { class: "meta" }, notes) : "");
+    const parts = [el("div", { class: "scroll" }, el("table", { class: "evalhist" }, el("thead", {}, head), el("tbody", {}, rows)))];
+    if (earlier.length) {
+      const hist = el("table", { class: "evalpast" },
+        el("thead", {}, el("tr", {}, el("th", { scope: "col", text: "Earlier run" }), EVAL_COLS.map(([, h]) => el("th", { scope: "col", text: h })))),
+        el("tbody", {}, [...earlier].reverse().map((r) => el("tr", {}, el("td", { text: runLabel(r) }), EVAL_COLS.map(([k, , f]) => evalCell(f(r.summary[k])))))));
+      parts.push(el("h3", { class: "subhead", text: `History · ${earlier.length} earlier run${earlier.length === 1 ? "" : "s"}` }), el("div", { class: "scroll" }, hist));
+    }
+    if (base) parts.push(el("div", { class: "meta" }, el("span", { class: "chip", text: "pp = percentage points" })));
+    body.replaceChildren(...parts);
   }
 
   /* (c) Backtest chart: MAE and WMAPE per model across horizons 1–4 */
