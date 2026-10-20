@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>CDC Outbreak Agent</title>
+  <meta name="description" content="A tool-calling agent over public CDC respiratory data: nightly dashboard, eval scores, forecast backtests and recorded answers.">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/site.css">
+  <script src="assets/site.js" defer></script>
+</head>
+<body>
+  <header class="head panel">
+    <div>
+      <h1>CDC Outbreak Agent</h1>
+      <p class="sub">Asks the CDC respiratory data questions through tools, and shows every call it made.</p>
+    </div>
+    <div class="head-meta"><span class="chip" id="as-of">as of —</span></div>
+  </header>
+
+  <main>
+    <section class="panel" id="sec-dashboard" aria-labelledby="h-dash">
+      <div class="sec-head"><h2 id="h-dash">Dashboard</h2><span class="chip" data-stamp>—</span></div>
+      <div class="body" data-body></div>
+    </section>
+
+    <section class="panel" id="sec-eval" aria-labelledby="h-eval">
+      <div class="sec-head"><h2 id="h-eval">Eval scores</h2><span class="chip" data-stamp>—</span></div>
+      <div class="body" data-body></div>
+    </section>
+
+    <section class="panel" id="sec-backtest" aria-labelledby="h-bt">
+      <div class="sec-head"><h2 id="h-bt">Forecast backtest</h2><span class="chip" data-stamp>—</span></div>
+      <p class="note">Error by forecast horizon (weeks ahead). Lower is better.</p>
+      <div class="body" data-body></div>
+    </section>
+
+    <section class="panel" id="sec-replay" aria-labelledby="h-rp">
+      <div class="sec-head"><h2 id="h-rp">Recorded answers</h2><span class="chip" data-stamp>—</span></div>
+      <p class="note">Real answers recorded during the eval run, replayed with the tool calls behind them.</p>
+      <div class="body" data-body></div>
+    </section>
+
+    <section class="panel live" id="sec-live" aria-labelledby="h-live" hidden>
+      <div class="sec-head"><h2 id="h-live">Try it live</h2></div>
+      <div class="body" data-body></div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>Public CDC data · rebuilt nightly</span>
+    <a href="https://github.com/NeelVadlamudi/cdc-outbreak-dashboard" rel="noopener">Source on GitHub</a>
+  </footer>
+</body>
+</html>

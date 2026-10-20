@@ -1,0 +1,38 @@
+{
+  "_label": "EXAMPLE fixture \u2014 not real data",
+  "run_at": "2026-01-01T06:00:00Z",
+  "runs": [
+    {
+      "model": "EXAMPLE-model-a",
+      "date": "2000-01-01",
+      "summary": {
+        "questions": 10,
+        "numeric_accuracy": 50.0,
+        "tool_choice": 60.0,
+        "correct_refusals": 70.0,
+        "false_refusals": 10.0,
+        "grounded_answers": 80.0,
+        "median_s": 1.89,
+        "p95_s": 125.0,
+        "median_input_tokens": 900,
+        "median_output_tokens": 40.5
+      }
+    },
+    {
+      "model": "EXAMPLE-model-b-long-name",
+      "date": "2000-01-01",
+      "summary": {
+        "questions": 10,
+        "numeric_accuracy": 40.0,
+        "tool_choice": null,
+        "correct_refusals": 90.0,
+        "false_refusals": null,
+        "grounded_answers": 70.0,
+        "median_s": 0.85,
+        "p95_s": null,
+        "median_input_tokens": null,
+        "median_output_tokens": null
+      }
+    }
+  ]
+}

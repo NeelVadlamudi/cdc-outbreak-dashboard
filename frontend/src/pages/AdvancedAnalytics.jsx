@@ -15,10 +15,11 @@ export default function AdvancedAnalytics() {
   const [anomalies, setAnomalies] = useState([]);
   const [heatmapData, setHeatmapData] = useState([]);
   const [seasonData, setSeasonData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // Loading is derived: true until data for the selected virus has arrived (or failed).
+  const [loadedFor, setLoadedFor] = useState(null);
+  const loading = loadedFor !== selectedVirus;
 
   useEffect(() => {
-    setLoading(true);
     const virus = VIRUS_MAP[selectedVirus];
     Promise.all([
       compareModels(virus),
@@ -31,9 +32,9 @@ export default function AdvancedAnalytics() {
         setAnomalies(anom.anomalies || []);
         setHeatmapData(heat.data || []);
         setSeasonData(season.data || []);
-        setLoading(false);
+        setLoadedFor(selectedVirus);
       })
-      .catch(() => setLoading(false));
+      .catch(() => setLoadedFor(selectedVirus));
   }, [selectedVirus]);
 
   const ageGroups = [...new Set(heatmapData.map((d) => d.age_group))];

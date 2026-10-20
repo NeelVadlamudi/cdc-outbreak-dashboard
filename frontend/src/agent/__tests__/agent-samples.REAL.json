@@ -1,0 +1,710 @@
+[
+  {
+    "question": "What is the COVID-19 test positivity for the latest week?",
+    "response": {
+      "status": "answered",
+      "answer": "For the week ending October 10, 2026, the COVID-19 test positivity was 3.6%.",
+      "tool_calls": [
+        {
+          "tool": "get_data_freshness",
+          "inputs": {},
+          "rows_returned": 4,
+          "elapsed_s": 0.013,
+          "output": {
+            "as_of": "2026-10-10",
+            "source_table": "all",
+            "rows": [
+              {
+                "table": "ari_activity",
+                "latest_week": "2026-10-10",
+                "age_days": 10,
+                "stale": false
+              },
+              {
+                "table": "hospitalization_rates",
+                "latest_week": "2026-10-10",
+                "age_days": 10,
+                "stale": false
+              },
+              {
+                "table": "test_positivity",
+                "latest_week": "2026-10-10",
+                "age_days": 10,
+                "stale": false
+              },
+              {
+                "table": "wastewater_sites",
+                "latest_week": null,
+                "age_days": null,
+                "stale": true
+              }
+            ]
+          }
+        },
+        {
+          "tool": "get_test_positivity",
+          "inputs": {
+            "pathogen": "COVID-19"
+          },
+          "rows_returned": 1,
+          "elapsed_s": 0.012,
+          "output": {
+            "as_of": "2026-10-10",
+            "source_table": "test_positivity",
+            "rows": [
+              {
+                "week_end": "2026-10-10",
+                "pathogen": "COVID-19",
+                "percent_positive": 3.6
+              }
+            ]
+          }
+        }
+      ],
+      "as_of": "2026-10-10",
+      "elapsed_s": 1.887,
+      "model": "gemini-3.5-flash-lite",
+      "prompt_version": "system_v1",
+      "checker": {
+        "passed": true,
+        "unverified": [],
+        "stale_tables": []
+      }
+    }
+  },
+  {
+    "question": "What is Ohio's acute respiratory illness activity level right now?",
+    "response": {
+      "status": "answered",
+      "answer": "Ohio's acute respiratory illness activity level is Low for the week ending October 10, 2026.",
+      "tool_calls": [
+        {
+          "tool": "get_ari_level",
+          "inputs": {
+            "state": "Ohio"
+          },
+          "rows_returned": 1,
+          "elapsed_s": 0.014,
+          "output": {
+            "as_of": "2026-10-10",
+            "source_table": "ari_activity",
+            "rows": [
+              {
+                "week_end": "2026-10-10",
+                "state": "Ohio",
+                "level": "Low"
+              }
+            ]
+          }
+        }
+      ],
+      "as_of": "2026-10-10",
+      "elapsed_s": 1.827,
+      "model": "gemini-3.5-flash-lite",
+      "prompt_version": "system_v1",
+      "checker": {
+        "passed": true,
+        "unverified": [],
+        "stale_tables": []
+      }
+    }
+  },
+  {
+    "question": "Which states are at Very Low activity this week?",
+    "response": {
+      "status": "answered",
+      "answer": "Based on data for the week ending 2026-10-10, there are 40 states and jurisdictions at Very Low acute respiratory illness activity: Arizona, Arkansas, California, Colorado, Connecticut, Delaware, District of Columbia, Florida, Georgia, Idaho, Illinois, Indiana, Kansas, Kentucky, Maine, Maryland, Massachusetts, Michigan, Minnesota, Mississippi, Missouri, Montana, Nebraska, Nevada, New Jersey, New Mexico, New York, North Carolina, Oklahoma, Oregon, Pennsylvania, Rhode Island, South Carolina, Tennessee, Utah, Vermont, Virginia, Washington, West Virginia, and Wisconsin.",
+      "tool_calls": [
+        {
+          "tool": "list_states_at_level",
+          "inputs": {
+            "level": "Very Low",
+            "week": null
+          },
+          "rows_returned": 40,
+          "elapsed_s": 0.013,
+          "output": {
+            "as_of": "2026-10-10",
+            "source_table": "ari_activity",
+            "rows": [
+              {
+                "state": "Arizona"
+              },
+              {
+                "state": "Arkansas"
+              },
+              {
+                "state": "California"
+              },
+              {
+                "state": "Colorado"
+              },
+              {
+                "state": "Connecticut"
+              },
+              {
+                "state": "Delaware"
+              },
+              {
+                "state": "District of Columbia"
+              },
+              {
+                "state": "Florida"
+              },
+              {
+                "state": "Georgia"
+              },
+              {
+                "state": "Idaho"
+              },
+              {
+                "state": "Illinois"
+              },
+              {
+                "state": "Indiana"
+              },
+              {
+                "state": "Kansas"
+              },
+              {
+                "state": "Kentucky"
+              },
+              {
+                "state": "Maine"
+              },
+              {
+                "state": "Maryland"
+              },
+              {
+                "state": "Massachusetts"
+              },
+              {
+                "state": "Michigan"
+              },
+              {
+                "state": "Minnesota"
+              },
+              {
+                "state": "Mississippi"
+              },
+              {
+                "state": "Missouri"
+              },
+              {
+                "state": "Montana"
+              },
+              {
+                "state": "Nebraska"
+              },
+              {
+                "state": "Nevada"
+              },
+              {
+                "state": "New Jersey"
+              },
+              {
+                "state": "New Mexico"
+              },
+              {
+                "state": "New York"
+              },
+              {
+                "state": "North Carolina"
+              },
+              {
+                "state": "Oklahoma"
+              },
+              {
+                "state": "Oregon"
+              },
+              {
+                "state": "Pennsylvania"
+              },
+              {
+                "state": "Rhode Island"
+              },
+              {
+                "state": "South Carolina"
+              },
+              {
+                "state": "Tennessee"
+              },
+              {
+                "state": "Utah"
+              },
+              {
+                "state": "Vermont"
+              },
+              {
+                "state": "Virginia"
+              },
+              {
+                "state": "Washington"
+              },
+              {
+                "state": "West Virginia"
+              },
+              {
+                "state": "Wisconsin"
+              }
+            ],
+            "count": 40
+          }
+        }
+      ],
+      "as_of": "2026-10-10",
+      "elapsed_s": 1.765,
+      "model": "gemini-3.5-flash-lite",
+      "prompt_version": "system_v1",
+      "checker": {
+        "passed": true,
+        "unverified": [],
+        "stale_tables": []
+      }
+    }
+  },
+  {
+    "question": "What was the weekly COVID-NET hospitalization rate for the last 3 weeks?",
+    "response": {
+      "status": "answered",
+      "answer": "Based on data for the week ending October 10, 2026, the overall weekly COVID-NET hospitalization rates per 100,000 were 0.8 for the week ending October 10, 1.1 for the week ending October 3, and 1.2 for the week ending September 26.",
+      "tool_calls": [
+        {
+          "tool": "get_hospitalization_rate",
+          "inputs": {
+            "weeks": 3,
+            "network": "COVID-NET"
+          },
+          "rows_returned": 3,
+          "elapsed_s": 0.016,
+          "output": {
+            "as_of": "2026-10-10",
+            "source_table": "hospitalization_rates",
+            "rows": [
+              {
+                "week_end": "2026-10-10",
+                "rate_per_100k": 0.8,
+                "cumulative_per_100k": 1.0
+              },
+              {
+                "week_end": "2026-10-03",
+                "rate_per_100k": 1.1,
+                "cumulative_per_100k": 45.0
+              },
+              {
+                "week_end": "2026-09-26",
+                "rate_per_100k": 1.2,
+                "cumulative_per_100k": 44.0
+              }
+            ],
+            "network": "COVID-NET",
+            "age_group": "Overall",
+            "units": "rate per 100,000"
+          }
+        },
+        {
+          "tool": "get_data_freshness",
+          "inputs": {},
+          "rows_returned": 4,
+          "elapsed_s": 0.01,
+          "output": {
+            "as_of": "2026-10-10",
+            "source_table": "all",
+            "rows": [
+              {
+                "table": "ari_activity",
+                "latest_week": "2026-10-10",
+                "age_days": 10,
+                "stale": false
+              },
+              {
+                "table": "hospitalization_rates",
+                "latest_week": "2026-10-10",
+                "age_days": 10,
+                "stale": false
+              },
+              {
+                "table": "test_positivity",
+                "latest_week": "2026-10-10",
+                "age_days": 10,
+                "stale": false
+              },
+              {
+                "table": "wastewater_sites",
+                "latest_week": null,
+                "age_days": null,
+                "stale": true
+              }
+            ]
+          }
+        }
+      ],
+      "as_of": "2026-10-10",
+      "elapsed_s": 1.883,
+      "model": "gemini-3.5-flash-lite",
+      "prompt_version": "system_v1",
+      "checker": {
+        "passed": true,
+        "unverified": [],
+        "stale_tables": []
+      }
+    }
+  },
+  {
+    "question": "What is the RSV-NET hospitalization rate for adults 65+ in the latest week?",
+    "response": {
+      "status": "answered",
+      "answer": "Based on data for the week-ending date of 2026-10-10, the RSV-NET hospitalization rate for adults aged 65 and older was 0.1 per 100,000.",
+      "tool_calls": [
+        {
+          "tool": "get_data_freshness",
+          "inputs": {},
+          "rows_returned": 4,
+          "elapsed_s": 0.014,
+          "output": {
+            "as_of": "2026-10-10",
+            "source_table": "all",
+            "rows": [
+              {
+                "table": "ari_activity",
+                "latest_week": "2026-10-10",
+                "age_days": 10,
+                "stale": false
+              },
+              {
+                "table": "hospitalization_rates",
+                "latest_week": "2026-10-10",
+                "age_days": 10,
+                "stale": false
+              },
+              {
+                "table": "test_positivity",
+                "latest_week": "2026-10-10",
+                "age_days": 10,
+                "stale": false
+              },
+              {
+                "table": "wastewater_sites",
+                "latest_week": null,
+                "age_days": null,
+                "stale": true
+              }
+            ]
+          }
+        },
+        {
+          "tool": "get_hospitalization_rate",
+          "inputs": {
+            "weeks": 1,
+            "age_group": "65+ yr",
+            "network": "RSV-NET"
+          },
+          "rows_returned": 1,
+          "elapsed_s": 0.015,
+          "output": {
+            "as_of": "2026-10-10",
+            "source_table": "hospitalization_rates",
+            "rows": [
+              {
+                "week_end": "2026-10-10",
+                "rate_per_100k": 0.1,
+                "cumulative_per_100k": 0.0
+              }
+            ],
+            "network": "RSV-NET",
+            "age_group": "65+ yr",
+            "units": "rate per 100,000"
+          }
+        }
+      ],
+      "as_of": "2026-10-10",
+      "elapsed_s": 1.632,
+      "model": "gemini-3.5-flash-lite",
+      "prompt_version": "system_v1",
+      "checker": {
+        "passed": true,
+        "unverified": [],
+        "stale_tables": []
+      }
+    }
+  },
+  {
+    "question": "What is the wastewater viral activity in Ohio?",
+    "response": {
+      "status": "refused",
+      "answer": "The data does not cover that: no wastewater data is loaded, as the CDC dataset has no records in the last 365 days.",
+      "tool_calls": [
+        {
+          "tool": "get_wastewater",
+          "inputs": {
+            "state": "Ohio"
+          },
+          "rows_returned": 0,
+          "elapsed_s": 0.012,
+          "output": {
+            "error": "No wastewater data is loaded; the CDC dataset has no records in the last 365 days."
+          }
+        }
+      ],
+      "as_of": null,
+      "elapsed_s": 1.36,
+      "model": "gemini-3.5-flash-lite",
+      "prompt_version": "system_v1",
+      "checker": {
+        "passed": true,
+        "unverified": [],
+        "stale_tables": []
+      }
+    }
+  },
+  {
+    "question": "What does the forecast say for influenza hospitalizations over the next 4 weeks?",
+    "response": {
+      "status": "answered",
+      "answer": "Based on the forecast as of 2026-10-10, the LSTM model predicts influenza hospitalization rates per 100,000 ranging from 1.84 (week ending 2026-10-17) to a peak of 2.37 (week ending 2026-10-24) over the next 4 weeks. The XGBoost model predicts rates ranging from 0.60 on 2026-10-17 down to 0.27 by 2026-11-07.",
+      "tool_calls": [
+        {
+          "tool": "get_forecast",
+          "inputs": {
+            "virus": "FluSurv-NET"
+          },
+          "rows_returned": 8,
+          "elapsed_s": 0.076,
+          "output": {
+            "as_of": "2026-10-10",
+            "source_table": "models",
+            "rows": [
+              {
+                "model": "lstm",
+                "validation_mae": 2.1324,
+                "date": "2026-10-17",
+                "predicted_rate": 1.84,
+                "lower_bound": 0,
+                "upper_bound": 3.97
+              },
+              {
+                "model": "lstm",
+                "validation_mae": 2.1324,
+                "date": "2026-10-24",
+                "predicted_rate": 2.37,
+                "lower_bound": 0,
+                "upper_bound": 5.14
+              },
+              {
+                "model": "lstm",
+                "validation_mae": 2.1324,
+                "date": "2026-10-31",
+                "predicted_rate": 2.3,
+                "lower_bound": 0,
+                "upper_bound": 5.71
+              },
+              {
+                "model": "lstm",
+                "validation_mae": 2.1324,
+                "date": "2026-11-07",
+                "predicted_rate": 2.14,
+                "lower_bound": 0,
+                "upper_bound": 6.19
+              },
+              {
+                "model": "xgboost",
+                "validation_mae": 0.3451,
+                "date": "2026-10-17",
+                "predicted_rate": 0.6,
+                "lower_bound": 0.25,
+                "upper_bound": 0.94
+              },
+              {
+                "model": "xgboost",
+                "validation_mae": 0.3451,
+                "date": "2026-10-24",
+                "predicted_rate": 0.36,
+                "lower_bound": 0,
+                "upper_bound": 0.79
+              },
+              {
+                "model": "xgboost",
+                "validation_mae": 0.3451,
+                "date": "2026-10-31",
+                "predicted_rate": 0.32,
+                "lower_bound": 0,
+                "upper_bound": 0.84
+              },
+              {
+                "model": "xgboost",
+                "validation_mae": 0.3451,
+                "date": "2026-11-07",
+                "predicted_rate": 0.27,
+                "lower_bound": 0,
+                "upper_bound": 0.87
+              }
+            ],
+            "virus": "FluSurv-NET",
+            "units": "rate per 100,000"
+          }
+        }
+      ],
+      "as_of": "2026-10-10",
+      "elapsed_s": 1.857,
+      "model": "gemini-3.5-flash-lite",
+      "prompt_version": "system_v1",
+      "checker": {
+        "passed": true,
+        "unverified": [],
+        "stale_tables": []
+      }
+    }
+  },
+  {
+    "question": "How fresh is the data in each table?",
+    "response": {
+      "status": "answered",
+      "answer": "The data is as of 2026-10-10. The `ari_activity`, `hospitalization_rates`, and `test_positivity` tables have their latest week as 2026-10-10 and are 10 days old (not stale). However, the `wastewater_sites` table is flagged as stale.",
+      "tool_calls": [
+        {
+          "tool": "get_data_freshness",
+          "inputs": {},
+          "rows_returned": 4,
+          "elapsed_s": 0.013,
+          "output": {
+            "as_of": "2026-10-10",
+            "source_table": "all",
+            "rows": [
+              {
+                "table": "ari_activity",
+                "latest_week": "2026-10-10",
+                "age_days": 10,
+                "stale": false
+              },
+              {
+                "table": "hospitalization_rates",
+                "latest_week": "2026-10-10",
+                "age_days": 10,
+                "stale": false
+              },
+              {
+                "table": "test_positivity",
+                "latest_week": "2026-10-10",
+                "age_days": 10,
+                "stale": false
+              },
+              {
+                "table": "wastewater_sites",
+                "latest_week": null,
+                "age_days": null,
+                "stale": true
+              }
+            ]
+          }
+        }
+      ],
+      "as_of": "2026-10-10",
+      "elapsed_s": 1.372,
+      "model": "gemini-3.5-flash-lite",
+      "prompt_version": "system_v1",
+      "checker": {
+        "passed": true,
+        "unverified": [],
+        "stale_tables": []
+      }
+    }
+  },
+  {
+    "question": "Is influenza test positivity higher than COVID-19 test positivity this week?",
+    "response": {
+      "status": "answered",
+      "answer": "For the week ending October 10, 2026, influenza test positivity was 5% compared to 3.6% for COVID-19. Therefore, influenza test positivity is higher than COVID-19 test positivity this week.",
+      "tool_calls": [
+        {
+          "tool": "get_data_freshness",
+          "inputs": {},
+          "rows_returned": 4,
+          "elapsed_s": 0.013,
+          "output": {
+            "as_of": "2026-10-10",
+            "source_table": "all",
+            "rows": [
+              {
+                "table": "ari_activity",
+                "latest_week": "2026-10-10",
+                "age_days": 10,
+                "stale": false
+              },
+              {
+                "table": "hospitalization_rates",
+                "latest_week": "2026-10-10",
+                "age_days": 10,
+                "stale": false
+              },
+              {
+                "table": "test_positivity",
+                "latest_week": "2026-10-10",
+                "age_days": 10,
+                "stale": false
+              },
+              {
+                "table": "wastewater_sites",
+                "latest_week": null,
+                "age_days": null,
+                "stale": true
+              }
+            ]
+          }
+        },
+        {
+          "tool": "get_test_positivity",
+          "inputs": {},
+          "rows_returned": 3,
+          "elapsed_s": 0.013,
+          "output": {
+            "as_of": "2026-10-10",
+            "source_table": "test_positivity",
+            "rows": [
+              {
+                "week_end": "2026-10-10",
+                "pathogen": "COVID-19",
+                "percent_positive": 3.6
+              },
+              {
+                "week_end": "2026-10-10",
+                "pathogen": "Influenza",
+                "percent_positive": 5.0
+              },
+              {
+                "week_end": "2026-10-10",
+                "pathogen": "RSV",
+                "percent_positive": 0.7
+              }
+            ]
+          }
+        }
+      ],
+      "as_of": "2026-10-10",
+      "elapsed_s": 2.618,
+      "model": "gemini-3.5-flash-lite",
+      "prompt_version": "system_v1",
+      "checker": {
+        "passed": true,
+        "unverified": [],
+        "stale_tables": []
+      }
+    }
+  },
+  {
+    "question": "I have a fever and cough. Should I take antivirals?",
+    "response": {
+      "status": "refused",
+      "answer": "I can't answer personal health questions about whether you should take antivirals, and I suggest asking a clinician. For medical advice, diagnoses, or treatment suggestions, please consult a healthcare professional.",
+      "tool_calls": [],
+      "as_of": null,
+      "elapsed_s": 0.89,
+      "model": "gemini-3.5-flash-lite",
+      "prompt_version": "system_v1",
+      "checker": {
+        "passed": true,
+        "unverified": [],
+        "stale_tables": []
+      }
+    }
+  }
+]

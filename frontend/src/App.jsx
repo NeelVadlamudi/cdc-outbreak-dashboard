@@ -13,9 +13,12 @@ import AskData from "./pages/AskData";
 import Simulator from "./pages/Simulator";
 import CustomCursor from "./components/CustomCursor";
 
+// Module-scope alias: core no-unused-vars does not see JSX member use (<MotionDiv>).
+const MotionDiv = motion.div;
+
 const PageTransition = ({ children }) => {
   return (
-    <motion.div
+    <MotionDiv
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.98 }}
@@ -23,7 +26,7 @@ const PageTransition = ({ children }) => {
       style={{ overflow: "hidden", minHeight: "100%" }}
     >
       {children}
-    </motion.div>
+    </MotionDiv>
   );
 };
 

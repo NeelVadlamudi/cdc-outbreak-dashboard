@@ -1,0 +1,90 @@
+{
+  "_label": "EXAMPLE fixture \u2014 not real data",
+  "recorded_at": "2026-01-01T06:00:00Z",
+  "answers": [
+    {
+      "question": "EXAMPLE question one?",
+      "correct": true,
+      "response": {
+        "status": "answered",
+        "answer": "EXAMPLE answer text.",
+        "tool_calls": [
+          {
+            "tool": "EXAMPLE_query_tool",
+            "inputs": {
+              "pathogen": "EXAMPLE"
+            },
+            "rows_returned": 2,
+            "elapsed_s": 0.12,
+            "output": {
+              "as_of": "2000-01-01",
+              "source_table": "example_table",
+              "units": "EXAMPLE units",
+              "rows": [
+                {
+                  "week_end": "2000-01-01",
+                  "value": "EXAMPLE"
+                },
+                {
+                  "week_end": "2000-01-08",
+                  "value": null
+                }
+              ]
+            }
+          },
+          {
+            "tool": "EXAMPLE_freshness_tool",
+            "inputs": {},
+            "output": {
+              "source_table": "all",
+              "rows": []
+            }
+          }
+        ],
+        "as_of": "2000-01-01",
+        "elapsed_s": 1.4,
+        "model": "EXAMPLE-model",
+        "prompt_version": "EXAMPLE",
+        "checker": {
+          "passed": true,
+          "unverified": [],
+          "stale_tables": []
+        }
+      }
+    },
+    {
+      "question": "EXAMPLE question that should be refused?",
+      "response": {
+        "status": "refused",
+        "answer": "EXAMPLE refused answer.",
+        "tool_calls": [],
+        "as_of": null,
+        "elapsed_s": 0.85,
+        "checker": {
+          "passed": true,
+          "unverified": [],
+          "stale_tables": [
+            "example_table"
+          ]
+        }
+      }
+    },
+    {
+      "question": "EXAMPLE unverified?",
+      "response": {
+        "status": "unverified",
+        "answer": "EXAMPLE unverified answer.",
+        "tool_calls": [],
+        "as_of": "2000-01-01",
+        "elapsed_s": 125,
+        "checker": {
+          "passed": false,
+          "unverified": [
+            "EXAMPLE"
+          ],
+          "stale_tables": []
+        }
+      }
+    }
+  ]
+}

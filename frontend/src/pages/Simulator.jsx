@@ -3,23 +3,26 @@ import Plot from "react-plotly.js";
 import { Hospital, AlertTriangle, TrendingUp, Settings, Activity, Play } from "lucide-react";
 import { runSimulator, getSimDefaults } from "../api";
 
+const INITIAL_PARAMS = {
+  population: 1000000,
+  current_rate: 5.0,
+  surge_multiplier: 2.0,
+  hospitalization_pct: 10.0,
+  icu_pct: 20.0,
+  avg_los_days: 5.0,
+  icu_los_days: 10.0,
+  beds_available: 500,
+  icu_beds_available: 50,
+  cost_per_bed_day: 3000,
+  cost_per_icu_day: 8000,
+  weeks: 8,
+};
+
 export default function Simulator() {
-  const [params, setParams] = useState({
-    population: 1000000,
-    current_rate: 5.0,
-    surge_multiplier: 2.0,
-    hospitalization_pct: 10.0,
-    icu_pct: 20.0,
-    avg_los_days: 5.0,
-    icu_los_days: 10.0,
-    beds_available: 500,
-    icu_beds_available: 50,
-    cost_per_bed_day: 3000,
-    cost_per_icu_day: 8000,
-    weeks: 8,
-  });
+  const [params, setParams] = useState(INITIAL_PARAMS);
   const [results, setResults] = useState(null);
-  const [loading, setLoading] = useState(false);
+  // Starts true: the first simulation is kicked off on mount.
+  const [loading, setLoading] = useState(true);
   const [defaults, setDefaults] = useState(null);
 
   useEffect(() => {
@@ -37,8 +40,13 @@ export default function Simulator() {
     setLoading(false);
   };
 
+  // Initial run uses the initial params (identical to `params` on mount); state is only set
+  // in async callbacks, so no synchronous setState inside the effect.
   useEffect(() => {
-    runSim();
+    runSimulator(INITIAL_PARAMS)
+      .then(setResults)
+      .catch(() => console.error("Simulation failed"))
+      .finally(() => setLoading(false));
   }, []);
 
   const updateParam = (key, value) => {
