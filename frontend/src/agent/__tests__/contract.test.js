@@ -8,19 +8,26 @@ const FX = JSON.parse(readFileSync(new URL("./ask.fixture.EXAMPLE.json", import.
 
 test("fixture is labelled EXAMPLE", () => assert.match(FX._label, /^EXAMPLE/));
 
-test("adapts the ok response", () => {
+test("adapts the answered response", () => {
   const r = adaptAskResponse(FX.ok);
-  assert.equal(r.status, "ok");
+  assert.equal(r.status, "answered");
   assert.equal(r.toolCalls.length, 2);
   assert.deepEqual(r.toolCalls[0], { tool: "EXAMPLE_query_tool", inputs: { virus: "EXAMPLE", state: "EX" }, rows: 3, ms: 120 });
   assert.equal(r.toolCalls[1].rows, null); // optional rows stays null, never invented
   assert.equal(formatDuration(r.elapsedMs), "1.4 s");
 });
 
-test("detects refusal / could-not-verify", () => {
-  assert.equal(adaptAskResponse(FX.refusal).status, "unverified");
-  assert.equal(adaptAskResponse({ ...FX.ok, answer: "I can't answer that." }).status, "refused");
-  assert.equal(adaptAskResponse({ ...FX.ok, status: "unverified" }).status, "unverified");
+test("status drives refused / unverified", () => {
+  assert.equal(adaptAskResponse(FX.refused).status, "refused");
+  assert.equal(adaptAskResponse(FX.unverified).status, "unverified");
+});
+
+test("missing or unknown status falls back to answered (no text matching)", () => {
+  const { status, ...noStatus } = FX.ok;
+  assert.equal(status, "answered");
+  assert.equal(adaptAskResponse(noStatus).status, "answered");
+  assert.equal(adaptAskResponse({ ...noStatus, answer: "Could not verify that." }).status, "answered");
+  assert.equal(adaptAskResponse({ ...FX.ok, status: "weird" }).status, "answered");
 });
 
 test("rejects empty response", () => assert.throws(() => adaptAskResponse(null)));

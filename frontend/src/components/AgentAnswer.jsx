@@ -4,7 +4,7 @@ import { formatDuration, formatInputs } from "../agent/contract.js";
 
 export default function AgentAnswer({ result }) {
   const [open, setOpen] = useState(false);
-  const refused = result.status !== "ok";
+  const refused = result.status !== "answered";
   const took = formatDuration(result.elapsedMs);
   const n = result.toolCalls.length;
   return (

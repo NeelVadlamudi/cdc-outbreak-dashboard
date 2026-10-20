@@ -1,5 +1,5 @@
 { "_label": "EXAMPLE fixture — not real data", "recorded_at": "2026-01-01T06:00:00Z",
   "answers": [
-    { "question": "EXAMPLE question one?", "answer": "EXAMPLE answer one.", "as_of_week": "EXAMPLE-W01", "elapsed_ms": 1400, "correct": true,
+    { "question": "EXAMPLE question one?", "answer": "EXAMPLE answer one.", "status": "answered", "as_of_week": "EXAMPLE-W01", "elapsed_ms": 1400, "correct": true,
       "tool_calls": [ { "tool": "EXAMPLE_tool_a", "inputs": { "virus": "EXAMPLE", "state": "EX" }, "rows": 3, "ms": 120 }, { "tool": "EXAMPLE_tool_b", "inputs": { "horizon": 1 } } ] },
-    { "question": "EXAMPLE question that should be refused?", "answer": "Could not verify that from the data.", "status": "unverified", "as_of_week": "EXAMPLE-W01", "elapsed_ms": 125000, "tool_calls": [] } ] }
+    { "question": "EXAMPLE question that should be refused?", "answer": "EXAMPLE unverified answer.", "status": "unverified", "as_of_week": "EXAMPLE-W01", "elapsed_ms": 125000, "tool_calls": [] } ] }
