@@ -1,0 +1,19 @@
+# Render free tier (512 MB RAM): the API only.
+# Left out on purpose (see requirements.txt for the full set):
+#   torch, xgboost       - forecasts return no_model without them (xgboost also pulls a large CUDA library)
+#   scikit-learn         - not imported by the app
+#   ollama, langchain-ollama - local models only; Render uses Gemini
+#   mcp, langchain-mcp-adapters - the MCP server is not part of the web service
+#   sse-starlette        - not imported by the app
+#   pytest, ruff, pyyaml - tests, lint and the eval runner
+fastapi>=0.115
+uvicorn>=0.34
+duckdb>=1.2
+httpx>=0.28
+pandas>=2.0
+numpy>=1.24
+apscheduler>=3.10
+langgraph>=0.2
+langchain-core>=0.3
+langchain-google-genai>=2.0
+pydantic>=2.0
