@@ -1,27 +1,34 @@
 {
   "_label": "EXAMPLE — test fixture only, not real agent output. Never imported by shipped code.",
   "ok": {
-    "answer": "EXAMPLE answer text.",
     "status": "answered",
+    "answer": "EXAMPLE answer text.",
     "tool_calls": [
-      { "tool": "EXAMPLE_query_tool", "inputs": { "virus": "EXAMPLE", "state": "EX" }, "rows": 3, "ms": 120 },
-      { "tool": "EXAMPLE_forecast_tool", "inputs": { "horizon": 1 } }
+      { "tool": "EXAMPLE_query_tool", "inputs": { "pathogen": "EXAMPLE" }, "rows_returned": 2, "elapsed_s": 0.12,
+        "output": { "as_of": "2000-01-01", "source_table": "example_table", "units": "EXAMPLE units",
+                    "rows": [ { "week_end": "2000-01-01", "value": "EXAMPLE" }, { "week_end": "2000-01-08", "value": null } ] } },
+      { "tool": "EXAMPLE_freshness_tool", "inputs": {}, "output": { "source_table": "all", "rows": [] } }
     ],
-    "as_of_week": "EXAMPLE-week",
-    "elapsed_ms": 1400
+    "as_of": "2000-01-01",
+    "elapsed_s": 1.4,
+    "model": "EXAMPLE-model",
+    "prompt_version": "EXAMPLE",
+    "checker": { "passed": true, "unverified": [], "stale_tables": [] }
   },
   "refused": {
-    "answer": "EXAMPLE refused answer.",
     "status": "refused",
+    "answer": "EXAMPLE refused answer.",
     "tool_calls": [],
-    "as_of_week": "EXAMPLE-week",
-    "elapsed_ms": 850
+    "as_of": null,
+    "elapsed_s": 0.85,
+    "checker": { "passed": true, "unverified": [], "stale_tables": ["example_table"] }
   },
   "unverified": {
-    "answer": "EXAMPLE unverified answer.",
     "status": "unverified",
+    "answer": "EXAMPLE unverified answer.",
     "tool_calls": [],
-    "as_of_week": "EXAMPLE-week",
-    "elapsed_ms": 125000
+    "as_of": "2000-01-01",
+    "elapsed_s": 125,
+    "checker": { "passed": false, "unverified": ["EXAMPLE"], "stale_tables": [] }
   }
 }
