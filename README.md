@@ -89,7 +89,7 @@ The NWSS wastewater dataset the app uses has no records after 2025-09-07, so was
 make run    # start the API with reload
 make test   # run pytest
 make lint   # run ruff
-make eval   # placeholder until an evaluation suite exists
+make eval   # runs the 60-question eval (evals/run_evals.py)
 ```
 
 ## Running locally on an 8 GB Mac

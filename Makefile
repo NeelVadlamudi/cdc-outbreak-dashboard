@@ -13,4 +13,4 @@ lint:
 	$(PYTHON) -m ruff check .
 
 eval:
-	@echo "No evaluation suite yet."
+	python evals/run_evals.py
