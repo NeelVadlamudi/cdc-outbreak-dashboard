@@ -66,7 +66,7 @@
     const body = $("[data-body]", sec);
     const ms = d && Array.isArray(d.metrics) ? d.metrics.filter((m) => m && m.label && isNum(m.value)) : [];
     if (!ms.length) return notRun(body, "data/dashboard.json");
-    if (d.as_of_week) $("#as-of").textContent = `as of ${d.as_of_week}`;
+    if (d.as_of) $("#as-of").textContent = `as of ${d.as_of}`;
     body.replaceChildren(el("div", { class: "metrics" }, ms.map((m) =>
       el("div", { class: "metric" },
         el("div", { class: "lab", text: m.label }),
@@ -153,29 +153,49 @@
       legend, el("details", {}, el("summary", { text: "Show numbers" }), el("div", { class: "scroll" }, table)), meta.length ? el("div", { class: "meta" }, meta) : "");
   }
 
-  /* (d) Replay of recorded answers — same shape as POST /api/agent/ask */
+  /* (d) Replay of recorded answers. Each item: { question, response: <POST /api/agent/ask body>, correct? } */
   function fmtInputs(i) { if (i == null) return ""; if (typeof i !== "object") return String(i); return Object.entries(i).map(([k, v]) => `${k}=${typeof v === "object" ? JSON.stringify(v) : v}`).join(", "); }
+  const secs = (s) => (isNum(s) ? fmtDuration(s * 1000) : null);
+  function outputRows(rows) {
+    if (!Array.isArray(rows) || !rows.length) return null;
+    const cols = [...new Set(rows.flatMap((r) => (r && typeof r === "object" ? Object.keys(r) : [])))];
+    return el("details", { class: "out" }, el("summary", { text: `output rows (${int(rows.length)})` }),
+      el("div", { class: "scroll" }, el("table", {},
+        el("thead", {}, el("tr", {}, cols.map((c) => el("th", { text: c })))),
+        el("tbody", {}, rows.map((r) => el("tr", {}, cols.map((c) => cell(r?.[c] == null ? null : String(r[c])))))))));
+  }
   function renderReplay(sec, d) {
     const body = $("[data-body]", sec);
-    const items = d && Array.isArray(d.answers) ? d.answers.filter((a) => a && typeof a.answer === "string") : [];
+    const items = d && Array.isArray(d.answers) ? d.answers.filter((a) => a && a.response && typeof a.response.answer === "string") : [];
     if (!items.length) return notRun(body, "data/replay.json");
-    body.replaceChildren(el("div", { class: "replay" }, items.map((a) => {
-      const refused = a.status === "refused" || a.status === "unverified";
+    body.replaceChildren(el("div", { class: "replay" }, items.map((it) => {
+      const a = it.response;
+      const flagged = a.status === "refused" || a.status === "unverified";
       const calls = Array.isArray(a.tool_calls) ? a.tool_calls : [];
       const meta = [];
-      if (a.as_of_week) meta.push(el("span", { class: "chip", text: `as of ${a.as_of_week}` }));
-      const took = fmtDuration(a.elapsed_ms); if (took) meta.push(el("span", { class: "chip", text: `took ${took}` }));
-      if (typeof a.correct === "boolean") meta.push(el("span", { class: a.correct ? "chip acc" : "chip", text: a.correct ? "graded correct" : "graded wrong" }));
-      return el("article", { class: refused ? "qa refused" : "qa" },
-        a.question ? el("div", { class: "q", text: a.question }) : null,
-        refused ? el("div", { class: "flag", text: a.status === "unverified" ? "Could not verify" : "Declined to answer" }) : null,
+      meta.push(el("span", { class: "chip", text: a.as_of ? `as of ${a.as_of}` : "no data date" }));
+      const took = secs(a.elapsed_s); if (took) meta.push(el("span", { class: "chip", text: `took ${took}` }));
+      if (a.model) meta.push(el("span", { class: "chip", text: a.model }));
+      const stale = a.checker && Array.isArray(a.checker.stale_tables) ? a.checker.stale_tables : [];
+      if (stale.length) meta.push(el("span", { class: "chip", text: `stale: ${stale.join(", ")}` }));
+      if (typeof it.correct === "boolean") meta.push(el("span", { class: it.correct ? "chip acc" : "chip", text: it.correct ? "graded correct" : "graded wrong" }));
+      return el("article", { class: flagged ? "qa refused" : "qa" },
+        it.question ? el("div", { class: "q", text: it.question }) : null,
+        flagged ? el("div", { class: "flag", text: a.status === "unverified" ? "Could not verify" : "Declined to answer" }) : null,
         el("div", { class: "a", text: a.answer }),
-        meta.length ? el("div", { class: "meta" }, meta) : null,
+        el("div", { class: "meta" }, meta),
         calls.length ? el("details", {}, el("summary", { text: `${calls.length} tool call${calls.length === 1 ? "" : "s"}` }),
-          el("ol", { class: "calls" }, calls.map((c) => el("li", {}, el("code", { text: c.tool || "unknown" }), " ",
-            el("span", { class: "in", text: fmtInputs(c.inputs) || "no inputs" }), " · ",
-            isNum(c.rows) ? `${int(c.rows)} row${c.rows === 1 ? "" : "s"}` : "rows not reported",
-            isNum(c.ms) ? ` · ${fmtDuration(c.ms)}` : "")))) : el("div", { class: "meta" }, el("span", { class: "chip", text: "no tool calls" })));
+          el("ol", { class: "calls" }, calls.map((c) => {
+            const o = c.output && typeof c.output === "object" ? c.output : {};
+            const facts = [isNum(c.rows_returned) ? `${int(c.rows_returned)} row${c.rows_returned === 1 ? "" : "s"} returned` : "rows not reported"];
+            const t = secs(c.elapsed_s); if (t) facts.push(t);
+            if (o.source_table) facts.push(`table ${o.source_table}`);
+            if (o.units) facts.push(o.units);
+            if (o.error) facts.push(`error: ${o.error}`);
+            return el("li", {}, el("code", { text: c.tool || "unknown" }), " ",
+              el("span", { class: "in", text: fmtInputs(c.inputs) || "no inputs" }),
+              el("div", { class: "facts", text: facts.join(" · ") }), outputRows(o.rows));
+          }))) : el("div", { class: "meta" }, el("span", { class: "chip", text: "no tool calls" })));
     })));
   }
 
