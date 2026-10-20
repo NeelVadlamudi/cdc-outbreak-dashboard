@@ -72,8 +72,10 @@ One entry per model run. Each entry is the top of the file `evals/run_evals.py` 
 ## Data freshness strip (no file of its own)
 Built only from dates already in the data:
 - `dashboard.json` → `as_of`.
-- `replay.json` → the last recorded `get_data_freshness` tool output: `output.rows[] = {table, latest_week, age_days, stale}`
-  (backend/agent/tools.py). Shown as `table latest_week`, "no data" if `latest_week` is null.
+- `replay.json` → the last recorded `get_data_freshness` tool output: `output.rows[] = {table, latest_week, age_days, stale, dataset?, legacy?}`
+  (backend/agent/tools.py `get_data_freshness`). One chip per table **and dataset** (wastewater_sites has one row per source
+  dataset), shown as `table · dataset latest_week`; "no data" if `latest_week` is null. Rows with `legacy: true` are shown
+  last in a muted style; their own `stale` flag is still shown.
 - If no freshness output was recorded: each tool output's `source_table` with its latest `output.as_of`.
 - **Stale** = `rows[].stale === true` or the table appears in any `response.checker.stale_tables`. The site applies no threshold
   of its own (the 14-day rule lives in the backend). `age_days` is not shown because it is relative to recording time.
@@ -86,14 +88,21 @@ Built only from dates already in the data:
   "target": "string?, what was forecast",
   "mae_unit": "string?, unit of MAE",
   "n_origins": 0,
-  "notes": ["string?, plain sentences shown above the charts"],
+  "notes": ["string?, plain sentences shown above the tables"],
   "models": [
     { "model": "string", "horizons": [ { "h": 1, "mae": 0.0, "wmape": 0.0 } ] }
   ]
 }
 ```
-`h` is 1–4 (weeks ahead). `wmape` is a 0–1 fraction. Omit or null a horizon you didn't score.
-`notes` is optional; the page lists each string as written (the backtest writes one per model and series saying whether it beats repeating last week's value).
+`h` is 1–4 (weeks ahead). `wmape` is a 0–1 fraction (can exceed 1). Omit or null a horizon you didn't score.
+Written by `evals/backtest.py --site-out` (subset of its full output; `coverage` is not shown).
+`notes` is optional. backtest.py writes one sentence per model and target saying whether it beats repeating last week's value; the site lists them as written.
+
+Display rules:
+- `model` is `"<Model> · <Target>"` as backtest.py writes it; the site groups by the text after the last " · ".
+- `"Last value"` is the baseline (`MODELS` in backtest.py). Per target and horizon, a model cell is orange with ▼ when its
+  value is lower than the baseline's; grey when equal or higher. This is a comparison only; no difference or ratio is computed.
+- MAE is shown exactly as recorded (backtest.py rounds to 3 dp); WMAPE as a percentage with 1 decimal.
 
 ## 4. `data/replay.json` — section (d)
 Each item wraps one **unmodified** `POST /api/agent/ask` response (same shape as the API section below),
