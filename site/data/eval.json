@@ -53,6 +53,24 @@
       "scoring_changed": true
     },
     {
+      "model": "qwen2.5:3b",
+      "date": "2026-10-20",
+      "note": "Ollama qwen2.5:3b (Q4_K_M) on CPU: 8 cores, no GPU, AGENT_MODEL=ollama-local. Same prompt and tools as the Gemini runs.",
+      "summary": {
+        "question_set": "cdc-q60-v1",
+        "questions": 60,
+        "numeric_accuracy": 68.8,
+        "tool_choice": 91.7,
+        "correct_refusals": 66.7,
+        "false_refusals": 12.5,
+        "grounded_answers": 97.8,
+        "median_s": 3.9,
+        "p95_s": 9.13,
+        "median_input_tokens": null,
+        "median_output_tokens": null
+      }
+    },
+    {
       "model": "gemini-3.5-flash-lite",
       "date": "2026-10-20",
       "summary": {

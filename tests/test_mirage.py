@@ -182,14 +182,17 @@ def test_approvals_disabled_without_admin_key(mirage_env, monkeypatch):
 
 
 def test_recorded_eval_rescores_to_published_summary(mirage_env, tmp_path):
-    """CI check: rescoring the committed responses with today's expected values gives the published summary."""
+    """CI check: rescoring each committed result with today's expected values gives its published summary."""
     from evals.mirage import run_mirage_evals
 
     results = sorted((ROOT / "evals" / "mirage" / "results").glob("*.json"))
     assert results
-    latest = json.loads(results[-1].read_text())
-    run_mirage_evals.main(["--model", "x", "--from-file", str(results[-1]), "--out-dir", str(tmp_path)])
-    rescored = json.loads(next(tmp_path.glob("*.json")).read_text())["summary"]
-    assert rescored == latest["summary"]
     site = json.loads((ROOT / "site" / "data" / "mirage_eval.json").read_text())
-    assert site["runs"][-1]["summary"] == latest["summary"]
+    for i, path in enumerate(results):
+        saved = json.loads(path.read_text())
+        out = tmp_path / str(i)
+        run_mirage_evals.main(["--model", "x", "--from-file", str(path), "--out-dir", str(out)])
+        rescored = json.loads(next(out.glob("*.json")).read_text())["summary"]
+        assert rescored == saved["summary"], path.name
+        published = [r for r in site["runs"] if r["model"] == saved["model"] and r["date"] == saved["date"]]
+        assert published and published[-1]["summary"] == saved["summary"], path.name
