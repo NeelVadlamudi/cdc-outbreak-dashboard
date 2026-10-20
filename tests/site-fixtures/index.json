@@ -1,1 +1,1 @@
-{ "available": ["dashboard","eval","backtest","replay","live"] }
+{"available": ["dashboard", "eval", "backtest", "replay", "live", "status"]}
