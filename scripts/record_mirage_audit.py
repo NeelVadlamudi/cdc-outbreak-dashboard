@@ -90,7 +90,9 @@ def main():
     (args.site_dir / "mirage_audit.json").write_text(json.dumps(recording, indent=1, default=str) + "\n")
     queue = {"generated_at": stamp, "proposals": proposals, "audit_log": audit,
              "source": "Recorded by scripts/record_mirage_audit.py; proposals from two real answers.",
-             "second_answer": {"question": SECOND, "status": second.get("status"), "answer": second.get("answer")}}
+             "second_answer": {"question": SECOND, "status": second.get("status"), "answer": second.get("answer"),
+                               "as_of": second.get("as_of"), "tool_calls": second.get("tool_calls", []),
+                               "proposal_id": (second.get("proposals") or [{}])[0].get("proposal_id")}}
     (args.site_dir / "mirage_proposals.json").write_text(json.dumps(queue, indent=1, default=str) + "\n")
     from publish_eval import ensure_index
 

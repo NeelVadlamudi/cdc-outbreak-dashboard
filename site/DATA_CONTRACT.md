@@ -130,7 +130,7 @@ Shown per answer: status flag, answer, `as_of`, `elapsed_s`, `model`, stale tabl
 
 ## 5. `data/live.json` — section (e)
 ```json
-{ "url": "https://<render-app>.onrender.com/ask" }
+{ "url": "https://cdc-outbreak-api.onrender.com" }
 ```
 Must be `https://`.
 
@@ -138,8 +138,8 @@ The API on Render (`render.yaml`) accepts `POST <render url>/api/agent/ask` and 
 - CORS allows that origin only, with methods `GET` and `POST` and the `Content-Type` header.
 - The request body is `{question}`, and the response is the Ask contract below.
 - `GET <render url>/api/health` is a cheap way to wake the service first.
-- The free instance sleeps when idle, so the first call can take about a minute.
-- Today the site uses `url` only as a link. `live.json` is not written yet.
+- The free instance sleeps after about 15 minutes idle. The first call after that can take about 50 seconds while it wakes; later calls are fast.
+- `url` is the API base. The page links to it, and code calls `${url}/api/agent/ask`.
 
 If `live` is not listed in `index.json` (or the URL is missing or not https), the whole "Try it live" section is **hidden**, not disabled. When shown, the button reads "Try it live · may take a minute to wake".
 
@@ -264,6 +264,10 @@ Written by `scripts/record_mirage_audit.py`. `steps[]` are in order:
   "source": "string", "second_answer": { "question": "string", "status": "string", "answer": "string",
                                          "tool_calls": "[...]? as in /api/agent/ask", "proposal_id": "integer?" } }
 ```
+- `second_answer` comes from the second recorded `POST /api/mirage/ask` call. It has the same fields as that response:
+  - `tool_calls[]`: `{tool, inputs, rows_returned, elapsed_s, output}`, as in `/api/agent/ask`.
+  - `as_of`: as in that response.
+  - `proposal_id`: the id of the proposal that answer wrote, matching a row in `proposals[]`. It is `null` if the answer made no proposal.
 - The static site cannot approve anything. Approval goes through the API below. In this file, the recorded decider is `"Demo reviewer"`.
 - `status` `"waiting for approval"` is the only state that shows Approve and Reject buttons.
 
