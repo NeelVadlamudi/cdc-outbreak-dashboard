@@ -412,6 +412,7 @@ async def agent_ask(body: AgentQuestion):
         start = time.perf_counter()
         fallback = await chat_with_data(body.question)
         return {
+            "status": "answered",
             "answer": fallback.get("answer", ""),
             "tool_calls": [],
             "as_of": None,
