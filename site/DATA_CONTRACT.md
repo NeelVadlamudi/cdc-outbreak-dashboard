@@ -61,11 +61,13 @@ One entry per model run. Each entry is the top of the file `evals/run_evals.py` 
 - `questions`, `median_input_tokens`, `median_output_tokens` are shown as given.
 - Any `null` cell shows **"Not run yet"**. The site never computes or estimates a value.
 - There is no checker-catches column (no summary key for it).
-- **History:** `runs[]` is appended on each rerun, oldest first. The site shows one column per run in file order
-  (first run labelled "first run", last "latest").
-- With 2+ runs there is one extra column, **"Change · latest vs first · computed"**: latest minus first, shown only when
-  both values are numbers (otherwise "—"). Rates in percentage points (pp), times via the duration formatter, counts as-is.
-  If `questions` differs between the two runs, a note says the change is not like-for-like. Nothing else is computed.
+- **History:** `runs[]` is appended on each rerun, oldest first. The **last** entry is the headline table;
+  earlier runs are listed underneath ("History", newest first), values only.
+- **Computed change:** the headline gets a "Change · computed" column only against the most recent earlier run with the
+  **same question set**: equal `questions` count and, if a question-set id key is present in either summary, an equal id
+  in both. `summarize()` has no such key today; if one is added, tell the UI its name (`QSET_ID_KEYS` in site.js).
+  Never compared across different sets (e.g. 20 vs 60). Shown only when both values are numbers, else "—".
+  Rates in percentage points (pp), times via the duration formatter, counts as-is. Nothing else is computed.
 
 ## Data freshness strip (no file of its own)
 Built only from dates already in the data:
