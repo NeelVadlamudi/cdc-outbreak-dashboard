@@ -25,9 +25,9 @@ export const getSites = () => fetchAPI("/hospitalizations/sites");
 
 // ─── Phase 2A: Wastewater ────────────────────────────────────────────
 export const getWastewater = (params = "") => fetchAPI(`/wastewater?${params}`);
-export const getWastewaterLatest = () => fetchAPI("/wastewater/latest");
+export const getWastewaterLatest = (pathogen = "SARS-CoV-2") => fetchAPI(`/wastewater/latest?pathogen=${encodeURIComponent(pathogen)}`);
 export const getWastewaterCounty = (fips) => fetchAPI(`/wastewater/county/${fips}`);
-export const getWastewaterStates = () => fetchAPI("/wastewater/states");
+export const getWastewaterStates = (pathogen = "SARS-CoV-2") => fetchAPI(`/wastewater/states?pathogen=${encodeURIComponent(pathogen)}`);
 
 // ─── Phase 2B: Ensemble AI ──────────────────────────────────────────
 export const getEnsembleForecast = (virus) => fetchAPI(`/ensemble/forecast/${encodeURIComponent(virus)}`);
