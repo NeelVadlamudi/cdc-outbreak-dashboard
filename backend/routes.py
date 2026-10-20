@@ -3,23 +3,26 @@ FastAPI REST API routes for the CDC Outbreak Dashboard.
 Phase 2: Expanded with wastewater, ensemble AI, LLM chat, anomaly detection, and simulator.
 """
 
+import asyncio
+import json
 import secrets
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
+
 from backend.config import ADMIN_API_KEY
 from backend.database import query
-from backend.forecasting import generate_forecast, train_model
 from backend.ensemble import (
-    train_xgboost, xgb_forecast, detect_anomalies,
-    get_age_heatmap_data, get_season_comparison,
+    detect_anomalies,
+    get_age_heatmap_data,
+    get_season_comparison,
+    train_xgboost,
+    xgb_forecast,
 )
+from backend.forecasting import generate_forecast, train_model
 from backend.llm_engine import chat_with_data, generate_weekly_brief
-from backend.simulator import run_simulation, SimulationParams, get_current_rates
-import asyncio
-import json
-from datetime import datetime
+from backend.simulator import SimulationParams, get_current_rates, run_simulation
 
 router = APIRouter(prefix="/api")
 

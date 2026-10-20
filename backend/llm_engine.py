@@ -3,12 +3,12 @@ LLM + RAG Engine — Local AI insights using Ollama + Mistral.
 Queries DuckDB for context, injects into LLM prompt, generates natural language insights.
 """
 
-import duckdb
-import os
-from pathlib import Path
-from datetime import datetime
-import json
 import logging
+import os
+from datetime import datetime
+from pathlib import Path
+
+import duckdb
 
 from backend.config import OLLAMA_MODEL
 
@@ -238,7 +238,7 @@ def generate_rule_based_response(question: str, context: str) -> dict:
             lines = [f"**{row['pathogen']}**: {row['percent_test_positivity']:.1f}%" for _, row in pos.iterrows()]
             return {
                 "status": "success",
-                "answer": f"Current test positivity rates:\n" + "\n".join(f"- {l}" for l in lines) +
+                "answer": "Current test positivity rates:\n" + "\n".join(f"- {line}" for line in lines) +
                           "\n\nThese represent the percentage of respiratory virus tests coming back positive nationwide.",
                 "model": "rule-based",
                 "engine": "fallback",

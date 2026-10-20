@@ -3,11 +3,12 @@ Hospital Capacity Monte Carlo Simulator.
 Models surge scenarios and estimates resource impact.
 """
 
-import numpy as np
-from dataclasses import dataclass
-import duckdb
 import os
+from dataclasses import dataclass
 from pathlib import Path
+
+import duckdb
+import numpy as np
 
 DB_PATH = os.path.join(Path(__file__).parent.parent, "data", "cdc_surveillance.duckdb")
 
