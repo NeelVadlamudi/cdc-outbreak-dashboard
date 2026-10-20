@@ -20,6 +20,9 @@ GEMINI_MODEL_ID = os.getenv("GEMINI_MODEL_ID", "gemini-3.5-flash-lite")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 OLLAMA_AGENT_MODEL = os.getenv("OLLAMA_AGENT_MODEL", "qwen2.5:7b")
 
+# Set to "false" to serve a fixed database (e.g. the eval snapshot) without refreshing it.
+INGEST_ON_STARTUP = os.getenv("INGEST_ON_STARTUP", "true").lower() != "false"
+
 # Data older than this many days is flagged as stale by the agent.
 STALE_AFTER_DAYS = int(os.getenv("STALE_AFTER_DAYS", "14"))
 
