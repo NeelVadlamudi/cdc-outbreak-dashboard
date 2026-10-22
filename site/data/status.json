@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-10-21T14:35:24Z",
+  "generated_at": "2026-10-22T14:38:46Z",
   "run": {
     "result": "success",
-    "started_at": "2026-10-21T14:33:04Z",
-    "finished_at": "2026-10-21T14:35:24Z",
-    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/39617641719",
-    "commit": "8e6938cb7594ff14c33de780014edc15ee2f6cc8",
+    "started_at": "2026-10-22T14:35:01Z",
+    "finished_at": "2026-10-22T14:38:46Z",
+    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/39796758042",
+    "commit": "7f2ffd4424c0161b57baf194a6ae81452d0b92c1",
     "steps": {
       "refresh": "success",
       "backtest": "success",
@@ -15,18 +15,18 @@
   },
   "eval": {
     "model": "gemini-3.5-flash-lite",
-    "date": "2026-10-21",
+    "date": "2026-10-22",
     "question_set": "cdc-q60-v1",
     "summary": {
       "question_set": "cdc-q60-v1",
       "questions": 60,
       "numeric_accuracy": 95.8,
       "tool_choice": 100.0,
-      "correct_refusals": 83.3,
+      "correct_refusals": 91.7,
       "false_refusals": 2.1,
       "grounded_answers": 100.0,
-      "median_s": 1.65,
-      "p95_s": 2.25,
+      "median_s": 2.85,
+      "p95_s": 4.73,
       "median_input_tokens": null,
       "median_output_tokens": null
     },
@@ -50,7 +50,7 @@
     "drops": []
   },
   "backtest": {
-    "run_at": "2026-10-21T14:33:41Z",
+    "run_at": "2026-10-22T14:35:44Z",
     "data_through": "2026-10-10",
     "notes": [
       "LSTM on COVID-NET does not beat last week's value at any horizon.",
@@ -71,7 +71,7 @@
         "dataset": null,
         "legacy": null,
         "latest_week": "2026-10-10",
-        "age_days": 11,
+        "age_days": 12,
         "stale": false
       },
       {
@@ -79,7 +79,7 @@
         "dataset": null,
         "legacy": null,
         "latest_week": "2026-10-10",
-        "age_days": 11,
+        "age_days": 12,
         "stale": false
       },
       {
@@ -87,7 +87,7 @@
         "dataset": null,
         "legacy": null,
         "latest_week": "2026-10-10",
-        "age_days": 11,
+        "age_days": 12,
         "stale": false
       },
       {
@@ -95,7 +95,7 @@
         "dataset": "atcp-73re",
         "legacy": false,
         "latest_week": "2026-10-10",
-        "age_days": 11,
+        "age_days": 12,
         "stale": false
       },
       {
