@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-10-23T14:21:23Z",
+  "generated_at": "2026-10-24T13:27:01Z",
   "run": {
     "result": "success",
-    "started_at": "2026-10-23T14:18:49Z",
-    "finished_at": "2026-10-23T14:21:23Z",
-    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/39968395560",
-    "commit": "2c6daeb19c3d9f7ee7013a1dc508b05f87c8add0",
+    "started_at": "2026-10-24T13:24:40Z",
+    "finished_at": "2026-10-24T13:27:01Z",
+    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/40097941319",
+    "commit": "a21c07f243f20a554cbb7120a8445f0b32b359fe",
     "steps": {
       "refresh": "success",
       "backtest": "success",
@@ -15,18 +15,18 @@
   },
   "eval": {
     "model": "gemini-3.5-flash-lite",
-    "date": "2026-10-23",
+    "date": "2026-10-24",
     "question_set": "cdc-q60-v1",
     "summary": {
       "question_set": "cdc-q60-v1",
       "questions": 60,
-      "numeric_accuracy": 93.8,
+      "numeric_accuracy": 91.7,
       "tool_choice": 100.0,
       "correct_refusals": 91.7,
-      "false_refusals": 2.1,
+      "false_refusals": 6.2,
       "grounded_answers": 100.0,
-      "median_s": 1.78,
-      "p95_s": 2.37,
+      "median_s": 1.58,
+      "p95_s": 2.21,
       "median_input_tokens": null,
       "median_output_tokens": null
     },
@@ -50,7 +50,7 @@
     "drops": []
   },
   "backtest": {
-    "run_at": "2026-10-23T14:19:29Z",
+    "run_at": "2026-10-24T13:25:20Z",
     "data_through": "2026-10-17",
     "notes": [
       "LSTM on COVID-NET does not beat last week's value at any horizon.",
@@ -70,8 +70,8 @@
         "table": "ari_activity",
         "dataset": null,
         "legacy": null,
-        "latest_week": "2026-10-10",
-        "age_days": 13,
+        "latest_week": "2026-10-17",
+        "age_days": 7,
         "stale": false
       },
       {
@@ -79,23 +79,23 @@
         "dataset": null,
         "legacy": null,
         "latest_week": "2026-10-17",
-        "age_days": 6,
+        "age_days": 7,
         "stale": false
       },
       {
         "table": "test_positivity",
         "dataset": null,
         "legacy": null,
-        "latest_week": "2026-10-10",
-        "age_days": 13,
+        "latest_week": "2026-10-17",
+        "age_days": 7,
         "stale": false
       },
       {
         "table": "wastewater_sites",
         "dataset": "atcp-73re",
         "legacy": false,
-        "latest_week": "2026-10-10",
-        "age_days": 13,
+        "latest_week": "2026-10-17",
+        "age_days": 7,
         "stale": false
       },
       {
