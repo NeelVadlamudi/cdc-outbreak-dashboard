@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-23T14:19:30Z",
+  "generated_at": "2026-10-24T13:25:21Z",
   "as_of": "2026-10-17",
   "metrics": [
     {
@@ -8,23 +8,23 @@
       "value": 0.036,
       "format": "pct",
       "decimals": 1,
-      "change_text": "4.2% the week ending 2026-10-03"
+      "change_text": "3.8% the week ending 2026-10-10"
     },
     {
       "id": "positivity_influenza",
       "label": "Influenza test positivity",
-      "value": 0.05,
+      "value": 0.057,
       "format": "pct",
       "decimals": 1,
-      "change_text": "3.9% the week ending 2026-10-03"
+      "change_text": "4.6% the week ending 2026-10-10"
     },
     {
       "id": "positivity_rsv",
       "label": "RSV test positivity",
-      "value": 0.007,
+      "value": 0.008,
       "format": "pct",
       "decimals": 1,
-      "change_text": "0.5% the week ending 2026-10-03"
+      "change_text": "0.7% the week ending 2026-10-10"
     },
     {
       "id": "hosp_combined",
@@ -57,12 +57,12 @@
     {
       "id": "ari_very_low",
       "label": "States and territories at Very Low ARI activity",
-      "value": 40
+      "value": 36
     },
     {
       "id": "ari_low",
       "label": "States and territories at Low ARI activity",
-      "value": 10
+      "value": 12
     }
   ]
 }
