@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-10-28T16:12:26Z",
+  "generated_at": "2026-10-29T16:18:15Z",
   "run": {
     "result": "alert",
-    "started_at": "2026-10-28T16:09:36Z",
-    "finished_at": "2026-10-28T16:12:26Z",
-    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/40723003314",
-    "commit": "7af5dbc302451e4cd466701bb5be1e9353377e55",
+    "started_at": "2026-10-29T16:15:51Z",
+    "finished_at": "2026-10-29T16:18:15Z",
+    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/40909629486",
+    "commit": "9f829e17086b8f3bacdc97c471907b1f109e0d0b",
     "steps": {
       "refresh": "success",
       "backtest": "success",
@@ -15,7 +15,7 @@
   },
   "eval": {
     "model": "gemini-3.5-flash-lite",
-    "date": "2026-10-28",
+    "date": "2026-10-29",
     "question_set": "cdc-q60-v1",
     "summary": {
       "question_set": "cdc-q60-v1",
@@ -23,10 +23,10 @@
       "numeric_accuracy": 89.6,
       "tool_choice": 100.0,
       "correct_refusals": 58.3,
-      "false_refusals": 6.2,
-      "grounded_answers": 37.8,
-      "median_s": 1.83,
-      "p95_s": 2.47,
+      "false_refusals": 8.3,
+      "grounded_answers": 31.1,
+      "median_s": 1.56,
+      "p95_s": 2.24,
       "median_input_tokens": null,
       "median_output_tokens": null
     },
@@ -57,13 +57,13 @@
       {
         "metric": "grounded_answers",
         "baseline": 100.0,
-        "value": 37.8,
-        "change": -62.2
+        "value": 31.1,
+        "change": -68.9
       }
     ]
   },
   "backtest": {
-    "run_at": "2026-10-28T16:10:31Z",
+    "run_at": "2026-10-29T16:16:36Z",
     "data_through": "2026-10-17",
     "notes": [
       "LSTM on COVID-NET does not beat last week's value at any horizon.",
@@ -84,7 +84,7 @@
         "dataset": null,
         "legacy": null,
         "latest_week": "2026-10-17",
-        "age_days": 11,
+        "age_days": 12,
         "stale": false
       },
       {
@@ -92,7 +92,7 @@
         "dataset": null,
         "legacy": null,
         "latest_week": "2026-10-17",
-        "age_days": 11,
+        "age_days": 12,
         "stale": false
       },
       {
@@ -100,7 +100,7 @@
         "dataset": null,
         "legacy": null,
         "latest_week": "2026-10-17",
-        "age_days": 11,
+        "age_days": 12,
         "stale": false
       },
       {
@@ -108,7 +108,7 @@
         "dataset": "atcp-73re",
         "legacy": false,
         "latest_week": "2026-10-17",
-        "age_days": 11,
+        "age_days": 12,
         "stale": false
       },
       {
@@ -130,7 +130,7 @@
     {
       "kind": "score_drop",
       "title": "Eval score drop: grounded_answers",
-      "detail": "grounded_answers was 37.8 against a baseline of 100.0 (-62.2 points; alert threshold 5)."
+      "detail": "grounded_answers was 31.1 against a baseline of 100.0 (-68.9 points; alert threshold 5)."
     }
   ]
 }
