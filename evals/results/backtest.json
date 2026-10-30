@@ -1,17 +1,16 @@
 {
-  "run_at": "2026-10-29T16:16:36Z",
+  "run_at": "2026-10-30T16:01:11Z",
   "target": "Weekly RESP-NET hospitalization rate, overall population, 1-4 weeks ahead",
   "mae_unit": "rate per 100,000",
   "n_origins": 12,
-  "data_through": "2026-10-17",
+  "data_through": "2026-10-24",
   "coverage_note": "Share of actual values inside the app's band (validation MAE times a growth factor).",
   "series": {
     "COVID-NET": {
-      "weeks": 164,
+      "weeks": 165,
       "first_week": "2023-09-02",
-      "last_week": "2026-10-17",
+      "last_week": "2026-10-24",
       "origins": [
-        "2026-07-04",
         "2026-07-11",
         "2026-07-18",
         "2026-07-25",
@@ -22,15 +21,15 @@
         "2026-08-29",
         "2026-09-05",
         "2026-09-12",
-        "2026-09-19"
+        "2026-09-19",
+        "2026-09-26"
       ]
     },
     "FluSurv-NET": {
-      "weeks": 138,
+      "weeks": 139,
       "first_week": "2023-10-07",
-      "last_week": "2026-10-17",
+      "last_week": "2026-10-24",
       "origins": [
-        "2026-07-04",
         "2026-07-11",
         "2026-07-18",
         "2026-07-25",
@@ -41,15 +40,15 @@
         "2026-08-29",
         "2026-09-05",
         "2026-09-12",
-        "2026-09-19"
+        "2026-09-19",
+        "2026-09-26"
       ]
     },
     "RSV-NET": {
-      "weeks": 164,
+      "weeks": 165,
       "first_week": "2023-09-02",
-      "last_week": "2026-10-17",
+      "last_week": "2026-10-24",
       "origins": [
-        "2026-07-04",
         "2026-07-11",
         "2026-07-18",
         "2026-07-25",
@@ -60,15 +59,15 @@
         "2026-08-29",
         "2026-09-05",
         "2026-09-12",
-        "2026-09-19"
+        "2026-09-19",
+        "2026-09-26"
       ]
     },
     "Combined": {
-      "weeks": 164,
+      "weeks": 165,
       "first_week": "2023-09-02",
-      "last_week": "2026-10-17",
+      "last_week": "2026-10-24",
       "origins": [
-        "2026-07-04",
         "2026-07-11",
         "2026-07-18",
         "2026-07-25",
@@ -79,7 +78,8 @@
         "2026-08-29",
         "2026-09-05",
         "2026-09-12",
-        "2026-09-19"
+        "2026-09-19",
+        "2026-09-26"
       ]
     }
   },
@@ -89,27 +89,27 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.312,
-          "wmape": 0.467,
+          "mae": 0.337,
+          "wmape": 0.449,
           "coverage": 0.333
         },
         {
           "h": 2,
-          "mae": 0.345,
-          "wmape": 0.46,
-          "coverage": 0.5
-        },
-        {
-          "h": 3,
-          "mae": 0.405,
-          "wmape": 0.496,
+          "mae": 0.385,
+          "wmape": 0.462,
           "coverage": 0.417
         },
         {
+          "h": 3,
+          "mae": 0.436,
+          "wmape": 0.489,
+          "coverage": 0.333
+        },
+        {
           "h": 4,
-          "mae": 0.434,
-          "wmape": 0.506,
-          "coverage": 0.583
+          "mae": 0.454,
+          "wmape": 0.491,
+          "coverage": 0.5
         }
       ]
     },
@@ -118,27 +118,27 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.588,
-          "wmape": 0.882,
-          "coverage": 0.417
+          "mae": 0.52,
+          "wmape": 0.694,
+          "coverage": 0.5
         },
         {
           "h": 2,
-          "mae": 0.801,
-          "wmape": 1.068,
-          "coverage": 0.333
+          "mae": 0.741,
+          "wmape": 0.889,
+          "coverage": 0.417
         },
         {
           "h": 3,
-          "mae": 0.968,
-          "wmape": 1.185,
-          "coverage": 0.167
+          "mae": 0.879,
+          "wmape": 0.986,
+          "coverage": 0.25
         },
         {
           "h": 4,
-          "mae": 1.041,
-          "wmape": 1.213,
-          "coverage": 0.333
+          "mae": 0.953,
+          "wmape": 1.03,
+          "coverage": 0.417
         }
       ]
     },
@@ -148,25 +148,25 @@
         {
           "h": 1,
           "mae": 0.083,
-          "wmape": 0.125,
+          "wmape": 0.111,
           "coverage": null
         },
         {
           "h": 2,
           "mae": 0.167,
-          "wmape": 0.222,
+          "wmape": 0.2,
           "coverage": null
         },
         {
           "h": 3,
-          "mae": 0.25,
-          "wmape": 0.306,
+          "mae": 0.258,
+          "wmape": 0.29,
           "coverage": null
         },
         {
           "h": 4,
-          "mae": 0.342,
-          "wmape": 0.398,
+          "mae": 0.358,
+          "wmape": 0.387,
           "coverage": null
         }
       ]
@@ -176,27 +176,27 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.228,
-          "wmape": 0.884,
-          "coverage": 0.583
+          "mae": 0.303,
+          "wmape": 0.908,
+          "coverage": 0.5
         },
         {
           "h": 2,
-          "mae": 0.289,
-          "wmape": 0.866,
-          "coverage": 0.667
-        },
-        {
-          "h": 3,
-          "mae": 0.371,
-          "wmape": 0.89,
+          "mae": 0.368,
+          "wmape": 0.883,
           "coverage": 0.583
         },
         {
-          "h": 4,
-          "mae": 0.436,
-          "wmape": 0.872,
+          "h": 3,
+          "mae": 0.47,
+          "wmape": 0.881,
           "coverage": 0.5
+        },
+        {
+          "h": 4,
+          "mae": 0.566,
+          "wmape": 0.893,
+          "coverage": 0.417
         }
       ]
     },
@@ -205,26 +205,26 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.162,
-          "wmape": 0.629,
+          "mae": 0.15,
+          "wmape": 0.449,
           "coverage": 0.917
         },
         {
           "h": 2,
-          "mae": 0.379,
-          "wmape": 1.136,
-          "coverage": 0.583
+          "mae": 0.314,
+          "wmape": 0.754,
+          "coverage": 0.667
         },
         {
           "h": 3,
-          "mae": 0.603,
-          "wmape": 1.447,
+          "mae": 0.53,
+          "wmape": 0.994,
           "coverage": 0.5
         },
         {
           "h": 4,
-          "mae": 0.796,
-          "wmape": 1.591,
+          "mae": 0.702,
+          "wmape": 1.109,
           "coverage": 0.417
         }
       ]
@@ -234,26 +234,26 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.067,
-          "wmape": 0.258,
+          "mae": 0.075,
+          "wmape": 0.225,
           "coverage": null
         },
         {
           "h": 2,
-          "mae": 0.142,
-          "wmape": 0.425,
+          "mae": 0.158,
+          "wmape": 0.38,
           "coverage": null
         },
         {
           "h": 3,
-          "mae": 0.225,
-          "wmape": 0.54,
+          "mae": 0.275,
+          "wmape": 0.516,
           "coverage": null
         },
         {
           "h": 4,
-          "mae": 0.308,
-          "wmape": 0.617,
+          "mae": 0.375,
+          "wmape": 0.592,
           "coverage": null
         }
       ]
@@ -263,26 +263,26 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.057,
-          "wmape": 2.281,
+          "mae": 0.061,
+          "wmape": 2.43,
           "coverage": 1.0
         },
         {
           "h": 2,
-          "mae": 0.07,
-          "wmape": 2.806,
+          "mae": 0.066,
+          "wmape": 1.995,
           "coverage": 1.0
         },
         {
           "h": 3,
-          "mae": 0.07,
-          "wmape": 2.093,
+          "mae": 0.067,
+          "wmape": 1.604,
           "coverage": 1.0
         },
         {
           "h": 4,
-          "mae": 0.069,
-          "wmape": 1.665,
+          "mae": 0.071,
+          "wmape": 1.418,
           "coverage": 1.0
         }
       ]
@@ -292,27 +292,27 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.05,
-          "wmape": 2.02,
+          "mae": 0.053,
+          "wmape": 2.131,
           "coverage": 0.75
         },
         {
           "h": 2,
-          "mae": 0.087,
-          "wmape": 3.498,
-          "coverage": 0.583
+          "mae": 0.099,
+          "wmape": 2.971,
+          "coverage": 0.5
         },
         {
           "h": 3,
-          "mae": 0.098,
-          "wmape": 2.944,
+          "mae": 0.103,
+          "wmape": 2.465,
           "coverage": 0.75
         },
         {
           "h": 4,
-          "mae": 0.089,
-          "wmape": 2.143,
-          "coverage": 0.75
+          "mae": 0.1,
+          "wmape": 2.004,
+          "coverage": 0.667
         }
       ]
     },
@@ -321,26 +321,26 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.042,
-          "wmape": 1.667,
+          "mae": 0.05,
+          "wmape": 2.0,
           "coverage": null
         },
         {
           "h": 2,
           "mae": 0.058,
-          "wmape": 2.333,
+          "wmape": 1.75,
           "coverage": null
         },
         {
           "h": 3,
           "mae": 0.05,
-          "wmape": 1.5,
+          "wmape": 1.2,
           "coverage": null
         },
         {
           "h": 4,
           "mae": 0.042,
-          "wmape": 1.0,
+          "wmape": 0.833,
           "coverage": null
         }
       ]
@@ -350,27 +350,27 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.644,
-          "wmape": 0.678,
-          "coverage": 0.833
+          "mae": 0.786,
+          "wmape": 0.709,
+          "coverage": 0.75
         },
         {
           "h": 2,
-          "mae": 0.82,
-          "wmape": 0.745,
-          "coverage": 0.833
+          "mae": 0.957,
+          "wmape": 0.746,
+          "coverage": 0.75
         },
         {
           "h": 3,
-          "mae": 1.007,
-          "wmape": 0.8,
+          "mae": 1.141,
+          "wmape": 0.773,
           "coverage": 0.75
         },
         {
           "h": 4,
-          "mae": 1.081,
-          "wmape": 0.777,
-          "coverage": 1.0
+          "mae": 1.291,
+          "wmape": 0.799,
+          "coverage": 0.833
         }
       ]
     },
@@ -379,27 +379,27 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.578,
-          "wmape": 0.609,
+          "mae": 0.537,
+          "wmape": 0.484,
           "coverage": 0.917
         },
         {
           "h": 2,
-          "mae": 0.979,
-          "wmape": 0.89,
+          "mae": 0.906,
+          "wmape": 0.706,
           "coverage": 0.417
         },
         {
           "h": 3,
-          "mae": 1.278,
-          "wmape": 1.015,
+          "mae": 1.207,
+          "wmape": 0.819,
           "coverage": 0.333
         },
         {
           "h": 4,
-          "mae": 1.571,
-          "wmape": 1.129,
-          "coverage": 0.333
+          "mae": 1.447,
+          "wmape": 0.895,
+          "coverage": 0.417
         }
       ]
     },
@@ -408,26 +408,26 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.15,
-          "wmape": 0.158,
+          "mae": 0.158,
+          "wmape": 0.143,
           "coverage": null
         },
         {
           "h": 2,
-          "mae": 0.3,
-          "wmape": 0.273,
+          "mae": 0.333,
+          "wmape": 0.26,
           "coverage": null
         },
         {
           "h": 3,
-          "mae": 0.458,
-          "wmape": 0.364,
+          "mae": 0.525,
+          "wmape": 0.356,
           "coverage": null
         },
         {
           "h": 4,
-          "mae": 0.592,
-          "wmape": 0.425,
+          "mae": 0.667,
+          "wmape": 0.412,
           "coverage": null
         }
       ]
