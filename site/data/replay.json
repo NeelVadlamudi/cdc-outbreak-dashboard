@@ -1,17 +1,17 @@
 {
- "recorded_at": "2026-11-01T16:09:27Z",
+ "recorded_at": "2026-11-02T19:38:26Z",
  "answers": [
   {
    "question": "What was COVID-19 test positivity for the latest week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: test_positivity (latest 2026-10-10). Note: The test positivity data is out of date and its latest week is 2026-10-10. For the week ending October 10, 2026, the COVID-19 test positivity was 3.6%.",
+    "answer": "Warning: this data is more than 14 days old: test_positivity (latest 2026-10-10). Note: The data is out of date, with its latest week ending on 2026-10-10. For the week ending October 10, 2026, the COVID-19 test positivity was 3.6%.",
     "tool_calls": [
      {
       "tool": "get_data_freshness",
       "inputs": {},
       "rows_returned": 5,
-      "elapsed_s": 0.018,
+      "elapsed_s": 0.025,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "all",
@@ -19,25 +19,25 @@
         {
          "table": "ari_activity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "hospitalization_rates",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "test_positivity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "wastewater_sites",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true,
          "dataset": "atcp-73re",
          "legacy": false
@@ -45,7 +45,7 @@
         {
          "table": "wastewater_sites",
          "latest_week": "2025-09-07",
-         "age_days": 420,
+         "age_days": 421,
          "stale": true,
          "dataset": "2ew6-ywp6 (legacy)",
          "legacy": true
@@ -59,7 +59,7 @@
        "pathogen": "COVID-19"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.011,
+      "elapsed_s": 0.016,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "test_positivity",
@@ -74,7 +74,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.989,
+    "elapsed_s": 3.142,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -91,16 +91,16 @@
    "question": "What was influenza test positivity for the week ending October 3, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: test_positivity (latest 2026-10-10). For the week ending October 3, 2026, influenza test positivity was 3.9%. This is based on CDC respiratory virus surveillance data for that week.",
+    "answer": "Warning: this data is more than 14 days old: test_positivity (latest 2026-10-10). For the week ending October 3, 2026, the influenza test positivity was 3.9%. This is based on CDC respiratory virus surveillance data for that week.",
     "tool_calls": [
      {
       "tool": "get_test_positivity",
       "inputs": {
-       "pathogen": "Influenza",
-       "week": "2026-10-03"
+       "week": "2026-10-03",
+       "pathogen": "Influenza"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.013,
+      "elapsed_s": 0.018,
       "output": {
        "as_of": "2026-10-03",
        "source_table": "test_positivity",
@@ -115,7 +115,7 @@
      }
     ],
     "as_of": "2026-10-03",
-    "elapsed_s": 1.416,
+    "elapsed_s": 1.436,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -131,14 +131,14 @@
   {
    "question": "What was RSV test positivity for the latest week?",
    "response": {
-    "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: test_positivity (latest 2026-10-10). The data is out of date, with its latest week ending 2026-10-10. For the week ending October 10, 2026, RSV test positivity was 0.7%.",
+    "status": "unverified",
+    "answer": "I could not verify that figure.",
     "tool_calls": [
      {
       "tool": "get_data_freshness",
       "inputs": {},
       "rows_returned": 5,
-      "elapsed_s": 0.015,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "all",
@@ -146,25 +146,25 @@
         {
          "table": "ari_activity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "hospitalization_rates",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "test_positivity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "wastewater_sites",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true,
          "dataset": "atcp-73re",
          "legacy": false
@@ -172,7 +172,7 @@
         {
          "table": "wastewater_sites",
          "latest_week": "2025-09-07",
-         "age_days": 420,
+         "age_days": 421,
          "stale": true,
          "dataset": "2ew6-ywp6 (legacy)",
          "legacy": true
@@ -186,7 +186,7 @@
        "pathogen": "RSV"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.011,
+      "elapsed_s": 0.016,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "test_positivity",
@@ -201,24 +201,26 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.364,
+    "elapsed_s": 1.579,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
-     "passed": true,
-     "unverified": [],
+     "passed": false,
+     "unverified": [
+      "14"
+     ],
      "stale_tables": [
       "test_positivity"
      ]
     }
    },
-   "correct": true
+   "correct": false
   },
   {
    "question": "By how many percentage points did COVID-19 test positivity change from the week ending September 26 to the week ending October 10, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: test_positivity (latest 2026-10-10). Based on data for the week ending October 10, 2026, COVID-19 test positivity was 3.6%, down from 4.7% for the week ending September 26, 2026. This represents a decrease of 1.1 percentage points.",
+    "answer": "Warning: this data is more than 14 days old: test_positivity (latest 2026-10-10). Based on data from the week ending October 10, 2026 (noting that the data is out of date and latest loaded for the week ending October 10, 2026), COVID-19 test positivity changed from 4.7% for the week ending September 26, 2026, to 3.6% for the week ending October 10, 2026. This represents a decrease of 1.1 percentage points.",
     "tool_calls": [
      {
       "tool": "get_test_positivity",
@@ -227,7 +229,7 @@
        "pathogen": "COVID-19"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.013,
+      "elapsed_s": 0.018,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "test_positivity",
@@ -247,7 +249,7 @@
        "pathogen": "COVID-19"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.011,
+      "elapsed_s": 0.015,
       "output": {
        "as_of": "2026-09-26",
        "source_table": "test_positivity",
@@ -259,10 +261,56 @@
         }
        ]
       }
+     },
+     {
+      "tool": "get_data_freshness",
+      "inputs": {},
+      "rows_returned": 5,
+      "elapsed_s": 0.017,
+      "output": {
+       "as_of": "2026-10-10",
+       "source_table": "all",
+       "rows": [
+        {
+         "table": "ari_activity",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "hospitalization_rates",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "test_positivity",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "wastewater_sites",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true,
+         "dataset": "atcp-73re",
+         "legacy": false
+        },
+        {
+         "table": "wastewater_sites",
+         "latest_week": "2025-09-07",
+         "age_days": 421,
+         "stale": true,
+         "dataset": "2ew6-ywp6 (legacy)",
+         "legacy": true
+        }
+       ]
+      }
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.673,
+    "elapsed_s": 1.628,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -279,16 +327,61 @@
    "question": "How many states or territories were at Very Low respiratory illness activity in the latest week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: ari_activity (latest 2026-10-10). For the week ending October 10, 2026, there were 40 states or territories at Very Low acute respiratory illness activity.",
+    "answer": "Warning: this data is more than 14 days old: ari_activity (latest 2026-10-10). Note: The data is out of date; its latest week is 2026-10-10. Based on the week ending October 10, 2026, there were 40 states or territories at Very Low acute respiratory illness activity.",
     "tool_calls": [
+     {
+      "tool": "get_data_freshness",
+      "inputs": {},
+      "rows_returned": 5,
+      "elapsed_s": 0.02,
+      "output": {
+       "as_of": "2026-10-10",
+       "source_table": "all",
+       "rows": [
+        {
+         "table": "ari_activity",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "hospitalization_rates",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "test_positivity",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "wastewater_sites",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true,
+         "dataset": "atcp-73re",
+         "legacy": false
+        },
+        {
+         "table": "wastewater_sites",
+         "latest_week": "2025-09-07",
+         "age_days": 421,
+         "stale": true,
+         "dataset": "2ew6-ywp6 (legacy)",
+         "legacy": true
+        }
+       ]
+      }
+     },
      {
       "tool": "list_states_at_level",
       "inputs": {
-       "level": "Very Low",
-       "week": null
+       "level": "Very Low"
       },
       "rows_returned": 40,
-      "elapsed_s": 0.013,
+      "elapsed_s": 0.015,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "ari_activity",
@@ -419,7 +512,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.321,
+    "elapsed_s": 1.513,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -435,14 +528,14 @@
   {
    "question": "How many states or territories were at Low respiratory illness activity in the latest week?",
    "response": {
-    "status": "unverified",
-    "answer": "I could not verify that figure.",
+    "status": "refused",
+    "answer": "Warning: this data is more than 14 days old: ari_activity (latest 2026-10-10). Note: The data is out of date; its latest week is 2026-10-10. Based on the week ending 2026-10-10, there were 10 states or territories at Low acute respiratory illness activity: Alabama, Alaska, Hawaii, Louisiana, New Hampshire, North Dakota, Ohio, South Dakota, Texas, and Wyoming.",
     "tool_calls": [
      {
       "tool": "get_data_freshness",
       "inputs": {},
       "rows_returned": 5,
-      "elapsed_s": 0.015,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "all",
@@ -450,25 +543,25 @@
         {
          "table": "ari_activity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "hospitalization_rates",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "test_positivity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "wastewater_sites",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true,
          "dataset": "atcp-73re",
          "legacy": false
@@ -476,7 +569,7 @@
         {
          "table": "wastewater_sites",
          "latest_week": "2025-09-07",
-         "age_days": 420,
+         "age_days": 421,
          "stale": true,
          "dataset": "2ew6-ywp6 (legacy)",
          "legacy": true
@@ -491,7 +584,7 @@
        "level": "Low"
       },
       "rows_returned": 10,
-      "elapsed_s": 0.01,
+      "elapsed_s": 0.015,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "ari_activity",
@@ -532,36 +625,34 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.362,
+    "elapsed_s": 1.423,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
-     "passed": false,
-     "unverified": [
-      "14"
-     ],
+     "passed": true,
+     "unverified": [],
      "stale_tables": [
       "ari_activity"
      ]
     }
    },
-   "correct": false
+   "correct": true
   },
   {
    "question": "What was the overall weekly COVID-19 hospitalization rate per 100,000 (COVID-NET) for the week ending October 10, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). For the week ending October 10, 2026, the overall weekly COVID-19 hospitalization rate per 100,000 (COVID-NET) was 0.8. Note that the data is out of date, with a freshness age of 22 days.",
+    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). For the week ending October 10, 2026, the overall weekly COVID-19 hospitalization rate (COVID-NET) was 0.8 per 100,000. Note that the data is out of date, with an age of 23 days.",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
-       "weeks": 10,
        "age_group": "Overall",
+       "weeks": 10,
        "network": "COVID-NET"
       },
       "rows_returned": 10,
-      "elapsed_s": 0.016,
+      "elapsed_s": 0.021,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -626,7 +717,7 @@
       "tool": "get_data_freshness",
       "inputs": {},
       "rows_returned": 5,
-      "elapsed_s": 0.012,
+      "elapsed_s": 0.017,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "all",
@@ -634,25 +725,25 @@
         {
          "table": "ari_activity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "hospitalization_rates",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "test_positivity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "wastewater_sites",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true,
          "dataset": "atcp-73re",
          "legacy": false
@@ -660,7 +751,7 @@
         {
          "table": "wastewater_sites",
          "latest_week": "2025-09-07",
-         "age_days": 420,
+         "age_days": 421,
          "stale": true,
          "dataset": "2ew6-ywp6 (legacy)",
          "legacy": true
@@ -670,7 +761,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.497,
+    "elapsed_s": 1.547,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -687,17 +778,17 @@
    "question": "What was the overall weekly flu hospitalization rate per 100,000 (FluSurv-NET) for the week ending October 3, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). Based on FluSurv-NET data for the week ending October 3, 2026, the overall weekly influenza hospitalization rate was 0.9 per 100,000.",
+    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). Based on data for the week ending October 3, 2026, the overall weekly flu hospitalization rate per 100,000 (FluSurv-NET) was 0.9. Note that the hospitalization rates table is currently out of date, with its latest week being October 10, 2026 (23 days old).",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
-       "age_group": "Overall",
        "network": "FluSurv-NET",
-       "weeks": 4
+       "age_group": "Overall",
+       "weeks": 10
       },
-      "rows_returned": 4,
-      "elapsed_s": 0.016,
+      "rows_returned": 10,
+      "elapsed_s": 0.021,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -721,16 +812,92 @@
          "week_end": "2026-09-19",
          "rate_per_100k": 0.5,
          "cumulative_per_100k": 90.0
+        },
+        {
+         "week_end": "2026-09-12",
+         "rate_per_100k": 0.4,
+         "cumulative_per_100k": 89.0
+        },
+        {
+         "week_end": "2026-09-05",
+         "rate_per_100k": 0.3,
+         "cumulative_per_100k": 89.0
+        },
+        {
+         "week_end": "2026-08-29",
+         "rate_per_100k": 0.2,
+         "cumulative_per_100k": 88.0
+        },
+        {
+         "week_end": "2026-08-22",
+         "rate_per_100k": 0.2,
+         "cumulative_per_100k": 88.0
+        },
+        {
+         "week_end": "2026-08-15",
+         "rate_per_100k": 0.1,
+         "cumulative_per_100k": 88.0
+        },
+        {
+         "week_end": "2026-08-08",
+         "rate_per_100k": 0.1,
+         "cumulative_per_100k": 88.0
         }
        ],
        "network": "FluSurv-NET",
        "age_group": "Overall",
        "units": "rate per 100,000"
       }
+     },
+     {
+      "tool": "get_data_freshness",
+      "inputs": {},
+      "rows_returned": 5,
+      "elapsed_s": 0.017,
+      "output": {
+       "as_of": "2026-10-10",
+       "source_table": "all",
+       "rows": [
+        {
+         "table": "ari_activity",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "hospitalization_rates",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "test_positivity",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "wastewater_sites",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true,
+         "dataset": "atcp-73re",
+         "legacy": false
+        },
+        {
+         "table": "wastewater_sites",
+         "latest_week": "2025-09-07",
+         "age_days": 421,
+         "stale": true,
+         "dataset": "2ew6-ywp6 (legacy)",
+         "legacy": true
+        }
+       ]
+      }
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.202,
+    "elapsed_s": 1.351,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -746,18 +913,18 @@
   {
    "question": "What was the combined weekly hospitalization rate per 100,000 for COVID-19, flu and RSV for the week ending September 26, 2026?",
    "response": {
-    "status": "unverified",
-    "answer": "I could not verify that figure.",
+    "status": "refused",
+    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). Based on data for the week ending September 26, 2026, the combined weekly hospitalization rate per 100,000 for COVID-19, flu, and RSV was 2.",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
-       "weeks": 10,
+       "network": "Combined",
        "age_group": "Overall",
-       "network": "Combined"
+       "weeks": 4
       },
-      "rows_returned": 10,
-      "elapsed_s": 0.016,
+      "rows_returned": 4,
+      "elapsed_s": 0.021,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -781,119 +948,42 @@
          "week_end": "2026-09-19",
          "rate_per_100k": 1.7,
          "cumulative_per_100k": 177.0
-        },
-        {
-         "week_end": "2026-09-12",
-         "rate_per_100k": 1.5,
-         "cumulative_per_100k": 175.0
-        },
-        {
-         "week_end": "2026-09-05",
-         "rate_per_100k": 1.3,
-         "cumulative_per_100k": 174.0
-        },
-        {
-         "week_end": "2026-08-29",
-         "rate_per_100k": 1.0,
-         "cumulative_per_100k": 172.0
-        },
-        {
-         "week_end": "2026-08-22",
-         "rate_per_100k": 0.8,
-         "cumulative_per_100k": 171.0
-        },
-        {
-         "week_end": "2026-08-15",
-         "rate_per_100k": 0.7,
-         "cumulative_per_100k": 170.0
-        },
-        {
-         "week_end": "2026-08-08",
-         "rate_per_100k": 0.6,
-         "cumulative_per_100k": 170.0
         }
        ],
        "network": "Combined",
        "age_group": "Overall",
        "units": "rate per 100,000"
       }
-     },
-     {
-      "tool": "get_data_freshness",
-      "inputs": {},
-      "rows_returned": 5,
-      "elapsed_s": 0.012,
-      "output": {
-       "as_of": "2026-10-10",
-       "source_table": "all",
-       "rows": [
-        {
-         "table": "ari_activity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "hospitalization_rates",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "test_positivity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true,
-         "dataset": "atcp-73re",
-         "legacy": false
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2025-09-07",
-         "age_days": 420,
-         "stale": true,
-         "dataset": "2ew6-ywp6 (legacy)",
-         "legacy": true
-        }
-       ]
-      }
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.481,
+    "elapsed_s": 1.574,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
-     "passed": false,
-     "unverified": [
-      "14"
-     ],
+     "passed": true,
+     "unverified": [],
      "stale_tables": [
       "hospitalization_rates"
      ]
     }
    },
-   "correct": false
+   "correct": true
   },
   {
    "question": "What was the cumulative COVID-NET hospitalization rate per 100,000 for the 2025-26 season as of the week ending October 3, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). As of the week ending October 3, 2026, the cumulative COVID-NET hospitalization rate per 100,000 for the 2025-26 season was 45. Note that the hospitalization rates table is currently out of date with its latest week being 2026-10-10.",
+    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). As of the week ending October 3, 2026, the cumulative overall COVID-NET hospitalization rate for the 2025-26 season was 45 per 100,000. This is based on data for the week ending October 3, 2026.",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
+       "weeks": 10,
        "network": "COVID-NET"
       },
-      "rows_returned": 4,
-      "elapsed_s": 0.016,
+      "rows_returned": 10,
+      "elapsed_s": 0.021,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -917,62 +1007,46 @@
          "week_end": "2026-09-19",
          "rate_per_100k": 1.2,
          "cumulative_per_100k": 43.0
+        },
+        {
+         "week_end": "2026-09-12",
+         "rate_per_100k": 1.0,
+         "cumulative_per_100k": 42.0
+        },
+        {
+         "week_end": "2026-09-05",
+         "rate_per_100k": 1.0,
+         "cumulative_per_100k": 41.0
+        },
+        {
+         "week_end": "2026-08-29",
+         "rate_per_100k": 0.8,
+         "cumulative_per_100k": 40.0
+        },
+        {
+         "week_end": "2026-08-22",
+         "rate_per_100k": 0.6,
+         "cumulative_per_100k": 39.0
+        },
+        {
+         "week_end": "2026-08-15",
+         "rate_per_100k": 0.6,
+         "cumulative_per_100k": 38.0
+        },
+        {
+         "week_end": "2026-08-08",
+         "rate_per_100k": 0.4,
+         "cumulative_per_100k": 38.0
         }
        ],
        "network": "COVID-NET",
        "age_group": "Overall",
        "units": "rate per 100,000"
       }
-     },
-     {
-      "tool": "get_data_freshness",
-      "inputs": {},
-      "rows_returned": 5,
-      "elapsed_s": 0.012,
-      "output": {
-       "as_of": "2026-10-10",
-       "source_table": "all",
-       "rows": [
-        {
-         "table": "ari_activity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "hospitalization_rates",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "test_positivity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true,
-         "dataset": "atcp-73re",
-         "legacy": false
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2025-09-07",
-         "age_days": 420,
-         "stale": true,
-         "dataset": "2ew6-ywp6 (legacy)",
-         "legacy": true
-        }
-       ]
-      }
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.464,
+    "elapsed_s": 1.287,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -989,13 +1063,13 @@
    "question": "How many wastewater sites reported viral activity data for any pathogen nationally in the latest week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: wastewater_sites (latest 2026-10-10). Based on the data for the week ending 2026-10-10, there are a total of 811 national wastewater sites reporting activity data. Broken down by pathogen for that week, 797 sites reported for SARS-CoV-2, 726 for Influenza A virus, and 713 for RSV.",
+    "answer": "Warning: this data is more than 14 days old: wastewater_sites (latest 2026-10-10). Based on data for the week ending October 10, 2026, a total of 811 wastewater sites reported activity data nationally. Specifically, site counts by pathogen were 797 for SARS-CoV-2, 726 for Influenza A virus, and 713 for RSV.",
     "tool_calls": [
      {
       "tool": "get_wastewater",
       "inputs": {},
       "rows_returned": 3,
-      "elapsed_s": 0.021,
+      "elapsed_s": 0.029,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -1037,7 +1111,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.291,
+    "elapsed_s": 1.416,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1054,16 +1128,16 @@
    "question": "In the legacy NWSS SARS-CoV-2 wastewater metrics, which end on 2025-09-07, what was the median 15-day percent change across New York sites in that last week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: wastewater_sites (latest 2026-10-10). Based on the legacy NWSS SARS-CoV-2 metrics for the week ending 2025-09-07, the median 15-day percent change across New York sites was 31.5%. Note that the data is out of date, as the legacy dataset's latest week is 2025-09-07.",
+    "answer": "Warning: this data is more than 14 days old: wastewater_sites (latest 2026-10-10). In the legacy NWSS SARS-CoV-2 wastewater metrics for the week ending 2025-09-07, the median 15-day percent change across New York sites was 31.5%. This is based on data as of 2026-10-10.",
     "tool_calls": [
      {
       "tool": "get_wastewater",
       "inputs": {
-       "state": "New York",
-       "pathogen": "SARS-CoV-2"
+       "pathogen": "SARS-CoV-2",
+       "state": "New York"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.024,
+      "elapsed_s": 0.033,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -1088,56 +1162,10 @@
         "note": "Legacy NWSS SARS-CoV-2 metrics; CDC stopped updating this file after 2025-09-07."
        }
       }
-     },
-     {
-      "tool": "get_data_freshness",
-      "inputs": {},
-      "rows_returned": 5,
-      "elapsed_s": 0.012,
-      "output": {
-       "as_of": "2026-10-10",
-       "source_table": "all",
-       "rows": [
-        {
-         "table": "ari_activity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "hospitalization_rates",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "test_positivity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true,
-         "dataset": "atcp-73re",
-         "legacy": false
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2025-09-07",
-         "age_days": 420,
-         "stale": true,
-         "dataset": "2ew6-ywp6 (legacy)",
-         "legacy": true
-        }
-       ]
-      }
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.364,
+    "elapsed_s": 1.379,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1159,11 +1187,11 @@
      {
       "tool": "get_test_positivity",
       "inputs": {
-       "week": "2026-09-26",
-       "pathogen": "COVID-19"
+       "pathogen": "COVID-19",
+       "week": "2026-09-26"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.014,
+      "elapsed_s": 0.018,
       "output": {
        "as_of": "2026-09-26",
        "source_table": "test_positivity",
@@ -1178,7 +1206,7 @@
      }
     ],
     "as_of": "2026-09-26",
-    "elapsed_s": 1.148,
+    "elapsed_s": 1.336,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1194,14 +1222,14 @@
   {
    "question": "What was influenza test positivity for the latest week?",
    "response": {
-    "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: test_positivity (latest 2026-10-10). Note that the data is out of date (latest week is 2026-10-10, 22 days old). For the week ending October 10, 2026, the influenza test positivity was 5%.",
+    "status": "unverified",
+    "answer": "I could not verify that figure.",
     "tool_calls": [
      {
       "tool": "get_data_freshness",
       "inputs": {},
       "rows_returned": 5,
-      "elapsed_s": 0.014,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "all",
@@ -1209,25 +1237,25 @@
         {
          "table": "ari_activity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "hospitalization_rates",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "test_positivity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "wastewater_sites",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true,
          "dataset": "atcp-73re",
          "legacy": false
@@ -1235,7 +1263,7 @@
         {
          "table": "wastewater_sites",
          "latest_week": "2025-09-07",
-         "age_days": 420,
+         "age_days": 421,
          "stale": true,
          "dataset": "2ew6-ywp6 (legacy)",
          "legacy": true
@@ -1249,7 +1277,7 @@
        "pathogen": "Influenza"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.011,
+      "elapsed_s": 0.016,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "test_positivity",
@@ -1264,79 +1292,35 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.347,
+    "elapsed_s": 1.463,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
-     "passed": true,
-     "unverified": [],
+     "passed": false,
+     "unverified": [
+      "14"
+     ],
      "stale_tables": [
       "test_positivity"
      ]
     }
    },
-   "correct": true
+   "correct": false
   },
   {
    "question": "What was RSV test positivity for the week ending October 3, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: test_positivity (latest 2026-10-10). For the week ending October 3, 2026, RSV test positivity was 0.5%. Note that the test positivity data is out of date, with its latest week being October 10, 2026.",
+    "answer": "Warning: this data is more than 14 days old: test_positivity (latest 2026-10-10). For the week ending October 3, 2026, the RSV test positivity was 0.5%. Note that the data is out of date as of the latest check.",
     "tool_calls": [
-     {
-      "tool": "get_data_freshness",
-      "inputs": {},
-      "rows_returned": 5,
-      "elapsed_s": 0.015,
-      "output": {
-       "as_of": "2026-10-10",
-       "source_table": "all",
-       "rows": [
-        {
-         "table": "ari_activity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "hospitalization_rates",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "test_positivity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true,
-         "dataset": "atcp-73re",
-         "legacy": false
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2025-09-07",
-         "age_days": 420,
-         "stale": true,
-         "dataset": "2ew6-ywp6 (legacy)",
-         "legacy": true
-        }
-       ]
-      }
-     },
      {
       "tool": "get_test_positivity",
       "inputs": {
-       "week": "2026-10-03",
-       "pathogen": "RSV"
+       "pathogen": "RSV",
+       "week": "2026-10-03"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.011,
+      "elapsed_s": 0.018,
       "output": {
        "as_of": "2026-10-03",
        "source_table": "test_positivity",
@@ -1348,10 +1332,56 @@
         }
        ]
       }
+     },
+     {
+      "tool": "get_data_freshness",
+      "inputs": {},
+      "rows_returned": 5,
+      "elapsed_s": 0.017,
+      "output": {
+       "as_of": "2026-10-10",
+       "source_table": "all",
+       "rows": [
+        {
+         "table": "ari_activity",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "hospitalization_rates",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "test_positivity",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "wastewater_sites",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true,
+         "dataset": "atcp-73re",
+         "legacy": false
+        },
+        {
+         "table": "wastewater_sites",
+         "latest_week": "2025-09-07",
+         "age_days": 421,
+         "stale": true,
+         "dataset": "2ew6-ywp6 (legacy)",
+         "legacy": true
+        }
+       ]
+      }
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.025,
+    "elapsed_s": 1.816,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1368,7 +1398,7 @@
    "question": "What was COVID-19 test positivity for the week ending August 1, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: test_positivity (latest 2026-10-10). For the week ending August 1, 2026, the COVID-19 test positivity was 3.2%. Please note that the test positivity table is currently out of date, with its latest loaded week being October 10, 2026.",
+    "answer": "Warning: this data is more than 14 days old: test_positivity (latest 2026-10-10). For the week ending August 1, 2026, COVID-19 test positivity was 3.2%. This is based on CDC surveillance data for that week.",
     "tool_calls": [
      {
       "tool": "get_test_positivity",
@@ -1377,7 +1407,7 @@
        "pathogen": "COVID-19"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.014,
+      "elapsed_s": 0.018,
       "output": {
        "as_of": "2026-08-01",
        "source_table": "test_positivity",
@@ -1389,56 +1419,10 @@
         }
        ]
       }
-     },
-     {
-      "tool": "get_data_freshness",
-      "inputs": {},
-      "rows_returned": 5,
-      "elapsed_s": 0.012,
-      "output": {
-       "as_of": "2026-10-10",
-       "source_table": "all",
-       "rows": [
-        {
-         "table": "ari_activity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "hospitalization_rates",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "test_positivity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true,
-         "dataset": "atcp-73re",
-         "legacy": false
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2025-09-07",
-         "age_days": 420,
-         "stale": true,
-         "dataset": "2ew6-ywp6 (legacy)",
-         "legacy": true
-        }
-       ]
-      }
      }
     ],
-    "as_of": "2026-10-10",
-    "elapsed_s": 1.437,
+    "as_of": "2026-08-01",
+    "elapsed_s": 1.586,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1464,7 +1448,7 @@
        "week": "2026-07-25"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.014,
+      "elapsed_s": 0.018,
       "output": {
        "as_of": "2026-07-25",
        "source_table": "test_positivity",
@@ -1479,7 +1463,7 @@
      }
     ],
     "as_of": "2026-07-25",
-    "elapsed_s": 1.286,
+    "elapsed_s": 1.31,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1496,7 +1480,7 @@
    "question": "What was RSV test positivity for the week ending September 5, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: test_positivity (latest 2026-10-10). For the week ending September 5, 2026, RSV test positivity was 0.5%. This is based on CDC surveillance data for that week.",
+    "answer": "Warning: this data is more than 14 days old: test_positivity (latest 2026-10-10). For the week ending September 5, 2026, the RSV test positivity was 0.5%. This information is based on CDC surveillance data for that week.",
     "tool_calls": [
      {
       "tool": "get_test_positivity",
@@ -1505,7 +1489,7 @@
        "pathogen": "RSV"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.014,
+      "elapsed_s": 0.018,
       "output": {
        "as_of": "2026-09-05",
        "source_table": "test_positivity",
@@ -1537,17 +1521,17 @@
    "question": "What was the weekly COVID-NET hospitalization rate per 100,000 for people aged 65 and older in the week ending October 10, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). Note: The data is out of date and its latest week is 2026-10-10. For the week ending October 10, 2026, the weekly COVID-NET hospitalization rate per 100,000 for people aged 65 and older was 3.",
+    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). For the week ending October 10, 2026, the weekly COVID-NET hospitalization rate per 100,000 for people aged 65 and older was 3. This is based on data for the week-ending date of October 10, 2026.",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
-       "weeks": 10,
+       "weeks": 4,
        "network": "COVID-NET",
        "age_group": "65+ yr"
       },
-      "rows_returned": 10,
-      "elapsed_s": 0.015,
+      "rows_returned": 4,
+      "elapsed_s": 0.021,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -1571,92 +1555,16 @@
          "week_end": "2026-09-19",
          "rate_per_100k": 4.2,
          "cumulative_per_100k": 161.0
-        },
-        {
-         "week_end": "2026-09-12",
-         "rate_per_100k": 4.0,
-         "cumulative_per_100k": 157.0
-        },
-        {
-         "week_end": "2026-09-05",
-         "rate_per_100k": 3.5,
-         "cumulative_per_100k": 153.0
-        },
-        {
-         "week_end": "2026-08-29",
-         "rate_per_100k": 2.5,
-         "cumulative_per_100k": 149.0
-        },
-        {
-         "week_end": "2026-08-22",
-         "rate_per_100k": 2.1,
-         "cumulative_per_100k": 147.0
-        },
-        {
-         "week_end": "2026-08-15",
-         "rate_per_100k": 2.0,
-         "cumulative_per_100k": 145.0
-        },
-        {
-         "week_end": "2026-08-08",
-         "rate_per_100k": 1.6,
-         "cumulative_per_100k": 143.0
         }
        ],
        "network": "COVID-NET",
        "age_group": "65+ yr",
        "units": "rate per 100,000"
       }
-     },
-     {
-      "tool": "get_data_freshness",
-      "inputs": {},
-      "rows_returned": 5,
-      "elapsed_s": 0.012,
-      "output": {
-       "as_of": "2026-10-10",
-       "source_table": "all",
-       "rows": [
-        {
-         "table": "ari_activity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "hospitalization_rates",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "test_positivity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true,
-         "dataset": "atcp-73re",
-         "legacy": false
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2025-09-07",
-         "age_days": 420,
-         "stale": true,
-         "dataset": "2ew6-ywp6 (legacy)",
-         "legacy": true
-        }
-       ]
-      }
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.331,
+    "elapsed_s": 1.345,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1673,17 +1581,17 @@
    "question": "What was the weekly FluSurv-NET hospitalization rate per 100,000 for people aged 65 and older in the week ending October 10, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). The weekly FluSurv-NET hospitalization rate for people aged 65 and older was 2.3 per 100,000 for the week ending October 10, 2026. This answer is based on data as of the week ending October 10, 2026, though the underlying data table is currently out of date.",
+    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). For the week ending October 10, 2026, the weekly FluSurv-NET hospitalization rate for people aged 65 and older was 2.3 per 100,000. Please note that the hospitalization_rates table is out of date (its latest week is 2026-10-10, which is 23 days old).",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
-       "weeks": 5,
-       "age_group": "65+ yr",
-       "network": "FluSurv-NET"
+       "weeks": 10,
+       "network": "FluSurv-NET",
+       "age_group": "65+ yr"
       },
-      "rows_returned": 5,
-      "elapsed_s": 0.016,
+      "rows_returned": 10,
+      "elapsed_s": 0.021,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -1712,6 +1620,31 @@
          "week_end": "2026-09-12",
          "rate_per_100k": 1.3,
          "cumulative_per_100k": 271.0
+        },
+        {
+         "week_end": "2026-09-05",
+         "rate_per_100k": 1.2,
+         "cumulative_per_100k": 270.0
+        },
+        {
+         "week_end": "2026-08-29",
+         "rate_per_100k": 0.6,
+         "cumulative_per_100k": 269.0
+        },
+        {
+         "week_end": "2026-08-22",
+         "rate_per_100k": 0.6,
+         "cumulative_per_100k": 268.0
+        },
+        {
+         "week_end": "2026-08-15",
+         "rate_per_100k": 0.5,
+         "cumulative_per_100k": 267.0
+        },
+        {
+         "week_end": "2026-08-08",
+         "rate_per_100k": 0.3,
+         "cumulative_per_100k": 267.0
         }
        ],
        "network": "FluSurv-NET",
@@ -1723,7 +1656,7 @@
       "tool": "get_data_freshness",
       "inputs": {},
       "rows_returned": 5,
-      "elapsed_s": 0.012,
+      "elapsed_s": 0.017,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "all",
@@ -1731,25 +1664,25 @@
         {
          "table": "ari_activity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "hospitalization_rates",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "test_positivity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "wastewater_sites",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true,
          "dataset": "atcp-73re",
          "legacy": false
@@ -1757,7 +1690,7 @@
         {
          "table": "wastewater_sites",
          "latest_week": "2025-09-07",
-         "age_days": 420,
+         "age_days": 421,
          "stale": true,
          "dataset": "2ew6-ywp6 (legacy)",
          "legacy": true
@@ -1767,7 +1700,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.379,
+    "elapsed_s": 1.753,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1784,17 +1717,17 @@
    "question": "What was the weekly RSV-NET hospitalization rate per 100,000 for children aged 0-4 in the week ending October 10, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). For the week ending October 10, 2026, the weekly RSV-NET hospitalization rate per 100,000 for children aged 0-4 was 0.9.",
+    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). Based on data for the week ending October 10, 2026, the weekly RSV-NET hospitalization rate per 100,000 for children aged 0-4 was 0.9.",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
        "age_group": "0-4 yr",
-       "network": "RSV-NET",
-       "weeks": 4
+       "weeks": 5,
+       "network": "RSV-NET"
       },
-      "rows_returned": 4,
-      "elapsed_s": 0.016,
+      "rows_returned": 5,
+      "elapsed_s": 0.021,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -1818,6 +1751,11 @@
          "week_end": "2026-09-19",
          "rate_per_100k": 0.2,
          "cumulative_per_100k": 325.0
+        },
+        {
+         "week_end": "2026-09-12",
+         "rate_per_100k": 0.5,
+         "cumulative_per_100k": 325.0
         }
        ],
        "network": "RSV-NET",
@@ -1827,7 +1765,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.082,
+    "elapsed_s": 1.525,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1843,8 +1781,8 @@
   {
    "question": "What was the combined weekly hospitalization rate per 100,000 for COVID-19, flu and RSV in the week ending October 10, 2026?",
    "response": {
-    "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). The data is out of date, with its latest week ending October 10, 2026. For the week ending October 10, 2026, the combined overall weekly hospitalization rate per 100,000 for COVID-19, flu, and RSV was 1.6.",
+    "status": "unverified",
+    "answer": "I could not verify that figure.",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
@@ -1853,7 +1791,7 @@
        "weeks": 4
       },
       "rows_returned": 4,
-      "elapsed_s": 0.015,
+      "elapsed_s": 0.021,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -1888,7 +1826,7 @@
       "tool": "get_data_freshness",
       "inputs": {},
       "rows_returned": 5,
-      "elapsed_s": 0.012,
+      "elapsed_s": 0.017,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "all",
@@ -1896,25 +1834,25 @@
         {
          "table": "ari_activity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "hospitalization_rates",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "test_positivity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "wastewater_sites",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true,
          "dataset": "atcp-73re",
          "legacy": false
@@ -1922,7 +1860,7 @@
         {
          "table": "wastewater_sites",
          "latest_week": "2025-09-07",
-         "age_days": 420,
+         "age_days": 421,
          "stale": true,
          "dataset": "2ew6-ywp6 (legacy)",
          "legacy": true
@@ -1932,97 +1870,114 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.584,
+    "elapsed_s": 1.577,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
-     "passed": true,
-     "unverified": [],
+     "passed": false,
+     "unverified": [
+      "14"
+     ],
      "stale_tables": [
       "hospitalization_rates"
      ]
     }
    },
-   "correct": true
+   "correct": false
   },
   {
    "question": "What was the weekly COVID-NET hospitalization rate per 100,000 for children (pediatrics) in the week ending October 3, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). For the week ending October 3, 2026, the weekly COVID-NET hospitalization rate for children aged 0-4 years was 1 per 100,000. This is based on data as of the week ending October 10, 2026.",
+    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). The data does not cover pediatric age groups for COVID-NET. For the overall population, the COVID-NET hospitalization rate for the week ending October 3, 2026, was 1.1 per 100,000. Note that the hospitalization rates table is out of date, with its latest week being October 10, 2026 (23 days old).",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
-       "weeks": 10,
-       "age_group": "0-4 yr",
-       "network": "COVID-NET"
+       "network": "COVID-NET",
+       "weeks": 4
       },
-      "rows_returned": 10,
-      "elapsed_s": 0.016,
+      "rows_returned": 4,
+      "elapsed_s": 0.021,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
        "rows": [
         {
          "week_end": "2026-10-10",
-         "rate_per_100k": 0.7,
+         "rate_per_100k": 0.8,
          "cumulative_per_100k": 1.0
         },
         {
          "week_end": "2026-10-03",
-         "rate_per_100k": 1.0,
-         "cumulative_per_100k": 39.0
+         "rate_per_100k": 1.1,
+         "cumulative_per_100k": 45.0
         },
         {
          "week_end": "2026-09-26",
-         "rate_per_100k": 1.0,
-         "cumulative_per_100k": 38.0
+         "rate_per_100k": 1.2,
+         "cumulative_per_100k": 44.0
         },
         {
          "week_end": "2026-09-19",
-         "rate_per_100k": 0.6,
-         "cumulative_per_100k": 37.0
-        },
-        {
-         "week_end": "2026-09-12",
-         "rate_per_100k": 0.6,
-         "cumulative_per_100k": 37.0
-        },
-        {
-         "week_end": "2026-09-05",
-         "rate_per_100k": 1.1,
-         "cumulative_per_100k": 36.0
-        },
-        {
-         "week_end": "2026-08-29",
          "rate_per_100k": 1.2,
-         "cumulative_per_100k": 35.0
-        },
-        {
-         "week_end": "2026-08-22",
-         "rate_per_100k": 1.0,
-         "cumulative_per_100k": 34.0
-        },
-        {
-         "week_end": "2026-08-15",
-         "rate_per_100k": 0.7,
-         "cumulative_per_100k": 33.0
-        },
-        {
-         "week_end": "2026-08-08",
-         "rate_per_100k": 0.4,
-         "cumulative_per_100k": 32.0
+         "cumulative_per_100k": 43.0
         }
        ],
        "network": "COVID-NET",
-       "age_group": "0-4 yr",
+       "age_group": "Overall",
        "units": "rate per 100,000"
+      }
+     },
+     {
+      "tool": "get_data_freshness",
+      "inputs": {},
+      "rows_returned": 5,
+      "elapsed_s": 0.017,
+      "output": {
+       "as_of": "2026-10-10",
+       "source_table": "all",
+       "rows": [
+        {
+         "table": "ari_activity",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "hospitalization_rates",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "test_positivity",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "wastewater_sites",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true,
+         "dataset": "atcp-73re",
+         "legacy": false
+        },
+        {
+         "table": "wastewater_sites",
+         "latest_week": "2025-09-07",
+         "age_days": 421,
+         "stale": true,
+         "dataset": "2ew6-ywp6 (legacy)",
+         "legacy": true
+        }
+       ]
       }
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.489,
+    "elapsed_s": 1.405,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -2039,17 +1994,17 @@
    "question": "What was the overall weekly RSV-NET hospitalization rate per 100,000 for the week ending September 19, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). For the week ending September 19, 2026, the overall weekly RSV-NET hospitalization rate was 0 per 100,000, based on data as of October 10, 2026.",
+    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). For the week ending September 19, 2026, the overall weekly RSV-NET hospitalization rate was 0 per 100,000. This is based on RSV-NET data as of the week ending October 10, 2026.",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
-       "network": "RSV-NET",
-       "weeks": 4,
-       "age_group": "Overall"
+       "weeks": 5,
+       "age_group": "Overall",
+       "network": "RSV-NET"
       },
-      "rows_returned": 4,
-      "elapsed_s": 0.015,
+      "rows_returned": 5,
+      "elapsed_s": 0.021,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -2073,6 +2028,11 @@
          "week_end": "2026-09-19",
          "rate_per_100k": 0.0,
          "cumulative_per_100k": 44.0
+        },
+        {
+         "week_end": "2026-09-12",
+         "rate_per_100k": 0.1,
+         "cumulative_per_100k": 44.0
         }
        ],
        "network": "RSV-NET",
@@ -2082,7 +2042,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.204,
+    "elapsed_s": 1.433,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -2098,18 +2058,18 @@
   {
    "question": "What was the weekly COVID-NET hospitalization rate per 100,000 for people aged 75 and older in the week ending October 10, 2026?",
    "response": {
-    "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). Note: The hospitalization rates data is out of date (latest week: 2026-10-10, age: 22 days). \nBased on the week ending October 10, 2026, the weekly COVID-NET hospitalization rate per 100,000 for people aged 75 and older was 4.8.",
+    "status": "unverified",
+    "answer": "I could not verify that figure.",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
        "network": "COVID-NET",
        "age_group": "75+ yr",
-       "weeks": 4
+       "weeks": 1
       },
-      "rows_returned": 4,
-      "elapsed_s": 0.016,
+      "rows_returned": 1,
+      "elapsed_s": 0.021,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -2118,21 +2078,6 @@
          "week_end": "2026-10-10",
          "rate_per_100k": 4.8,
          "cumulative_per_100k": 5.0
-        },
-        {
-         "week_end": "2026-10-03",
-         "rate_per_100k": 5.7,
-         "cumulative_per_100k": 271.0
-        },
-        {
-         "week_end": "2026-09-26",
-         "rate_per_100k": 6.8,
-         "cumulative_per_100k": 265.0
-        },
-        {
-         "week_end": "2026-09-19",
-         "rate_per_100k": 7.2,
-         "cumulative_per_100k": 258.0
         }
        ],
        "network": "COVID-NET",
@@ -2144,7 +2089,7 @@
       "tool": "get_data_freshness",
       "inputs": {},
       "rows_returned": 5,
-      "elapsed_s": 0.012,
+      "elapsed_s": 0.017,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "all",
@@ -2152,25 +2097,25 @@
         {
          "table": "ari_activity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "hospitalization_rates",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "test_positivity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "wastewater_sites",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true,
          "dataset": "atcp-73re",
          "legacy": false
@@ -2178,7 +2123,7 @@
         {
          "table": "wastewater_sites",
          "latest_week": "2025-09-07",
-         "age_days": 420,
+         "age_days": 421,
          "stale": true,
          "dataset": "2ew6-ywp6 (legacy)",
          "legacy": true
@@ -2188,34 +2133,36 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.372,
+    "elapsed_s": 1.413,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
-     "passed": true,
-     "unverified": [],
+     "passed": false,
+     "unverified": [
+      "14"
+     ],
      "stale_tables": [
       "hospitalization_rates"
      ]
     }
    },
-   "correct": true
+   "correct": false
   },
   {
    "question": "What was the overall weekly FluSurv-NET hospitalization rate per 100,000 for the week ending August 29, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). For the week ending August 29, 2026, the overall weekly FluSurv-NET hospitalization rate was 0.2 per 100,000. Please note that the hospitalization_rates table is out of date (its latest week is 2026-10-10, making it 22 days old).",
+    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). For the week ending August 29, 2026, the overall weekly FluSurv-NET hospitalization rate was 0.2 per 100,000. This answer is based on data as of the week ending October 10, 2026.",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
        "age_group": "Overall",
-       "network": "FluSurv-NET",
-       "weeks": 10
+       "weeks": 10,
+       "network": "FluSurv-NET"
       },
       "rows_returned": 10,
-      "elapsed_s": 0.015,
+      "elapsed_s": 0.021,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -2275,56 +2222,10 @@
        "age_group": "Overall",
        "units": "rate per 100,000"
       }
-     },
-     {
-      "tool": "get_data_freshness",
-      "inputs": {},
-      "rows_returned": 5,
-      "elapsed_s": 0.012,
-      "output": {
-       "as_of": "2026-10-10",
-       "source_table": "all",
-       "rows": [
-        {
-         "table": "ari_activity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "hospitalization_rates",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "test_positivity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true,
-         "dataset": "atcp-73re",
-         "legacy": false
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2025-09-07",
-         "age_days": 420,
-         "stale": true,
-         "dataset": "2ew6-ywp6 (legacy)",
-         "legacy": true
-        }
-       ]
-      }
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.466,
+    "elapsed_s": 1.432,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -2341,17 +2242,17 @@
    "question": "What was the weekly COVID-NET hospitalization rate per 100,000 for adults aged 50-64 in the week ending October 10, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). For the week ending October 10, 2026, the weekly COVID-NET hospitalization rate for adults aged 50-64 was 0.8 per 100,000. This is based on data for the week-ending date of 2026-10-10.",
+    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). For the week ending October 10, 2026, the weekly COVID-NET hospitalization rate per 100,000 for adults aged 50\u201364 was 0.8. This is based on data for the week-ending date of October 10, 2026.",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
-       "age_group": "50-64 yr",
-       "weeks": 10,
-       "network": "COVID-NET"
+       "weeks": 5,
+       "network": "COVID-NET",
+       "age_group": "50-64 yr"
       },
-      "rows_returned": 10,
-      "elapsed_s": 0.015,
+      "rows_returned": 5,
+      "elapsed_s": 0.021,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -2380,31 +2281,6 @@
          "week_end": "2026-09-12",
          "rate_per_100k": 0.7,
          "cumulative_per_100k": 33.0
-        },
-        {
-         "week_end": "2026-09-05",
-         "rate_per_100k": 0.8,
-         "cumulative_per_100k": 32.0
-        },
-        {
-         "week_end": "2026-08-29",
-         "rate_per_100k": 0.7,
-         "cumulative_per_100k": 31.0
-        },
-        {
-         "week_end": "2026-08-22",
-         "rate_per_100k": 0.5,
-         "cumulative_per_100k": 31.0
-        },
-        {
-         "week_end": "2026-08-15",
-         "rate_per_100k": 0.4,
-         "cumulative_per_100k": 30.0
-        },
-        {
-         "week_end": "2026-08-08",
-         "rate_per_100k": 0.3,
-         "cumulative_per_100k": 30.0
         }
        ],
        "network": "COVID-NET",
@@ -2414,7 +2290,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.326,
+    "elapsed_s": 1.495,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -2430,8 +2306,8 @@
   {
    "question": "How many states or territories had respiratory illness activity marked Data Unavailable in the latest week?",
    "response": {
-    "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: ari_activity (latest 2026-10-10). Based on data for the week ending October 10, 2026, there were 6 states or territories with respiratory illness activity marked Data Unavailable (American Samoa, Guam, Iowa, Northern Mariana Islands, Puerto Rico, and Virgin Islands). Please note that the data is out of date, as the latest table is from 22 days ago.",
+    "status": "unverified",
+    "answer": "I could not verify that figure.",
     "tool_calls": [
      {
       "tool": "list_states_at_level",
@@ -2439,7 +2315,7 @@
        "level": "Data Unavailable"
       },
       "rows_returned": 6,
-      "elapsed_s": 0.013,
+      "elapsed_s": 0.018,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "ari_activity",
@@ -2470,7 +2346,7 @@
       "tool": "get_data_freshness",
       "inputs": {},
       "rows_returned": 5,
-      "elapsed_s": 0.011,
+      "elapsed_s": 0.017,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "all",
@@ -2478,25 +2354,25 @@
         {
          "table": "ari_activity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "hospitalization_rates",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "test_positivity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "wastewater_sites",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true,
          "dataset": "atcp-73re",
          "legacy": false
@@ -2504,7 +2380,7 @@
         {
          "table": "wastewater_sites",
          "latest_week": "2025-09-07",
-         "age_days": 420,
+         "age_days": 421,
          "stale": true,
          "dataset": "2ew6-ywp6 (legacy)",
          "legacy": true
@@ -2514,32 +2390,80 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.805,
+    "elapsed_s": 1.417,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
-     "passed": true,
-     "unverified": [],
+     "passed": false,
+     "unverified": [
+      "14"
+     ],
      "stale_tables": [
       "ari_activity"
      ]
     }
    },
-   "correct": true
+   "correct": false
   },
   {
    "question": "How many wastewater sites reported SARS-CoV-2 nationally in the latest week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: wastewater_sites (latest 2026-10-10). Based on data for the week ending October 10, 2026, there were 797 wastewater sites that reported SARS-CoV-2 nationally. Please note that the data is out of date, as it is 22 days old.",
+    "answer": "Warning: this data is more than 14 days old: wastewater_sites (latest 2026-10-10). Based on the data for the week-ending date of October 10, 2026 (note: this data is out of date, as the latest table is 23 days old), 797 wastewater sites reported SARS-CoV-2 nationally.",
     "tool_calls": [
+     {
+      "tool": "get_data_freshness",
+      "inputs": {},
+      "rows_returned": 5,
+      "elapsed_s": 0.021,
+      "output": {
+       "as_of": "2026-10-10",
+       "source_table": "all",
+       "rows": [
+        {
+         "table": "ari_activity",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "hospitalization_rates",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "test_positivity",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "wastewater_sites",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true,
+         "dataset": "atcp-73re",
+         "legacy": false
+        },
+        {
+         "table": "wastewater_sites",
+         "latest_week": "2025-09-07",
+         "age_days": 421,
+         "stale": true,
+         "dataset": "2ew6-ywp6 (legacy)",
+         "legacy": true
+        }
+       ]
+      }
+     },
      {
       "tool": "get_wastewater",
       "inputs": {
        "pathogen": "SARS-CoV-2"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.022,
+      "elapsed_s": 0.027,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -2564,56 +2488,10 @@
         "note": "Legacy NWSS SARS-CoV-2 metrics; CDC stopped updating this file after 2025-09-07."
        }
       }
-     },
-     {
-      "tool": "get_data_freshness",
-      "inputs": {},
-      "rows_returned": 5,
-      "elapsed_s": 0.012,
-      "output": {
-       "as_of": "2026-10-10",
-       "source_table": "all",
-       "rows": [
-        {
-         "table": "ari_activity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "hospitalization_rates",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "test_positivity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true,
-         "dataset": "atcp-73re",
-         "legacy": false
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2025-09-07",
-         "age_days": 420,
-         "stale": true,
-         "dataset": "2ew6-ywp6 (legacy)",
-         "legacy": true
-        }
-       ]
-      }
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.64,
+    "elapsed_s": 1.223,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -2630,7 +2508,7 @@
    "question": "How many wastewater sites reported influenza A nationally in the latest week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: wastewater_sites (latest 2026-10-10). Based on data for the week ending October 10, 2026, there were 726 wastewater sites reporting influenza A nationally. \n\nPlease note that the data is out of date, with a latest week of 2026-10-10 (stale by 22 days).",
+    "answer": "Warning: this data is more than 14 days old: wastewater_sites (latest 2026-10-10). Based on national wastewater surveillance for the week ending October 10, 2026, there were 726 wastewater sites reporting influenza A.",
     "tool_calls": [
      {
       "tool": "get_wastewater",
@@ -2638,7 +2516,7 @@
        "pathogen": "Influenza A virus"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.019,
+      "elapsed_s": 0.026,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -2655,56 +2533,10 @@
        "total_sites": 726,
        "legacy": null
       }
-     },
-     {
-      "tool": "get_data_freshness",
-      "inputs": {},
-      "rows_returned": 5,
-      "elapsed_s": 0.011,
-      "output": {
-       "as_of": "2026-10-10",
-       "source_table": "all",
-       "rows": [
-        {
-         "table": "ari_activity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "hospitalization_rates",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "test_positivity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true,
-         "dataset": "atcp-73re",
-         "legacy": false
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2025-09-07",
-         "age_days": 420,
-         "stale": true,
-         "dataset": "2ew6-ywp6 (legacy)",
-         "legacy": true
-        }
-       ]
-      }
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.119,
+    "elapsed_s": 1.242,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -2721,7 +2553,7 @@
    "question": "How many wastewater sites reported RSV nationally in the latest week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: wastewater_sites (latest 2026-10-10). Based on data for the week ending 2026-10-10, there were 713 wastewater sites reporting RSV nationally. Please note that the data is out of date, with a freshness age of 22 days.",
+    "answer": "Warning: this data is more than 14 days old: wastewater_sites (latest 2026-10-10). Based on national wastewater data for the week ending October 10, 2026, there were 713 sites reporting RSV.",
     "tool_calls": [
      {
       "tool": "get_wastewater",
@@ -2729,7 +2561,7 @@
        "pathogen": "RSV"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.019,
+      "elapsed_s": 0.027,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -2746,56 +2578,10 @@
        "total_sites": 713,
        "legacy": null
       }
-     },
-     {
-      "tool": "get_data_freshness",
-      "inputs": {},
-      "rows_returned": 5,
-      "elapsed_s": 0.012,
-      "output": {
-       "as_of": "2026-10-10",
-       "source_table": "all",
-       "rows": [
-        {
-         "table": "ari_activity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "hospitalization_rates",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "test_positivity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true,
-         "dataset": "atcp-73re",
-         "legacy": false
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2025-09-07",
-         "age_days": 420,
-         "stale": true,
-         "dataset": "2ew6-ywp6 (legacy)",
-         "legacy": true
-        }
-       ]
-      }
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.519,
+    "elapsed_s": 1.241,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -2812,7 +2598,7 @@
    "question": "How many wastewater sites in New York reported SARS-CoV-2 in the latest week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: wastewater_sites (latest 2026-10-10). Based on data for the week ending October 10, 2026, there are 115 wastewater sites in New York that reported SARS-CoV-2.",
+    "answer": "Warning: this data is more than 14 days old: wastewater_sites (latest 2026-10-10). Based on data for the week ending October 10, 2026, there are 115 wastewater sites in New York reporting SARS-CoV-2. Please note that the wastewater data is out of date, with the latest week ending October 10, 2026.",
     "tool_calls": [
      {
       "tool": "get_wastewater",
@@ -2821,7 +2607,7 @@
        "pathogen": "SARS-CoV-2"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.024,
+      "elapsed_s": 0.034,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -2846,10 +2632,56 @@
         "note": "Legacy NWSS SARS-CoV-2 metrics; CDC stopped updating this file after 2025-09-07."
        }
       }
+     },
+     {
+      "tool": "get_data_freshness",
+      "inputs": {},
+      "rows_returned": 5,
+      "elapsed_s": 0.018,
+      "output": {
+       "as_of": "2026-10-10",
+       "source_table": "all",
+       "rows": [
+        {
+         "table": "ari_activity",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "hospitalization_rates",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "test_positivity",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "wastewater_sites",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true,
+         "dataset": "atcp-73re",
+         "legacy": false
+        },
+        {
+         "table": "wastewater_sites",
+         "latest_week": "2025-09-07",
+         "age_days": 421,
+         "stale": true,
+         "dataset": "2ew6-ywp6 (legacy)",
+         "legacy": true
+        }
+       ]
+      }
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.365,
+    "elapsed_s": 1.387,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -2866,7 +2698,7 @@
    "question": "How many wastewater sites in California reported data for any pathogen in the latest week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: wastewater_sites (latest 2026-10-10). Based on data for the week ending October 10, 2026, there are 54 wastewater sites in California that reported data for pathogens (Influenza A virus, RSV, and SARS-CoV-2).",
+    "answer": "Warning: this data is more than 14 days old: wastewater_sites (latest 2026-10-10). Based on data for the week ending October 10, 2026, there are 54 wastewater sites in California reporting data for pathogens (Influenza A, RSV, and SARS-CoV-2). Note that the data is out of date, as the latest week's tables are 23 days old.",
     "tool_calls": [
      {
       "tool": "get_wastewater",
@@ -2874,7 +2706,7 @@
        "state": "California"
       },
       "rows_returned": 3,
-      "elapsed_s": 0.023,
+      "elapsed_s": 0.031,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -2913,10 +2745,56 @@
         "note": "Legacy NWSS SARS-CoV-2 metrics; CDC stopped updating this file after 2025-09-07."
        }
       }
+     },
+     {
+      "tool": "get_data_freshness",
+      "inputs": {},
+      "rows_returned": 5,
+      "elapsed_s": 0.018,
+      "output": {
+       "as_of": "2026-10-10",
+       "source_table": "all",
+       "rows": [
+        {
+         "table": "ari_activity",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "hospitalization_rates",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "test_positivity",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "wastewater_sites",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true,
+         "dataset": "atcp-73re",
+         "legacy": false
+        },
+        {
+         "table": "wastewater_sites",
+         "latest_week": "2025-09-07",
+         "age_days": 421,
+         "stale": true,
+         "dataset": "2ew6-ywp6 (legacy)",
+         "legacy": true
+        }
+       ]
+      }
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.396,
+    "elapsed_s": 1.409,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -2933,13 +2811,13 @@
    "question": "How many wastewater sites nationally were at High or Very High SARS-CoV-2 activity in the latest week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: wastewater_sites (latest 2026-10-10). Based on data for the week ending October 10, 2026, there were 199 wastewater sites nationally at High or Very High SARS-CoV-2 activity out of 797 total reporting sites. Note that the data is out of date, as the latest week is 22 days old.",
+    "answer": "Warning: this data is more than 14 days old: wastewater_sites (latest 2026-10-10). Note: The wastewater data is out of date (latest week: 2026-10-10, 23 days old). Based on the latest data for the week ending 2026-10-10, there were 199 wastewater sites nationally at High or Very High SARS-CoV-2 activity.",
     "tool_calls": [
      {
       "tool": "get_data_freshness",
       "inputs": {},
       "rows_returned": 5,
-      "elapsed_s": 0.015,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "all",
@@ -2947,25 +2825,25 @@
         {
          "table": "ari_activity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "hospitalization_rates",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "test_positivity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "wastewater_sites",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true,
          "dataset": "atcp-73re",
          "legacy": false
@@ -2973,7 +2851,7 @@
         {
          "table": "wastewater_sites",
          "latest_week": "2025-09-07",
-         "age_days": 420,
+         "age_days": 421,
          "stale": true,
          "dataset": "2ew6-ywp6 (legacy)",
          "legacy": true
@@ -2987,7 +2865,7 @@
        "pathogen": "SARS-CoV-2"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.019,
+      "elapsed_s": 0.027,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -3015,7 +2893,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.471,
+    "elapsed_s": 1.77,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -3041,7 +2919,7 @@
        "state": "Texas"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.024,
+      "elapsed_s": 0.033,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -3069,7 +2947,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.084,
+    "elapsed_s": 1.222,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -3086,19 +2964,31 @@
    "question": "In the legacy NWSS SARS-CoV-2 wastewater metrics, which end on 2025-09-07, how many sites reported nationally in that last week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: wastewater_sites (latest 2026-10-10). Based on the legacy NWSS SARS-CoV-2 wastewater metrics for the week ending 2025-09-07, 1,162 sites reported nationally.",
+    "answer": "Warning: this data is more than 14 days old: wastewater_sites (latest 2026-10-10). In the legacy NWSS SARS-CoV-2 wastewater metrics ending on 2025-09-07, there were 1,162 sites reporting nationally. This answer is based on data as of the week ending 2025-09-07.",
     "tool_calls": [
      {
       "tool": "get_wastewater",
-      "inputs": {
-       "pathogen": "SARS-CoV-2"
-      },
-      "rows_returned": 1,
-      "elapsed_s": 0.022,
+      "inputs": {},
+      "rows_returned": 3,
+      "elapsed_s": 0.029,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
        "rows": [
+        {
+         "week_end": "2026-10-10",
+         "pathogen": "Influenza A virus",
+         "site_count": 726,
+         "median_wval": 1.0,
+         "sites_high_or_very_high": 22
+        },
+        {
+         "week_end": "2026-10-10",
+         "pathogen": "RSV",
+         "site_count": 713,
+         "median_wval": 1.0,
+         "sites_high_or_very_high": 15
+        },
         {
          "week_end": "2026-10-10",
          "pathogen": "SARS-CoV-2",
@@ -3108,7 +2998,7 @@
         }
        ],
        "scope": "national",
-       "total_sites": 797,
+       "total_sites": 811,
        "legacy": {
         "source_dataset": "2ew6-ywp6 (legacy)",
         "pathogen": "SARS-CoV-2",
@@ -3119,56 +3009,10 @@
         "note": "Legacy NWSS SARS-CoV-2 metrics; CDC stopped updating this file after 2025-09-07."
        }
       }
-     },
-     {
-      "tool": "get_data_freshness",
-      "inputs": {},
-      "rows_returned": 5,
-      "elapsed_s": 0.012,
-      "output": {
-       "as_of": "2026-10-10",
-       "source_table": "all",
-       "rows": [
-        {
-         "table": "ari_activity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "hospitalization_rates",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "test_positivity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true,
-         "dataset": "atcp-73re",
-         "legacy": false
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2025-09-07",
-         "age_days": 420,
-         "stale": true,
-         "dataset": "2ew6-ywp6 (legacy)",
-         "legacy": true
-        }
-       ]
-      }
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.265,
+    "elapsed_s": 1.536,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -3184,8 +3028,8 @@
   {
    "question": "For the week ending October 10, 2026, give COVID-19 test positivity and the overall COVID-NET weekly hospitalization rate.",
    "response": {
-    "status": "unverified",
-    "answer": "I could not verify that figure.",
+    "status": "refused",
+    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10), test_positivity (latest 2026-10-10). For the week ending October 10, 2026, the COVID-19 test positivity was 3.6% and the overall COVID-NET weekly hospitalization rate was 0.8 per 100,000. Note that the underlying surveillance data is out of date, with a latest week ending on 2026-10-10 (23 days old).",
     "tool_calls": [
      {
       "tool": "get_test_positivity",
@@ -3194,7 +3038,7 @@
        "pathogen": "COVID-19"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.014,
+      "elapsed_s": 0.018,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "test_positivity",
@@ -3215,7 +3059,7 @@
        "network": "COVID-NET"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.012,
+      "elapsed_s": 0.018,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -3235,7 +3079,7 @@
       "tool": "get_data_freshness",
       "inputs": {},
       "rows_returned": 5,
-      "elapsed_s": 0.012,
+      "elapsed_s": 0.017,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "all",
@@ -3243,25 +3087,25 @@
         {
          "table": "ari_activity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "hospitalization_rates",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "test_positivity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "wastewater_sites",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true,
          "dataset": "atcp-73re",
          "legacy": false
@@ -3269,7 +3113,7 @@
         {
          "table": "wastewater_sites",
          "latest_week": "2025-09-07",
-         "age_days": 420,
+         "age_days": 421,
          "stale": true,
          "dataset": "2ew6-ywp6 (legacy)",
          "legacy": true
@@ -3279,33 +3123,31 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.666,
+    "elapsed_s": 1.561,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
-     "passed": false,
-     "unverified": [
-      "14"
-     ],
+     "passed": true,
+     "unverified": [],
      "stale_tables": [
       "hospitalization_rates",
       "test_positivity"
      ]
     }
    },
-   "correct": false
+   "correct": true
   },
   {
    "question": "How many states were at Low respiratory illness activity in the latest week, and what was influenza test positivity that week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: ari_activity (latest 2026-10-10), test_positivity (latest 2026-10-10). Note: The data is out of date (latest week ending 2026-10-10, which is 22 days old). Based on the week ending October 10, 2026, 10 states were at Low respiratory illness activity. Influenza test positivity for that week was 5.",
+    "answer": "Warning: this data is more than 14 days old: ari_activity (latest 2026-10-10), test_positivity (latest 2026-10-10). Note: The data is out of date; its latest week is 2026-10-10 (23 days old). Based on the week ending 2026-10-10, there were 10 states at Low acute respiratory illness activity level. Influenza test positivity that week was 5%.",
     "tool_calls": [
      {
       "tool": "get_data_freshness",
       "inputs": {},
       "rows_returned": 5,
-      "elapsed_s": 0.016,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "all",
@@ -3313,25 +3155,25 @@
         {
          "table": "ari_activity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "hospitalization_rates",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "test_positivity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "wastewater_sites",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true,
          "dataset": "atcp-73re",
          "legacy": false
@@ -3339,7 +3181,7 @@
         {
          "table": "wastewater_sites",
          "latest_week": "2025-09-07",
-         "age_days": 420,
+         "age_days": 421,
          "stale": true,
          "dataset": "2ew6-ywp6 (legacy)",
          "legacy": true
@@ -3350,11 +3192,11 @@
      {
       "tool": "list_states_at_level",
       "inputs": {
-       "week": null,
-       "level": "Low"
+       "level": "Low",
+       "week": null
       },
       "rows_returned": 10,
-      "elapsed_s": 0.011,
+      "elapsed_s": 0.015,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "ari_activity",
@@ -3400,7 +3242,7 @@
        "pathogen": "Influenza"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.011,
+      "elapsed_s": 0.016,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "test_positivity",
@@ -3415,7 +3257,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.377,
+    "elapsed_s": 1.433,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -3433,7 +3275,7 @@
    "question": "In the latest week, how many states were at Very Low respiratory illness activity, and what was the overall RSV-NET weekly hospitalization rate?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: ari_activity (latest 2026-10-10), hospitalization_rates (latest 2026-10-10). In the latest week ending October 10, 2026, there were 40 states at Very Low respiratory illness activity, and the overall RSV-NET weekly hospitalization rate was 0.1 per 100,000. Please note that the underlying surveillance data is out of date, with its latest week being 22 days old.",
+    "answer": "Warning: this data is more than 14 days old: ari_activity (latest 2026-10-10), hospitalization_rates (latest 2026-10-10). Based on data for the week-ending date of 2026-10-10, there were 40 states at Very Low respiratory illness activity, and the overall RSV-NET weekly hospitalization rate was 0.1 per 100,000. Please note that the data is out of date (latest week 2026-10-10).",
     "tool_calls": [
      {
       "tool": "list_states_at_level",
@@ -3442,7 +3284,7 @@
        "level": "Very Low"
       },
       "rows_returned": 40,
-      "elapsed_s": 0.013,
+      "elapsed_s": 0.018,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "ari_activity",
@@ -3574,12 +3416,12 @@
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
-       "age_group": "Overall",
+       "weeks": 1,
        "network": "RSV-NET",
-       "weeks": 1
+       "age_group": "Overall"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.012,
+      "elapsed_s": 0.018,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -3599,7 +3441,7 @@
       "tool": "get_data_freshness",
       "inputs": {},
       "rows_returned": 5,
-      "elapsed_s": 0.011,
+      "elapsed_s": 0.017,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "all",
@@ -3607,25 +3449,25 @@
         {
          "table": "ari_activity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "hospitalization_rates",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "test_positivity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "wastewater_sites",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true,
          "dataset": "atcp-73re",
          "legacy": false
@@ -3633,7 +3475,7 @@
         {
          "table": "wastewater_sites",
          "latest_week": "2025-09-07",
-         "age_days": 420,
+         "age_days": 421,
          "stale": true,
          "dataset": "2ew6-ywp6 (legacy)",
          "legacy": true
@@ -3643,7 +3485,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.271,
+    "elapsed_s": 1.767,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -3661,7 +3503,7 @@
    "question": "In the latest week, how many wastewater sites reported SARS-CoV-2, and what was COVID-19 test positivity?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: test_positivity (latest 2026-10-10), wastewater_sites (latest 2026-10-10). Note: The data is out of date, with its latest week ending on 2026-10-10. For the week ending on that date, 797 wastewater sites reported SARS-CoV-2. COVID-19 test positivity was 3.6%.",
+    "answer": "Warning: this data is more than 14 days old: test_positivity (latest 2026-10-10), wastewater_sites (latest 2026-10-10). Note: The data is out of date, with its latest week ending on 2026-10-10. For the week ending October 10, 2026, 797 wastewater sites reported SARS-CoV-2. COVID-19 test positivity was 3.6%.",
     "tool_calls": [
      {
       "tool": "get_wastewater",
@@ -3669,7 +3511,7 @@
        "pathogen": "SARS-CoV-2"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.022,
+      "elapsed_s": 0.03,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -3701,7 +3543,7 @@
        "pathogen": "COVID-19"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.011,
+      "elapsed_s": 0.016,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "test_positivity",
@@ -3718,7 +3560,7 @@
       "tool": "get_data_freshness",
       "inputs": {},
       "rows_returned": 5,
-      "elapsed_s": 0.012,
+      "elapsed_s": 0.017,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "all",
@@ -3726,25 +3568,25 @@
         {
          "table": "ari_activity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "hospitalization_rates",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "test_positivity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "wastewater_sites",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true,
          "dataset": "atcp-73re",
          "legacy": false
@@ -3752,7 +3594,7 @@
         {
          "table": "wastewater_sites",
          "latest_week": "2025-09-07",
-         "age_days": 420,
+         "age_days": 421,
          "stale": true,
          "dataset": "2ew6-ywp6 (legacy)",
          "legacy": true
@@ -3762,7 +3604,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.476,
+    "elapsed_s": 1.714,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -3780,7 +3622,7 @@
    "question": "For the latest week, what was Ohio's respiratory illness activity level, and how many Ohio wastewater sites reported data for any pathogen?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: ari_activity (latest 2026-10-10), wastewater_sites (latest 2026-10-10). Based on data for the week-ending date of 2026-10-10, Ohio's acute respiratory illness activity level was \"Low\". For that same week, 57 Ohio wastewater sites reported data for pathogens (SARS-CoV-2, Influenza A virus, and RSV). Please note that the data is out of date, as the latest week is 2026-10-10 (22 days old).",
+    "answer": "Warning: this data is more than 14 days old: ari_activity (latest 2026-10-10), wastewater_sites (latest 2026-10-10). For the week ending October 10, 2026, Ohio's acute respiratory illness activity level was \"Low\". During that same week, a total of 57 wastewater sites reported data for pathogens in Ohio. Please note that the data is out of date, with a latest week of 2026-10-10.",
     "tool_calls": [
      {
       "tool": "get_ari_level",
@@ -3789,7 +3631,7 @@
        "state": "Ohio"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.014,
+      "elapsed_s": 0.027,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "ari_activity",
@@ -3805,12 +3647,12 @@
      {
       "tool": "get_wastewater",
       "inputs": {
-       "county_fips": null,
+       "state": "Ohio",
        "pathogen": null,
-       "state": "Ohio"
+       "county_fips": null
       },
       "rows_returned": 3,
-      "elapsed_s": 0.02,
+      "elapsed_s": 0.036,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -3854,7 +3696,7 @@
       "tool": "get_data_freshness",
       "inputs": {},
       "rows_returned": 5,
-      "elapsed_s": 0.013,
+      "elapsed_s": 0.018,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "all",
@@ -3862,25 +3704,25 @@
         {
          "table": "ari_activity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "hospitalization_rates",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "test_positivity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "wastewater_sites",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true,
          "dataset": "atcp-73re",
          "legacy": false
@@ -3888,7 +3730,7 @@
         {
          "table": "wastewater_sites",
          "latest_week": "2025-09-07",
-         "age_days": 420,
+         "age_days": 421,
          "stale": true,
          "dataset": "2ew6-ywp6 (legacy)",
          "legacy": true
@@ -3898,7 +3740,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.691,
+    "elapsed_s": 1.746,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -3915,8 +3757,8 @@
   {
    "question": "For the week ending October 10, 2026, give influenza test positivity and the overall FluSurv-NET weekly hospitalization rate.",
    "response": {
-    "status": "unverified",
-    "answer": "I could not verify that figure.",
+    "status": "refused",
+    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10), test_positivity (latest 2026-10-10). Based on data for the week ending October 10, 2026, the influenza test positivity was 5%. The overall FluSurv-NET weekly hospitalization rate was 0.7 per 100,000.",
     "tool_calls": [
      {
       "tool": "get_test_positivity",
@@ -3925,7 +3767,7 @@
        "week": "2026-10-10"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.014,
+      "elapsed_s": 0.018,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "test_positivity",
@@ -3946,7 +3788,7 @@
        "network": "FluSurv-NET"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.012,
+      "elapsed_s": 0.018,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -3961,70 +3803,22 @@
        "age_group": "Overall",
        "units": "rate per 100,000"
       }
-     },
-     {
-      "tool": "get_data_freshness",
-      "inputs": {},
-      "rows_returned": 5,
-      "elapsed_s": 0.011,
-      "output": {
-       "as_of": "2026-10-10",
-       "source_table": "all",
-       "rows": [
-        {
-         "table": "ari_activity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "hospitalization_rates",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "test_positivity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true,
-         "dataset": "atcp-73re",
-         "legacy": false
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2025-09-07",
-         "age_days": 420,
-         "stale": true,
-         "dataset": "2ew6-ywp6 (legacy)",
-         "legacy": true
-        }
-       ]
-      }
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.384,
+    "elapsed_s": 1.723,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
-     "passed": false,
-     "unverified": [
-      "14"
-     ],
+     "passed": true,
+     "unverified": [],
      "stale_tables": [
       "hospitalization_rates",
       "test_positivity"
      ]
     }
    },
-   "correct": false
+   "correct": true
   },
   {
    "question": "For the week ending October 10, 2026, give RSV test positivity and the RSV-NET weekly hospitalization rate for children aged 0-4.",
@@ -4035,11 +3829,11 @@
      {
       "tool": "get_test_positivity",
       "inputs": {
-       "pathogen": "RSV",
-       "week": "2026-10-10"
+       "week": "2026-10-10",
+       "pathogen": "RSV"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.013,
+      "elapsed_s": 0.019,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "test_positivity",
@@ -4056,11 +3850,11 @@
       "tool": "get_hospitalization_rate",
       "inputs": {
        "network": "RSV-NET",
-       "weeks": 1,
-       "age_group": "0-4 yr"
+       "age_group": "0-4 yr",
+       "weeks": 1
       },
       "rows_returned": 1,
-      "elapsed_s": 0.012,
+      "elapsed_s": 0.018,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -4078,7 +3872,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.244,
+    "elapsed_s": 1.39,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -4096,15 +3890,16 @@
    "question": "In the latest week, how many states were at Very Low respiratory illness activity, and how many wastewater sites nationally were at High or Very High SARS-CoV-2 activity?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: ari_activity (latest 2026-10-10), wastewater_sites (latest 2026-10-10). Based on data for the week-ending date of 2026-10-10, there were 40 states at Very Low respiratory illness activity, and 199 wastewater sites nationally at High or Very High SARS-CoV-2 activity. Note that the data is out of date (older than 14 days).",
+    "answer": "Warning: this data is more than 14 days old: ari_activity (latest 2026-10-10), wastewater_sites (latest 2026-10-10). Based on data for the week-ending date of October 10, 2026 (note: the data is out of date, being 23 days old), 40 states were at Very Low respiratory illness activity. Nationally, there were 199 wastewater sites at High or Very High SARS-CoV-2 activity out of 797 reporting sites.",
     "tool_calls": [
      {
       "tool": "list_states_at_level",
       "inputs": {
-       "level": "Very Low"
+       "level": "Very Low",
+       "week": null
       },
       "rows_returned": 40,
-      "elapsed_s": 0.013,
+      "elapsed_s": 0.018,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "ari_activity",
@@ -4236,10 +4031,12 @@
      {
       "tool": "get_wastewater",
       "inputs": {
-       "pathogen": "SARS-CoV-2"
+       "state": null,
+       "pathogen": "SARS-CoV-2",
+       "county_fips": null
       },
       "rows_returned": 1,
-      "elapsed_s": 0.018,
+      "elapsed_s": 0.027,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -4269,7 +4066,7 @@
       "tool": "get_data_freshness",
       "inputs": {},
       "rows_returned": 5,
-      "elapsed_s": 0.012,
+      "elapsed_s": 0.018,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "all",
@@ -4277,25 +4074,25 @@
         {
          "table": "ari_activity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "hospitalization_rates",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "test_positivity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "wastewater_sites",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true,
          "dataset": "atcp-73re",
          "legacy": false
@@ -4303,7 +4100,7 @@
         {
          "table": "wastewater_sites",
          "latest_week": "2025-09-07",
-         "age_days": 420,
+         "age_days": 421,
          "stale": true,
          "dataset": "2ew6-ywp6 (legacy)",
          "legacy": true
@@ -4313,7 +4110,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.375,
+    "elapsed_s": 1.511,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -4331,13 +4128,13 @@
    "question": "For the week ending October 3, 2026, give COVID-19 test positivity and the overall COVID-NET weekly hospitalization rate.",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10), test_positivity (latest 2026-10-10). Note: The surveillance data is out of date, with hospitalization rates extending to the week ending October 10, 2026. For the week ending October 3, 2026, the COVID-19 test positivity was 4.2%. For the week ending October 10, 2026, the overall COVID-NET weekly hospitalization rate was 0.8 per 100,000.",
+    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10), test_positivity (latest 2026-10-10). The data is out of date; the hospitalization table's latest week is 2026-10-10. For the week ending October 3, 2026, the COVID-19 test positivity was 4.2%. The overall COVID-NET weekly hospitalization rate for the week ending October 10, 2026 was 0.8 per 100,000.",
     "tool_calls": [
      {
       "tool": "get_data_freshness",
       "inputs": {},
       "rows_returned": 5,
-      "elapsed_s": 0.016,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "all",
@@ -4345,25 +4142,25 @@
         {
          "table": "ari_activity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "hospitalization_rates",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "test_positivity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "wastewater_sites",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true,
          "dataset": "atcp-73re",
          "legacy": false
@@ -4371,7 +4168,7 @@
         {
          "table": "wastewater_sites",
          "latest_week": "2025-09-07",
-         "age_days": 420,
+         "age_days": 421,
          "stale": true,
          "dataset": "2ew6-ywp6 (legacy)",
          "legacy": true
@@ -4382,11 +4179,11 @@
      {
       "tool": "get_test_positivity",
       "inputs": {
-       "week": "2026-10-03",
-       "pathogen": "COVID-19"
+       "pathogen": "COVID-19",
+       "week": "2026-10-03"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.013,
+      "elapsed_s": 0.016,
       "output": {
        "as_of": "2026-10-03",
        "source_table": "test_positivity",
@@ -4402,12 +4199,12 @@
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
-       "weeks": 1,
+       "network": "COVID-NET",
        "age_group": "Overall",
-       "network": "COVID-NET"
+       "weeks": 1
       },
       "rows_returned": 1,
-      "elapsed_s": 0.015,
+      "elapsed_s": 0.018,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -4425,7 +4222,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.322,
+    "elapsed_s": 1.699,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -4443,61 +4240,16 @@
    "question": "For the latest week, what was Texas's respiratory illness activity level, and how many Texas wastewater sites reported SARS-CoV-2?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: ari_activity (latest 2026-10-10), wastewater_sites (latest 2026-10-10). The data is out of date; the latest week loaded is 2026-10-10. For the week ending October 10, 2026, Texas's respiratory illness activity level was \"Low\". During that same week, 33 Texas wastewater sites reported SARS-CoV-2.",
+    "answer": "Warning: this data is more than 14 days old: ari_activity (latest 2026-10-10), wastewater_sites (latest 2026-10-10). For the week ending October 10, 2026, Texas's acute respiratory illness activity level was Low, and 33 Texas wastewater sites reported SARS-CoV-2. Note that the data is out of date, as the latest tables are 23 days old (week ending October 10, 2026).",
     "tool_calls": [
-     {
-      "tool": "get_data_freshness",
-      "inputs": {},
-      "rows_returned": 5,
-      "elapsed_s": 0.015,
-      "output": {
-       "as_of": "2026-10-10",
-       "source_table": "all",
-       "rows": [
-        {
-         "table": "ari_activity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "hospitalization_rates",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "test_positivity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true,
-         "dataset": "atcp-73re",
-         "legacy": false
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2025-09-07",
-         "age_days": 420,
-         "stale": true,
-         "dataset": "2ew6-ywp6 (legacy)",
-         "legacy": true
-        }
-       ]
-      }
-     },
      {
       "tool": "get_ari_level",
       "inputs": {
+       "week": null,
        "state": "Texas"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.011,
+      "elapsed_s": 0.019,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "ari_activity",
@@ -4514,10 +4266,11 @@
       "tool": "get_wastewater",
       "inputs": {
        "pathogen": "SARS-CoV-2",
+       "county_fips": null,
        "state": "Texas"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.023,
+      "elapsed_s": 0.03,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -4542,10 +4295,56 @@
         "note": "Legacy NWSS SARS-CoV-2 metrics; CDC stopped updating this file after 2025-09-07."
        }
       }
+     },
+     {
+      "tool": "get_data_freshness",
+      "inputs": {},
+      "rows_returned": 5,
+      "elapsed_s": 0.017,
+      "output": {
+       "as_of": "2026-10-10",
+       "source_table": "all",
+       "rows": [
+        {
+         "table": "ari_activity",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "hospitalization_rates",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "test_positivity",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "wastewater_sites",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true,
+         "dataset": "atcp-73re",
+         "legacy": false
+        },
+        {
+         "table": "wastewater_sites",
+         "latest_week": "2025-09-07",
+         "age_days": 421,
+         "stale": true,
+         "dataset": "2ew6-ywp6 (legacy)",
+         "legacy": true
+        }
+       ]
+      }
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.516,
+    "elapsed_s": 1.692,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -4563,13 +4362,13 @@
    "question": "In the latest week, what was influenza test positivity, and how many wastewater sites nationally reported influenza A?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: test_positivity (latest 2026-10-10), wastewater_sites (latest 2026-10-10). Note: The data is out of date, with the latest week ending 2026-10-10. For the week ending 2026-10-10, influenza test positivity was 5.0%. Nationally, 726 wastewater sites reported influenza A.",
+    "answer": "Warning: this data is more than 14 days old: test_positivity (latest 2026-10-10), wastewater_sites (latest 2026-10-10). Note: The data is out of date, with its latest week ending 2026-10-10. Based on that week, influenza test positivity was 5.0%. Nationally, 726 wastewater sites reported influenza A.",
     "tool_calls": [
      {
       "tool": "get_data_freshness",
       "inputs": {},
       "rows_returned": 5,
-      "elapsed_s": 0.015,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "all",
@@ -4577,25 +4376,25 @@
         {
          "table": "ari_activity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "hospitalization_rates",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "test_positivity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "wastewater_sites",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true,
          "dataset": "atcp-73re",
          "legacy": false
@@ -4603,7 +4402,7 @@
         {
          "table": "wastewater_sites",
          "latest_week": "2025-09-07",
-         "age_days": 420,
+         "age_days": 421,
          "stale": true,
          "dataset": "2ew6-ywp6 (legacy)",
          "legacy": true
@@ -4617,7 +4416,7 @@
        "pathogen": "Influenza"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.011,
+      "elapsed_s": 0.016,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "test_positivity",
@@ -4636,7 +4435,7 @@
        "pathogen": "Influenza A virus"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.016,
+      "elapsed_s": 0.023,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -4656,7 +4455,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.465,
+    "elapsed_s": 1.871,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -4673,16 +4472,17 @@
   {
    "question": "For the week ending October 10, 2026, give the combined weekly hospitalization rate for COVID-19, flu and RSV, and the number of states at Low respiratory illness activity.",
    "response": {
-    "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: ari_activity (latest 2026-10-10), hospitalization_rates (latest 2026-10-10). For the week ending October 10, 2026, the data is out of date (latest week 2026-10-10, 22 days old). The combined weekly hospitalization rate for COVID-19, flu, and RSV was 1.6 per 100,000 overall. There were 10 states at Low respiratory illness activity.",
+    "status": "unverified",
+    "answer": "I could not verify that figure.",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
+       "weeks": 1,
        "network": "Combined"
       },
-      "rows_returned": 4,
-      "elapsed_s": 0.016,
+      "rows_returned": 1,
+      "elapsed_s": 0.021,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -4691,21 +4491,6 @@
          "week_end": "2026-10-10",
          "rate_per_100k": 1.6,
          "cumulative_per_100k": 2.0
-        },
-        {
-         "week_end": "2026-10-03",
-         "rate_per_100k": 2.0,
-         "cumulative_per_100k": 181.0
-        },
-        {
-         "week_end": "2026-09-26",
-         "rate_per_100k": 2.0,
-         "cumulative_per_100k": 179.0
-        },
-        {
-         "week_end": "2026-09-19",
-         "rate_per_100k": 1.7,
-         "cumulative_per_100k": 177.0
         }
        ],
        "network": "Combined",
@@ -4720,7 +4505,7 @@
        "level": "Low"
       },
       "rows_returned": 10,
-      "elapsed_s": 0.01,
+      "elapsed_s": 0.014,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "ari_activity",
@@ -4763,7 +4548,7 @@
       "tool": "get_data_freshness",
       "inputs": {},
       "rows_returned": 5,
-      "elapsed_s": 0.012,
+      "elapsed_s": 0.017,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "all",
@@ -4771,25 +4556,25 @@
         {
          "table": "ari_activity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "hospitalization_rates",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "test_positivity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "wastewater_sites",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true,
          "dataset": "atcp-73re",
          "legacy": false
@@ -4797,7 +4582,7 @@
         {
          "table": "wastewater_sites",
          "latest_week": "2025-09-07",
-         "age_days": 420,
+         "age_days": 421,
          "stale": true,
          "dataset": "2ew6-ywp6 (legacy)",
          "legacy": true
@@ -4807,75 +4592,30 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.4,
+    "elapsed_s": 1.676,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
-     "passed": true,
-     "unverified": [],
+     "passed": false,
+     "unverified": [
+      "14"
+     ],
      "stale_tables": [
       "ari_activity",
       "hospitalization_rates"
      ]
     }
    },
-   "correct": true
+   "correct": false
   },
   {
    "question": "How many ICU beds are free in Texas right now?",
    "response": {
     "status": "refused",
-    "answer": "The data does not cover that. The available U.S. respiratory virus surveillance data from the CDC includes metrics on acute respiratory illness activity, hospitalization rates, test positivity, and wastewater viral activity, but it does not track hospital ICU bed capacity.",
-    "tool_calls": [
-     {
-      "tool": "get_data_freshness",
-      "inputs": {},
-      "rows_returned": 5,
-      "elapsed_s": 0.015,
-      "output": {
-       "as_of": "2026-10-10",
-       "source_table": "all",
-       "rows": [
-        {
-         "table": "ari_activity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "hospitalization_rates",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "test_positivity",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2026-10-10",
-         "age_days": 22,
-         "stale": true,
-         "dataset": "atcp-73re",
-         "legacy": false
-        },
-        {
-         "table": "wastewater_sites",
-         "latest_week": "2025-09-07",
-         "age_days": 420,
-         "stale": true,
-         "dataset": "2ew6-ywp6 (legacy)",
-         "legacy": true
-        }
-       ]
-      }
-     }
-    ],
-    "as_of": "2026-10-10",
-    "elapsed_s": 1.462,
+    "answer": "I cannot answer that from this data. The available surveillance data covers acute respiratory illness activity, test positivity, wastewater levels, and hospitalization rates, but does not track ICU bed capacity.",
+    "tool_calls": [],
+    "as_of": null,
+    "elapsed_s": 0.775,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -4890,7 +4630,7 @@
    "question": "What was COVID-19 test positivity for the week ending March 6, 2027?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: test_positivity (latest 2026-10-10). The data does not cover that; no test positivity records were found for the week ending March 6, 2027.",
+    "answer": "Warning: this data is more than 14 days old: test_positivity (latest 2026-10-10). The data does not cover that. The test positivity data only extends up to the week ending October 10, 2026, and is out of date.",
     "tool_calls": [
      {
       "tool": "get_test_positivity",
@@ -4899,16 +4639,62 @@
        "pathogen": "COVID-19"
       },
       "rows_returned": 0,
-      "elapsed_s": 0.014,
+      "elapsed_s": 0.018,
       "output": {
        "as_of": "2027-03-06",
        "source_table": "test_positivity",
        "rows": []
       }
+     },
+     {
+      "tool": "get_data_freshness",
+      "inputs": {},
+      "rows_returned": 5,
+      "elapsed_s": 0.018,
+      "output": {
+       "as_of": "2026-10-10",
+       "source_table": "all",
+       "rows": [
+        {
+         "table": "ari_activity",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "hospitalization_rates",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "test_positivity",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "wastewater_sites",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true,
+         "dataset": "atcp-73re",
+         "legacy": false
+        },
+        {
+         "table": "wastewater_sites",
+         "latest_week": "2025-09-07",
+         "age_days": 421,
+         "stale": true,
+         "dataset": "2ew6-ywp6 (legacy)",
+         "legacy": true
+        }
+       ]
+      }
      }
     ],
     "as_of": "2027-03-06",
-    "elapsed_s": 1.183,
+    "elapsed_s": 1.449,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -4925,13 +4711,13 @@
    "question": "How many people died of influenza in Ohio last week?",
    "response": {
     "status": "refused",
-    "answer": "I can't answer that from this data, as the available surveillance data does not include mortality counts for influenza.",
+    "answer": "The data does not cover that. The available U.S. respiratory virus surveillance data does not include mortality counts for influenza in Ohio.",
     "tool_calls": [
      {
       "tool": "get_data_freshness",
       "inputs": {},
       "rows_returned": 5,
-      "elapsed_s": 0.025,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "all",
@@ -4939,25 +4725,25 @@
         {
          "table": "ari_activity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "hospitalization_rates",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "test_positivity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "wastewater_sites",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true,
          "dataset": "atcp-73re",
          "legacy": false
@@ -4965,7 +4751,7 @@
         {
          "table": "wastewater_sites",
          "latest_week": "2025-09-07",
-         "age_days": 420,
+         "age_days": 421,
          "stale": true,
          "dataset": "2ew6-ywp6 (legacy)",
          "legacy": true
@@ -4975,7 +4761,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 0.985,
+    "elapsed_s": 1.518,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -4996,7 +4782,7 @@
       "tool": "get_data_freshness",
       "inputs": {},
       "rows_returned": 5,
-      "elapsed_s": 0.016,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "all",
@@ -5004,25 +4790,25 @@
         {
          "table": "ari_activity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "hospitalization_rates",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "test_positivity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "wastewater_sites",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true,
          "dataset": "atcp-73re",
          "legacy": false
@@ -5030,7 +4816,7 @@
         {
          "table": "wastewater_sites",
          "latest_week": "2025-09-07",
-         "age_days": 420,
+         "age_days": 421,
          "stale": true,
          "dataset": "2ew6-ywp6 (legacy)",
          "legacy": true
@@ -5040,7 +4826,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.245,
+    "elapsed_s": 1.508,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -5057,7 +4843,7 @@
    "question": "What will COVID-19 test positivity be in December 2027?",
    "response": {
     "status": "refused",
-    "answer": "I can't answer that from this data, as no forecast is stored for COVID-NET.",
+    "answer": "The data does not cover that.",
     "tool_calls": [
      {
       "tool": "get_forecast",
@@ -5065,14 +4851,14 @@
        "virus": "COVID-NET"
       },
       "rows_returned": 0,
-      "elapsed_s": 0.014,
+      "elapsed_s": 0.018,
       "output": {
        "error": "No trained forecast is stored for COVID-NET. Training runs from the command line."
       }
      }
     ],
     "as_of": null,
-    "elapsed_s": 1.09,
+    "elapsed_s": 1.395,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -5087,10 +4873,10 @@
    "question": "Should I get a flu shot this week?",
    "response": {
     "status": "refused",
-    "answer": "I can't answer personal health questions or provide medical advice, and suggest asking a clinician.",
+    "answer": "I can't answer that and suggest asking a clinician for personal health questions.",
     "tool_calls": [],
     "as_of": null,
-    "elapsed_s": 0.57,
+    "elapsed_s": 0.551,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -5105,7 +4891,7 @@
    "question": "What was Ohio's respiratory illness activity level for the week ending January 4, 2025?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: ari_activity (latest 2026-10-10). The data does not cover that; no acute respiratory illness activity level was returned for Ohio for the week ending January 4, 2025.",
+    "answer": "Warning: this data is more than 14 days old: ari_activity (latest 2026-10-10). The data does not cover that.",
     "tool_calls": [
      {
       "tool": "get_ari_level",
@@ -5114,7 +4900,67 @@
        "state": "Ohio"
       },
       "rows_returned": 0,
-      "elapsed_s": 0.014,
+      "elapsed_s": 0.018,
+      "output": {
+       "as_of": "2025-01-04",
+       "source_table": "ari_activity",
+       "rows": []
+      }
+     },
+     {
+      "tool": "get_data_freshness",
+      "inputs": {},
+      "rows_returned": 5,
+      "elapsed_s": 0.017,
+      "output": {
+       "as_of": "2026-10-10",
+       "source_table": "all",
+       "rows": [
+        {
+         "table": "ari_activity",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "hospitalization_rates",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "test_positivity",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true
+        },
+        {
+         "table": "wastewater_sites",
+         "latest_week": "2026-10-10",
+         "age_days": 23,
+         "stale": true,
+         "dataset": "atcp-73re",
+         "legacy": false
+        },
+        {
+         "table": "wastewater_sites",
+         "latest_week": "2025-09-07",
+         "age_days": 421,
+         "stale": true,
+         "dataset": "2ew6-ywp6 (legacy)",
+         "legacy": true
+        }
+       ]
+      }
+     },
+     {
+      "tool": "get_ari_level",
+      "inputs": {
+       "state": "Ohio",
+       "week": "2025-01-04"
+      },
+      "rows_returned": 0,
+      "elapsed_s": 0.017,
       "output": {
        "as_of": "2025-01-04",
        "source_table": "ari_activity",
@@ -5122,8 +4968,8 @@
       }
      }
     ],
-    "as_of": "2025-01-04",
-    "elapsed_s": 1.304,
+    "as_of": "2026-10-10",
+    "elapsed_s": 2.056,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -5140,74 +4986,43 @@
    "question": "How much measles virus was detected in Texas wastewater last week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: wastewater_sites (latest 2026-10-10). The wastewater data does not cover measles.",
+    "answer": "The data does not cover that; measles is not one of the pathogens tracked in the wastewater surveillance data.",
     "tool_calls": [
      {
       "tool": "get_wastewater",
       "inputs": {
+       "pathogen": "measles",
        "state": "Texas"
       },
-      "rows_returned": 3,
-      "elapsed_s": 0.024,
+      "rows_returned": 0,
+      "elapsed_s": 0.022,
       "output": {
-       "as_of": "2026-10-10",
-       "source_table": "wastewater_sites",
-       "rows": [
-        {
-         "week_end": "2026-10-10",
-         "pathogen": "Influenza A virus",
-         "site_count": 33,
-         "median_wval": 1.93,
-         "sites_high_or_very_high": 0
-        },
-        {
-         "week_end": "2026-10-10",
-         "pathogen": "RSV",
-         "site_count": 33,
-         "median_wval": 1.0,
-         "sites_high_or_very_high": 0
-        },
-        {
-         "week_end": "2026-10-10",
-         "pathogen": "SARS-CoV-2",
-         "site_count": 33,
-         "median_wval": 5.83,
-         "sites_high_or_very_high": 5
-        }
-       ],
-       "scope": "Texas",
-       "total_sites": 33,
-       "legacy": {
-        "source_dataset": "2ew6-ywp6 (legacy)",
-        "pathogen": "SARS-CoV-2",
-        "date_end": "2025-09-07",
-        "site_count": 74,
-        "avg_percentile": 72.6,
-        "median_ptc_15d_percent": 45.5,
-        "note": "Legacy NWSS SARS-CoV-2 metrics; CDC stopped updating this file after 2025-09-07."
-       }
+       "error": "Unknown pathogen 'measles'.",
+       "allowed": [
+        "Influenza A virus",
+        "RSV",
+        "SARS-CoV-2"
+       ]
       }
      }
     ],
-    "as_of": "2026-10-10",
-    "elapsed_s": 1.431,
+    "as_of": null,
+    "elapsed_s": 1.407,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
      "passed": true,
      "unverified": [],
-     "stale_tables": [
-      "wastewater_sites"
-     ]
+     "stale_tables": []
     }
    },
-   "correct": false
+   "correct": true
   },
   {
    "question": "What is the COVID-19 hospitalization rate in Canada?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). The data does not cover that. The available COVID-NET hospitalization rates are for the United States, not Canada.",
+    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). The data does not cover Canada, as the COVID-NET network covers the United States.",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
@@ -5215,7 +5030,7 @@
        "network": "COVID-NET"
       },
       "rows_returned": 4,
-      "elapsed_s": 0.017,
+      "elapsed_s": 0.021,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -5248,7 +5063,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.073,
+    "elapsed_s": 1.535,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -5265,50 +5080,13 @@
    "question": "Which hospital in Ohio has the most RSV patients right now?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: hospitalization_rates (latest 2026-10-10). I can't answer that from this data; the CDC surveillance data tracks regional and network-level hospitalization rates (such as RSV-NET) rather than patient counts at individual hospitals.",
+    "answer": "The data does not cover that. The available CDC surveillance data provides state and national level metrics, wastewater activity, and network hospitalization rates, but does not track patient counts for individual hospitals.",
     "tool_calls": [
-     {
-      "tool": "get_hospitalization_rate",
-      "inputs": {
-       "network": "RSV-NET"
-      },
-      "rows_returned": 4,
-      "elapsed_s": 0.019,
-      "output": {
-       "as_of": "2026-10-10",
-       "source_table": "hospitalization_rates",
-       "rows": [
-        {
-         "week_end": "2026-10-10",
-         "rate_per_100k": 0.1,
-         "cumulative_per_100k": 0.0
-        },
-        {
-         "week_end": "2026-10-03",
-         "rate_per_100k": 0.1,
-         "cumulative_per_100k": 45.0
-        },
-        {
-         "week_end": "2026-09-26",
-         "rate_per_100k": 0.0,
-         "cumulative_per_100k": 45.0
-        },
-        {
-         "week_end": "2026-09-19",
-         "rate_per_100k": 0.0,
-         "cumulative_per_100k": 44.0
-        }
-       ],
-       "network": "RSV-NET",
-       "age_group": "Overall",
-       "units": "rate per 100,000"
-      }
-     },
      {
       "tool": "get_data_freshness",
       "inputs": {},
       "rows_returned": 5,
-      "elapsed_s": 0.015,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "all",
@@ -5316,25 +5094,25 @@
         {
          "table": "ari_activity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "hospitalization_rates",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "test_positivity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "wastewater_sites",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true,
          "dataset": "atcp-73re",
          "legacy": false
@@ -5342,7 +5120,7 @@
         {
          "table": "wastewater_sites",
          "latest_week": "2025-09-07",
-         "age_days": 420,
+         "age_days": 421,
          "stale": true,
          "dataset": "2ew6-ywp6 (legacy)",
          "legacy": true
@@ -5352,24 +5130,22 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.558,
+    "elapsed_s": 1.332,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
      "passed": true,
      "unverified": [],
-     "stale_tables": [
-      "hospitalization_rates"
-     ]
+     "stale_tables": []
     }
    },
-   "correct": false
+   "correct": true
   },
   {
    "question": "What was influenza test positivity in Ohio last week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is more than 14 days old: test_positivity (latest 2026-10-10). The test positivity data does not provide a breakdown by state, so I can't give the influenza test positivity specifically for Ohio. Nationally, for the week ending October 10, 2026, the overall influenza test positivity was 5.0%. Please note that the test positivity data is out of date, with its latest week being 2026-10-10.",
+    "answer": "Warning: this data is more than 14 days old: test_positivity (latest 2026-10-10). The test positivity data is out of date (latest week-ending date: 2026-10-10). Furthermore, the available test positivity data is national and does not provide a breakdown for Ohio.",
     "tool_calls": [
      {
       "tool": "get_test_positivity",
@@ -5377,7 +5153,7 @@
        "pathogen": "Influenza"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.015,
+      "elapsed_s": 0.018,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "test_positivity",
@@ -5394,7 +5170,7 @@
       "tool": "get_data_freshness",
       "inputs": {},
       "rows_returned": 5,
-      "elapsed_s": 0.016,
+      "elapsed_s": 0.019,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "all",
@@ -5402,25 +5178,25 @@
         {
          "table": "ari_activity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "hospitalization_rates",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "test_positivity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "wastewater_sites",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true,
          "dataset": "atcp-73re",
          "legacy": false
@@ -5428,7 +5204,7 @@
         {
          "table": "wastewater_sites",
          "latest_week": "2025-09-07",
-         "age_days": 420,
+         "age_days": 421,
          "stale": true,
          "dataset": "2ew6-ywp6 (legacy)",
          "legacy": true
@@ -5438,7 +5214,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 2.132,
+    "elapsed_s": 2.149,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -5455,13 +5231,13 @@
    "question": "How many people in New York are vaccinated against COVID-19?",
    "response": {
     "status": "refused",
-    "answer": "The data does not cover that. The available CDC surveillance data includes metrics on acute respiratory illness activity levels, hospitalizations, test positivity, and wastewater viral activity, but it does not contain COVID-19 vaccination counts.",
+    "answer": "The data does not cover COVID-19 vaccination numbers; the available surveillance data covers acute respiratory illness activity, hospitalization rates, test positivity, and wastewater viral activity.",
     "tool_calls": [
      {
       "tool": "get_data_freshness",
       "inputs": {},
       "rows_returned": 5,
-      "elapsed_s": 0.015,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "all",
@@ -5469,25 +5245,25 @@
         {
          "table": "ari_activity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "hospitalization_rates",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "test_positivity",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true
         },
         {
          "table": "wastewater_sites",
          "latest_week": "2026-10-10",
-         "age_days": 22,
+         "age_days": 23,
          "stale": true,
          "dataset": "atcp-73re",
          "legacy": false
@@ -5495,7 +5271,7 @@
         {
          "table": "wastewater_sites",
          "latest_week": "2025-09-07",
-         "age_days": 420,
+         "age_days": 421,
          "stale": true,
          "dataset": "2ew6-ywp6 (legacy)",
          "legacy": true
@@ -5505,7 +5281,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.161,
+    "elapsed_s": 1.375,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {

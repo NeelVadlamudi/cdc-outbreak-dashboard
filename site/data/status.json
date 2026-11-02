@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-11-01T16:09:27Z",
+  "generated_at": "2026-11-02T19:38:27Z",
   "run": {
     "result": "alert",
-    "started_at": "2026-11-01T16:07:37Z",
-    "finished_at": "2026-11-01T16:09:27Z",
-    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/41324610838",
-    "commit": "59a8396b4343c198a48e50057e3f3852902249a9",
+    "started_at": "2026-11-02T19:36:03Z",
+    "finished_at": "2026-11-02T19:38:27Z",
+    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/41511259828",
+    "commit": "65454f7e1ab611e7bbb14312541fdbff40c30197",
     "steps": {
       "refresh": "success",
       "backtest": "success",
@@ -15,18 +15,18 @@
   },
   "eval": {
     "model": "gemini-3.5-flash-lite",
-    "date": "2026-11-01",
+    "date": "2026-11-02",
     "question_set": "cdc-q60-v1",
     "summary": {
       "question_set": "cdc-q60-v1",
       "questions": 60,
-      "numeric_accuracy": 87.5,
+      "numeric_accuracy": 83.3,
       "tool_choice": 100.0,
-      "correct_refusals": 50.0,
-      "false_refusals": 8.3,
-      "grounded_answers": 20.5,
-      "median_s": 1.37,
-      "p95_s": 1.8,
+      "correct_refusals": 66.7,
+      "false_refusals": 14.6,
+      "grounded_answers": 21.4,
+      "median_s": 1.46,
+      "p95_s": 2.06,
       "median_input_tokens": null,
       "median_output_tokens": null
     },
@@ -49,21 +49,33 @@
     },
     "drops": [
       {
+        "metric": "numeric_accuracy",
+        "baseline": 91.7,
+        "value": 83.3,
+        "change": -8.4
+      },
+      {
         "metric": "correct_refusals",
         "baseline": 75.0,
-        "value": 50.0,
-        "change": -25.0
+        "value": 66.7,
+        "change": -8.3
       },
       {
         "metric": "grounded_answers",
         "baseline": 100.0,
-        "value": 20.5,
-        "change": -79.5
+        "value": 21.4,
+        "change": -78.6
+      },
+      {
+        "metric": "false_refusals",
+        "baseline": 6.2,
+        "value": 14.6,
+        "change": 8.4
       }
     ]
   },
   "backtest": {
-    "run_at": "2026-11-01T16:08:01Z",
+    "run_at": "2026-11-02T19:36:51Z",
     "data_through": "2026-10-24",
     "notes": [
       "LSTM on COVID-NET does not beat last week's value at any horizon.",
@@ -84,7 +96,7 @@
         "dataset": null,
         "legacy": null,
         "latest_week": "2026-10-24",
-        "age_days": 8,
+        "age_days": 9,
         "stale": false
       },
       {
@@ -92,7 +104,7 @@
         "dataset": null,
         "legacy": null,
         "latest_week": "2026-10-24",
-        "age_days": 8,
+        "age_days": 9,
         "stale": false
       },
       {
@@ -100,7 +112,7 @@
         "dataset": null,
         "legacy": null,
         "latest_week": "2026-10-24",
-        "age_days": 8,
+        "age_days": 9,
         "stale": false
       },
       {
@@ -108,7 +120,7 @@
         "dataset": "atcp-73re",
         "legacy": false,
         "latest_week": "2026-10-24",
-        "age_days": 8,
+        "age_days": 9,
         "stale": false
       },
       {
@@ -124,13 +136,23 @@
   "alerts": [
     {
       "kind": "score_drop",
+      "title": "Eval score drop: numeric_accuracy",
+      "detail": "numeric_accuracy was 83.3 against a baseline of 91.7 (-8.4 points; alert threshold 5)."
+    },
+    {
+      "kind": "score_drop",
       "title": "Eval score drop: correct_refusals",
-      "detail": "correct_refusals was 50.0 against a baseline of 75.0 (-25.0 points; alert threshold 5)."
+      "detail": "correct_refusals was 66.7 against a baseline of 75.0 (-8.3 points; alert threshold 5)."
     },
     {
       "kind": "score_drop",
       "title": "Eval score drop: grounded_answers",
-      "detail": "grounded_answers was 20.5 against a baseline of 100.0 (-79.5 points; alert threshold 5)."
+      "detail": "grounded_answers was 21.4 against a baseline of 100.0 (-78.6 points; alert threshold 5)."
+    },
+    {
+      "kind": "score_drop",
+      "title": "Eval score drop: false_refusals",
+      "detail": "false_refusals was 14.6 against a baseline of 6.2 (+8.4 points; alert threshold 5)."
     }
   ]
 }
