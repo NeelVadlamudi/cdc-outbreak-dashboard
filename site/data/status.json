@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-11-02T19:38:27Z",
+  "generated_at": "2026-11-03T17:12:53Z",
   "run": {
     "result": "alert",
-    "started_at": "2026-11-02T19:36:03Z",
-    "finished_at": "2026-11-02T19:38:27Z",
-    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/41511259828",
-    "commit": "65454f7e1ab611e7bbb14312541fdbff40c30197",
+    "started_at": "2026-11-03T17:10:02Z",
+    "finished_at": "2026-11-03T17:12:53Z",
+    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/41681335245",
+    "commit": "aa6f4252fe61b41ff22fdaca44dc6f1a93e9104c",
     "steps": {
       "refresh": "success",
       "backtest": "success",
@@ -15,18 +15,18 @@
   },
   "eval": {
     "model": "gemini-3.5-flash-lite",
-    "date": "2026-11-02",
+    "date": "2026-11-03",
     "question_set": "cdc-q60-v1",
     "summary": {
       "question_set": "cdc-q60-v1",
       "questions": 60,
-      "numeric_accuracy": 83.3,
+      "numeric_accuracy": 77.1,
       "tool_choice": 100.0,
-      "correct_refusals": 66.7,
-      "false_refusals": 14.6,
-      "grounded_answers": 21.4,
-      "median_s": 1.46,
-      "p95_s": 2.06,
+      "correct_refusals": 58.3,
+      "false_refusals": 20.8,
+      "grounded_answers": 30.8,
+      "median_s": 2.05,
+      "p95_s": 2.77,
       "median_input_tokens": null,
       "median_output_tokens": null
     },
@@ -51,31 +51,31 @@
       {
         "metric": "numeric_accuracy",
         "baseline": 91.7,
-        "value": 83.3,
-        "change": -8.4
+        "value": 77.1,
+        "change": -14.6
       },
       {
         "metric": "correct_refusals",
         "baseline": 75.0,
-        "value": 66.7,
-        "change": -8.3
+        "value": 58.3,
+        "change": -16.7
       },
       {
         "metric": "grounded_answers",
         "baseline": 100.0,
-        "value": 21.4,
-        "change": -78.6
+        "value": 30.8,
+        "change": -69.2
       },
       {
         "metric": "false_refusals",
         "baseline": 6.2,
-        "value": 14.6,
-        "change": 8.4
+        "value": 20.8,
+        "change": 14.6
       }
     ]
   },
   "backtest": {
-    "run_at": "2026-11-02T19:36:51Z",
+    "run_at": "2026-11-03T17:10:46Z",
     "data_through": "2026-10-24",
     "notes": [
       "LSTM on COVID-NET does not beat last week's value at any horizon.",
@@ -96,7 +96,7 @@
         "dataset": null,
         "legacy": null,
         "latest_week": "2026-10-24",
-        "age_days": 9,
+        "age_days": 10,
         "stale": false
       },
       {
@@ -104,7 +104,7 @@
         "dataset": null,
         "legacy": null,
         "latest_week": "2026-10-24",
-        "age_days": 9,
+        "age_days": 10,
         "stale": false
       },
       {
@@ -112,7 +112,7 @@
         "dataset": null,
         "legacy": null,
         "latest_week": "2026-10-24",
-        "age_days": 9,
+        "age_days": 10,
         "stale": false
       },
       {
@@ -120,7 +120,7 @@
         "dataset": "atcp-73re",
         "legacy": false,
         "latest_week": "2026-10-24",
-        "age_days": 9,
+        "age_days": 10,
         "stale": false
       },
       {
@@ -137,22 +137,22 @@
     {
       "kind": "score_drop",
       "title": "Eval score drop: numeric_accuracy",
-      "detail": "numeric_accuracy was 83.3 against a baseline of 91.7 (-8.4 points; alert threshold 5)."
+      "detail": "numeric_accuracy was 77.1 against a baseline of 91.7 (-14.6 points; alert threshold 5)."
     },
     {
       "kind": "score_drop",
       "title": "Eval score drop: correct_refusals",
-      "detail": "correct_refusals was 66.7 against a baseline of 75.0 (-8.3 points; alert threshold 5)."
+      "detail": "correct_refusals was 58.3 against a baseline of 75.0 (-16.7 points; alert threshold 5)."
     },
     {
       "kind": "score_drop",
       "title": "Eval score drop: grounded_answers",
-      "detail": "grounded_answers was 21.4 against a baseline of 100.0 (-78.6 points; alert threshold 5)."
+      "detail": "grounded_answers was 30.8 against a baseline of 100.0 (-69.2 points; alert threshold 5)."
     },
     {
       "kind": "score_drop",
       "title": "Eval score drop: false_refusals",
-      "detail": "false_refusals was 14.6 against a baseline of 6.2 (+8.4 points; alert threshold 5)."
+      "detail": "false_refusals was 20.8 against a baseline of 6.2 (+14.6 points; alert threshold 5)."
     }
   ]
 }
