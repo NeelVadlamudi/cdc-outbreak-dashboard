@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-04T17:22:36Z",
+  "generated_at": "2026-11-04T23:53:20Z",
   "as_of": "2026-10-24",
   "metrics": [
     {
@@ -8,6 +8,12 @@
       "value": 0.035,
       "format": "pct",
       "decimals": 1,
+      "headline": "COVID-19 positivity",
+      "unit": "%",
+      "plain": "about 1 in 29 tests positive",
+      "insight": "about 1 in 29 tests positive \u00b7 down from 3.8% last week",
+      "week_ending": "2026-10-24",
+      "source_table": "test_positivity",
       "change_text": "3.8% the week ending 2026-10-17"
     },
     {
@@ -16,6 +22,12 @@
       "value": 0.076,
       "format": "pct",
       "decimals": 1,
+      "headline": "Influenza positivity",
+      "unit": "%",
+      "plain": "about 1 in 13 tests positive",
+      "insight": "about 1 in 13 tests positive \u00b7 up from 6% last week",
+      "week_ending": "2026-10-24",
+      "source_table": "test_positivity",
       "change_text": "6% the week ending 2026-10-17"
     },
     {
@@ -24,6 +36,12 @@
       "value": 0.009,
       "format": "pct",
       "decimals": 1,
+      "headline": "RSV positivity",
+      "unit": "%",
+      "plain": "about 1 in 111 tests positive",
+      "insight": "about 1 in 111 tests positive \u00b7 unchanged from last week",
+      "week_ending": "2026-10-24",
+      "source_table": "test_positivity",
       "change_text": "0.9% the week ending 2026-10-17"
     },
     {
@@ -31,38 +49,74 @@
       "label": "Combined hospitalizations (Combined)",
       "value": 2.2,
       "unit": "per 100,000 per week",
-      "decimals": 1
+      "decimals": 1,
+      "headline": "Combined hospitalizations (Combined)",
+      "plain": "2.2 hospitalizations per 100,000 people this week",
+      "insight": "2.2 hospitalizations per 100,000 people this week",
+      "week_ending": "2026-10-24",
+      "source_table": "hospitalization_rates"
     },
     {
       "id": "hosp_covidnet",
       "label": "COVID-19 hospitalizations (COVID-NET)",
       "value": 0.8,
       "unit": "per 100,000 per week",
-      "decimals": 1
+      "decimals": 1,
+      "headline": "COVID-19 hospitalizations (COVID-NET)",
+      "plain": "0.8 hospitalizations per 100,000 people this week",
+      "insight": "0.8 hospitalizations per 100,000 people this week",
+      "week_ending": "2026-10-24",
+      "source_table": "hospitalization_rates"
     },
     {
       "id": "hosp_flusurvnet",
       "label": "Influenza hospitalizations (FluSurv-NET)",
       "value": 1.3,
       "unit": "per 100,000 per week",
-      "decimals": 1
+      "decimals": 1,
+      "headline": "Influenza hospitalizations (FluSurv-NET)",
+      "plain": "1.3 hospitalizations per 100,000 people this week",
+      "insight": "1.3 hospitalizations per 100,000 people this week",
+      "week_ending": "2026-10-24",
+      "source_table": "hospitalization_rates"
     },
     {
       "id": "hosp_rsvnet",
       "label": "RSV hospitalizations (RSV-NET)",
       "value": 0.1,
       "unit": "per 100,000 per week",
-      "decimals": 1
+      "decimals": 1,
+      "headline": "RSV hospitalizations (RSV-NET)",
+      "plain": "0.1 hospitalizations per 100,000 people this week",
+      "insight": "0.1 hospitalizations per 100,000 people this week",
+      "week_ending": "2026-10-24",
+      "source_table": "hospitalization_rates"
     },
     {
       "id": "ari_very_low",
       "label": "States and territories at Very Low ARI activity",
-      "value": 32
+      "value": 32,
+      "headline": "ARI Very Low",
+      "week_ending": "2026-10-24",
+      "source_table": "ari_activity"
     },
     {
       "id": "ari_low",
       "label": "States and territories at Low ARI activity",
-      "value": 16
+      "value": 16,
+      "headline": "ARI Low",
+      "week_ending": "2026-10-24",
+      "source_table": "ari_activity"
+    },
+    {
+      "id": "ari_high_risk_total",
+      "label": "States and territories at High or Very High ARI activity",
+      "value": 0,
+      "headline": "High / Very High ARI",
+      "plain": "0 of 56 states/territories at High or Very High activity",
+      "insight": "0 of 56 states/territories at High or Very High activity",
+      "week_ending": "2026-10-24",
+      "source_table": "ari_activity"
     }
   ]
 }
