@@ -287,6 +287,19 @@ export default function Overview() {
         </div>
       )}
 
+      {health?.data_plane === 'snapshot_fallback' && !loadError && (
+        <div className="alert-banner ops" role="status" style={{ marginBottom: 16 }}>
+          <Info size={18} />
+          <span>
+            API is serving the frozen eval snapshot
+            {health?.cdc_db_url_configured
+              ? ' (live DuckDB download failed—check CDC_DB_URL / release asset).'
+              : ' (CDC_DB_URL is not set on the host).'}
+            {' '}Figures still carry CDC week stamps—this is an ops note, not a disease alert.
+          </span>
+        </div>
+      )}
+
       {briefing && (
         <div className="briefing-card fade-in" aria-label="Weekly briefing">
           <div className="briefing-kicker">Weekly briefing · MMWR-style</div>

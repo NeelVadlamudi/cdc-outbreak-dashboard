@@ -19,6 +19,8 @@ def test_health(fixture_db):
     assert isinstance(body.get("tables"), list) and body["tables"]
     # Fixture wastewater weeks are old → status may be "stale" while DB is fine.
     assert body["status"] in ("ok", "stale")
+    assert "cdc_db_url_configured" in body
+    assert body.get("data_plane") in ("live_release", "snapshot_fallback", "unknown")
 
 
 def test_cors_allows_pages_origin_only(monkeypatch):
