@@ -13,7 +13,7 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
 from backend.agent.tools import backtest_vs_last_value
-from backend.chat_engine import chat_with_data, generate_weekly_brief
+from backend.chat_engine import generate_weekly_brief
 from backend.config import ADMIN_API_KEY
 from backend.database import query
 from backend.ensemble import (
