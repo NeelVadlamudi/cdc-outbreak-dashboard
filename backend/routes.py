@@ -138,11 +138,14 @@ async def get_hospitalizations(
     limit: int = Query(200),
 ):
     """Get RESP-NET hospitalization rates."""
+    # CDC RESP-NET uses sex/race 'All' (legacy rows may say 'Overall').
     sql = """
         SELECT surveillance_network, season, week_ending_date, mmwr_year, mmwr_week,
                age_group, site, weekly_rate, cumulative_rate
         FROM hospitalization_rates
-        WHERE age_group = ? AND sex = 'Overall' AND race_ethnicity = 'Overall'
+        WHERE age_group = ?
+          AND sex IN ('All', 'Overall')
+          AND race_ethnicity IN ('All', 'Overall')
           AND rate_type = 'Observed'
     """
     params = [age_group]
@@ -162,11 +165,15 @@ async def get_hospitalizations(
 @router.get("/hospitalizations/trends")
 async def get_hospitalization_trends():
     """Get weekly hospitalization rates grouped by virus for trend charts."""
+    # Match forecasting / agent tools: national Overall site, All/Overall demographics.
     results = query("""
         SELECT surveillance_network as virus, week_ending_date, AVG(weekly_rate) as avg_rate
         FROM hospitalization_rates
-        WHERE age_group = 'Overall' AND sex = 'Overall' AND race_ethnicity = 'Overall'
+        WHERE age_group = 'Overall' AND site = 'Overall'
+          AND sex IN ('All', 'Overall')
+          AND race_ethnicity IN ('All', 'Overall')
           AND rate_type = 'Observed'
+          AND weekly_rate IS NOT NULL
         GROUP BY surveillance_network, week_ending_date
         ORDER BY week_ending_date
     """)

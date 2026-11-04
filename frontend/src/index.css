@@ -608,6 +608,17 @@ body {
   margin-bottom: 4px;
 }
 
+.briefing-ask {
+  margin: 14px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+.briefing-ask a {
+  color: var(--accent-primary);
+  text-decoration: none;
+}
+.briefing-ask a:hover { text-decoration: underline; }
+
 .briefing-beat p {
   margin: 0;
   font-size: 14px;
@@ -745,6 +756,41 @@ body {
   background: #f5f7ff;
   border: 1px solid rgba(0, 0, 242, 0.18);
   color: #1e3a5f;
+}
+
+.retry-btn {
+  flex-shrink: 0;
+  border: 1px solid rgba(71, 85, 105, 0.35);
+  background: #fff;
+  color: #334155;
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font: 600 12px/1.2 var(--font-sans);
+  cursor: pointer;
+}
+.retry-btn:hover { background: #f1f5f9; }
+.retry-btn:focus-visible { outline: 2px solid var(--accent-primary); outline-offset: 2px; }
+
+.chart-empty {
+  padding: 28px 18px;
+  text-align: center;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+  border: 1px dashed var(--border-subtle);
+  color: var(--text-on-panel-secondary);
+}
+.chart-empty strong {
+  display: block;
+  color: var(--text-on-panel);
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+.chart-empty p {
+  margin: 0 0 12px;
+  font-size: 13px;
+  line-height: 1.45;
+  max-width: 36rem;
+  margin-inline: auto;
 }
 
 /* ── Gauge ── */
