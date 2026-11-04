@@ -93,6 +93,40 @@ async def request_log(request: Request, call_next):
 app.include_router(router)
 
 
+def _data_plane_meta() -> dict:
+    """How the process loaded DuckDB (url vs frozen snapshot). Fail open if marker missing."""
+    import json
+    import os
+    from pathlib import Path
+
+    from backend import config
+
+    url = (os.environ.get("CDC_DB_URL") or "").strip()
+    meta = {
+        "cdc_db_url_configured": bool(url),
+        "data_plane": "unknown",
+        "data_plane_detail": None,
+    }
+    marker = Path(config.DB_PATH).with_suffix(Path(config.DB_PATH).suffix + ".source.json")
+    if marker.is_file():
+        try:
+            payload = json.loads(marker.read_text(encoding="utf-8"))
+            source = payload.get("source")
+            if source == "url":
+                meta["data_plane"] = "live_release"
+            elif source == "snapshot":
+                meta["data_plane"] = "snapshot_fallback"
+            meta["data_plane_detail"] = payload.get("error") or payload.get("fetched_at")
+            meta["data_plane_fetched_at"] = payload.get("fetched_at")
+        except (OSError, json.JSONDecodeError):
+            pass
+    elif not url:
+        # Local/dev without fetch script: typically the frozen snapshot path.
+        meta["data_plane"] = "snapshot_fallback"
+        meta["data_plane_detail"] = "CDC_DB_URL unset; no fetch marker"
+    return meta
+
+
 @app.get("/api/health")
 async def health():
     """Liveness check for the host (Render health check). Includes per-table as_of + stale flags."""
@@ -102,6 +136,7 @@ async def health():
     from backend.agent.tools import get_data_freshness
 
     checked_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    plane = _data_plane_meta()
     try:
         fresh = get_data_freshness()
         tables = fresh.get("rows") or []
@@ -119,6 +154,7 @@ async def health():
             "stale_tables": [
                 (t["table"] + (f" ({t['dataset']})" if t.get("dataset") else "")) for t in stale
             ],
+            **plane,
         }
     except Exception as e:  # report, but keep the shape so the UI can show failure
         return {
@@ -130,6 +166,7 @@ async def health():
             "tables": [],
             "stale_tables": [],
             "error": str(e) or type(e).__name__,
+            **plane,
         }
 
 
