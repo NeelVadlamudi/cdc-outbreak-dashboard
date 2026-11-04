@@ -68,17 +68,17 @@ function App() {
     <Router basename={import.meta.env.BASE_URL.replace(/\/$/, "")}>
       <div className="app-layout">
         <div className="mobile-header">
-          <div style={{ display: "flex", alignItems: "center", gap: 10, fontWeight: 600, fontSize: 14 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, fontWeight: 600, fontSize: 14, fontFamily: "var(--font-display)" }}>
             <div
               style={{
-                background: "var(--accent-primary)",
+                background: "var(--accent-cta)",
                 width: 30,
                 height: 30,
-                borderRadius: 6,
+                borderRadius: 4,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                color: "white",
+                color: "var(--accent-on-cta)",
                 flexShrink: 0,
               }}
               aria-hidden

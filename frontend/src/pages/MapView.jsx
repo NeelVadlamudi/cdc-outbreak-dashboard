@@ -104,7 +104,7 @@ export default function MapView() {
   const plotLayout = {
     paper_bgcolor: 'rgba(0,0,0,0)',
     plot_bgcolor: 'rgba(0,0,0,0)',
-    font: { family: 'DM Sans, sans-serif', color: '#6B7C74', size: 11 },
+    font: { family: 'Space Grotesk, sans-serif', color: '#6b6b6b', size: 11 },
     margin: { l: 0, r: 0, t: 0, b: 0 },
   };
 
@@ -167,9 +167,9 @@ export default function MapView() {
                 }
               }}
               pointLabel={d => `
-                <div style="background: rgba(255,255,255,0.9); padding: 8px 12px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: 1px solid #E5E7EB;">
-                  <strong style="color: #15201C; font-family: DM Sans, sans-serif; font-size: 14px;">${d.name}</strong><br/>
-                  <span style="color: ${d.color}; font-family: DM Sans, sans-serif; font-size: 12px; font-weight: 600;">${d.label}</span>
+                <div style="background: rgba(255,255,255,0.95); padding: 8px 12px; border-radius: 4px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: 1px solid #e8e8e8;">
+                  <strong style="color: #121212; font-family: Space Grotesk, sans-serif; font-size: 14px;">${d.name}</strong><br/>
+                  <span style="color: ${d.color}; font-family: Space Grotesk, sans-serif; font-size: 12px; font-weight: 600;">${d.label}</span>
                 </div>
               `}
               ringsData={globePoints.filter(d => d.level >= 4).map(d => ({ lat: d.lat, lng: d.lng, color: d.color }))}
@@ -221,7 +221,7 @@ export default function MapView() {
                       y: historyData.map(d => d.level),
                       type: 'scatter',
                       mode: 'lines+markers',
-                      line: { color: '#0F5C55', width: 2, shape: 'spline' },
+                      line: { color: '#0000d9', width: 2, shape: 'spline' },
                       marker: {
                         size: 6,
                         color: historyData.map(d => RISK_COLORS[d.level]),
@@ -240,9 +240,9 @@ export default function MapView() {
                         ticktext: RISK_LABELS,
                         tickvals: [0, 1, 2, 3, 4, 5],
                         tickfont: { size: 9, color: '#6B7280' },
-                        gridcolor: '#F3F4F6',
+                        gridcolor: '#e8e8e8',
                       },
-                      xaxis: { gridcolor: '#F3F4F6', tickfont: { color: '#6B7280' } },
+                      xaxis: { gridcolor: '#e8e8e8', tickfont: { color: '#6B7280' } },
                     }}
                     config={{ displayModeBar: false, responsive: true }}
                     style={{ width: '100%' }}

@@ -55,12 +55,12 @@ export default function Analytics() {
   const plotLayout = {
     paper_bgcolor: 'rgba(0,0,0,0)',
     plot_bgcolor: 'rgba(0,0,0,0)',
-    font: { family: 'DM Sans, sans-serif', color: '#6B7C74', size: 11 },
+    font: { family: 'Space Grotesk, sans-serif', color: '#6b6b6b', size: 11 },
     margin: { l: 50, r: 20, t: 30, b: 50 },
-    xaxis: { gridcolor: '#F3F4F6', zeroline: false },
-    yaxis: { gridcolor: '#F3F4F6', zeroline: false },
+    xaxis: { gridcolor: '#e8e8e8', zeroline: false },
+    yaxis: { gridcolor: '#e8e8e8', zeroline: false },
     showlegend: true,
-    legend: { orientation: 'h', y: -0.2, font: { size: 11, color: '#4B5563' } },
+    legend: { orientation: 'h', y: -0.2, font: { size: 11, color: '#3a3a3a' } },
   };
 
   const pathogenGroups = {};
@@ -69,7 +69,7 @@ export default function Analytics() {
     pathogenGroups[d.pathogen].push(d);
   });
 
-  const pathogenColors = { 'COVID-19': '#0F5C55', 'Influenza': '#B45309', 'RSV': '#1A7A5C' };
+  const pathogenColors = { 'COVID-19': '#0000d9', 'Influenza': '#B45309', 'RSV': '#1A7A5C' };
 
   const hospByNetwork = {};
   hospitalizations.forEach(d => {
@@ -78,7 +78,7 @@ export default function Analytics() {
     hospByNetwork[key].push(d);
   });
 
-  const networkColors = { 'COVID-NET': '#0F5C55', 'FluSurv-NET': '#B45309', 'RSV-NET': '#1A7A5C' };
+  const networkColors = { 'COVID-NET': '#0000d9', 'FluSurv-NET': '#B45309', 'RSV-NET': '#1A7A5C' };
 
   const getLatestRate = (network) => {
     const items = hospByNetwork[network] || [];

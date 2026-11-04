@@ -87,7 +87,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                           <Icon
                             size={18}
                             strokeWidth={isActive ? 2.4 : 2}
-                            color={isActive ? "var(--accent-primary)" : "currentColor"}
+                            color={isActive ? "var(--accent-cta)" : "currentColor"}
                           />
                         </div>
                         {item.label}
