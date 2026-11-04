@@ -12,6 +12,7 @@ import duckdb
 from pydantic import BaseModel, Field
 
 from backend import config
+from backend.insights import hosp_per_100k_plain, positivity_one_in_n, positivity_plain
 
 ARI_LEVELS = ["Very Low", "Low", "Moderate", "High", "Very High", "Data Unavailable"]
 
@@ -218,6 +219,10 @@ def get_hospitalization_rate(
             rows = _rows(cur)
             if not rows:
                 return _week_not_covered("hospitalization_rates", wk, latest)
+            for row in rows:
+                plain = hosp_per_100k_plain(row.get("rate_per_100k"))
+                if plain is not None:
+                    row["plain"] = plain
             return _result(rows, "hospitalization_rates", wk, network=net, age_group=age, units="rate per 100,000")
         cur = conn.execute(
             """
@@ -232,6 +237,10 @@ def get_hospitalization_rate(
         )
         rows = _rows(cur)
         as_of = rows[0]["week_end"] if rows else None
+        for row in rows:
+            plain = hosp_per_100k_plain(row.get("rate_per_100k"))
+            if plain is not None:
+                row["plain"] = plain
         return _result(rows, "hospitalization_rates", as_of, network=net, age_group=age, units="rate per 100,000")
 
 
@@ -269,6 +278,15 @@ def get_test_positivity(pathogen: str | None = None, week: str | None = None) ->
         rows = _rows(cur)
         if requested and not rows:
             return _week_not_covered("test_positivity", wk, latest)
+        # Dual-layer fields so “1 in N” can appear in tool receipts (grounding-safe).
+        for row in rows:
+            pct = row.get("percent_positive")
+            n = positivity_one_in_n(pct)
+            plain = positivity_plain(pct)
+            if n is not None:
+                row["one_in_n"] = n
+            if plain is not None:
+                row["plain"] = plain
         return _result(rows, "test_positivity", wk)
 
 

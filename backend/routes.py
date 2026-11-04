@@ -24,6 +24,14 @@ from backend.ensemble import (
     xgb_forecast,
 )
 from backend.forecasting import generate_forecast, last_value_outlook, train_model
+from backend.insights import (
+    build_briefing,
+    combine_insight,
+    high_risk_plain,
+    metric_card,
+    positivity_plain,
+    wow_plain,
+)
 from backend.ratelimit import limited
 from backend.simulator import SimulationParams, get_current_rates, run_simulation
 
@@ -220,7 +228,7 @@ async def trigger_training(virus: str = "COVID-NET"):
 
 @router.get("/dashboard-summary")
 async def get_dashboard_summary():
-    """Get aggregated dashboard summary stats."""
+    """Aggregated dashboard stats plus dual-layer insights and an MMWR-shaped briefing."""
     risk_data = query("""
         SELECT label, COUNT(*) as count FROM ari_activity
         WHERE week_end = (SELECT MAX(week_end) FROM ari_activity)
@@ -236,6 +244,17 @@ async def get_dashboard_summary():
         WHERE week_end = (SELECT MAX(week_end) FROM test_positivity)
     """)
 
+    prior_positivity_rows = query("""
+        SELECT pathogen, percent_test_positivity FROM test_positivity
+        WHERE week_end = (
+            SELECT MAX(week_end) FROM test_positivity
+            WHERE week_end < (SELECT MAX(week_end) FROM test_positivity)
+        )
+    """)
+    prior_positivity = {
+        r["pathogen"]: r["percent_test_positivity"] for r in (prior_positivity_rows or [])
+    }
+
     total_states = query("SELECT COUNT(DISTINCT geography) as n FROM ari_activity")
     high_risk = query("""
         SELECT COUNT(*) as count FROM ari_activity
@@ -243,8 +262,9 @@ async def get_dashboard_summary():
           AND label IN ('High', 'Very High')
     """)
 
-    # Wastewater summary
-    ww_summary = {}
+    # Wastewater summary — surface failure instead of silently empty
+    ww_summary: dict = {}
+    ww_error = None
     try:
         ww = query("""
             SELECT COUNT(DISTINCT wwtp_id) as sites,
@@ -257,26 +277,101 @@ async def get_dashboard_summary():
         serialize_dates(ww)
         if ww:
             ww_summary = ww[0]
-    except Exception:
-        pass
+    except Exception as e:
+        ww_error = f"{type(e).__name__}: {e}" if str(e) else type(e).__name__
+        logger.warning("wastewater summary failed: %s", ww_error)
 
     def safe_date(val):
-        if val and hasattr(val, "isoformat"):
-            return val.isoformat()
-        return str(val) if val else None
+        """Epidemiology week stamp as YYYY-MM-DD (not a wall-clock timestamp)."""
+        if val is None:
+            return None
+        if hasattr(val, "date") and callable(val.date):
+            try:
+                return val.date().isoformat()
+            except Exception:
+                pass
+        if hasattr(val, "isoformat"):
+            text = val.isoformat()
+            return text[:10] if len(text) >= 10 else text
+        text = str(val)
+        return text[:10] if len(text) >= 10 else text
 
-    return {
+    ari_week = safe_date(latest_ari[0]["latest"]) if latest_ari else None
+    pos_week = safe_date(latest_positivity[0]["latest"]) if latest_positivity else None
+    hosp_week = safe_date(latest_hosp[0]["latest"]) if latest_hosp else None
+    week_ending = ari_week or pos_week or hosp_week
+
+    total_n = total_states[0]["n"] if total_states else 0
+    high_n = high_risk[0]["count"] if high_risk else 0
+
+    metrics: dict = {
+        "states_monitored": metric_card(
+            headline="States monitored",
+            value=total_n,
+            unit="jurisdictions",
+            plain=f"{total_n} jurisdictions with ARI activity in this week's table"
+            if total_n
+            else None,
+            week_ending=ari_week,
+            source_table="ari_activity",
+        ),
+        "high_risk": metric_card(
+            headline="High risk states",
+            value=high_n,
+            unit="states/territories",
+            plain=high_risk_plain(high_n, total_n),
+            insight=high_risk_plain(high_n, total_n),
+            week_ending=ari_week,
+            source_table="ari_activity",
+        ),
+    }
+    for row in positivity or []:
+        pathogen = row.get("pathogen")
+        pct = row.get("percent_test_positivity")
+        if not pathogen:
+            continue
+        key = {
+            "COVID-19": "positivity_covid",
+            "Influenza": "positivity_flu",
+            "RSV": "positivity_rsv",
+        }.get(pathogen, f"positivity_{str(pathogen).lower().replace(' ', '_')}")
+        plain = positivity_plain(pct)
+        wow = wow_plain(pct, prior_positivity.get(pathogen), as_percent=True)
+        metrics[key] = metric_card(
+            headline=f"{pathogen} positivity",
+            value=pct,
+            unit="%",
+            plain=plain,
+            insight=combine_insight(plain, wow),
+            week_ending=pos_week,
+            source_table="test_positivity",
+        )
+
+    briefing = build_briefing(
+        week_ending=week_ending,
+        high_risk=high_n,
+        total_states=total_n,
+        positivity=positivity,
+    )
+
+    payload = {
         "risk_distribution": risk_data,
         "latest_dates": {
-            "ari_activity": safe_date(latest_ari[0]["latest"]) if latest_ari else None,
-            "hospitalizations": safe_date(latest_hosp[0]["latest"]) if latest_hosp else None,
-            "test_positivity": safe_date(latest_positivity[0]["latest"]) if latest_positivity else None,
+            "ari_activity": ari_week,
+            "hospitalizations": hosp_week,
+            "test_positivity": pos_week,
         },
+        "week_ending": week_ending,
         "latest_positivity": positivity,
-        "total_states_tracked": total_states[0]["n"] if total_states else 0,
-        "high_risk_states": high_risk[0]["count"] if high_risk else 0,
+        "total_states_tracked": total_n,
+        "high_risk_states": high_n,
         "wastewater_summary": ww_summary,
+        "metrics": metrics,
+        "briefing": briefing,
     }
+    if ww_error:
+        payload["wastewater_error"] = ww_error
+    return payload
 
 
 @router.get("/states")

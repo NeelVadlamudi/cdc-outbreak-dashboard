@@ -1,16 +1,21 @@
 #!/usr/bin/env python3
-"""Download the nightly-published DuckDB for the live API.
+"""Download the twice-daily-published DuckDB for the live API.
 
-Prefers CDC_DB_URL (direct HTTPS to a release asset, R2, S3, etc.). Falls back
-to the frozen evals/snapshot.duckdb so local/Render boot never hard-fails.
+Prefers CDC_DB_URL (direct HTTPS). Falls back to the frozen
+evals/snapshot.duckdb so local/Render boot never hard-fails when the URL is
+unset or the download fails (keeps last good dest file only if you remount;
+on free Render /tmp is wiped on restart—then snapshot is used).
 
 Usage (Render startCommand):
   python scripts/fetch_live_db.py --dest /tmp/cdc_surveillance.duckdb && \\
     uvicorn backend.main:app --host 0.0.0.0 --port $PORT
 
-Nightly uploads the refreshed DB as a workflow artifact named cdc-duckdb; publish
-it to a stable URL (GitHub Release asset or object storage) and set CDC_DB_URL
-on Render. evals/snapshot.duckdb stays frozen for agent evals only.
+Nightly workflow uploads the refreshed DB to GitHub Release tag cdc-data-latest
+(and as Actions artifact cdc-duckdb). Set CDC_DB_URL on Render once, e.g.:
+
+  https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/releases/download/cdc-data-latest/cdc_surveillance.duckdb
+
+evals/snapshot.duckdb stays frozen for agent evals only.
 """
 
 from __future__ import annotations
