@@ -4,9 +4,9 @@ import { Bot, Crosshair, Calendar, BrainCircuit, Activity, LineChart, AlertTrian
 import { getForecast } from '../api';
 
 const VIRUSES = [
-  { key: 'COVID-NET', label: 'COVID-19', color: '#4F46E5', icon: <Activity size={16} /> },
-  { key: 'FluSurv-NET', label: 'Influenza', color: '#D97706', icon: <Activity size={16} /> },
-  { key: 'RSV-NET', label: 'RSV', color: '#059669', icon: <Activity size={16} /> },
+  { key: 'COVID-NET', label: 'COVID-19', color: '#0F5C55', icon: <Activity size={16} /> },
+  { key: 'FluSurv-NET', label: 'Influenza', color: '#B45309', icon: <Activity size={16} /> },
+  { key: 'RSV-NET', label: 'RSV', color: '#1A7A5C', icon: <Activity size={16} /> },
 ];
 
 function underperforms(model) {
@@ -39,12 +39,12 @@ export default function Forecasts() {
   const plotLayout = {
     paper_bgcolor: 'rgba(0,0,0,0)',
     plot_bgcolor: 'rgba(0,0,0,0)',
-    font: { family: 'Inter, sans-serif', color: '#6B7280', size: 11 },
+    font: { family: 'DM Sans, sans-serif', color: '#6B7C74', size: 11 },
     margin: { l: 50, r: 20, t: 30, b: 50 },
-    xaxis: { gridcolor: '#F3F4F6', zeroline: false, title: { text: 'Week', font: { size: 11 } } },
-    yaxis: { gridcolor: '#F3F4F6', zeroline: false, title: { text: 'Rate per 100k', font: { size: 11 } } },
+    xaxis: { gridcolor: '#EEF2F0', zeroline: false, title: { text: 'Week', font: { size: 11 } } },
+    yaxis: { gridcolor: '#EEF2F0', zeroline: false, title: { text: 'Rate per 100k', font: { size: 11 } } },
     showlegend: true,
-    legend: { orientation: 'h', y: -0.2, font: { size: 11, color: '#4B5563' } },
+    legend: { orientation: 'h', y: -0.2, font: { size: 11, color: '#3D4F48' } },
   };
 
   return (
@@ -54,7 +54,7 @@ export default function Forecasts() {
           <div>
             <h1 className="page-title">Outlook</h1>
             <p className="page-subtitle">
-              Primary view is last-week persistence. LSTM is experimental and scored against that baseline in published backtests.
+              A four-week look ahead based on last week’s hospitalization rate. Useful for planning — not a clinical diagnosis.
             </p>
           </div>
         </div>
@@ -75,7 +75,7 @@ export default function Forecasts() {
       {loading ? (
         <div className="loading-page" style={{ minHeight: '40vh' }}>
           <div className="loading-spinner" />
-          <div className="loading-page-text">Loading {virusInfo?.label} outlook...</div>
+          <div className="loading-page-text">Loading the {virusInfo?.label} outlook…</div>
         </div>
       ) : forecast?.status === 'success' ? (
         <>
@@ -98,7 +98,7 @@ export default function Forecasts() {
             </div>
             <div className="stat-card accent-amber">
               <div className="stat-card-icon amber"><LineChart size={22} /></div>
-              <div className="stat-card-label">Outlook Horizon</div>
+              <div className="stat-card-label">Looking ahead</div>
               <div className="stat-card-value">4 weeks</div>
             </div>
           </div>
@@ -106,9 +106,9 @@ export default function Forecasts() {
           <div className="card fade-in" style={{ marginBottom: '24px' }}>
             <div className="card-header">
               <span className="card-title">
-                <LineChart size={18} /> {virusInfo?.label} — Last-value outlook (primary)
+                <LineChart size={18} /> {virusInfo?.label} — expected path
               </span>
-              <span className="badge badge-updated">persistence baseline</span>
+              <span className="badge badge-updated">based on last week</span>
             </div>
             <Plot
               data={[
@@ -126,9 +126,9 @@ export default function Forecasts() {
                   y: forecast.forecasts.map(f => f.predicted_rate),
                   type: 'scatter',
                   mode: 'lines+markers',
-                  name: 'Last-value outlook',
-                  line: { color: '#0F766E', width: 2.5 },
-                  marker: { size: 8, color: '#0F766E', line: { color: 'white', width: 1 } },
+                  name: 'Outlook (last week held forward)',
+                  line: { color: '#0F5C55', width: 2.5 },
+                  marker: { size: 8, color: '#0F5C55', line: { color: 'white', width: 1 } },
                 },
               ]}
               layout={{ ...plotLayout, height: 400 }}
@@ -141,11 +141,11 @@ export default function Forecasts() {
             <div className="card fade-in" style={{ marginBottom: '24px' }}>
               <div className="card-header">
                 <span className="card-title">
-                  <BrainCircuit size={18} /> Experimental — LSTM
+                  <BrainCircuit size={18} /> Alternate model (experimental)
                 </span>
                 {lstmUnder && (
                   <span className="badge" style={{ background: '#FEF3C7', color: '#92400E' }}>
-                    underperforms baseline
+                    usually weaker than last-week method
                   </span>
                 )}
               </div>
@@ -164,9 +164,9 @@ export default function Forecasts() {
                     y: lstm.forecasts.map(f => f.predicted_rate),
                     type: 'scatter',
                     mode: 'lines+markers',
-                    name: 'LSTM (experimental)',
-                    line: { color: '#F59E0B', width: 2.5, dash: 'dash' },
-                    marker: { size: 8, symbol: 'diamond', color: '#F59E0B', line: { color: 'white', width: 1 } },
+                    name: 'Alternate model',
+                    line: { color: '#B45309', width: 2.5, dash: 'dash' },
+                    marker: { size: 8, symbol: 'diamond', color: '#B45309', line: { color: 'white', width: 1 } },
                   },
                 ]}
                 layout={{ ...plotLayout, height: 320 }}
@@ -174,7 +174,7 @@ export default function Forecasts() {
                 style={{ width: '100%' }}
               />
               <div style={{ marginTop: '12px', fontSize: '13px', color: 'var(--text-muted)' }}>
-                Validation MAE: {lstm.mae ?? '—'} · not the product primary outlook
+                Shown for comparison only. Average error (MAE): {lstm.mae ?? '—'}
               </div>
             </div>
           )}
@@ -182,7 +182,7 @@ export default function Forecasts() {
           <div className="charts-grid">
             <div className="card fade-in">
               <div className="card-header">
-                <span className="card-title"><Calendar size={18} /> Weekly last-value breakdown</span>
+                <span className="card-title"><Calendar size={18} /> Week-by-week outlook</span>
               </div>
               <div style={{ display: 'grid', gap: '16px' }}>
                 {forecast.forecasts.map((f, i) => (
@@ -193,14 +193,14 @@ export default function Forecasts() {
                     <div>
                       <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>Week {i + 1} — {f.date}</div>
                       <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px', fontWeight: 500 }}>
-                        Persistence of last observed rate
+                        Holding last week’s rate forward
                       </div>
                     </div>
                     <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontSize: '24px', fontWeight: 800, color: virusInfo?.color }}>
+                      <div style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--font-display)', color: virusInfo?.color }}>
                         {f.predicted_rate}
                       </div>
-                      <div style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>per 100k</div>
+                      <div style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600 }}>per 100k</div>
                     </div>
                   </div>
                 ))}
@@ -209,29 +209,25 @@ export default function Forecasts() {
 
             <div className="card fade-in">
               <div className="card-header">
-                <span className="card-title"><BrainCircuit size={18} /> Why last-value is primary</span>
+                <span className="card-title"><BrainCircuit size={18} /> Why this method?</span>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px' }}>
-                <div>
-                  <div style={{ color: 'var(--text-secondary)', fontSize: '12px', fontWeight: 600, textTransform: 'uppercase', marginBottom: '6px' }}>Backtest</div>
-                  <div style={{ fontWeight: 500, fontSize: '14px', color: 'var(--text-secondary)' }}>
-                    Rolling-origin evals show LSTM and XGBoost rarely beat repeating last week on these weekly RESP-NET series. The UI therefore leads with persistence.
-                  </div>
-                </div>
-                <div>
-                  <div style={{ color: 'var(--text-secondary)', fontSize: '12px', fontWeight: 600, textTransform: 'uppercase', marginBottom: '6px' }}>Experimental models</div>
-                  <div style={{ fontWeight: 700, fontSize: '15px' }}>LSTM (2×64) · XGBoost — shown only with underperforms-baseline when they lose</div>
-                </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '16px' }}>
+                <p style={{ fontWeight: 500, fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.55 }}>
+                  For these weekly hospital series, simply repeating last week’s rate has been more reliable than more complex models in our published checks.
+                </p>
+                <p className="page-footnote" style={{ marginTop: 0, paddingTop: 0, borderTop: 'none' }}>
+                  Technical note: experimental models (including neural and tree-based forecasts) are available under Technical details when you want the comparison.
+                </p>
               </div>
             </div>
           </div>
         </>
       ) : (
-        <div className="card" style={{ padding: '60px', textAlign: 'center', background: 'var(--bg-elevated)' }}>
-          <Bot size={56} strokeWidth={1.5} color="#9CA3AF" style={{ margin: '0 auto 20px' }} />
-          <h3 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text-primary)' }}>Outlook unavailable</h3>
-          <p style={{ color: 'var(--text-secondary)', marginTop: '8px', fontSize: '15px', maxWidth: '500px', margin: '8px auto 0' }}>
-            {forecast?.detail || 'No hospitalization series is available for this network.'}
+        <div className="card empty-state" style={{ background: 'var(--bg-elevated)' }}>
+          <Bot size={48} strokeWidth={1.5} color="#6B7C74" style={{ margin: '0 auto 16px' }} />
+          <h3>Outlook not available</h3>
+          <p>
+            {forecast?.detail || 'Hospitalization data for this virus network is not available right now.'}
           </p>
         </div>
       )}

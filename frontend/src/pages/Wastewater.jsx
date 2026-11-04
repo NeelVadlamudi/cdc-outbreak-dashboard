@@ -6,11 +6,11 @@ import { STATE_ABBREV as STATE_ABBREVS } from "../lib/states";
 
 // CDC Wastewater Viral Activity Level categories (dataset atcp-73re)
 const CATEGORY_COLORS = {
-  "Very High": "#DC2626",
-  High: "#D97706",
-  Moderate: "#EAB308",
-  Low: "#059669",
-  "Very Low": "#4F46E5",
+  "Very High": "#9F1239",
+  High: "#C2410C",
+  Moderate: "#B45309",
+  Low: "#1A7A5C",
+  "Very Low": "#0E7490",
 };
 const PATHOGENS = ["SARS-CoV-2", "Influenza A virus", "RSV"];
 
@@ -52,7 +52,7 @@ export default function Wastewater() {
           <div>
             <h1 className="page-title">Wastewater</h1>
             <p className="page-subtitle">
-              CDC Wastewater Viral Activity Level by site for the latest week (NWSS dataset atcp-73re)
+              Early signal of virus activity in communities from wastewater sampling sites across the U.S.
             </p>
           </div>
           <div style={{ display: "flex", gap: "8px" }}>
@@ -66,7 +66,10 @@ export default function Wastewater() {
       </div>
 
       {loading ? (
-        <div style={{ textAlign: "center", padding: "4rem" }}><div className="loading-spinner" /></div>
+        <div className="loading-page" style={{ minHeight: "40vh" }}>
+          <div className="loading-spinner" />
+          <div className="loading-page-text">Loading wastewater activity…</div>
+        </div>
       ) : (
         <>
           <div className="stat-cards-grid fade-in" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
@@ -135,6 +138,9 @@ export default function Wastewater() {
               </div>
             </div>
           </div>
+          <p className="page-footnote">
+            Source: CDC National Wastewater Surveillance System (NWSS). Activity levels are by sampling site for the latest available week.
+          </p>
         </>
       )}
     </div>

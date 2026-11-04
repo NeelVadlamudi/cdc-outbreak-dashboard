@@ -47,7 +47,7 @@ export default function Analytics() {
     return (
       <div className="loading-page">
         <div className="loading-spinner" />
-        <div className="loading-page-text">Loading analytics...</div>
+        <div className="loading-page-text">Loading trends…</div>
       </div>
     );
   }
@@ -55,7 +55,7 @@ export default function Analytics() {
   const plotLayout = {
     paper_bgcolor: 'rgba(0,0,0,0)',
     plot_bgcolor: 'rgba(0,0,0,0)',
-    font: { family: 'Inter, sans-serif', color: '#6B7280', size: 11 },
+    font: { family: 'DM Sans, sans-serif', color: '#6B7C74', size: 11 },
     margin: { l: 50, r: 20, t: 30, b: 50 },
     xaxis: { gridcolor: '#F3F4F6', zeroline: false },
     yaxis: { gridcolor: '#F3F4F6', zeroline: false },
@@ -69,7 +69,7 @@ export default function Analytics() {
     pathogenGroups[d.pathogen].push(d);
   });
 
-  const pathogenColors = { 'COVID-19': '#4F46E5', 'Influenza': '#D97706', 'RSV': '#059669' };
+  const pathogenColors = { 'COVID-19': '#0F5C55', 'Influenza': '#B45309', 'RSV': '#1A7A5C' };
 
   const hospByNetwork = {};
   hospitalizations.forEach(d => {
@@ -78,7 +78,7 @@ export default function Analytics() {
     hospByNetwork[key].push(d);
   });
 
-  const networkColors = { 'COVID-NET': '#4F46E5', 'FluSurv-NET': '#D97706', 'RSV-NET': '#059669' };
+  const networkColors = { 'COVID-NET': '#0F5C55', 'FluSurv-NET': '#B45309', 'RSV-NET': '#1A7A5C' };
 
   const getLatestRate = (network) => {
     const items = hospByNetwork[network] || [];
@@ -95,9 +95,9 @@ export default function Analytics() {
       <div className="page-header fade-in">
         <div className="page-header-row">
           <div>
-            <h1 className="page-title">Data Core</h1>
+            <h1 className="page-title">Trends</h1>
             <p className="page-subtitle">
-              Comprehensive statistical modeling and cross-network temporal analysis
+              Test positivity and hospitalization rates over time for COVID-19, flu, and RSV.
             </p>
           </div>
         </div>

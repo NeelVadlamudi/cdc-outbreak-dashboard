@@ -7,7 +7,7 @@ import { STATE_COORDS } from '../lib/states';
 
 const RISK_LEVELS = { 'Minimal': 0, 'Very Low': 1, 'Low': 2, 'Moderate': 3, 'High': 4, 'Very High': 5 };
 // Matte Light Mode Aesthetic Colors for the points
-const RISK_COLORS = ['#059669', '#0ea5e9', '#6366f1', '#f59e0b', '#ef4444', '#b91c1c'];
+const RISK_COLORS = ['#1A7A5C', '#0E7490', '#3D6B66', '#B45309', '#C2410C', '#9F1239'];
 const RISK_LABELS = ['Minimal', 'Very Low', 'Low', 'Moderate', 'High', 'Very High'];
 
 export default function MapView() {
@@ -71,7 +71,7 @@ export default function MapView() {
     return (
       <div className="loading-page">
         <div className="loading-spinner" />
-        <div className="loading-page-text">Loading the state map...</div>
+        <div className="loading-page-text">Loading the state activity map…</div>
       </div>
     );
   }
@@ -104,7 +104,7 @@ export default function MapView() {
   const plotLayout = {
     paper_bgcolor: 'rgba(0,0,0,0)',
     plot_bgcolor: 'rgba(0,0,0,0)',
-    font: { family: 'Inter, sans-serif', color: '#6B7280', size: 11 },
+    font: { family: 'DM Sans, sans-serif', color: '#6B7C74', size: 11 },
     margin: { l: 0, r: 0, t: 0, b: 0 },
   };
 
@@ -113,9 +113,9 @@ export default function MapView() {
       <div className="page-header fade-in">
         <div className="page-header-row">
           <div>
-            <h1 className="page-title">State map</h1>
+            <h1 className="page-title">Map</h1>
             <p className="page-subtitle">
-              Interactive 3D WebGL projection — click any node for historic viral activity
+              See respiratory illness activity by state. Click a state to view its recent history.
             </p>
           </div>
         </div>
@@ -124,7 +124,7 @@ export default function MapView() {
       <div className="charts-grid fade-in">
         <div className="card" style={{ padding: 0, overflow: 'hidden' }} id="globe-container">
           <div className="card-header" style={{ padding: '24px 24px 0', borderBottom: 'none' }}>
-            <span className="card-title"><GlobeIcon size={18} /> US Continental Projection</span>
+            <span className="card-title"><GlobeIcon size={18} /> United States</span>
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', zIndex: 10 }}>
               {RISK_LABELS.map((label, i) => (
                 <span key={label} style={{
@@ -168,8 +168,8 @@ export default function MapView() {
               }}
               pointLabel={d => `
                 <div style="background: rgba(255,255,255,0.9); padding: 8px 12px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: 1px solid #E5E7EB;">
-                  <strong style="color: #111827; font-family: Inter, sans-serif; font-size: 14px;">${d.name}</strong><br/>
-                  <span style="color: ${d.color}; font-family: Inter, sans-serif; font-size: 12px; font-weight: 600;">${d.label}</span>
+                  <strong style="color: #15201C; font-family: DM Sans, sans-serif; font-size: 14px;">${d.name}</strong><br/>
+                  <span style="color: ${d.color}; font-family: DM Sans, sans-serif; font-size: 12px; font-weight: 600;">${d.label}</span>
                 </div>
               `}
               ringsData={globePoints.filter(d => d.level >= 4).map(d => ({ lat: d.lat, lng: d.lng, color: d.color }))}
@@ -221,7 +221,7 @@ export default function MapView() {
                       y: historyData.map(d => d.level),
                       type: 'scatter',
                       mode: 'lines+markers',
-                      line: { color: '#4F46E5', width: 2, shape: 'spline' },
+                      line: { color: '#0F5C55', width: 2, shape: 'spline' },
                       marker: {
                         size: 6,
                         color: historyData.map(d => RISK_COLORS[d.level]),

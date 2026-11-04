@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef, type CSSProperties, type MouseEvent } from "react";
-import { Bot, ArrowRight, AlertTriangle } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { MessageSquare, ArrowRight, AlertTriangle } from "lucide-react";
 import { askAgent } from "../api";
 import type { AdaptedAskResponse } from "../agent/contract";
 import AgentAnswer from "../components/AgentAnswer";
@@ -45,60 +45,32 @@ export default function AskData() {
     setLoading(false);
   };
 
-  const chipStyle: CSSProperties = {
-    padding: "8px 16px",
-    borderRadius: "20px",
-    border: "1px solid var(--border-light)",
-    background: "var(--bg-elevated)",
-    color: "var(--text-secondary)",
-    cursor: "pointer",
-    fontSize: "13px",
-    fontWeight: 500,
-    transition: "all 0.2s",
-  };
-
   return (
     <div className="page-container">
-      <div className="page-header fade-in" style={{ marginBottom: "20px" }}>
+      <div className="page-header fade-in" style={{ marginBottom: 20 }}>
         <div className="page-header-row">
           <div>
-            <h1 className="page-title">Live data question box</h1>
+            <h1 className="page-title">Ask a question</h1>
             <p className="page-subtitle">
-              Answers come from tool calls on the CDC data; every call is listed under the answer
+              Ask in plain English about COVID, flu, or RSV. Answers come from the CDC data behind this dashboard.
             </p>
           </div>
         </div>
       </div>
 
       <div className="fade-in">
-        <div className="card" style={{ display: "flex", flexDirection: "column", minHeight: "600px", padding: 0 }}>
-          <div style={{ flex: 1, overflowY: "auto", padding: "24px" }}>
+        <div className="card" style={{ display: "flex", flexDirection: "column", minHeight: 560, padding: 0 }}>
+          <div style={{ flex: 1, overflowY: "auto", padding: 24 }}>
             {messages.length === 0 && (
-              <div style={{ textAlign: "center", padding: "40px 20px" }}>
-                <Bot size={48} strokeWidth={1.5} color="#9CA3AF" style={{ margin: "0 auto 16px" }} />
-                <h3 style={{ color: "var(--text-primary)", marginBottom: "8px", fontWeight: 800, fontSize: "20px" }}>
-                  Ask anything about the outbreak data
-                </h3>
-                <p style={{ color: "var(--text-muted)", fontSize: "14px" }}>
-                  Each answer shows the tools it called, the data week, and how long it took
+              <div className="empty-state">
+                <MessageSquare size={40} strokeWidth={1.5} color="#6B7C74" style={{ margin: "0 auto 14px" }} />
+                <h3>Try a question about this week’s data</h3>
+                <p>
+                  You’ll see the answer, the data week it used, and (if you want) which sources it checked.
                 </p>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", justifyContent: "center", marginTop: "32px" }}>
-                  {SUGGESTED_QUESTIONS.map((q, i) => (
-                    <button
-                      key={i}
-                      onClick={() => sendMessage(q)}
-                      style={chipStyle}
-                      onMouseEnter={(e: MouseEvent<HTMLButtonElement>) => {
-                        e.currentTarget.style.background = "var(--bg-card)";
-                        e.currentTarget.style.borderColor = "var(--accent-primary)";
-                        e.currentTarget.style.color = "var(--accent-primary)";
-                      }}
-                      onMouseLeave={(e: MouseEvent<HTMLButtonElement>) => {
-                        e.currentTarget.style.background = "var(--bg-elevated)";
-                        e.currentTarget.style.borderColor = "var(--border-light)";
-                        e.currentTarget.style.color = "var(--text-secondary)";
-                      }}
-                    >
+                <div className="suggest-list">
+                  {SUGGESTED_QUESTIONS.map((q) => (
+                    <button key={q} type="button" className="suggest-btn" onClick={() => sendMessage(q)}>
                       {q}
                     </button>
                   ))}
@@ -109,7 +81,7 @@ export default function AskData() {
             {messages.map((msg, i) => (
               <div key={i} className={`chat-message ${msg.role}`}>
                 <div className="chat-avatar">
-                  {msg.role === "assistant" ? <Bot size={20} /> : null}
+                  {msg.role === "assistant" ? <MessageSquare size={18} /> : null}
                 </div>
                 <div className="message-bubble">
                   {msg.role === "user" && "content" in msg && msg.content}
@@ -132,11 +104,11 @@ export default function AskData() {
 
             {loading && (
               <div className="chat-message assistant">
-                <div className="chat-avatar"><Bot size={20} /></div>
-                <div className="message-bubble" style={{ padding: "16px 20px" }} aria-live="polite">
-                  <div className="loading-spinner" style={{ width: "20px", height: "20px", borderWidth: "2px" }} />
-                  <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>
-                    Agent is querying the data… First call after idle can take ~30–60s while the API wakes.
+                <div className="chat-avatar"><MessageSquare size={18} /></div>
+                <div className="message-bubble" style={{ padding: "16px 20px", display: "flex", alignItems: "center", gap: 12 }} aria-live="polite">
+                  <div className="loading-spinner" style={{ width: 20, height: 20, borderWidth: 2, flexShrink: 0 }} />
+                  <span style={{ fontSize: 13, color: "var(--text-muted)" }}>
+                    Looking up your question… If the service has been idle, the first answer can take about a minute to wake up.
                   </span>
                 </div>
               </div>
@@ -146,10 +118,10 @@ export default function AskData() {
 
           <div style={{
             borderTop: "1px solid var(--border-subtle)",
-            padding: "20px 24px",
+            padding: "16px 20px",
             background: "var(--bg-card)",
-            borderBottomLeftRadius: "var(--radius-xl)",
-            borderBottomRightRadius: "var(--radius-xl)",
+            borderBottomLeftRadius: "var(--radius-lg)",
+            borderBottomRightRadius: "var(--radius-lg)",
           }}>
             <div className="chat-input-wrapper">
               <input
@@ -158,12 +130,14 @@ export default function AskData() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && sendMessage(input)}
-                placeholder="Ask about COVID, flu, RSV trends, risk levels..."
+                placeholder="Ask about COVID, flu, RSV, risk levels…"
+                aria-label="Ask a question about the data"
               />
               <button
                 className="chat-submit-btn"
                 onClick={() => sendMessage(input)}
                 disabled={loading || !input.trim()}
+                aria-label="Send question"
               >
                 <ArrowRight size={18} strokeWidth={2.5} />
               </button>
