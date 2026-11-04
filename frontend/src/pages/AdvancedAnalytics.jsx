@@ -78,8 +78,16 @@ export default function AdvancedAnalytics() {
     );
   }
 
+  const lastValue = comparison?.last_value || {};
   const lstm = comparison?.lstm || {};
   const xgb = comparison?.xgboost || {};
+  const lstmUnder = lstm.underperforms_baseline || comparison?.backtest?.lstm?.underperforms_baseline
+    || (comparison?.backtest?.lstm && comparison.backtest.lstm.beats_last_value === false);
+  const xgbUnder = xgb.underperforms_baseline || comparison?.backtest?.xgboost?.underperforms_baseline
+    || (comparison?.backtest?.xgboost && comparison.backtest.xgboost.beats_last_value === false);
+  const backtestNotes = [comparison?.backtest?.lstm?.note, comparison?.backtest?.xgboost?.note]
+    .filter(Boolean)
+    .filter((note, i, arr) => arr.indexOf(note) === i);
 
   return (
     <div className="page-container">
@@ -88,7 +96,7 @@ export default function AdvancedAnalytics() {
           <div>
             <h1 className="page-title">Advanced analytics</h1>
             <p className="page-subtitle">
-              Ensemble models, anomaly detection, age-stratified analysis, and season comparisons
+              Last-value outlook is primary. LSTM/XGBoost are experimental vs that baseline. Also: z-score anomalies, age heatmap, season compare.
             </p>
           </div>
         </div>
@@ -107,18 +115,31 @@ export default function AdvancedAnalytics() {
         ))}
       </div>
 
-      <div className="stat-cards-grid fade-in" style={{ gridTemplateColumns: "repeat(3, 1fr)", marginBottom: "24px", gap: "16px" }}>
+      {backtestNotes.length > 0 && (
+        <div className="alert-banner warning fade-in" role="note" style={{ marginBottom: "24px" }}>
+          <AlertTriangle size={18} />
+          <span>{backtestNotes.join(" ")}</span>
+        </div>
+      )}
+
+      <div className="stat-cards-grid fade-in" style={{ gridTemplateColumns: "repeat(4, 1fr)", marginBottom: "24px", gap: "16px" }}>
+        <div className="stat-card accent-emerald">
+          <div className="stat-card-icon emerald"><Microscope size={22} /></div>
+          <div className="stat-card-label">LAST-VALUE (PRIMARY)</div>
+          <div className="stat-card-value">{lastValue.last_observed_rate ?? "N/A"}</div>
+          <div style={{ marginTop: "12px", fontSize: "13px", fontWeight: 600, color: "var(--color-safe)" }}>Persistence outlook</div>
+        </div>
         <div className="stat-card accent-indigo">
           <div className="stat-card-icon indigo"><BrainCircuit size={22} /></div>
-          <div className="stat-card-label">LSTM MAE</div>
+          <div className="stat-card-label">LSTM MAE {lstmUnder ? "· underperforms" : ""}</div>
           <div className="stat-card-value">{lstm.mae || "N/A"}</div>
-          <div style={{ marginTop: "12px", fontSize: "13px", fontWeight: 600, color: "var(--accent-primary)" }}>PyTorch LSTM (2×64)</div>
+          <div style={{ marginTop: "12px", fontSize: "13px", fontWeight: 600, color: "var(--accent-primary)" }}>Experimental</div>
         </div>
         <div className="stat-card accent-emerald">
           <div className="stat-card-icon emerald"><Trees size={22} /></div>
-          <div className="stat-card-label">XGBOOST MAE</div>
+          <div className="stat-card-label">XGBOOST MAE {xgbUnder ? "· underperforms" : ""}</div>
           <div className="stat-card-value">{xgb.mae || "N/A"}</div>
-          <div style={{ marginTop: "12px", fontSize: "13px", fontWeight: 600, color: "var(--color-safe)" }}>XGBoost (200 trees)</div>
+          <div style={{ marginTop: "12px", fontSize: "13px", fontWeight: 600, color: "var(--color-safe)" }}>Experimental</div>
         </div>
         <div className="stat-card accent-amber">
           <div className="stat-card-icon amber"><AlertOctagon size={22} /></div>
@@ -131,28 +152,36 @@ export default function AdvancedAnalytics() {
       <div className="charts-grid charts-grid-equal fade-in">
         <div className="card">
           <div className="card-header">
-            <span className="card-title"><BrainCircuit size={18} /> LSTM Forecast vs XGBoost</span>
+            <span className="card-title"><Microscope size={18} /> Primary last-value vs experimental models</span>
           </div>
           <Plot
             data={[
-              ...(lstm.historical_recent ? [{
-                x: lstm.historical_recent.map((_, i) => `Week -${lstm.historical_recent.length - i}`),
-                y: lstm.historical_recent,
+              ...((lastValue.historical_recent || lstm.historical_recent) ? [{
+                x: (lastValue.historical_recent || lstm.historical_recent).map((_, i, arr) => `Week -${arr.length - i}`),
+                y: lastValue.historical_recent || lstm.historical_recent,
                 type: "scatter", mode: "lines+markers",
                 name: "Actual", line: { color: "#9CA3AF", width: 2 },
+              }] : []),
+              ...(lastValue.forecasts ? [{
+                x: lastValue.forecasts.map((f) => f.date),
+                y: lastValue.forecasts.map((f) => f.predicted_rate),
+                type: "scatter", mode: "lines+markers",
+                name: "Last-value (primary)", line: { color: "#0F766E", width: 3 },
               }] : []),
               ...(lstm.forecasts ? [{
                 x: lstm.forecasts.map((f) => f.date),
                 y: lstm.forecasts.map((f) => f.predicted_rate),
                 type: "scatter", mode: "lines+markers",
-                name: "LSTM", line: { color: "#4F46E5", width: 2.5 },
+                name: lstmUnder ? "LSTM (underperforms baseline)" : "LSTM (experimental)",
+                line: { color: "#4F46E5", width: 2, dash: "dash" },
                 marker: { size: 7, symbol: "diamond", line: { color: 'white', width: 1 } },
               }] : []),
               ...(xgb.forecasts ? [{
                 x: xgb.forecasts.map((f) => f.date),
                 y: xgb.forecasts.map((f) => f.predicted_rate),
                 type: "scatter", mode: "lines+markers",
-                name: "XGBoost", line: { color: "#059669", width: 2.5, dash: "dash" },
+                name: xgbUnder ? "XGBoost (underperforms baseline)" : "XGBoost (experimental)",
+                line: { color: "#D97706", width: 2, dash: "dot" },
                 marker: { size: 7, symbol: "square", line: { color: 'white', width: 1 } },
               }] : []),
             ]}
@@ -258,7 +287,7 @@ export default function AdvancedAnalytics() {
           <span className="badge badge-updated">z-score &gt; 2σ</span>
         </div>
         <p style={{ color: "var(--text-secondary)", marginBottom: "20px", fontSize: "14px" }}>
-          Surveillance sites where current rates deviate significantly from historical average (Isolation Forest + z-score methodology)
+          Surveillance sites where current rates deviate significantly from the recent mean (|z| &gt; 2).
         </p>
         {anomalies.length === 0 ? (
           <div style={{ textAlign: "center", padding: "40px 20px" }}>

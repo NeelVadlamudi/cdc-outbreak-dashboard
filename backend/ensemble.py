@@ -11,9 +11,9 @@ from pathlib import Path
 import duckdb
 import numpy as np
 
-try:  # XGBoost is optional (not installed on the Render free tier); without it forecasts return no_model
+try:  # XGBoost is optional (not installed on the Render free tier / missing libomp); without it forecasts return no_model
     import xgboost as xgb
-except ImportError:
+except Exception:  # ImportError, or runtime load errors such as missing OpenMP
     xgb = None
 
 from backend.config import DB_PATH  # noqa: E402
@@ -202,7 +202,7 @@ def xgb_forecast(virus: str = "COVID-NET") -> dict:
 
 
 def detect_anomalies() -> list:
-    """Run anomaly detection on latest state-level data using z-scores and Isolation Forest."""
+    """Flag outliers on latest state-level rates with a z-score threshold (|z| > 2)."""
     conn = duckdb.connect(DB_PATH, read_only=True)
     try:
         # Get recent hospitalization rates by site

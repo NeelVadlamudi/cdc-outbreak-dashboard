@@ -23,6 +23,11 @@ jobs:
         run: ruff check .
       - name: Test
         run: make test
+      - name: Grounding gate (when eval artifacts present)
+        # Uses the same >5pt drop rule as nightly alerts. Skips when no matching
+        # evals/results/*.json is in the tree (typical PR). Set EVAL_RESULT_PATH
+        # to force a specific artifact. Do not invent a nightly eval here.
+        run: python scripts/check_grounding_gate.py
 
   frontend:
     runs-on: ubuntu-latest
@@ -43,4 +48,10 @@ jobs:
         working-directory: frontend
         run: npm run build
       - name: Node tests
-        run: node --test frontend/src/agent/__tests__/contract.test.js tests/site-fixtures/*.test.mjs
+        working-directory: frontend
+        run: npm run test:contract
+      - name: Site fixture tests
+        run: node --test tests/site-fixtures/*.test.mjs
+      - name: Frontend smoke
+        working-directory: frontend
+        run: npm run smoke

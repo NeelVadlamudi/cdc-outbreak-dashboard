@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type CSSProperties, type MouseEvent } from "react";
 import { Bot, ArrowRight, AlertTriangle } from "lucide-react";
 import { askAgent } from "../api";
+import type { AdaptedAskResponse } from "../agent/contract";
 import AgentAnswer from "../components/AgentAnswer";
 
 const SUGGESTED_QUESTIONS = [
@@ -12,17 +13,22 @@ const SUGGESTED_QUESTIONS = [
   "What's happening with flu activity?",
 ];
 
+type ChatMessage =
+  | { role: "user"; content: string }
+  | { role: "assistant"; result: AdaptedAskResponse }
+  | { role: "assistant"; error: string; question: string };
+
 export default function AskData() {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const chatEndRef = useRef(null);
+  const chatEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const sendMessage = async (question) => {
+  const sendMessage = async (question: string) => {
     if (!question.trim()) return;
     const q = question.trim();
     setInput("");
@@ -33,9 +39,22 @@ export default function AskData() {
       const result = await askAgent(q);
       setMessages((prev) => [...prev, { role: "assistant", result }]);
     } catch (err) {
-      setMessages((prev) => [...prev, { role: "assistant", error: err?.message || "Request failed", question: q }]);
+      const message = err instanceof Error ? err.message : "Request failed";
+      setMessages((prev) => [...prev, { role: "assistant", error: message, question: q }]);
     }
     setLoading(false);
+  };
+
+  const chipStyle: CSSProperties = {
+    padding: "8px 16px",
+    borderRadius: "20px",
+    border: "1px solid var(--border-light)",
+    background: "var(--bg-elevated)",
+    color: "var(--text-secondary)",
+    cursor: "pointer",
+    fontSize: "13px",
+    fontWeight: 500,
+    transition: "all 0.2s",
   };
 
   return (
@@ -56,7 +75,7 @@ export default function AskData() {
           <div style={{ flex: 1, overflowY: "auto", padding: "24px" }}>
             {messages.length === 0 && (
               <div style={{ textAlign: "center", padding: "40px 20px" }}>
-                <Bot size={48} strokeWidth={1.5} color="#9CA3AF" style={{ margin: '0 auto 16px' }} />
+                <Bot size={48} strokeWidth={1.5} color="#9CA3AF" style={{ margin: "0 auto 16px" }} />
                 <h3 style={{ color: "var(--text-primary)", marginBottom: "8px", fontWeight: 800, fontSize: "20px" }}>
                   Ask anything about the outbreak data
                 </h3>
@@ -68,26 +87,16 @@ export default function AskData() {
                     <button
                       key={i}
                       onClick={() => sendMessage(q)}
-                      style={{
-                        padding: "8px 16px",
-                        borderRadius: "20px",
-                        border: "1px solid var(--border-light)",
-                        background: "var(--bg-elevated)",
-                        color: "var(--text-secondary)",
-                        cursor: "pointer",
-                        fontSize: "13px",
-                        fontWeight: 500,
-                        transition: "all 0.2s",
+                      style={chipStyle}
+                      onMouseEnter={(e: MouseEvent<HTMLButtonElement>) => {
+                        e.currentTarget.style.background = "var(--bg-card)";
+                        e.currentTarget.style.borderColor = "var(--accent-primary)";
+                        e.currentTarget.style.color = "var(--accent-primary)";
                       }}
-                      onMouseEnter={(e) => {
-                        e.target.style.background = "var(--bg-card)";
-                        e.target.style.borderColor = "var(--accent-primary)";
-                        e.target.style.color = "var(--accent-primary)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.background = "var(--bg-elevated)";
-                        e.target.style.borderColor = "var(--border-light)";
-                        e.target.style.color = "var(--text-secondary)";
+                      onMouseLeave={(e: MouseEvent<HTMLButtonElement>) => {
+                        e.currentTarget.style.background = "var(--bg-elevated)";
+                        e.currentTarget.style.borderColor = "var(--border-light)";
+                        e.currentTarget.style.color = "var(--text-secondary)";
                       }}
                     >
                       {q}
@@ -103,12 +112,18 @@ export default function AskData() {
                   {msg.role === "assistant" ? <Bot size={20} /> : null}
                 </div>
                 <div className="message-bubble">
-                  {msg.role === "user" && msg.content}
-                  {msg.result && <AgentAnswer result={msg.result} />}
-                  {msg.error && (
+                  {msg.role === "user" && "content" in msg && msg.content}
+                  {"result" in msg && msg.result && <AgentAnswer result={msg.result} />}
+                  {"error" in msg && msg.error && (
                     <div className="agent-error" role="alert">
                       <AlertTriangle size={14} /> {msg.error}{" "}
-                      <button className="agent-calls-toggle" onClick={() => sendMessage(msg.question)} disabled={loading}>Retry</button>
+                      <button
+                        className="agent-calls-toggle"
+                        onClick={() => sendMessage(msg.question)}
+                        disabled={loading}
+                      >
+                        Retry
+                      </button>
                     </div>
                   )}
                 </div>
@@ -120,7 +135,9 @@ export default function AskData() {
                 <div className="chat-avatar"><Bot size={20} /></div>
                 <div className="message-bubble" style={{ padding: "16px 20px" }} aria-live="polite">
                   <div className="loading-spinner" style={{ width: "20px", height: "20px", borderWidth: "2px" }} />
-                  <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>Agent is querying the data…</span>
+                  <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>
+                    Agent is querying the data… First call after idle can take ~30–60s while the API wakes.
+                  </span>
                 </div>
               </div>
             )}

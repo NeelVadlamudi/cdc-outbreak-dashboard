@@ -77,3 +77,20 @@ def test_backtest_vs_last_value(tmp_path, monkeypatch):
     assert "did not beat" in out["lstm"]["note"]
     assert out["xgboost"]["beats_last_value"] is False
     assert "1 of 2" in out["xgboost"]["note"]
+
+
+def test_forecast_route_attaches_backtest(tmp_path, monkeypatch):
+    from backend import config
+    from backend.routes import _with_backtest
+
+    bt = {"run_at": "x", "models": [
+        {"model": "LSTM · COVID-NET", "horizons": [{"h": 1, "mae": 0.3}]},
+        {"model": "Last value · COVID-NET", "horizons": [{"h": 1, "mae": 0.1}]},
+    ]}
+    p = tmp_path / "bt.json"
+    p.write_text(json.dumps(bt))
+    monkeypatch.setattr(config, "BACKTEST_PATH", str(p))
+    out = _with_backtest({"status": "success", "virus": "COVID-NET"}, "COVID-NET")
+    assert out["backtest"]["lstm"]["beats_last_value"] is False
+    assert "last week's value" in out["backtest"]["lstm"]["note"]
+    assert _with_backtest({"status": "no_model"}, "Unknown-NET") == {"status": "no_model"}

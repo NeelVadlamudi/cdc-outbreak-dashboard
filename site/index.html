@@ -5,8 +5,8 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://cdc-outbreak-api.onrender.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>CDC Outbreak Agent</title>
-  <meta name="description" content="A tool-calling agent over public CDC respiratory data: nightly dashboard, eval scores, forecast backtests and recorded answers.">
+  <title>CDC Outbreak Agent — CDC → DuckDB → grounded tools</title>
+  <meta name="description" content="CDC open data → DuckDB → FastAPI → grounded tool agent → nightly evals. Last-value outlooks are primary; LSTM/XGBoost are experimental.">
   <meta name="theme-color" content="#000000">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -17,7 +17,7 @@
   <header class="head panel">
     <div>
       <h1>CDC Outbreak Agent</h1>
-      <p class="sub">Asks the CDC respiratory data questions through tools, and shows every call it made.</p>
+      <p class="sub">CDC → DuckDB → FastAPI → grounded tool agent → nightly evals &amp; backtests. Outlooks default to last-week persistence; LSTM/XGBoost are experimental.</p>
     </div>
     <div class="head-meta"><span class="chip" id="as-of">as of —</span></div>
   </header>
@@ -38,8 +38,17 @@
 
     <section class="panel" id="sec-backtest" aria-labelledby="h-bt">
       <div class="sec-head"><h2 id="h-bt">Forecast backtest</h2><span class="chip" data-stamp>—</span></div>
-      <p class="note">Error by forecast horizon (weeks ahead). Lower is better.</p>
+      <p class="note">Error by forecast horizon (weeks ahead). Lower is better. Last-value is the product primary; models that lose are experimental.</p>
       <div class="body" data-body></div>
+    </section>
+
+    <section class="panel" id="sec-case" aria-labelledby="h-case">
+      <div class="sec-head"><h2 id="h-case">Case study</h2></div>
+      <div class="body">
+        <p class="note"><strong>Grounding:</strong> a stale-warning path once injected an unverified day count (<code>14</code>), collapsing nightly <code>grounded_answers</code>. The checker now keeps warnings number-free. Scores on this page update only after the next nightly with that fix deployed.</p>
+        <p class="note"><strong>Forecasts:</strong> backtests show LSTM/XGBoost rarely beat repeating last week on these series — so the product leads with persistence, not the losing model.</p>
+        <p class="note"><strong>Live demo:</strong> the free Render API sleeps when idle. The Ask UI retries wake-up instead of dying on the first HTML splash.</p>
+      </div>
     </section>
 
     <section class="panel" id="sec-replay" aria-labelledby="h-rp">

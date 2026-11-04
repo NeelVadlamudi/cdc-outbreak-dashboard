@@ -26,7 +26,7 @@ except ImportError:
     torch = None
     nn = None
 
-from backend.config import DB_PATH  # noqa: E402
+from backend import config  # noqa: E402
 
 MODEL_DIR = os.path.join(Path(__file__).parent.parent, "models")
 
@@ -117,7 +117,7 @@ def create_samples(dates: list, values: np.ndarray) -> tuple:
 
 def get_training_data(virus: str = "COVID-NET") -> tuple[list, np.ndarray]:
     """Weekly overall hospitalization rate series (dates, values) from DuckDB."""
-    conn = duckdb.connect(DB_PATH, read_only=True)
+    conn = duckdb.connect(config.DB_PATH, read_only=True)
     try:
         rows = conn.execute("""
             SELECT week_ending_date, AVG(weekly_rate) as avg_rate
@@ -214,8 +214,46 @@ def train_model(virus: str = "COVID-NET") -> dict:
     return {"status": "trained", "virus": virus, "mae": round(mae, 4), "trained_through": dates[-1].isoformat()}
 
 
+def last_value_outlook(virus: str = "COVID-NET", horizon: int = HORIZON) -> dict:
+    """Primary outlook: repeat the latest observed weekly rate for ``horizon`` weeks.
+
+    Weekly sparse surveillance series rarely beat this persistence baseline in the
+    published rolling-origin backtest; the product defaults to it.
+    """
+    dates, values = get_training_data(virus)
+    if len(values) == 0:
+        return {"status": "insufficient_data", "detail": f"No hospitalization rates for {virus}."}
+    last = dates[-1]
+    if hasattr(last, "isoformat"):
+        last_iso = last.isoformat()[:10]
+    else:
+        last_iso = str(last)[:10]
+    rate = float(values[-1])
+    forecasts = []
+    for i in range(horizon):
+        d = last + timedelta(weeks=i + 1) if hasattr(last, "isoformat") else last
+        date_str = d.isoformat()[:10] if hasattr(d, "isoformat") else str(d)[:10]
+        forecasts.append({
+            "date": date_str,
+            "predicted_rate": round(rate, 2),
+            "lower_bound": round(rate, 2),
+            "upper_bound": round(rate, 2),
+        })
+    return {
+        "status": "success",
+        "model": "last_value",
+        "virus": virus,
+        "mae": None,
+        "last_data_date": last_iso,
+        "last_observed_rate": round(rate, 2),
+        "forecasts": forecasts,
+        "historical_recent": [round(float(v), 2) for v in values[-8:]],
+        "note": "Primary outlook: persistence (last observed week repeated). LSTM/XGBoost are experimental.",
+    }
+
+
 def generate_forecast(virus: str = "COVID-NET") -> dict:
-    """4-week forecast from a saved model. Never trains; returns no_model if none is saved."""
+    """4-week LSTM forecast from a saved model. Never trains; returns no_model if none is saved."""
     if torch is None:
         return dict(NO_TORCH)
     model_path, params_path = _paths(virus)
@@ -245,9 +283,11 @@ def generate_forecast(virus: str = "COVID-NET") -> dict:
         })
     return {
         "status": "success",
+        "model": "lstm",
         "virus": virus,
         "mae": round(mae, 4),
         "last_data_date": last.isoformat(),
         "forecasts": forecasts,
         "historical_recent": [round(float(v), 2) for v in values[-8:]],
+        "experimental": True,
     }
