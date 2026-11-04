@@ -11,21 +11,8 @@ import {
   TrendingUp, 
   ClipboardList 
 } from 'lucide-react';
-import { getDashboardSummary, getAriActivity, getTestPositivity, getHospTrends } from '../api';
-
-const STATE_ABBREV = {
-  'Alabama': 'AL', 'Alaska': 'AK', 'Arizona': 'AZ', 'Arkansas': 'AR', 'California': 'CA',
-  'Colorado': 'CO', 'Connecticut': 'CT', 'Delaware': 'DE', 'Florida': 'FL', 'Georgia': 'GA',
-  'Hawaii': 'HI', 'Idaho': 'ID', 'Illinois': 'IL', 'Indiana': 'IN', 'Iowa': 'IA',
-  'Kansas': 'KS', 'Kentucky': 'KY', 'Louisiana': 'LA', 'Maine': 'ME', 'Maryland': 'MD',
-  'Massachusetts': 'MA', 'Michigan': 'MI', 'Minnesota': 'MN', 'Mississippi': 'MS', 'Missouri': 'MO',
-  'Montana': 'MT', 'Nebraska': 'NE', 'Nevada': 'NV', 'New Hampshire': 'NH', 'New Jersey': 'NJ',
-  'New Mexico': 'NM', 'New York': 'NY', 'North Carolina': 'NC', 'North Dakota': 'ND', 'Ohio': 'OH',
-  'Oklahoma': 'OK', 'Oregon': 'OR', 'Pennsylvania': 'PA', 'Rhode Island': 'RI', 'South Carolina': 'SC',
-  'South Dakota': 'SD', 'Tennessee': 'TN', 'Texas': 'TX', 'Utah': 'UT', 'Vermont': 'VT',
-  'Virginia': 'VA', 'Washington': 'WA', 'West Virginia': 'WV', 'Wisconsin': 'WI', 'Wyoming': 'WY',
-  'District of Columbia': 'DC', 'Puerto Rico': 'PR',
-};
+import { getDashboardSummary, getAriActivity, getTestPositivity, getHospTrends, getHealth } from '../api';
+import { STATE_ABBREV } from '../lib/states';
 
 const RISK_LEVELS = { 'Minimal': 0, 'Very Low': 1, 'Low': 2, 'Moderate': 3, 'High': 4, 'Very High': 5 };
 // Deepened colors for better contrast on white background
@@ -36,21 +23,24 @@ export default function Overview() {
   const [ariData, setAriData] = useState([]);
   const [positivity, setPositivity] = useState([]);
   const [trends, setTrends] = useState([]);
+  const [health, setHealth] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const [summaryRes, ariRes, posRes, trendsRes] = await Promise.all([
+        const [summaryRes, ariRes, posRes, trendsRes, healthRes] = await Promise.all([
           getDashboardSummary(),
           getAriActivity(),
           getTestPositivity('limit=500'),
           getHospTrends(),
+          getHealth().catch(() => null),
         ]);
         setSummary(summaryRes);
         setAriData(ariRes.data || []);
         setPositivity(posRes.data || []);
         setTrends(trendsRes.data || []);
+        setHealth(healthRes);
       } catch (err) {
         console.error('Failed to fetch dashboard data:', err);
       } finally {
@@ -116,10 +106,34 @@ export default function Overview() {
             <span className="live-dot"></span> Live Tracking Active
           </div>
           <span className="badge badge-updated">
-            Updated: {summary?.latest_dates?.ari_activity?.slice(0, 10) || 'Loading...'}
+            as of {health?.as_of || summary?.latest_dates?.ari_activity?.slice(0, 10) || '—'}
           </span>
         </div>
       </div>
+
+      {health?.tables?.length > 0 && (
+        <div
+          className={`alert-banner ${health.status === 'stale' ? 'warning' : 'fade-in'}`}
+          role="status"
+          style={{ marginBottom: '16px', display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}
+        >
+          <ClipboardList size={16} />
+          <span style={{ fontWeight: 600 }}>Data freshness</span>
+          {health.tables.filter((t) => !t.legacy).map((t) => (
+            <span
+              key={`${t.table}-${t.dataset || ''}`}
+              className="badge"
+              style={{
+                background: t.stale ? '#FEF3C7' : '#ECFDF5',
+                color: t.stale ? '#92400E' : '#065F46',
+              }}
+            >
+              {t.table}{t.dataset ? ` (${t.dataset})` : ''}: {t.latest_week || '—'}
+              {t.stale ? ' · stale' : ''}
+            </span>
+          ))}
+        </div>
+      )}
 
       {highRiskCount > 0 && (
         <div className={`alert-banner ${highRiskCount >= 5 ? 'danger' : 'warning'}`}>

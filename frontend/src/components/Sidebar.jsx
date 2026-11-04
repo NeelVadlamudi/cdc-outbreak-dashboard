@@ -19,7 +19,7 @@ const navItems = [
     { path: "/wastewater", label: "Bio-Surveillance", icon: TestTubes },
   ]},
   { section: "Analysis", items: [
-    { path: "/forecasts", label: "Forecasts", icon: Bot },
+    { path: "/forecasts", label: "Outlook", icon: Bot },
     { path: "/advanced", label: "Advanced analytics", icon: Microscope },
     { path: "/ask", label: "Ask the data", icon: MessageSquare },
   ]},

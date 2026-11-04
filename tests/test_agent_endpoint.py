@@ -22,6 +22,10 @@ def _client(monkeypatch, tmp_path, messages):
 
 
 def test_agent_ask_contract(fixture_db, monkeypatch, tmp_path):
+    from backend import config
+
+    # Fixture weeks are fixed (2026-10-10); keep them "fresh" so this asserts the happy path.
+    monkeypatch.setattr(config, "STALE_AFTER_DAYS", 10_000)
     messages = [
         AIMessage(content="", tool_calls=[{"name": "get_test_positivity", "args": {"pathogen": "COVID-19"}, "id": "c1"}]),
         AIMessage(content="For the week ending 2026-10-10, COVID-19 test positivity was 3.6%."),
@@ -58,3 +62,19 @@ def test_agent_ask_stale_is_refused(fixture_db, monkeypatch, tmp_path):
     body = _client(monkeypatch, tmp_path, messages).post("/api/agent/ask", json={"question": "Ohio wastewater?"}).json()
     assert body["status"] == "refused"
     assert body["checker"]["stale_tables"] == ["wastewater_sites"]
+    # Stale warning must not inject an unverified day-count (e.g. "14") that fails grounding.
+    assert body["checker"]["passed"] is True
+    assert "out of date" in body["answer"]
+    assert "14 days" not in body["answer"]
+
+
+def test_agent_ask_fallback_is_unverified(fixture_db, monkeypatch, tmp_path):
+    """When the agent crashes, do not pretend a rule-based answer is checker-verified."""
+    monkeypatch.setattr(graph, "run_agent", lambda *a, **k: (_ for _ in ()).throw(RuntimeError("boom")))
+    from backend.main import app
+
+    body = TestClient(app).post("/api/agent/ask", json={"question": "COVID positivity?"}).json()
+    assert body["status"] == "unverified"
+    assert body["checker"]["passed"] is False
+    assert body["model"] == "unavailable"
+    assert body["tool_calls"] == []

@@ -49,12 +49,25 @@ def test_wastewater_national(fixture_db):
     assert out["total_sites"] == 3
 
 
-def test_forecast_without_model_is_error(fixture_db, monkeypatch, tmp_path):
+def test_forecast_defaults_to_last_value(fixture_db, monkeypatch, tmp_path):
     import backend.forecasting as forecasting
 
     monkeypatch.setattr(forecasting, "MODEL_DIR", str(tmp_path / "none"))
     out = call_tool("get_forecast", {"virus": "COVID-NET"})
-    assert "No trained forecast" in out["error"]
+    assert out["primary"] == "last_value"
+    assert out["rows"] and out["rows"][0]["model"] == "last_value"
+
+
+def test_hospitalization_exact_week_and_pediatric_alias(fixture_db):
+    miss = call_tool("get_hospitalization_rate", {
+        "network": "FluSurv-NET", "week": "2099-01-01",
+    })
+    assert "No data" in miss["error"]
+    ped = call_tool("get_hospitalization_rate", {
+        "network": "COVID-NET", "age_group": "children", "weeks": 1,
+    })
+    assert ped["age_group"] == "Pediatrics"
+    assert ped["rows"][0]["rate_per_100k"] == 0.3
 
 
 def test_freshness_flags_stale_wastewater(fixture_db):

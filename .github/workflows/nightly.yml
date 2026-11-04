@@ -45,6 +45,15 @@ jobs:
         continue-on-error: true
         run: python scripts/refresh_data.py
 
+      - name: Publish live DuckDB artifact
+        if: steps.refresh.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: cdc-duckdb
+          path: ${{ env.CDC_DB_PATH }}
+          if-no-files-found: ignore
+          retention-days: 14
+
       - id: backtest
         name: Backtest on the refreshed data
         continue-on-error: true

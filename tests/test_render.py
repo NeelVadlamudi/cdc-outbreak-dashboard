@@ -12,7 +12,12 @@ def test_health(fixture_db):
     from backend.main import app
 
     body = TestClient(app).get("/api/health").json()
-    assert body["status"] == "ok" and body["latest_week"] == "2026-10-10"
+    assert body["database"] == "ok"
+    assert body["latest_week"] == "2026-10-10"
+    assert body["as_of"] == "2026-10-10"
+    assert isinstance(body.get("tables"), list) and body["tables"]
+    # Fixture wastewater weeks are old → status may be "stale" while DB is fine.
+    assert body["status"] in ("ok", "stale")
 
 
 def test_cors_allows_pages_origin_only(monkeypatch):

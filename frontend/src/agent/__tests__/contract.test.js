@@ -2,7 +2,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { adaptAskResponse, formatDuration, formatSeconds, formatInputs, STATUSES } from "../contract.js";
+import { adaptAskResponse, formatDuration, formatSeconds, formatInputs, STATUSES } from "../contract.ts";
 
 const FX = JSON.parse(readFileSync(new URL("./ask.fixture.EXAMPLE.json", import.meta.url)));
 const REAL = JSON.parse(readFileSync(new URL("./agent-samples.REAL.json", import.meta.url)));

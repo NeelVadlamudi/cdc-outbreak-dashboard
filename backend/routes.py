@@ -12,6 +12,7 @@ from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
+from backend.agent.tools import backtest_vs_last_value
 from backend.chat_engine import chat_with_data, generate_weekly_brief
 from backend.config import ADMIN_API_KEY
 from backend.database import query
@@ -22,13 +23,40 @@ from backend.ensemble import (
     train_xgboost,
     xgb_forecast,
 )
-from backend.forecasting import generate_forecast, train_model
+from backend.forecasting import generate_forecast, last_value_outlook, train_model
 from backend.ratelimit import limited
 from backend.simulator import SimulationParams, get_current_rates, run_simulation
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api")
+
+
+def _underperforms(vs: dict, key: str) -> bool:
+    """True when backtest says the model loses to last-value (or there is no win)."""
+    entry = (vs or {}).get(key) or {}
+    if "beats_last_value" in entry:
+        return not bool(entry["beats_last_value"])
+    return bool(entry.get("note"))
+
+
+def _with_backtest(payload: dict, virus: str) -> dict:
+    """Attach rolling-origin backtest vs last-value notes when available (no invented metrics)."""
+    if not isinstance(payload, dict):
+        return payload
+    vs = backtest_vs_last_value(virus)
+    if not vs:
+        return payload
+    out = {**payload, "backtest": vs}
+    for key in ("lstm", "xgboost"):
+        if key in out and isinstance(out[key], dict) and _underperforms(vs, key):
+            out[key] = {**out[key], "experimental": True, "underperforms_baseline": True}
+        if key in vs and _underperforms(vs, key):
+            vs[key] = {**vs[key], "underperforms_baseline": True}
+    if payload.get("model") == "lstm" and _underperforms(vs, "lstm"):
+        out["experimental"] = True
+        out["underperforms_baseline"] = True
+    return out
 
 
 # ─── Helper ──────────────────────────────────────────────────────────────────
@@ -171,8 +199,17 @@ async def get_latest_positivity():
 
 @router.get("/forecast/{virus}")
 async def get_forecast(virus: str = "COVID-NET"):
-    """Get 4-week LSTM forecast for a specific virus."""
-    return generate_forecast(virus)
+    """Outlook for a virus: last-value primary, LSTM experimental when a model exists."""
+    primary = last_value_outlook(virus)
+    experimental = generate_forecast(virus)
+    payload = {
+        **primary,
+        "primary": "last_value",
+        "experimental_models": {
+            "lstm": _with_backtest(experimental, virus) if experimental.get("status") == "success" else experimental,
+        },
+    }
+    return _with_backtest(payload, virus)
 
 
 @router.post("/forecast/train/{virus}", dependencies=[Depends(require_api_key)])
@@ -420,14 +457,18 @@ async def trigger_xgb_training(virus: str = "COVID-NET"):
 
 @router.get("/ensemble/compare/{virus}")
 async def compare_models(virus: str = "COVID-NET"):
-    """Compare LSTM vs XGBoost forecasts side-by-side."""
+    """Last-value primary outlook plus experimental LSTM/XGBoost side-by-side."""
+    primary = last_value_outlook(virus)
     lstm_result = generate_forecast(virus)
     xgb_result = xgb_forecast(virus)
-    return {
+    payload = {
+        "primary": "last_value",
+        "last_value": primary,
         "lstm": lstm_result,
         "xgboost": xgb_result,
         "virus": virus,
     }
+    return _with_backtest(payload, virus)
 
 
 @router.get("/anomalies")
@@ -462,7 +503,7 @@ class AgentQuestion(BaseModel):
 
 @router.post("/agent/ask", dependencies=[Depends(limited("ask"))])
 async def agent_ask(body: AgentQuestion):
-    """Answer a question with the tool-calling agent; fall back to the rule-based answer."""
+    """Answer a question with the tool-calling agent; fall back to an explicit unverified note."""
     import time
 
     from backend.agent.graph import run_agent
@@ -470,30 +511,39 @@ async def agent_ask(body: AgentQuestion):
     try:
         return await asyncio.to_thread(run_agent, body.question)
     except Exception as e:
-        logger.warning("Agent unavailable, using rule-based answer: %s", e)
+        # Never mark rule-based text as checker-passed — that is a portfolio honesty flop.
+        logger.warning("Agent unavailable, refusing with unverified fallback: %s", e)
         start = time.perf_counter()
-        fallback = await chat_with_data(body.question)
         return {
-            "status": "answered",
-            "answer": fallback.get("answer", ""),
+            "status": "unverified",
+            "answer": (
+                "I could not verify that figure. The grounded agent is unavailable right now; "
+                "retry in a moment rather than trusting an unverified fallback."
+            ),
             "tool_calls": [],
             "as_of": None,
             "elapsed_s": round(time.perf_counter() - start, 3),
-            "model": "rule-based",
-            "checker": {"passed": True, "unverified": [], "stale_tables": []},
+            "model": "unavailable",
+            "checker": {"passed": False, "unverified": ["agent_unavailable"], "stale_tables": []},
         }
 
 
 @router.post("/chat", dependencies=[Depends(limited("ask"))])
-async def chat_endpoint(msg: ChatMessage):
-    """Data chat: ask questions about the surveillance data."""
-    result = await chat_with_data(msg.question)
-    return result
+async def chat_endpoint(_msg: ChatMessage):
+    """Deprecated unverified chat path. Use the grounded agent instead."""
+    raise HTTPException(
+        status_code=410,
+        detail={
+            "error": "gone",
+            "message": "POST /api/chat is retired. Use the verified tool-calling agent at POST /api/agent/ask.",
+            "use": "/api/agent/ask",
+        },
+    )
 
 
 @router.get("/weekly-brief", dependencies=[Depends(limited("brief"))])
 async def get_weekly_brief():
-    """Get auto-generated weekly health brief."""
+    """Rule-based weekly brief from DuckDB aggregates (no free-form LLM path)."""
     return generate_weekly_brief()
 
 

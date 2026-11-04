@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
 import { TestTubes, Map as MapIcon, AlertTriangle, Calendar } from "lucide-react";
 import { getWastewaterLatest, getWastewaterStates } from "../api";
+import { STATE_ABBREV as STATE_ABBREVS } from "../lib/states";
 
 // CDC Wastewater Viral Activity Level categories (dataset atcp-73re)
 const CATEGORY_COLORS = {
@@ -12,19 +13,6 @@ const CATEGORY_COLORS = {
   "Very Low": "#4F46E5",
 };
 const PATHOGENS = ["SARS-CoV-2", "Influenza A virus", "RSV"];
-
-const STATE_ABBREVS = {
-  Alabama: "AL", Alaska: "AK", Arizona: "AZ", Arkansas: "AR", California: "CA", Colorado: "CO",
-  Connecticut: "CT", Delaware: "DE", Florida: "FL", Georgia: "GA", Hawaii: "HI", Idaho: "ID",
-  Illinois: "IL", Indiana: "IN", Iowa: "IA", Kansas: "KS", Kentucky: "KY", Louisiana: "LA",
-  Maine: "ME", Maryland: "MD", Massachusetts: "MA", Michigan: "MI", Minnesota: "MN",
-  Mississippi: "MS", Missouri: "MO", Montana: "MT", Nebraska: "NE", Nevada: "NV",
-  "New Hampshire": "NH", "New Jersey": "NJ", "New Mexico": "NM", "New York": "NY",
-  "North Carolina": "NC", "North Dakota": "ND", Ohio: "OH", Oklahoma: "OK", Oregon: "OR",
-  Pennsylvania: "PA", "Rhode Island": "RI", "South Carolina": "SC", "South Dakota": "SD",
-  Tennessee: "TN", Texas: "TX", Utah: "UT", Vermont: "VT", Virginia: "VA", Washington: "WA",
-  "West Virginia": "WV", Wisconsin: "WI", Wyoming: "WY", "District of Columbia": "DC",
-};
 
 export default function Wastewater() {
   const [pathogen, setPathogen] = useState("SARS-CoV-2");

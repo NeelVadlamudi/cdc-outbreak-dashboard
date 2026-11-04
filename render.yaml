@@ -1,25 +1,36 @@
 # Render Blueprint: the API only (the site is on GitHub Pages).
-# Free plan: 512 MB RAM, sleeps when idle. Installs requirements-render.txt (no torch, xgboost, ollama or test tools),
-# so forecast endpoints and the get_forecast tool return no_model, as they do when no model is trained.
+#
+# Plan note: change `plan` from free → starter (or higher) in the Render dashboard
+# so the public demo stays warm. Blueprint alone cannot upgrade billing — you must
+# click Upgrade on the service. Free tier sleeps and breaks "Try it live."
+#
+# Live data: startCommand downloads a nightly-published DuckDB when CDC_DB_URL is set;
+# otherwise it falls back to evals/snapshot.duckdb (frozen for evals). Keep the
+# snapshot committed; do not overwrite it with live pulls.
 services:
   - type: web
     name: cdc-outbreak-api
     runtime: python
+    # Keep free so blueprint sync does not require a paid plan to deploy.
+    # Upgrade to starter in the Render UI (cannot bill from YAML alone) to stop cold starts.
     plan: free
     buildCommand: pip install -r requirements-render.txt
-    # The app writes to its database at startup (schema check), so it serves a copy of the committed snapshot
-    # and leaves the file in the repo untouched. /tmp is wiped on every restart, so each cold start begins
-    # from the same snapshot.
-    startCommand: cp evals/snapshot.duckdb /tmp/cdc_surveillance.duckdb && uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    startCommand: python scripts/fetch_live_db.py --dest /var/data/cdc_surveillance.duckdb && uvicorn backend.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /api/health
+    disk:
+      name: cdc-data
+      mountPath: /var/data
+      sizeGB: 1
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.15
       - key: CDC_DB_PATH
-        value: /tmp/cdc_surveillance.duckdb
-      # false: serve the snapshot as is. A full CDC pull blocks startup until it finishes (about 20 s locally,
-      # longer on a free instance) and peaks at about 240 MB by itself, and the hourly refresh would repeat
-      # that inside the same 512 MB service. The nightly GitHub Actions job refreshes the published data instead.
+        value: /var/data/cdc_surveillance.duckdb
+      # Set in the Render dashboard to the nightly release/asset URL after publishing
+      # the DuckDB from GitHub Actions (artifact name: cdc-duckdb). Until then the
+      # fetch script copies evals/snapshot.duckdb.
+      - key: CDC_DB_URL
+        sync: false
       - key: INGEST_ON_STARTUP
         value: "false"
       - key: AGENT_MODEL
@@ -32,6 +43,10 @@ services:
         generateValue: true
       - key: LOG_LEVEL
         value: INFO
-      # No /docs, /redoc or /openapi.json on the public API.
       - key: ENABLE_API_DOCS
         value: "false"
+      - key: RATE_LIMIT_BACKEND
+        value: sqlite
+      - key: RATE_LIMIT_DB
+        value: /var/data/ratelimits.sqlite
+      # Optional: set RATE_LIMIT_BACKEND=redis and REDIS_URL if you provision Redis.

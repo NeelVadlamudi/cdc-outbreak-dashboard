@@ -95,18 +95,29 @@ app.include_router(router)
 
 @app.get("/api/health")
 async def health():
-    """Liveness check for the host (Render health check). Opens the database read-only."""
-    import duckdb
-
+    """Liveness check for the host (Render health check). Includes per-table as_of + stale flags."""
     from backend import config
+    from backend.agent.tools import get_data_freshness
 
     try:
-        con = duckdb.connect(config.DB_PATH, read_only=True)
-        latest = con.execute("SELECT MAX(week_end) FROM test_positivity").fetchone()[0]
-        con.close()
+        fresh = get_data_freshness()
+        tables = fresh.get("rows") or []
+        stale = [t for t in tables if t.get("stale") and not t.get("legacy")]
+        latest = fresh.get("as_of")
+        status = "ok" if not stale else "stale"
+        return {
+            "status": status,
+            "database": "ok",
+            "latest_week": latest,
+            "as_of": latest,
+            "stale_after_days": config.STALE_AFTER_DAYS,
+            "tables": tables,
+            "stale_tables": [
+                (t["table"] + (f" ({t['dataset']})" if t.get("dataset") else "")) for t in stale
+            ],
+        }
     except Exception as e:  # report, but keep the shape
         return {"status": "degraded", "database": f"error: {type(e).__name__}"}
-    return {"status": "ok", "database": "ok", "latest_week": latest.isoformat() if latest else None}
 
 
 @app.get("/")

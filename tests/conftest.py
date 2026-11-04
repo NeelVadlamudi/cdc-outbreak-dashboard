@@ -1,13 +1,20 @@
+import os
+
+# Force in-memory rate limits before backend.ratelimit is imported by tests.
+os.environ.setdefault("RATE_LIMIT_BACKEND", "memory")
+
 import duckdb
 import pytest
 
 from backend import config
-from backend.ratelimit import limiter
+from backend.ratelimit import MemoryStore, limiter
 
 
 @pytest.fixture(autouse=True)
 def _reset_rate_limits():
     """Each test starts with empty rate-limit counters."""
+    if not isinstance(limiter.store, MemoryStore):
+        limiter.store = MemoryStore()
     limiter.reset()
     yield
     limiter.reset()
@@ -30,7 +37,9 @@ def fixture_db(tmp_path, monkeypatch):
         ('2026-10-10', 'COVID-19', 3.6), ('2026-10-10', 'Influenza', 5.0), ('2026-10-03', 'COVID-19', 4.1)""")
     conn.execute("""INSERT INTO hospitalization_rates VALUES
         ('COVID-NET', '2026-27', '2026-10-10', 2026, 0, 'Overall', 'All', 'All', 'Overall', 0.8, 1.0, 'Observed'),
-        ('COVID-NET', '2026-27', '2026-10-03', 2026, 0, 'Overall', 'All', 'All', 'Overall', 1.1, 45.0, 'Observed')""")
+        ('COVID-NET', '2026-27', '2026-10-03', 2026, 0, 'Overall', 'All', 'All', 'Overall', 1.1, 45.0, 'Observed'),
+        ('COVID-NET', '2026-27', '2026-10-10', 2026, 0, 'Pediatrics', 'All', 'All', 'Overall', 0.3, 2.0, 'Observed'),
+        ('FluSurv-NET', '2026-27', '2026-10-10', 2026, 0, 'Overall', 'All', 'All', 'Overall', 0.5, 3.0, 'Observed')""")
     conn.execute("""INSERT INTO wastewater_sites (wwtp_jurisdiction, wwtp_id, county_names, county_fips,
         population_served, date_start, date_end, ptc_15d, detect_prop_15d, percentile, sampling_prior,
         first_sample_date) VALUES

@@ -133,12 +133,16 @@ def run_agent(question: str, model=None, setting: str | None = None, toolset=Non
     trace = state["trace"]
     answer = _text(state["messages"][-1]).strip()
     outputs = [t["output"] for t in trace]
-    checker = check_numbers(answer, outputs, question)
 
+    # Do not inject threshold digits (e.g. "14") into the answer: the number checker
+    # and eval grounded scorer both require every figure to appear in tool output, and
+    # STALE_AFTER_DAYS is not a tool value. Phrase the warning without a day count.
     stale = _stale_tables(trace) if check_freshness else []
     if stale:
         names = ", ".join(f"{r['table']} (latest {r['latest_week']})" for r in stale)
-        answer = f"Warning: this data is more than 14 days old: {names}. " + answer
+        answer = f"Warning: this data is out of date: {names}. " + answer
+
+    checker = check_numbers(answer, outputs, question)
     checker["stale_tables"] = [r["table"] for r in stale]
 
     as_of_values = [o.get("as_of") for o in outputs if o.get("as_of")]

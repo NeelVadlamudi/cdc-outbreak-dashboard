@@ -15,6 +15,15 @@ from backend import config
 
 ARI_LEVELS = ["Very Low", "Low", "Moderate", "High", "Very High", "Data Unavailable"]
 
+# Common phrasings → RESP-NET age_group labels in the database.
+AGE_ALIASES = {
+    "pediatric": "Pediatrics",
+    "pediatrics": "Pediatrics",
+    "children": "Pediatrics",
+    "child": "Pediatrics",
+    "kids": "Pediatrics",
+}
+
 
 def _connect():
     return duckdb.connect(config.DB_PATH, read_only=True)
@@ -43,8 +52,25 @@ def _match(value: str, allowed: list[str]):
     return lookup.get(value.strip().lower())
 
 
+def _match_age(value: str, allowed: list[str]):
+    """Match an age_group, including pediatric/children aliases."""
+    hit = _match(value, allowed)
+    if hit:
+        return hit
+    alias = AGE_ALIASES.get(value.strip().lower())
+    return _match(alias, allowed) if alias else None
+
+
 def _unknown(kind: str, value, allowed: list) -> dict:
     return {"error": f"Unknown {kind} '{value}'.", "allowed": allowed}
+
+
+def _week_not_covered(table: str, week, latest) -> dict:
+    return {
+        "error": f"No data in {table} for week {_jsonable(week)}.",
+        "requested_week": _jsonable(week),
+        "latest_available": _jsonable(latest),
+    }
 
 
 def _result(rows, source_table, as_of, **extra) -> dict:
@@ -74,8 +100,16 @@ class StatesAtLevelInput(BaseModel):
 
 class HospitalizationInput(BaseModel):
     network: str = Field(description="COVID-NET, FluSurv-NET, RSV-NET or Combined")
-    age_group: str = Field(default="Overall", description="Age group, e.g. 'Overall', '65+ yr'")
-    weeks: int = Field(default=4, ge=1, le=52, description="Number of most recent weeks")
+    age_group: str = Field(
+        default="Overall",
+        description="Age group, e.g. 'Overall', 'Pediatrics', '0-4 yr', '5-17 yr', '50-64 yr', '65+ yr'. "
+        "Required for pediatric/children questions — do not leave as Overall.",
+    )
+    weeks: int = Field(default=4, ge=1, le=52, description="Number of most recent weeks when week is omitted")
+    week: str | None = Field(
+        default=None,
+        description="Exact week-ending date YYYY-MM-DD. When set, returns that week only (or an error if missing).",
+    )
 
 
 class PositivityInput(BaseModel):
@@ -109,13 +143,18 @@ def get_ari_level(state: str, week: str | None = None) -> dict:
         wk = _parse_week(week)
         if wk == "invalid":
             return {"error": "week must be YYYY-MM-DD"}
+        latest = conn.execute("SELECT MAX(week_end) FROM ari_activity WHERE geography = ?", [name]).fetchone()[0]
+        requested = week is not None
         if wk is None:
-            wk = conn.execute("SELECT MAX(week_end) FROM ari_activity WHERE geography = ?", [name]).fetchone()[0]
+            wk = latest
         cur = conn.execute(
             "SELECT week_end, geography AS state, label AS level FROM ari_activity WHERE geography = ? AND week_end = ?",
             [name, wk],
         )
-        return _result(_rows(cur), "ari_activity", wk)
+        rows = _rows(cur)
+        if requested and not rows:
+            return _week_not_covered("ari_activity", wk, latest)
+        return _result(rows, "ari_activity", wk)
 
 
 def list_states_at_level(level: str, week: str | None = None) -> dict:
@@ -127,16 +166,22 @@ def list_states_at_level(level: str, week: str | None = None) -> dict:
         wk = _parse_week(week)
         if wk == "invalid":
             return {"error": "week must be YYYY-MM-DD"}
+        latest = conn.execute("SELECT MAX(week_end) FROM ari_activity").fetchone()[0]
+        requested = week is not None
         if wk is None:
-            wk = conn.execute("SELECT MAX(week_end) FROM ari_activity").fetchone()[0]
+            wk = latest
         cur = conn.execute(
             "SELECT geography AS state FROM ari_activity WHERE label = ? AND week_end = ? ORDER BY 1", [lvl, wk]
         )
         rows = _rows(cur)
+        if requested and not rows:
+            return _week_not_covered("ari_activity", wk, latest)
         return _result(rows, "ari_activity", wk, count=len(rows))
 
 
-def get_hospitalization_rate(network: str, age_group: str = "Overall", weeks: int = 4) -> dict:
+def get_hospitalization_rate(
+    network: str, age_group: str = "Overall", weeks: int = 4, week: str | None = None
+) -> dict:
     """Weekly RESP-NET hospitalization rates per 100,000 (all sites, all sexes and races)."""
     weeks = max(1, min(int(weeks), 52))
     with _connect() as conn:
@@ -145,9 +190,35 @@ def get_hospitalization_rate(network: str, age_group: str = "Overall", weeks: in
         if not net:
             return _unknown("network", network, nets)
         ages = _distinct(conn, "hospitalization_rates", "age_group")
-        age = _match(age_group, ages)
+        age = _match_age(age_group, ages)
         if not age:
             return _unknown("age_group", age_group, ages)
+        latest = conn.execute(
+            """
+            SELECT MAX(week_ending_date) FROM hospitalization_rates
+            WHERE surveillance_network = ? AND age_group = ? AND site = 'Overall'
+              AND sex IN ('All', 'Overall') AND race_ethnicity IN ('All', 'Overall')
+            """,
+            [net, age],
+        ).fetchone()[0]
+        wk = _parse_week(week)
+        if wk == "invalid":
+            return {"error": "week must be YYYY-MM-DD"}
+        if wk is not None:
+            cur = conn.execute(
+                """
+                SELECT week_ending_date AS week_end, weekly_rate AS rate_per_100k, cumulative_rate AS cumulative_per_100k
+                FROM hospitalization_rates
+                WHERE surveillance_network = ? AND age_group = ? AND site = 'Overall'
+                  AND sex IN ('All', 'Overall') AND race_ethnicity IN ('All', 'Overall')
+                  AND week_ending_date = ?
+                """,
+                [net, age, wk],
+            )
+            rows = _rows(cur)
+            if not rows:
+                return _week_not_covered("hospitalization_rates", wk, latest)
+            return _result(rows, "hospitalization_rates", wk, network=net, age_group=age, units="rate per 100,000")
         cur = conn.execute(
             """
             SELECT week_ending_date AS week_end, weekly_rate AS rate_per_100k, cumulative_rate AS cumulative_per_100k
@@ -179,8 +250,15 @@ def get_test_positivity(pathogen: str | None = None, week: str | None = None) ->
         wk = _parse_week(week)
         if wk == "invalid":
             return {"error": "week must be YYYY-MM-DD"}
+        latest_sql = "SELECT MAX(week_end) FROM test_positivity"
+        latest_params = []
+        if pathogen:
+            latest_sql += " WHERE pathogen = ?"
+            latest_params.append(p)
+        latest = conn.execute(latest_sql, latest_params).fetchone()[0]
+        requested = week is not None
         if wk is None:
-            wk = conn.execute("SELECT MAX(week_end) FROM test_positivity").fetchone()[0]
+            wk = latest
         where.append("week_end = ?")
         params.append(wk)
         cur = conn.execute(
@@ -188,7 +266,10 @@ def get_test_positivity(pathogen: str | None = None, week: str | None = None) ->
             + " AND ".join(where) + " ORDER BY pathogen",
             params,
         )
-        return _result(_rows(cur), "test_positivity", wk)
+        rows = _rows(cur)
+        if requested and not rows:
+            return _week_not_covered("test_positivity", wk, latest)
+        return _result(rows, "test_positivity", wk)
 
 
 # The legacy NWSS metric file uses sentinel codes, not real values: percentile 999
@@ -317,38 +398,48 @@ def backtest_vs_last_value(net: str) -> dict:
 
 
 def get_forecast(virus: str) -> dict:
-    """Stored LSTM and XGBoost 4-week forecasts with their validation MAE. Never trains."""
+    """Last-value primary outlook plus any stored LSTM/XGBoost rows. Never trains."""
     with _connect() as conn:
         nets = _distinct(conn, "hospitalization_rates", "surveillance_network")
     net = _match(virus, nets)
     if not net:
         return _unknown("virus", virus, nets)
+    from backend.forecasting import last_value_outlook
+
+    primary = last_value_outlook(net)
+    if primary.get("status") != "success":
+        return {"error": primary.get("detail") or f"No outlook available for {net}."}
+    as_of = primary["last_data_date"]
+    rows = [{"model": "last_value", "role": "primary", **f} for f in primary["forecasts"]]
     safe = net.replace("-", "_").replace(" ", "_").lower()
     from backend.forecasting import MODEL_DIR as model_dir
 
-    rows = []
-    as_of = None
     if os.path.exists(os.path.join(model_dir, f"params_{safe}.json")):
         from backend.forecasting import generate_forecast
 
         res = generate_forecast(net)
         if res.get("status") == "success":
-            as_of = res["last_data_date"]
-            rows += [{"model": "lstm", "validation_mae": res["mae"], **f} for f in res["forecasts"]]
+            rows += [{"model": "lstm", "role": "experimental", "validation_mae": res["mae"], **f}
+                     for f in res["forecasts"]]
     if os.path.exists(os.path.join(model_dir, f"xgb_{safe}.json")):
         from backend.ensemble import xgb_forecast
 
         res = xgb_forecast(net)
         if res.get("status") == "success":
-            as_of = as_of or res.get("last_data_date")
-            rows += [{"model": "xgboost", "validation_mae": res["mae"], **f} for f in res.get("forecasts", [])]
-    if not rows:
-        return {"error": f"No trained forecast is stored for {net}. Training runs from the command line."}
+            rows += [{"model": "xgboost", "role": "experimental", "validation_mae": res["mae"], **f}
+                     for f in res.get("forecasts", [])]
     vs = backtest_vs_last_value(net)
     for r in rows:
         if r["model"] in vs:
             r["beats_last_value"] = vs[r["model"]]["beats_last_value"]
-    extra = {"backtest": vs} if vs else {}
+            r["underperforms_baseline"] = not vs[r["model"]]["beats_last_value"]
+    extra = {
+        "primary": "last_value",
+        "last_observed_rate": primary.get("last_observed_rate"),
+        "note": primary.get("note"),
+    }
+    if vs:
+        extra["backtest"] = vs
     return _result(rows, "models", as_of, virus=net, units="rate per 100,000", **extra)
 
 

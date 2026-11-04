@@ -2,6 +2,7 @@
   "model": "gemini-3.5-flash-lite",
   "date": "2026-10-20",
   "source": "evals/results/gemini-3.5-flash-lite_2026-10-20_2.json",
+  "note": "Not bumped after the stale-warning grounding fix: no clean post-fix 60-q eval summary was produced in this Path-to-Ten pass (full Gemini eval needs GEMINI_API_KEY). Leave this baseline until a nightly (or local) run meets exit criteria; do not point at runs with collapsed grounded_answers (e.g. 2026-11-04 at 16.7%).",
   "summary": {
     "question_set": "cdc-q60-v1",
     "questions": 60,

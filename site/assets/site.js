@@ -318,15 +318,39 @@
       out.replaceChildren(el("p", { class: "note", text: "Asking… the first call can take about 50 s while the server wakes." }));
       try {
         const fail = (text) => { setState("error"); out.replaceChildren(el("p", { class: "note", text })); };
-        let r;
-        try {
-          r = await fetch(`${base}/api/agent/ask`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question }) });
-        } catch {
-          return fail("Couldn't reach the live API. It may be waking up, so try again in a minute.");
+        const splash = /Application loading|waking up|Start building on Render/i;
+        const askOnce = async () => {
+          const r = await fetch(`${base}/api/agent/ask`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question }) });
+          const raw = await r.text();
+          const cold = splash.test(raw.slice(0, 800)) || r.status === 502 || r.status === 503 || r.status === 504;
+          let j = null;
+          try { j = JSON.parse(raw); } catch { /* HTML splash while waking */ }
+          return { r, raw, cold, j };
+        };
+        let attempt = 0;
+        let result;
+        while (attempt < 3) {
+          attempt += 1;
+          try {
+            result = await askOnce();
+          } catch {
+            if (attempt < 3) {
+              out.replaceChildren(el("p", { class: "note", text: `API unreachable — retrying wake (${attempt}/3)…` }));
+              await new Promise((res) => setTimeout(res, 2500 * attempt));
+              continue;
+            }
+            return fail("Couldn't reach the live API. It may be waking up, so try again in a minute.");
+          }
+          if (result.cold && attempt < 3) {
+            out.replaceChildren(el("p", { class: "note", text: `API is waking up — retrying (${attempt}/3)…` }));
+            await new Promise((res) => setTimeout(res, 4000 * attempt));
+            continue;
+          }
+          break;
         }
-        let j;
-        try { j = await r.json(); } catch {
-          return fail(`The live API sent a response the page couldn't read (HTTP ${r.status}).`);
+        const { r, cold, j } = result;
+        if (cold || !j) {
+          return fail("The live API is still waking up (free-tier cold start). Wait ~30–60s and ask again.");
         }
         if (!r.ok) {
           const d = j && j.detail;

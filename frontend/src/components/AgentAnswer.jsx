@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ChevronRight, ShieldAlert, Wrench } from "lucide-react";
-import { formatDuration, formatInputs } from "../agent/contract.js";
+import { formatDuration, formatInputs } from "../agent/contract";
 
 function OutputRows({ rows }) {
   const [open, setOpen] = useState(false);
