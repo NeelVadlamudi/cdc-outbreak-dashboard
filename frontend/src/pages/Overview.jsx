@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import Plot from 'react-plotly.js';
 import {
   Hospital,
@@ -57,6 +58,20 @@ function MetricCard({ accent, iconTone, delayClass, icon, metric, fallbackValue,
             {metric.insight && metric.insight !== plain ? <> · {metric.insight}</> : null}
           </div>
         </details>
+      ) : null}
+    </div>
+  );
+}
+
+function ChartEmpty({ title, detail, onRetry }) {
+  return (
+    <div className="chart-empty" role="status">
+      <strong>{title}</strong>
+      <p>{detail}</p>
+      {onRetry ? (
+        <button type="button" className="retry-btn" onClick={onRetry}>
+          Retry
+        </button>
       ) : null}
     </div>
   );
@@ -231,11 +246,23 @@ export default function Overview() {
       {loadError && (
         <div className="alert-banner ops" role="status" style={{ marginBottom: 16 }}>
           <Info size={18} />
-          <span>
+          <span style={{ flex: 1 }}>
             Dashboard temporarily unavailable. Could not reach the data service
-            {loadError ? ` (${loadError})` : ''}. Try refreshing in a minute—this is a connection
-            issue, not a disease alert.
+            {loadError ? ` (${loadError})` : ''}. This is a connection issue, not a disease alert.
           </span>
+          <button type="button" className="retry-btn" onClick={() => { setLoading(true); loadDashboard(); }}>
+            Retry
+          </button>
+        </div>
+      )}
+
+      {loadError && !summary && (
+        <div className="card fade-in" style={{ marginBottom: 16 }}>
+          <ChartEmpty
+            title="Overview data not loaded"
+            detail="Charts and briefing stay hidden until the API responds so we never show a blank map as if it were empty CDC data."
+            onRetry={() => { setLoading(true); loadDashboard(); }}
+          />
         </div>
       )}
 
@@ -275,6 +302,9 @@ export default function Overview() {
             <span className="briefing-label">Plain implication</span>
             <p>{briefing.implication}</p>
           </div>
+          <p className="briefing-ask">
+            <Link to="/ask">Ask a grounded question about this week →</Link>
+          </p>
         </div>
       )}
 
@@ -378,6 +408,8 @@ export default function Overview() {
         />
       </div>
 
+      {!(!summary && loadError) && (
+      <>
       <div className="charts-grid">
         <div className="card fade-in">
           <div className="card-header">
@@ -386,77 +418,93 @@ export default function Overview() {
               {weekEnding ? `CDC week ending ${weekEnding}` : 'Current week'}
             </span>
           </div>
-          <Plot
-            data={[{
-              type: 'choropleth',
-              locationmode: 'USA-states',
-              locations: mapStates.map(s => s.state),
-              z: mapStates.map(s => s.level),
-              text: mapStates.map(s => `${s.name}: ${s.label}`),
-              hovertemplate: '%{text}<extra></extra>',
-              colorscale: RISK_COLORS.map((c, i) => [i / 5, c]),
-              showscale: true,
-              colorbar: {
-                title: { text: 'ARI activity', font: { size: 11, color: '#6B7280' } },
-                ticktext: ['Min', 'V.Low', 'Low', 'Mod', 'High', 'V.High'],
-                tickvals: [0, 1, 2, 3, 4, 5],
-                tickfont: { size: 10, color: '#6B7280' },
-                len: 0.6,
-                thickness: 12,
-                outlinewidth: 0,
-              },
-              marker: { line: { color: '#FFFFFF', width: 0.8 } },
-            }]}
-            layout={{
-              ...plotLayout,
-              geo: {
-                scope: 'usa',
-                bgcolor: 'rgba(0,0,0,0)',
-                lakecolor: '#E5E7EB',
-                landcolor: '#F3F4F6',
-                subunitcolor: '#D1D5DB',
-                showlakes: true,
-                projection: { type: 'albers usa' },
-              },
-              margin: { l: 0, r: 0, t: 0, b: 0 },
-              height: 360,
-            }}
-            config={{ displayModeBar: false, responsive: true }}
-            style={{ width: '100%' }}
-          />
+          {mapStates.length === 0 ? (
+            <ChartEmpty
+              title="No ARI map rows for this week"
+              detail="The API returned no geography labels to plot. Retry after the service wakes, or open Data status."
+              onRetry={() => { setLoading(true); loadDashboard(); }}
+            />
+          ) : (
+            <Plot
+              data={[{
+                type: 'choropleth',
+                locationmode: 'USA-states',
+                locations: mapStates.map(s => s.state),
+                z: mapStates.map(s => s.level),
+                text: mapStates.map(s => `${s.name}: ${s.label}`),
+                hovertemplate: '%{text}<extra></extra>',
+                colorscale: RISK_COLORS.map((c, i) => [i / 5, c]),
+                showscale: true,
+                colorbar: {
+                  title: { text: 'ARI activity', font: { size: 11, color: '#6B7280' } },
+                  ticktext: ['Min', 'V.Low', 'Low', 'Mod', 'High', 'V.High'],
+                  tickvals: [0, 1, 2, 3, 4, 5],
+                  tickfont: { size: 10, color: '#6B7280' },
+                  len: 0.6,
+                  thickness: 12,
+                  outlinewidth: 0,
+                },
+                marker: { line: { color: '#FFFFFF', width: 0.8 } },
+              }]}
+              layout={{
+                ...plotLayout,
+                geo: {
+                  scope: 'usa',
+                  bgcolor: 'rgba(0,0,0,0)',
+                  lakecolor: '#E5E7EB',
+                  landcolor: '#F3F4F6',
+                  subunitcolor: '#D1D5DB',
+                  showlakes: true,
+                  projection: { type: 'albers usa' },
+                },
+                margin: { l: 0, r: 0, t: 0, b: 0 },
+                height: 360,
+              }}
+              config={{ displayModeBar: false, responsive: true }}
+              style={{ width: '100%' }}
+            />
+          )}
         </div>
 
         <div className="card fade-in">
           <div className="card-header">
             <span className="card-title"><BarChart2 size={18} /> Activity levels</span>
           </div>
-          {(summary?.risk_distribution || []).map((item, i) => {
-            const riskClass = item.label?.toLowerCase().replace(' ', '-') || 'low';
-            return (
-              <div key={i} style={{ marginBottom: '14px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                  <span className={`risk-badge risk-${riskClass === 'data-unavailable' ? 'low' : riskClass}`}>
-                    {item.label}
-                  </span>
-                  <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>{item.count}</span>
-                </div>
-                <div style={{
-                  height: '6px',
-                  background: 'var(--bg-elevated)',
-                  borderRadius: 'var(--radius-full)',
-                  overflow: 'hidden',
-                }}>
+          {(summary?.risk_distribution || []).length === 0 ? (
+            <ChartEmpty
+              title="Activity levels unavailable"
+              detail="No risk distribution came back from dashboard-summary for this load."
+              onRetry={() => { setLoading(true); loadDashboard(); }}
+            />
+          ) : (
+            (summary?.risk_distribution || []).map((item, i) => {
+              const riskClass = item.label?.toLowerCase().replace(' ', '-') || 'low';
+              return (
+                <div key={i} style={{ marginBottom: '14px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                    <span className={`risk-badge risk-${riskClass === 'data-unavailable' ? 'low' : riskClass}`}>
+                      {item.label}
+                    </span>
+                    <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>{item.count}</span>
+                  </div>
                   <div style={{
-                    height: '100%',
-                    width: `${Math.min(100, (item.count / (totalStates || 1)) * 100)}%`,
-                    background: RISK_COLORS[RISK_LEVELS[item.label] || 1],
+                    height: '6px',
+                    background: 'var(--bg-elevated)',
                     borderRadius: 'var(--radius-full)',
-                    transition: 'width 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-                  }} />
+                    overflow: 'hidden',
+                  }}>
+                    <div style={{
+                      height: '100%',
+                      width: `${Math.min(100, (item.count / (totalStates || 1)) * 100)}%`,
+                      background: RISK_COLORS[RISK_LEVELS[item.label] || 1],
+                      borderRadius: 'var(--radius-full)',
+                      transition: 'width 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+                    }} />
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
 
           <div style={{ marginTop: '28px', borderTop: '1px solid var(--border-subtle)', paddingTop: '20px' }}>
             <div className="card-title" style={{ marginBottom: '16px' }}><TestTubes size={16} /> Test Positivity</div>
@@ -494,75 +542,93 @@ export default function Overview() {
           <div className="card-header">
             <span className="card-title"><TrendingUp size={18} /> Test Positivity — Trends</span>
           </div>
-          <Plot
-            data={[
-              {
-                x: covidPos.map(d => d.week_end),
-                y: covidPos.map(d => d.percent_test_positivity),
-                type: 'scatter',
-                mode: 'lines',
-                name: 'COVID-19',
-                line: { color: '#0000d9', width: 2, shape: 'spline' },
-                fill: 'tozeroy',
-                fillcolor: 'rgba(79, 70, 229, 0.08)',
-              },
-              {
-                x: fluPos.map(d => d.week_end),
-                y: fluPos.map(d => d.percent_test_positivity),
-                type: 'scatter',
-                mode: 'lines',
-                name: 'Influenza',
-                line: { color: '#D97706', width: 2, shape: 'spline' },
-              },
-              {
-                x: rsvPos.map(d => d.week_end),
-                y: rsvPos.map(d => d.percent_test_positivity),
-                type: 'scatter',
-                mode: 'lines',
-                name: 'RSV',
-                line: { color: '#059669', width: 2, shape: 'spline' },
-              },
-            ]}
-            layout={{
-              ...plotLayout,
-              height: 300,
-              yaxis: { ...plotLayout.yaxis, title: { text: '% Positive', font: { size: 11 } } },
-            }}
-            config={{ displayModeBar: false, responsive: true }}
-            style={{ width: '100%' }}
-          />
+          {(covidPos.length + fluPos.length + rsvPos.length) === 0 ? (
+            <ChartEmpty
+              title="No positivity trend series"
+              detail="test_positivity returned no rows for COVID-19, Influenza, or RSV on this load."
+              onRetry={() => { setLoading(true); loadDashboard(); }}
+            />
+          ) : (
+            <Plot
+              data={[
+                {
+                  x: covidPos.map(d => d.week_end),
+                  y: covidPos.map(d => d.percent_test_positivity),
+                  type: 'scatter',
+                  mode: 'lines',
+                  name: 'COVID-19',
+                  line: { color: '#0000d9', width: 2, shape: 'spline' },
+                  fill: 'tozeroy',
+                  fillcolor: 'rgba(79, 70, 229, 0.08)',
+                },
+                {
+                  x: fluPos.map(d => d.week_end),
+                  y: fluPos.map(d => d.percent_test_positivity),
+                  type: 'scatter',
+                  mode: 'lines',
+                  name: 'Influenza',
+                  line: { color: '#D97706', width: 2, shape: 'spline' },
+                },
+                {
+                  x: rsvPos.map(d => d.week_end),
+                  y: rsvPos.map(d => d.percent_test_positivity),
+                  type: 'scatter',
+                  mode: 'lines',
+                  name: 'RSV',
+                  line: { color: '#059669', width: 2, shape: 'spline' },
+                },
+              ]}
+              layout={{
+                ...plotLayout,
+                height: 300,
+                yaxis: { ...plotLayout.yaxis, title: { text: '% Positive', font: { size: 11 } } },
+              }}
+              config={{ displayModeBar: false, responsive: true }}
+              style={{ width: '100%' }}
+            />
+          )}
         </div>
 
         <div className="card fade-in">
           <div className="card-header">
             <span className="card-title"><Hospital size={18} /> Hospitalization Rate Trends</span>
           </div>
-          <Plot
-            data={(() => {
-              const viruses = ['COVID-NET', 'FluSurv-NET', 'RSV-NET'];
-              const colors = ['#0000d9', '#B45309', '#1A7A5C'];
-              return viruses.map((v, i) => {
-                const d = trends.filter(t => t.virus === v).sort((a, b) => a.week_ending_date?.localeCompare(b.week_ending_date));
-                return {
-                  x: d.map(t => t.week_ending_date),
-                  y: d.map(t => t.avg_rate),
-                  type: 'scatter',
-                  mode: 'lines',
-                  name: v.replace('-NET', '').replace('Surv', ''),
-                  line: { color: colors[i], width: 2, shape: 'spline' },
-                };
-              });
-            })()}
-            layout={{
-              ...plotLayout,
-              height: 300,
-              yaxis: { ...plotLayout.yaxis, title: { text: 'Rate per 100k', font: { size: 11 } } },
-            }}
-            config={{ displayModeBar: false, responsive: true }}
-            style={{ width: '100%' }}
-          />
+          {trends.length === 0 ? (
+            <ChartEmpty
+              title="No hospitalization trend series"
+              detail="hospitalizations/trends returned no rows. This is a data or service gap—not a clinical zero."
+              onRetry={() => { setLoading(true); loadDashboard(); }}
+            />
+          ) : (
+            <Plot
+              data={(() => {
+                const viruses = ['COVID-NET', 'FluSurv-NET', 'RSV-NET'];
+                const colors = ['#0000d9', '#B45309', '#1A7A5C'];
+                return viruses.map((v, i) => {
+                  const d = trends.filter(t => t.virus === v).sort((a, b) => a.week_ending_date?.localeCompare(b.week_ending_date));
+                  return {
+                    x: d.map(t => t.week_ending_date),
+                    y: d.map(t => t.avg_rate),
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: v.replace('-NET', '').replace('Surv', ''),
+                    line: { color: colors[i], width: 2, shape: 'spline' },
+                  };
+                });
+              })()}
+              layout={{
+                ...plotLayout,
+                height: 300,
+                yaxis: { ...plotLayout.yaxis, title: { text: 'Rate per 100k', font: { size: 11 } } },
+              }}
+              config={{ displayModeBar: false, responsive: true }}
+              style={{ width: '100%' }}
+            />
+          )}
         </div>
       </div>
+      </>
+      )}
 
       <div className="card fade-in glossary-card">
         <div className="card-header">
@@ -577,40 +643,50 @@ export default function Overview() {
         </ul>
       </div>
 
+      {!(!summary && loadError) && (
       <div className="card fade-in" style={{ marginTop: '0' }}>
         <div className="card-header">
           <span className="card-title"><ClipboardList size={18} /> Current State Activity Levels</span>
           <span className="badge badge-updated">{ariData.length} regions tracked</span>
         </div>
-        <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>State/Territory</th>
-                <th>Activity Level</th>
-                <th>Week Ending</th>
-              </tr>
-            </thead>
-            <tbody>
-              {ariData
-                .filter(d => d.label !== 'Data Unavailable')
-                .sort((a, b) => (RISK_LEVELS[b.label] || 0) - (RISK_LEVELS[a.label] || 0))
-                .map((d, i) => {
-                  const riskClass = d.label?.toLowerCase().replace(' ', '-') || 'low';
-                  return (
-                    <tr key={i}>
-                      <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{d.geography}</td>
-                      <td>
-                        <span className={`risk-badge risk-${riskClass}`}>{d.label}</span>
-                      </td>
-                      <td>{d.week_end?.slice(0, 10)}</td>
-                    </tr>
-                  );
-                })}
-            </tbody>
-          </table>
-        </div>
+        {ariData.filter(d => d.label !== 'Data Unavailable').length === 0 ? (
+          <ChartEmpty
+            title="No state activity rows"
+            detail="ari_activity returned no usable geography labels for this load."
+            onRetry={() => { setLoading(true); loadDashboard(); }}
+          />
+        ) : (
+          <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>State/Territory</th>
+                  <th>Activity Level</th>
+                  <th>Week Ending</th>
+                </tr>
+              </thead>
+              <tbody>
+                {ariData
+                  .filter(d => d.label !== 'Data Unavailable')
+                  .sort((a, b) => (RISK_LEVELS[b.label] || 0) - (RISK_LEVELS[a.label] || 0))
+                  .map((d, i) => {
+                    const riskClass = d.label?.toLowerCase().replace(' ', '-') || 'low';
+                    return (
+                      <tr key={i}>
+                        <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{d.geography}</td>
+                        <td>
+                          <span className={`risk-badge risk-${riskClass}`}>{d.label}</span>
+                        </td>
+                        <td>{d.week_end?.slice(0, 10)}</td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
+      )}
     </div>
   );
 }
