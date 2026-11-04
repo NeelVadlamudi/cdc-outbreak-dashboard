@@ -1,13 +1,14 @@
 {
-  "generated_at": "2026-11-04T17:24:33Z",
+  "generated_at": "2026-11-04T23:54:49Z",
   "run": {
-    "result": "alert",
-    "started_at": "2026-11-04T17:21:48Z",
-    "finished_at": "2026-11-04T17:24:33Z",
-    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/41876709386",
-    "commit": "e3ee1b1b531c10539a6d2b846ddefeeaa963c5da",
+    "result": "success",
+    "started_at": "2026-11-04T23:52:35Z",
+    "finished_at": "2026-11-04T23:54:49Z",
+    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/41936926883",
+    "commit": "2039ee6b67a308b435f8932e201f93e18522ed63",
     "steps": {
       "refresh": "success",
+      "release": "success",
       "backtest": "success",
       "dashboard": "success",
       "eval": "success"
@@ -20,13 +21,13 @@
     "summary": {
       "question_set": "cdc-q60-v1",
       "questions": 60,
-      "numeric_accuracy": 93.8,
+      "numeric_accuracy": 97.9,
       "tool_choice": 100.0,
-      "correct_refusals": 75.0,
+      "correct_refusals": 91.7,
       "false_refusals": 2.1,
-      "grounded_answers": 16.7,
-      "median_s": 1.8,
-      "p95_s": 2.99,
+      "grounded_answers": 100.0,
+      "median_s": 1.42,
+      "p95_s": 2.05,
       "median_input_tokens": null,
       "median_output_tokens": null
     },
@@ -47,17 +48,10 @@
         "median_output_tokens": null
       }
     },
-    "drops": [
-      {
-        "metric": "grounded_answers",
-        "baseline": 100.0,
-        "value": 16.7,
-        "change": -83.3
-      }
-    ]
+    "drops": []
   },
   "backtest": {
-    "run_at": "2026-11-04T17:22:35Z",
+    "run_at": "2026-11-04T23:53:19Z",
     "data_through": "2026-10-24",
     "notes": [
       "LSTM on COVID-NET does not beat last week's value at any horizon.",
@@ -115,11 +109,5 @@
       }
     ]
   },
-  "alerts": [
-    {
-      "kind": "score_drop",
-      "title": "Eval score drop: grounded_answers",
-      "detail": "grounded_answers was 16.7 against a baseline of 100.0 (-83.3 points; alert threshold 5)."
-    }
-  ]
+  "alerts": []
 }
