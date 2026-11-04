@@ -37,20 +37,24 @@ export default function AgentAnswer({ result }) {
     <div className={`agent-answer${flagged ? " agent-refused" : ""}`}>
       {flagged && (
         <div className="agent-flag"><ShieldAlert size={14} />
-          {result.status === "unverified" ? "Could not verify" : "Agent declined to answer"}
+          {result.status === "unverified"
+            ? "Could not fully verify this answer against the data"
+            : "Could not answer from the available data"}
         </div>
       )}
-      <div className="agent-text">{result.answer || "(empty answer)"}</div>
+      <div className="agent-text">{result.answer || "(no answer returned)"}</div>
       <div className="agent-meta">
-        <span>as of {result.asOf ?? "no data date"}</span>
-        {took && <span>took {took}</span>}
-        {result.staleTables.length > 0 && <span>stale: {result.staleTables.join(", ")}</span>}
+        <span>Data week: {result.asOf ?? "not reported"}</span>
+        {took && <span>Answered in {took}</span>}
+        {result.staleTables.length > 0 && (
+          <span>Some sources may be behind: {result.staleTables.join(", ")}</span>
+        )}
       </div>
       {n > 0 && (
         <div className="agent-calls">
           <button className="agent-calls-toggle" aria-expanded={open} onClick={() => setOpen(!open)}>
             <ChevronRight size={14} style={{ transform: open ? "rotate(90deg)" : "none" }} />
-            <Wrench size={13} /> {n} tool call{n === 1 ? "" : "s"}
+            <Wrench size={13} /> {open ? "Hide" : "Show"} data sources checked ({n})
           </button>
           {open && (
             <ol className="agent-calls-list">

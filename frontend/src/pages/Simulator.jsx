@@ -61,24 +61,24 @@ export default function Simulator() {
   };
 
   const sliders = [
-    { key: "surge_multiplier", label: "Surge Multiplier", min: 1, max: 5, step: 0.1, unit: "x" },
-    { key: "population", label: "Population", min: 100000, max: 10000000, step: 100000, unit: "", format: (v) => v.toLocaleString() },
-    { key: "current_rate", label: "Current Rate (per 100k)", min: 0.5, max: 30, step: 0.5, unit: "" },
-    { key: "hospitalization_pct", label: "Hospitalization %", min: 1, max: 30, step: 1, unit: "%" },
-    { key: "icu_pct", label: "ICU % of Hospitalizations", min: 5, max: 50, step: 5, unit: "%" },
-    { key: "beds_available", label: "Hospital Beds Available", min: 50, max: 2000, step: 50, unit: "" },
-    { key: "icu_beds_available", label: "ICU Beds Available", min: 10, max: 500, step: 10, unit: "" },
+    { key: "surge_multiplier", label: "How strong is the surge?", min: 1, max: 5, step: 0.1, unit: "x" },
+    { key: "population", label: "Population covered", min: 100000, max: 10000000, step: 100000, unit: "", format: (v) => v.toLocaleString() },
+    { key: "current_rate", label: "Current rate (per 100k)", min: 0.5, max: 30, step: 0.5, unit: "" },
+    { key: "hospitalization_pct", label: "Share needing hospital care", min: 1, max: 30, step: 1, unit: "%" },
+    { key: "icu_pct", label: "Share of hospital patients in ICU", min: 5, max: 50, step: 5, unit: "%" },
+    { key: "beds_available", label: "Hospital beds available", min: 50, max: 2000, step: 50, unit: "" },
+    { key: "icu_beds_available", label: "ICU beds available", min: 10, max: 500, step: 10, unit: "" },
   ];
 
   const plotLayout = {
     paper_bgcolor: 'rgba(0,0,0,0)',
     plot_bgcolor: 'rgba(0,0,0,0)',
-    font: { family: 'Inter, sans-serif', color: '#6B7280', size: 11 },
+    font: { family: 'DM Sans, sans-serif', color: '#6B7C74', size: 11 },
     margin: { t: 20, b: 60, l: 60, r: 20 },
-    xaxis: { gridcolor: '#F3F4F6', zeroline: false },
-    yaxis: { gridcolor: '#F3F4F6', zeroline: false },
+    xaxis: { gridcolor: '#EEF2F0', zeroline: false },
+    yaxis: { gridcolor: '#EEF2F0', zeroline: false },
     showlegend: true,
-    legend: { orientation: "h", y: -0.25, font: { color: "#4B5563" } },
+    legend: { orientation: "h", y: -0.25, font: { color: "#3D4F48" } },
   };
 
   return (
@@ -86,21 +86,21 @@ export default function Simulator() {
       <div className="page-header fade-in">
         <div className="page-header-row">
           <div>
-            <h1 className="page-title">Surge Matrix</h1>
+            <h1 className="page-title">Surge planning</h1>
             <p className="page-subtitle">
-              Interactive Monte Carlo capacity modeling based on emerging viral trends
+              Explore how hospital capacity might look under different surge assumptions. Adjust the knobs, then run a scenario.
             </p>
           </div>
           <button onClick={runSim} className="filter-btn active" disabled={loading} style={{ padding: '10px 24px', fontSize: '14px' }}>
-            {loading ? <><Activity className="animate-pulse" size={16} /> Running 1k sims...</> : <><Play size={16} fill="currentColor" /> Run Simulation</>}
+            {loading ? <><Activity className="animate-pulse" size={16} /> Running scenarios…</> : <><Play size={16} fill="currentColor" /> Run scenario</>}
           </button>
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "320px 1fr", gap: "24px" }} className="fade-in">
-        <div className="card" style={{ position: "sticky", top: "24px", alignSelf: "start", padding: "24px" }}>
+      <div className="simulator-layout fade-in" style={{ display: "grid", gridTemplateColumns: "minmax(260px, 320px) 1fr", gap: "20px" }}>
+        <div className="card" style={{ position: "sticky", top: "24px", alignSelf: "start", padding: "22px" }}>
           <div className="card-header" style={{ marginBottom: "20px" }}>
-            <span className="card-title"><Settings size={18} /> Parameters</span>
+            <span className="card-title"><Settings size={18} /> Scenario settings</span>
           </div>
 
           {defaults?.current_rates && (
@@ -108,7 +108,7 @@ export default function Simulator() {
               padding: "16px", borderRadius: "var(--radius-md)", marginBottom: "24px",
               background: "var(--accent-primary-glow)", border: "1px solid var(--border-accent)",
             }}>
-              <strong style={{ color: "var(--accent-primary)", fontSize: "13px" }}>Current CDC Rates:</strong>
+              <strong style={{ color: "var(--accent-primary)", fontSize: "13px" }}>Current CDC rates</strong>
               <div style={{ display: "grid", gap: "8px", marginTop: "12px" }}>
                 {Object.entries(defaults.current_rates).map(([k, v]) => (
                   <div key={k} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "13px" }}>
@@ -229,7 +229,7 @@ export default function Simulator() {
                     {
                       x: results.weeks, y: results.bed_demand_mean,
                       type: "scatter", mode: "lines+markers",
-                      name: "Mean bed demand", line: { color: "#4F46E5", width: 2.5 },
+                      name: "Mean bed demand", line: { color: "#0F5C55", width: 2.5 },
                       marker: { size: 7, line: { color: 'white', width: 1 } },
                     },
                     {

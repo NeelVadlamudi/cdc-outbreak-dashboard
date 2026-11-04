@@ -1,56 +1,66 @@
 import { NavLink } from "react-router-dom";
-import { 
-  LayoutDashboard, 
-  Map, 
-  TestTubes, 
-  Bot, 
-  Microscope, 
-  MessageSquare, 
-  Hospital, 
-  LineChart, 
+import {
+  LayoutDashboard,
+  Map,
+  TestTubes,
+  TrendingUp,
+  MessageSquare,
+  Hospital,
+  LineChart,
+  Microscope,
   Activity,
-  X
+  X,
 } from "lucide-react";
 
 const navItems = [
-  { section: "Dashboard", items: [
-    { path: "/", label: "Command Center", icon: LayoutDashboard },
-    { path: "/map", label: "State map", icon: Map },
-    { path: "/wastewater", label: "Bio-Surveillance", icon: TestTubes },
-  ]},
-  { section: "Analysis", items: [
-    { path: "/forecasts", label: "Outlook", icon: Bot },
-    { path: "/advanced", label: "Advanced analytics", icon: Microscope },
-    { path: "/ask", label: "Ask the data", icon: MessageSquare },
-  ]},
-  { section: "Tools", items: [
-    { path: "/simulator", label: "Surge Matrix", icon: Hospital },
-    { path: "/analytics", label: "Data Core", icon: LineChart },
-  ]},
+  {
+    section: "Monitor",
+    items: [
+      { path: "/", label: "Overview", icon: LayoutDashboard },
+      { path: "/map", label: "Map", icon: Map },
+      { path: "/analytics", label: "Trends", icon: LineChart },
+      { path: "/wastewater", label: "Wastewater", icon: TestTubes },
+    ],
+  },
+  {
+    section: "Ask & plan",
+    items: [
+      { path: "/ask", label: "Ask a question", icon: MessageSquare },
+      { path: "/forecasts", label: "Outlook", icon: TrendingUp },
+      { path: "/simulator", label: "Surge planning", icon: Hospital },
+    ],
+  },
+  {
+    section: "More",
+    items: [
+      { path: "/advanced", label: "Technical details", icon: Microscope },
+    ],
+  },
 ];
 
 export default function Sidebar({ isOpen, setIsOpen }) {
   return (
     <>
-      <div 
-        className={`sidebar-overlay ${isOpen ? 'open' : ''}`} 
+      <div
+        className={`sidebar-overlay ${isOpen ? "open" : ""}`}
         onClick={() => setIsOpen(false)}
+        aria-hidden={!isOpen}
       />
-      <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
+      <aside className={`sidebar ${isOpen ? "open" : ""}`} aria-label="Main navigation">
         <div className="sidebar-header">
           <div className="sidebar-logo">
-            <div className="sidebar-logo-icon">
-              <Activity size={24} strokeWidth={2.5} />
+            <div className="sidebar-logo-icon" aria-hidden>
+              <Activity size={20} strokeWidth={2.25} />
             </div>
             <div className="sidebar-logo-text">
-              <div className="sidebar-logo-title">CDC Respiratory Virus Dashboard</div>
-              <div className="sidebar-logo-subtitle">Surveillance Dashboard</div>
+              <div className="sidebar-logo-title">Respiratory Virus Dashboard</div>
+              <div className="sidebar-logo-subtitle">CDC open data</div>
             </div>
-            {/* Mobile close button inside header if open */}
-            <button 
-              className="mobile-menu-btn" 
-              style={{ marginLeft: 'auto', display: isOpen ? 'block' : 'none' }}
+            <button
+              className="mobile-menu-btn"
+              style={{ marginLeft: "auto", display: isOpen ? "flex" : "none" }}
               onClick={() => setIsOpen(false)}
+              aria-label="Close navigation"
             >
               <X size={20} />
             </button>
@@ -59,7 +69,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
 
         <nav className="sidebar-nav">
           {navItems.map((group) => (
-            <div key={group.section} style={{ marginBottom: 16 }}>
+            <div key={group.section} style={{ marginBottom: 12 }}>
               <div className="nav-section-label">{group.section}</div>
               {group.items.map((item) => {
                 const Icon = item.icon;
@@ -69,12 +79,16 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                     to={item.path}
                     end={item.path === "/"}
                     className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
-                    onClick={() => setIsOpen(false)} // Close on mobile click
+                    onClick={() => setIsOpen(false)}
                   >
                     {({ isActive }) => (
                       <>
                         <div className="nav-item-icon">
-                          <Icon size={18} strokeWidth={isActive ? 2.5 : 2} color={isActive ? "var(--accent-primary)" : "currentColor"} />
+                          <Icon
+                            size={18}
+                            strokeWidth={isActive ? 2.4 : 2}
+                            color={isActive ? "var(--accent-primary)" : "currentColor"}
+                          />
                         </div>
                         {item.label}
                       </>
@@ -88,11 +102,11 @@ export default function Sidebar({ isOpen, setIsOpen }) {
 
         <div className="sidebar-footer">
           <div className="live-indicator">
-            <span className="live-dot"></span>
-            Live · CDC SODA API
+            <span className="live-dot" aria-hidden />
+            Data updates about every hour
           </div>
-          <div style={{ color: "var(--text-muted)", fontSize: 11, marginTop: 4, paddingLeft: 16 }}>
-            Data refreshes every 60 min
+          <div style={{ color: "var(--text-muted)", fontSize: 11, marginTop: 6, paddingLeft: 15 }}>
+            Source: CDC public surveillance
           </div>
         </div>
       </aside>

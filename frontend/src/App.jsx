@@ -5,9 +5,8 @@ import { Activity, Menu } from "lucide-react";
 import Sidebar from "./components/Sidebar";
 import Overview from "./pages/Overview";
 import AskData from "./pages/AskData";
-import CustomCursor from "./components/CustomCursor";
 
-// Heavy chart/globe pages — split so the Ask demo path is not a 7MB first paint.
+// Heavy chart/globe pages — split so the Ask path stays light on first paint.
 const MapView = lazy(() => import("./pages/MapView"));
 const Forecasts = lazy(() => import("./pages/Forecasts"));
 const Analytics = lazy(() => import("./pages/Analytics"));
@@ -15,26 +14,30 @@ const Wastewater = lazy(() => import("./pages/Wastewater"));
 const AdvancedAnalytics = lazy(() => import("./pages/AdvancedAnalytics"));
 const Simulator = lazy(() => import("./pages/Simulator"));
 
-// Module-scope alias: core no-unused-vars does not see JSX member use (<MotionDiv>).
 const MotionDiv = motion.div;
 
-const PageTransition = ({ children }) => {
-  return (
-    <MotionDiv
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.98 }}
-      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-      style={{ overflow: "hidden", minHeight: "100%" }}
-    >
-      {children}
-    </MotionDiv>
-  );
-};
+const PageTransition = ({ children }) => (
+  <MotionDiv
+    initial={{ opacity: 0, y: 8 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0 }}
+    transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+    style={{ overflow: "hidden", minHeight: "100%" }}
+  >
+    {children}
+  </MotionDiv>
+);
 
 function LazyPage({ children }) {
   return (
-    <Suspense fallback={<div className="page-container fade-in" style={{ padding: 24 }}>Loading…</div>}>
+    <Suspense
+      fallback={
+        <div className="loading-page">
+          <div className="loading-spinner" />
+          <div className="loading-page-text">Loading this view…</div>
+        </div>
+      }
+    >
       {children}
     </Suspense>
   );
@@ -64,22 +67,33 @@ function App() {
   return (
     <Router basename={import.meta.env.BASE_URL.replace(/\/$/, "")}>
       <div className="app-layout">
-        <CustomCursor />
-        {/* Mobile Header */}
         <div className="mobile-header">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 800 }}>
-            <div style={{ background: 'var(--accent-gradient)', width: 32, height: 32, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }} aria-hidden>
-              <Activity size={16} />
+          <div style={{ display: "flex", alignItems: "center", gap: 10, fontWeight: 600, fontSize: 14 }}>
+            <div
+              style={{
+                background: "var(--accent-primary)",
+                width: 30,
+                height: 30,
+                borderRadius: 6,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "white",
+                flexShrink: 0,
+              }}
+              aria-hidden
+            >
+              <Activity size={15} />
             </div>
-            CDC Respiratory Virus Dashboard
+            Respiratory Virus Dashboard
           </div>
           <button className="mobile-menu-btn" onClick={() => setSidebarOpen(true)} aria-label="Open navigation">
-            <Menu size={24} />
+            <Menu size={22} />
           </button>
         </div>
 
         <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
-        
+
         <main className="main-content">
           <AppRoutes />
         </main>

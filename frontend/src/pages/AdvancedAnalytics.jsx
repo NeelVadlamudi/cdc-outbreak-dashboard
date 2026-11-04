@@ -49,7 +49,7 @@ export default function AdvancedAnalytics() {
   const seasons = [...new Set(seasonData.filter((d) => d.surveillance_network === VIRUS_MAP[selectedVirus]).map((d) => d.season))];
   const seasonTraces = seasons.map((s, i) => {
     const sData = seasonData.filter((d) => d.surveillance_network === VIRUS_MAP[selectedVirus] && d.season === s);
-    const colors = ["#4F46E5", "#D97706", "#059669", "#DC2626", "#EAB308"];
+    const colors = ["#0F5C55", "#B45309", "#1A7A5C", "#C2410C", "#CA8A04"];
     return {
       x: sData.map((d) => d.mmwr_week),
       y: sData.map((d) => d.avg_rate),
@@ -62,9 +62,9 @@ export default function AdvancedAnalytics() {
   const plotLayout = {
     paper_bgcolor: 'rgba(0,0,0,0)',
     plot_bgcolor: 'rgba(0,0,0,0)',
-    font: { family: 'Inter, sans-serif', color: '#6B7280', size: 11 },
-    xaxis: { gridcolor: '#F3F4F6', zeroline: false },
-    yaxis: { gridcolor: '#F3F4F6', zeroline: false },
+    font: { family: 'DM Sans, sans-serif', color: '#6B7C74', size: 11 },
+    xaxis: { gridcolor: '#EEF2F0', zeroline: false },
+    yaxis: { gridcolor: '#EEF2F0', zeroline: false },
   };
 
   if (loading) {
@@ -72,7 +72,7 @@ export default function AdvancedAnalytics() {
       <div className="page-container">
         <div style={{ textAlign: "center", padding: "4rem" }}>
           <div className="loading-spinner" />
-          <p style={{ color: "var(--text-muted)", marginTop: "1rem" }}>Running ensemble models and anomaly detection...</p>
+          <p style={{ color: "var(--text-muted)", marginTop: "1rem" }}>Loading technical comparisons…</p>
         </div>
       </div>
     );
@@ -94,9 +94,9 @@ export default function AdvancedAnalytics() {
       <div className="page-header fade-in">
         <div className="page-header-row">
           <div>
-            <h1 className="page-title">Advanced analytics</h1>
+            <h1 className="page-title">Technical details</h1>
             <p className="page-subtitle">
-              Last-value outlook is primary. LSTM/XGBoost are experimental vs that baseline. Also: z-score anomalies, age heatmap, season compare.
+              Model comparisons, unusual spikes, age patterns, and season-to-season charts for readers who want the deeper view.
             </p>
           </div>
         </div>
@@ -125,34 +125,34 @@ export default function AdvancedAnalytics() {
       <div className="stat-cards-grid fade-in" style={{ gridTemplateColumns: "repeat(4, 1fr)", marginBottom: "24px", gap: "16px" }}>
         <div className="stat-card accent-emerald">
           <div className="stat-card-icon emerald"><Microscope size={22} /></div>
-          <div className="stat-card-label">LAST-VALUE (PRIMARY)</div>
+          <div className="stat-card-label">Primary outlook rate</div>
           <div className="stat-card-value">{lastValue.last_observed_rate ?? "N/A"}</div>
-          <div style={{ marginTop: "12px", fontSize: "13px", fontWeight: 600, color: "var(--color-safe)" }}>Persistence outlook</div>
+          <div style={{ marginTop: "12px", fontSize: "13px", fontWeight: 600, color: "var(--color-safe)" }}>Last-week method</div>
         </div>
         <div className="stat-card accent-indigo">
           <div className="stat-card-icon indigo"><BrainCircuit size={22} /></div>
-          <div className="stat-card-label">LSTM MAE {lstmUnder ? "· underperforms" : ""}</div>
+          <div className="stat-card-label">Neural model error {lstmUnder ? "· weaker" : ""}</div>
           <div className="stat-card-value">{lstm.mae || "N/A"}</div>
           <div style={{ marginTop: "12px", fontSize: "13px", fontWeight: 600, color: "var(--accent-primary)" }}>Experimental</div>
         </div>
         <div className="stat-card accent-emerald">
           <div className="stat-card-icon emerald"><Trees size={22} /></div>
-          <div className="stat-card-label">XGBOOST MAE {xgbUnder ? "· underperforms" : ""}</div>
+          <div className="stat-card-label">Tree model error {xgbUnder ? "· weaker" : ""}</div>
           <div className="stat-card-value">{xgb.mae || "N/A"}</div>
           <div style={{ marginTop: "12px", fontSize: "13px", fontWeight: 600, color: "var(--color-safe)" }}>Experimental</div>
         </div>
         <div className="stat-card accent-amber">
           <div className="stat-card-icon amber"><AlertOctagon size={22} /></div>
-          <div className="stat-card-label">ANOMALIES DETECTED</div>
+          <div className="stat-card-label">Unusual spikes</div>
           <div className="stat-card-value">{anomalies.length}</div>
-          <div style={{ marginTop: "12px", fontSize: "13px", fontWeight: 600, color: "var(--color-moderate)" }}>z-score &gt; 2σ</div>
+          <div style={{ marginTop: "12px", fontSize: "13px", fontWeight: 600, color: "var(--color-moderate)" }}>Statistical outliers</div>
         </div>
       </div>
 
       <div className="charts-grid charts-grid-equal fade-in">
         <div className="card">
           <div className="card-header">
-            <span className="card-title"><Microscope size={18} /> Primary last-value vs experimental models</span>
+            <span className="card-title"><Microscope size={18} /> Primary outlook vs experimental models</span>
           </div>
           <Plot
             data={[
@@ -166,22 +166,22 @@ export default function AdvancedAnalytics() {
                 x: lastValue.forecasts.map((f) => f.date),
                 y: lastValue.forecasts.map((f) => f.predicted_rate),
                 type: "scatter", mode: "lines+markers",
-                name: "Last-value (primary)", line: { color: "#0F766E", width: 3 },
+                name: "Last-week (primary)", line: { color: "#0F5C55", width: 3 },
               }] : []),
               ...(lstm.forecasts ? [{
                 x: lstm.forecasts.map((f) => f.date),
                 y: lstm.forecasts.map((f) => f.predicted_rate),
                 type: "scatter", mode: "lines+markers",
-                name: lstmUnder ? "LSTM (underperforms baseline)" : "LSTM (experimental)",
-                line: { color: "#4F46E5", width: 2, dash: "dash" },
+                name: lstmUnder ? "Neural model (weaker than baseline)" : "Neural model (experimental)",
+                line: { color: "#0E7490", width: 2, dash: "dash" },
                 marker: { size: 7, symbol: "diamond", line: { color: 'white', width: 1 } },
               }] : []),
               ...(xgb.forecasts ? [{
                 x: xgb.forecasts.map((f) => f.date),
                 y: xgb.forecasts.map((f) => f.predicted_rate),
                 type: "scatter", mode: "lines+markers",
-                name: xgbUnder ? "XGBoost (underperforms baseline)" : "XGBoost (experimental)",
-                line: { color: "#D97706", width: 2, dash: "dot" },
+                name: xgbUnder ? "Tree model (weaker than baseline)" : "Tree model (experimental)",
+                line: { color: "#B45309", width: 2, dash: "dot" },
                 marker: { size: 7, symbol: "square", line: { color: 'white', width: 1 } },
               }] : []),
             ]}
@@ -190,17 +190,20 @@ export default function AdvancedAnalytics() {
               xaxis: { ...plotLayout.xaxis, title: "Week", tickangle: -45 },
               yaxis: { ...plotLayout.yaxis, title: "Rate per 100k" },
               margin: { t: 20, b: 80, l: 60, r: 20 },
-              legend: { orientation: "h", y: -0.3, font: { color: "#4B5563" } },
+              legend: { orientation: "h", y: -0.3, font: { color: "#3D4F48" } },
               height: 380,
             }}
             config={{ displayModeBar: false, responsive: true }}
             style={{ width: "100%" }}
           />
+          <p className="page-footnote">
+            Chart labels use plain language; underlying methods include neural and gradient-boosted models evaluated against the last-week baseline.
+          </p>
         </div>
 
         <div className="card">
           <div className="card-header">
-            <span className="card-title"><Trees size={18} /> XGBoost Feature Importance</span>
+            <span className="card-title"><Trees size={18} /> What the tree model weighs most</span>
           </div>
           {xgb.feature_importance && (
             <Plot
@@ -210,7 +213,7 @@ export default function AdvancedAnalytics() {
                 type: "bar", orientation: "h",
                 marker: {
                   color: Object.values(xgb.feature_importance).map((v, i) =>
-                    `rgba(79, 70, 229, ${0.4 + (i / Object.values(xgb.feature_importance).length) * 0.6})`
+                    `rgba(15, 92, 85, ${0.4 + (i / Object.values(xgb.feature_importance).length) * 0.6})`
                   ),
                 },
               }]}
@@ -239,7 +242,7 @@ export default function AdvancedAnalytics() {
               x: weeks.slice(-26),
               y: ageGroups,
               type: "heatmap",
-              colorscale: [[0, "#F9FAFB"], [0.25, "#E0E7FF"], [0.5, "#818CF8"], [0.75, "#4F46E5"], [1, "#312E81"]],
+              colorscale: [[0, "#F7F9F8"], [0.25, "#D8E8E5"], [0.5, "#6BA8A1"], [0.75, "#0F5C55"], [1, "#0A3D39"]],
               colorbar: { 
                 title: { text: "Rate/100k", font: { color: "#6B7280" } },
                 len: 0.8,

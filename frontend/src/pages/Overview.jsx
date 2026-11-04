@@ -56,7 +56,7 @@ export default function Overview() {
     return (
       <div className="loading-page">
         <div className="loading-spinner" />
-        <div className="loading-page-text">Loading CDC surveillance data...</div>
+        <div className="loading-page-text">Loading this week’s respiratory virus picture…</div>
       </div>
     );
   }
@@ -84,7 +84,7 @@ export default function Overview() {
   const plotLayout = {
     paper_bgcolor: 'rgba(0,0,0,0)',
     plot_bgcolor: 'rgba(0,0,0,0)',
-    font: { family: 'Inter, sans-serif', color: '#6B7280', size: 11 },
+    font: { family: 'DM Sans, sans-serif', color: '#6B7C74', size: 11 },
     margin: { l: 45, r: 20, t: 30, b: 40 },
     xaxis: { gridcolor: '#F3F4F6', zeroline: false },
     yaxis: { gridcolor: '#F3F4F6', zeroline: false },
@@ -97,17 +97,19 @@ export default function Overview() {
       <div className="page-header fade-in">
         <div className="page-header-row">
           <div>
-            <h1 className="page-title">Command Center</h1>
+            <h1 className="page-title">Overview</h1>
             <p className="page-subtitle">
-              High-level overview of national outbreak status and emerging anomalies
+              A national snapshot of respiratory illness activity, test positivity, and hospital trends this week.
             </p>
           </div>
-          <div className="status-badge status-live">
-            <span className="live-dot"></span> Live Tracking Active
+          <div className="page-header-badges">
+            <div className="status-badge status-live">
+              <span className="live-dot" aria-hidden /> Updated regularly
+            </div>
+            <span className="badge badge-updated">
+              as of {health?.as_of || summary?.latest_dates?.ari_activity?.slice(0, 10) || '—'}
+            </span>
           </div>
-          <span className="badge badge-updated">
-            as of {health?.as_of || summary?.latest_dates?.ari_activity?.slice(0, 10) || '—'}
-          </span>
         </div>
       </div>
 
@@ -118,7 +120,7 @@ export default function Overview() {
           style={{ marginBottom: '16px', display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}
         >
           <ClipboardList size={16} />
-          <span style={{ fontWeight: 600 }}>Data freshness</span>
+          <span style={{ fontWeight: 600 }}>How current is the data?</span>
           {health.tables.filter((t) => !t.legacy).map((t) => (
             <span
               key={`${t.table}-${t.dataset || ''}`}
@@ -128,8 +130,8 @@ export default function Overview() {
                 color: t.stale ? '#92400E' : '#065F46',
               }}
             >
-              {t.table}{t.dataset ? ` (${t.dataset})` : ''}: {t.latest_week || '—'}
-              {t.stale ? ' · stale' : ''}
+              {t.table}{t.dataset ? ` (${t.dataset})` : ''}: week of {t.latest_week || '—'}
+              {t.stale ? ' · may be behind' : ''}
             </span>
           ))}
         </div>
@@ -250,7 +252,7 @@ export default function Overview() {
             <div className="card-title" style={{ marginBottom: '16px' }}><TestTubes size={16} /> Test Positivity</div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
               {[
-                { label: 'COVID', rate: covidRate, color: '#4F46E5' },
+                { label: 'COVID', rate: covidRate, color: '#0F5C55' },
                 { label: 'Flu', rate: fluRate, color: '#D97706' },
                 { label: 'RSV', rate: rsvRate, color: '#059669' },
               ].map(v => (
@@ -264,7 +266,7 @@ export default function Overview() {
                       style={{ transition: 'stroke-dasharray 0.8s cubic-bezier(0.16, 1, 0.3, 1)' }}
                     />
                     <text x="32" y="36" textAnchor="middle" fill="var(--text-primary)"
-                      fontSize="14" fontWeight="800" fontFamily="Inter">{v.rate}%</text>
+                      fontSize="14" fontWeight="700" fontFamily="DM Sans, sans-serif">{v.rate}%</text>
                   </svg>
                   <span className="gauge-label">{v.label}</span>
                 </div>
@@ -287,7 +289,7 @@ export default function Overview() {
                 type: 'scatter',
                 mode: 'lines',
                 name: 'COVID-19',
-                line: { color: '#4F46E5', width: 2, shape: 'spline' },
+                line: { color: '#0F5C55', width: 2, shape: 'spline' },
                 fill: 'tozeroy',
                 fillcolor: 'rgba(79, 70, 229, 0.08)',
               },
@@ -325,7 +327,7 @@ export default function Overview() {
           <Plot
             data={(() => {
               const viruses = ['COVID-NET', 'FluSurv-NET', 'RSV-NET'];
-              const colors = ['#4F46E5', '#D97706', '#059669'];
+              const colors = ['#0F5C55', '#B45309', '#1A7A5C'];
               return viruses.map((v, i) => {
                 const d = trends.filter(t => t.virus === v).sort((a, b) => a.week_ending_date?.localeCompare(b.week_ending_date));
                 return {
