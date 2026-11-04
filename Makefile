@@ -1,6 +1,6 @@
 PYTHON ?= python
 
-.PHONY: run test lint eval
+.PHONY: run test lint check eval
 
 run:
 	$(PYTHON) -m uvicorn backend.main:app --reload
@@ -11,6 +11,9 @@ test:
 
 lint:
 	$(PYTHON) -m ruff check .
+
+# Cheap local gate matching the CI test job lint+pytest steps.
+check: lint test
 
 eval:
 	python evals/run_evals.py

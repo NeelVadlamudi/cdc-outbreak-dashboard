@@ -1,0 +1,9 @@
+# Catch ruff failures (e.g. unused imports) before push — same gate as CI `ruff check .`.
+# One-time setup: pip install pre-commit && pre-commit install
+# Or run without installing hooks: pre-commit run --all-files
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.2
+    hooks:
+      - id: ruff
+        args: []

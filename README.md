@@ -91,8 +91,16 @@ curl -X POST -H "Content-Type: application/json" \
 ```bash
 make run    # API with reload
 make test   # pytest
-make lint   # ruff
+make lint   # ruff (same as CI)
+make check  # lint + test before push
 make eval   # 60-question eval (needs model + snapshot)
+```
+
+**Before push:** run `make check` (or `scripts/check.sh`). Optional pre-commit hook so unused-import / ruff failures never reach CI again:
+
+```bash
+pip install pre-commit
+pre-commit install   # uses .pre-commit-config.yaml (ruff check)
 ```
 
 ## Nightly run
