@@ -15,6 +15,7 @@ def test_health(fixture_db):
     assert body["database"] == "ok"
     assert body["latest_week"] == "2026-10-10"
     assert body["as_of"] == "2026-10-10"
+    assert body.get("checked_at") and body["checked_at"].endswith("Z")
     assert isinstance(body.get("tables"), list) and body["tables"]
     # Fixture wastewater weeks are old → status may be "stale" while DB is fine.
     assert body["status"] in ("ok", "stale")

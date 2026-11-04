@@ -1,10 +1,10 @@
 name: nightly
 
-# Refresh CDC data, run the backtest, the 60-question eval, publish results to site/data,
-# write site/data/status.json, and open issues for score drops, stale tables or failed steps.
+# Twice-daily CDC refresh + release. Full eval/backtest on the morning run
+# (and on workflow_dispatch); evening run = refresh + release + dashboard JSON.
 on:
   schedule:
-    - cron: "17 9 * * *"  # 09:17 UTC daily
+    - cron: "17 9,21 * * *"  # 09:17 and 21:17 UTC
   workflow_dispatch:
 
 permissions:
@@ -40,6 +40,18 @@ jobs:
       - id: start
         run: echo "at=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
 
+      - id: schedule
+        name: Decide full vs refresh-only
+        run: |
+          HOUR=$(date -u +%-H)
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "$HOUR" -lt 15 ]; then
+            echo "full=true" >> "$GITHUB_OUTPUT"
+            echo "mode=full (eval + backtest)"
+          else
+            echo "full=false" >> "$GITHUB_OUTPUT"
+            echo "mode=refresh-only (evening)"
+          fi
+
       - id: refresh
         name: Refresh CDC data
         continue-on-error: true
@@ -51,11 +63,32 @@ jobs:
         with:
           name: cdc-duckdb
           path: ${{ env.CDC_DB_PATH }}
-          if-no-files-found: ignore
+          if-no-files-found: error
           retention-days: 14
+
+      # Hard-fail on upload problems so a broken release is never a silent green run.
+      - id: release
+        name: Upload DuckDB to cdc-data-latest release
+        if: steps.refresh.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if [ ! -f "$CDC_DB_PATH" ]; then
+            echo "DuckDB missing after successful refresh: $CDC_DB_PATH" >&2
+            exit 1
+          fi
+          if ! gh release view cdc-data-latest >/dev/null 2>&1; then
+            gh release create cdc-data-latest \
+              --title "CDC data (latest)" \
+              --notes "Twice-daily refreshed DuckDB for the live API (tag cdc-data-latest). Replaced on each successful refresh. Set Render CDC_DB_URL to the asset URL."
+          fi
+          gh release upload cdc-data-latest "$CDC_DB_PATH" --clobber
+          echo "Published $(basename "$CDC_DB_PATH") to release tag cdc-data-latest"
 
       - id: backtest
         name: Backtest on the refreshed data
+        if: steps.schedule.outputs.full == 'true'
         continue-on-error: true
         run: python evals/backtest.py --db "$CDC_DB_PATH" --site-out site/data/backtest.json
 
@@ -66,6 +99,7 @@ jobs:
 
       - id: eval
         name: Eval (60 questions on the frozen snapshot)
+        if: steps.schedule.outputs.full == 'true'
         continue-on-error: true
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -87,9 +121,10 @@ jobs:
           python scripts/nightly_status.py --db "$CDC_DB_PATH" \
             --eval-result "${{ steps.eval.outputs.result }}" \
             --step refresh=${{ steps.refresh.outcome }} \
-            --step backtest=${{ steps.backtest.outcome }} \
+            --step release=${{ steps.release.outcome || 'skipped' }} \
+            --step backtest=${{ steps.backtest.outcome || 'skipped' }} \
             --step dashboard=${{ steps.dashboard.outcome }} \
-            --step eval=${{ steps.eval.outcome }} \
+            --step eval=${{ steps.eval.outcome || 'skipped' }} \
             --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
             --commit "${{ github.sha }}" --started-at "${{ steps.start.outputs.at }}"
 
@@ -127,4 +162,9 @@ jobs:
       - name: Fail the run if a step failed
         if: always()
         run: |
+          # Release upload must never look green when it failed (status.json + explicit check).
+          if [ "${{ steps.refresh.outcome }}" = "success" ] && [ "${{ steps.release.outcome }}" = "failure" ]; then
+            echo "Release upload failed after a successful refresh" >&2
+            exit 1
+          fi
           python -c "import json,sys; r=json.load(open('site/data/status.json'))['run']['result']; print('result:', r); sys.exit(r == 'failure')"

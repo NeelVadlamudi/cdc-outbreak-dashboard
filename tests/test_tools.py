@@ -29,6 +29,14 @@ def test_hospitalization_rate(fixture_db):
 def test_positivity_specific_week(fixture_db):
     out = call_tool("get_test_positivity", {"pathogen": "covid-19", "week": "2026-10-03"})
     assert out["rows"][0]["percent_positive"] == 4.1
+    assert out["rows"][0]["one_in_n"] == 24
+    assert out["rows"][0]["plain"] == "about 1 in 24 tests positive"
+
+
+def test_hospitalization_includes_plain(fixture_db):
+    out = call_tool("get_hospitalization_rate", {"network": "COVID-NET", "weeks": 1})
+    assert out["rows"][0]["rate_per_100k"] == 0.8
+    assert "per 100,000" in out["rows"][0]["plain"]
 
 
 def test_wastewater_state(fixture_db):

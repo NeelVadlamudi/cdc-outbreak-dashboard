@@ -96,9 +96,12 @@ app.include_router(router)
 @app.get("/api/health")
 async def health():
     """Liveness check for the host (Render health check). Includes per-table as_of + stale flags."""
+    from datetime import datetime, timezone
+
     from backend import config
     from backend.agent.tools import get_data_freshness
 
+    checked_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     try:
         fresh = get_data_freshness()
         tables = fresh.get("rows") or []
@@ -110,14 +113,24 @@ async def health():
             "database": "ok",
             "latest_week": latest,
             "as_of": latest,
+            "checked_at": checked_at,
             "stale_after_days": config.STALE_AFTER_DAYS,
             "tables": tables,
             "stale_tables": [
                 (t["table"] + (f" ({t['dataset']})" if t.get("dataset") else "")) for t in stale
             ],
         }
-    except Exception as e:  # report, but keep the shape
-        return {"status": "degraded", "database": f"error: {type(e).__name__}"}
+    except Exception as e:  # report, but keep the shape so the UI can show failure
+        return {
+            "status": "degraded",
+            "database": f"error: {type(e).__name__}",
+            "latest_week": None,
+            "as_of": None,
+            "checked_at": checked_at,
+            "tables": [],
+            "stale_tables": [],
+            "error": str(e) or type(e).__name__,
+        }
 
 
 @app.get("/")

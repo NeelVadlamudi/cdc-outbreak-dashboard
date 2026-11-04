@@ -22,11 +22,25 @@ Conventions for every file:
   "generated_at": "ISO-8601",
   "as_of": "YYYY-MM-DD, latest data week (same meaning as the API as_of)",
   "metrics": [
-    { "id": "string", "label": "string", "value": 0, "unit": "string?", "format": "pct?", "decimals": 1, "change_text": "string?" }
+    {
+      "id": "string",
+      "label": "string",
+      "value": 0,
+      "unit": "string?",
+      "format": "pct?",
+      "decimals": 1,
+      "change_text": "string?",
+      "headline": "string?",
+      "plain": "string? — everyday language; omit rather than invent",
+      "insight": "string? — plain plus optional WoW when prior week exists",
+      "week_ending": "YYYY-MM-DD?",
+      "source_table": "string?"
+    }
   ]
 }
 ```
 `format: "pct"` means `value` is a 0–1 fraction. Integers are shown with separators; others with `decimals` (default 1).
+`plain` / `insight` / `week_ending` are optional; the site shows them when present and never fabricates them.
 
 ## 2. `data/eval.json` — section (b)
 One entry per model run. Each entry is the top of the file `evals/run_evals.py` already writes

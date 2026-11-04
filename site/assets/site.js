@@ -66,12 +66,15 @@
     const body = $("[data-body]", sec);
     const ms = d && Array.isArray(d.metrics) ? d.metrics.filter((m) => m && m.label && isNum(m.value)) : [];
     if (!ms.length) return notRun(body, "data/dashboard.json");
-    if (d.as_of) $("#as-of").textContent = `as of ${d.as_of}`;
+    if (d.as_of) $("#as-of").textContent = `CDC week ending ${d.as_of}`;
     body.replaceChildren(el("div", { class: "metrics" }, ms.map((m) =>
       el("div", { class: "metric" },
         el("div", { class: "lab", text: m.label }),
         el("div", { class: "val" }, m.format === "pct" ? pct(m.value) : (Number.isInteger(m.value) ? int(m.value) : dec(m.value, m.decimals ?? 1)),
           m.unit && m.format !== "pct" ? el("span", { class: "unit", text: m.unit }) : null),
+        m.plain ? el("div", { class: "ch plain", text: m.plain }) : null,
+        m.insight && m.insight !== m.plain ? el("div", { class: "ch", text: m.insight }) : null,
+        m.week_ending ? el("div", { class: "ch week", text: `CDC week ending ${m.week_ending}` }) : null,
         m.change_text ? el("div", { class: "ch", text: m.change_text }) : null))));
   }
 

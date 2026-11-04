@@ -5,12 +5,17 @@ import type { AdaptedAskResponse } from "../agent/contract";
 import AgentAnswer from "../components/AgentAnswer";
 
 const SUGGESTED_QUESTIONS = [
-  "What's the COVID risk level right now?",
-  "Which states have high respiratory illness activity?",
-  "What are the current test positivity rates?",
-  "How are hospitalization rates trending?",
-  "Show me a summary of this week's data",
-  "What's happening with flu activity?",
+  // Hospital / clinic ops
+  "Which states are High or Very High this CDC week?",
+  // Infection prevention / nursing
+  "What's COVID-19 test positivity in plain English?",
+  // Research coordinator
+  "What is the latest RESP-NET COVID-NET overall hospitalization rate and week ending?",
+  // Epidemiologist / analyst
+  "How do COVID, flu, and RSV test positivity compare this week?",
+  // Educator / sitrep
+  "Summarize this week's ARI activity with the CDC week stamp",
+  "Is any current surveillance table marked stale?",
 ];
 
 type ChatMessage =
@@ -52,7 +57,12 @@ export default function AskData() {
           <div>
             <h1 className="page-title">Ask a question</h1>
             <p className="page-subtitle">
-              Ask in plain English about COVID, flu, or RSV. Answers come from the CDC data behind this dashboard.
+              For ops leads, infection prevention, research coordinators, and analysts who need this week’s CDC
+              respiratory figures with tool receipts—not free-form chat.
+            </p>
+            <p className="page-disclaimer">
+              For research, education, and situational awareness—not clinical decision-making or official CDC guidance.
+              Numbers are epidemiology-week surveillance, not live case counts.
             </p>
           </div>
         </div>

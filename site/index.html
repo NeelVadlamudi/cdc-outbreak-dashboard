@@ -6,7 +6,7 @@
   <meta name="referrer" content="no-referrer">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>CDC Outbreak Agent — transparency &amp; evals</title>
-  <meta name="description" content="Public CDC respiratory data, a question-answering agent grounded in tools, and nightly evaluation scores. Outlooks lead with last-week persistence; complex models are experimental.">
+  <meta name="description" content="Built for clinicians, coordinators, and researchers: public CDC respiratory data, a tool-grounded Ask agent, twice-daily refresh, and nightly eval scores. Last-value outlooks first; complex models experimental.">
   <meta name="theme-color" content="#0000f2">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/site.css">
@@ -16,9 +16,10 @@
   <header class="head panel">
     <div>
       <h1>CDC Outbreak Agent</h1>
-      <p class="sub">Transparency page for the respiratory virus dashboard: how answers are grounded in CDC data, and how nightly evals and forecast backtests score. The product outlook leads with last-week persistence; neural and tree models are experimental.</p>
+      <p class="sub">Built for clinicians, coordinators, and researchers who need this week’s CDC respiratory picture—fast. Transparency for the tool-grounded Ask agent, twice-daily DuckDB refresh, nightly evals, and forecast backtests. Forecast Hub honesty: outlooks lead with last-week persistence; neural and tree models are experimental and scored against that baseline (HF / EPI-Eval culture).</p>
+      <p class="sub disclaimer">For research, education, and situational awareness—not clinical decision-making or official CDC guidance. Figures are epidemiology-week surveillance, not live case counts.</p>
     </div>
-    <div class="head-meta"><span class="chip" id="as-of">as of —</span></div>
+    <div class="head-meta"><span class="chip" id="as-of">CDC week —</span></div>
   </header>
 
   <div class="freshness status" id="status" aria-label="Nightly run status" role="status"></div>
@@ -32,6 +33,7 @@
 
     <section class="panel" id="sec-eval" aria-labelledby="h-eval">
       <div class="sec-head"><h2 id="h-eval">Eval scores</h2><span class="chip" data-stamp>—</span></div>
+      <p class="note">These scores measure whether the Ask bot’s numbers match the database—not whether COVID is rising. Correctness proof for reviewers; captions stay separate from surveillance claims.</p>
       <div class="body" data-body></div>
     </section>
 
@@ -63,7 +65,7 @@
   </main>
 
   <footer class="foot">
-    <span>Public CDC data · rebuilt nightly</span>
+    <span>Public CDC data · refreshed twice daily · research/education only</span>
     <a href="https://github.com/NeelVadlamudi/cdc-outbreak-dashboard" rel="noopener">Source on GitHub</a>
   </footer>
 </body>

@@ -7,10 +7,11 @@
 # /var/data. Blueprint alone cannot upgrade billing.
 #
 # Live data: startCommand runs scripts/fetch_live_db.py. Set CDC_DB_URL in the
-# Render dashboard to the nightly-published DuckDB HTTPS URL (release asset /
-# object storage; artifact name from Actions: cdc-duckdb). If unset or fetch
-# fails, the script copies evals/snapshot.duckdb. /tmp is ephemeral (wiped on
-# restart/spin-down); that is expected on free tier.
+# Render dashboard once to the cdc-data-latest release asset, e.g.
+# https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/releases/download/cdc-data-latest/cdc_surveillance.duckdb
+# (Actions also keeps artifact cdc-duckdb). If unset or fetch fails, the script
+# copies evals/snapshot.duckdb. /tmp is ephemeral (wiped on restart/spin-down);
+# that is expected on free tier.
 services:
   - type: web
     name: cdc-outbreak-api
@@ -25,9 +26,8 @@ services:
         value: 3.12.15
       - key: CDC_DB_PATH
         value: /tmp/cdc_surveillance.duckdb
-      # Set in the Render dashboard to the nightly release/asset URL after publishing
-      # the DuckDB from GitHub Actions (artifact name: cdc-duckdb). Until then the
-      # fetch script copies evals/snapshot.duckdb.
+      # Set once in the Render dashboard to the cdc-data-latest asset URL.
+      # Until then the fetch script copies evals/snapshot.duckdb.
       - key: CDC_DB_URL
         sync: false
       - key: INGEST_ON_STARTUP
