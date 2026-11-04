@@ -107,7 +107,7 @@ def build(db_path: str) -> dict:
                     "id": "ari_high_risk_total",
                     "label": "States and territories at High or Very High ARI activity",
                     "value": high_n,
-                    "headline": "High risk states",
+                    "headline": "High / Very High ARI",
                     "plain": hr_plain,
                     "insight": hr_plain,
                     "week_ending": week,

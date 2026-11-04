@@ -1,9 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Plot from 'react-plotly.js';
 import {
-  AlertTriangle,
   Hospital,
-  AlertCircle,
+  Activity,
   TestTubes,
   Syringe,
   Map as MapIcon,
@@ -12,6 +11,7 @@ import {
   ClipboardList,
   ChevronDown,
   ChevronRight,
+  Info,
 } from 'lucide-react';
 import { getDashboardSummary, getAriActivity, getTestPositivity, getHospTrends, getHealth } from '../api';
 import { STATE_ABBREV } from '../lib/states';
@@ -209,13 +209,19 @@ export default function Overview() {
           </div>
           <div className="page-header-badges">
             <div
-              className={`status-badge ${health?.status === 'degraded' ? 'status-degraded' : 'status-live'}`}
+              className={`status-badge ${
+                health?.status === 'degraded' || health?.status === 'stale'
+                  ? 'status-degraded'
+                  : 'status-live'
+              }`}
               title={health?.error || undefined}
             >
               <span className="live-dot" aria-hidden />
               {weekEnding
                 ? `CDC week ending ${weekEnding}`
                 : 'CDC week unavailable'}
+              {health?.status === 'stale' ? ' · refresh may be delayed' : ''}
+              {health?.status === 'degraded' ? ' · service check delayed' : ''}
               {checkedLabel ? ` · last checked ${checkedLabel}` : ''}
             </div>
           </div>
@@ -223,18 +229,33 @@ export default function Overview() {
       </div>
 
       {loadError && (
-        <div className="alert-banner danger" role="alert" style={{ marginBottom: 16 }}>
-          <AlertTriangle size={18} />
-          <span>Could not load dashboard data: {loadError}</span>
+        <div className="alert-banner ops" role="status" style={{ marginBottom: 16 }}>
+          <Info size={18} />
+          <span>
+            Dashboard temporarily unavailable. Could not reach the data service
+            {loadError ? ` (${loadError})` : ''}. Try refreshing in a minute—this is a connection
+            issue, not a disease alert.
+          </span>
         </div>
       )}
 
       {health?.status === 'degraded' && (
-        <div className="alert-banner danger" role="alert" style={{ marginBottom: 16 }}>
-          <AlertTriangle size={18} />
+        <div className="alert-banner ops" role="status" style={{ marginBottom: 16 }}>
+          <Info size={18} />
           <span>
-            Data health check failed{health?.error ? `: ${health.error}` : ''}.
-            Showing the last successfully loaded figures if available—not live wall-clock cases.
+            Data refresh delayed{health?.error ? ` (${health.error})` : ''}. Showing the last
+            figures that loaded successfully. Epidemiology-week surveillance—not live case counts.
+          </span>
+        </div>
+      )}
+
+      {health?.status === 'stale' && !loadError && (
+        <div className="alert-banner ops" role="status" style={{ marginBottom: 16 }}>
+          <Info size={18} />
+          <span>
+            Some surveillance tables may be behind the usual CDC publish cadence
+            {weekEnding ? ` (latest week ending ${weekEnding})` : ''}. Open Data status for details.
+            This is a freshness note—not a clinical alert.
           </span>
         </div>
       )}
@@ -304,13 +325,14 @@ export default function Overview() {
         </div>
       )}
 
-      {typeof highRiskCount === 'number' && highRiskCount > 0 && (
-        <div className={`alert-banner ${highRiskCount >= 5 ? 'danger' : 'warning'}`}>
-          <AlertTriangle size={18} />
+      {typeof highRiskCount === 'number' && typeof totalStates === 'number' && highRiskCount > 0 && (
+        <div className="alert-banner situation" role="status">
+          <Info size={18} />
           <span>
-            <strong>{highRiskCount} state{highRiskCount > 1 ? 's' : ''}</strong> reporting High or Very High
-            respiratory illness activity
-            {weekEnding ? ` · CDC week ending ${weekEnding}` : ' this week'}
+            {highRiskCount} of {totalStates} states/territories reported High or Very High ARI
+            activity
+            {weekEnding ? ` · CDC week ending ${weekEnding}` : ' this CDC week'}
+            . CDC activity labels for situational awareness—not an emergency declaration.
           </span>
         </div>
       )}
@@ -326,13 +348,13 @@ export default function Overview() {
           fallbackLabel="States Monitored"
         />
         <MetricCard
-          accent="accent-rose"
-          iconTone="rose"
+          accent="accent-amber"
+          iconTone="amber"
           delayClass="fade-in-delay-2"
-          icon={<AlertCircle size={22} />}
+          icon={<Activity size={22} />}
           metric={metrics.high_risk}
           fallbackValue={highRiskCount ?? null}
-          fallbackLabel="High Risk States"
+          fallbackLabel="High / Very High ARI"
         />
         <MetricCard
           accent="accent-amber"
@@ -375,7 +397,7 @@ export default function Overview() {
               colorscale: RISK_COLORS.map((c, i) => [i / 5, c]),
               showscale: true,
               colorbar: {
-                title: { text: 'Risk', font: { size: 11, color: '#6B7280' } },
+                title: { text: 'ARI activity', font: { size: 11, color: '#6B7280' } },
                 ticktext: ['Min', 'V.Low', 'Low', 'Mod', 'High', 'V.High'],
                 tickvals: [0, 1, 2, 3, 4, 5],
                 tickfont: { size: 10, color: '#6B7280' },
@@ -406,7 +428,7 @@ export default function Overview() {
 
         <div className="card fade-in">
           <div className="card-header">
-            <span className="card-title"><BarChart2 size={18} /> Risk Distribution</span>
+            <span className="card-title"><BarChart2 size={18} /> Activity levels</span>
           </div>
           {(summary?.risk_distribution || []).map((item, i) => {
             const riskClass = item.label?.toLowerCase().replace(' ', '-') || 'low';

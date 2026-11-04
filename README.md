@@ -27,7 +27,7 @@ A surveillance assistant over public U.S. respiratory virus data (COVID-19, infl
 
 Two lessons the nightlies forced into the product:
 
-1. **Grounding regression (`14` bug).** A stale-table warning path injected a day-count that never appeared in tool output. Numeric answers looked fine, but `grounded_answers` collapsed (e.g. 16.7% on 2026-11-04) because the scorer requires every figure to appear in tool results. Fix: keep the warning text free of invented numbers ([`backend/agent/graph.py`](backend/agent/graph.py)). CI can gate `grounded_answers` vs [`evals/baseline.json`](evals/baseline.json) when a clean artifact is supplied (`scripts/check_grounding_gate.py`).
+1. **Ask QA grounding regression (`14` bug).** A stale-table warning path included a day-count that never appeared in tool output. Surveillance table numbers were fine; nightly `grounded_answers` (Ask answer-quality) fell (e.g. 16.7% on 2026-11-04) because the scorer requires every figure in the answer to appear in tool results. Fix: keep the warning text free of invented numbers ([`backend/agent/graph.py`](backend/agent/graph.py)). CI can gate `grounded_answers` vs [`evals/baseline.json`](evals/baseline.json) when a clean artifact is supplied (`scripts/check_grounding_gate.py`). Live status chips frame this as an engineering/QA note—not a disease alert.
 2. **Forecast honesty.** Rolling-origin backtests show LSTM/XGBoost rarely beat repeating last week on these sparse weekly series. The UI and `get_forecast` therefore lead with last-value and badge experimental models — not “train harder forever.”
 
 ## 60-second demo script

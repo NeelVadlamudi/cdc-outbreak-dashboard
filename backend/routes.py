@@ -316,7 +316,7 @@ async def get_dashboard_summary():
             source_table="ari_activity",
         ),
         "high_risk": metric_card(
-            headline="High risk states",
+            headline="High / Very High ARI",
             value=high_n,
             unit="states/territories",
             plain=high_risk_plain(high_n, total_n),

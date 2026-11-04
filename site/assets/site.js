@@ -88,7 +88,7 @@
     ["tool_choice", "Tool choice", pctGiven, "max"],
     ["correct_refusals", "Correct refusals", pctGiven, "max"],
     ["false_refusals", "False refusals", pctGiven, "min"],
-    ["grounded_answers", "Grounded answers", pctGiven, "max"],
+    ["grounded_answers", "Grounded answers (Ask QA)", pctGiven, "max"],
     ["median_s", "Median time / answer", secsFmt, "min"],
     ["p95_s", "p95 time / answer", secsFmt, "min"],
     ["median_input_tokens", "Median input tokens", asGiven, "min"],
@@ -318,9 +318,9 @@
       ev.preventDefault();
       const question = input.value.trim(); if (!question) return;
       button.disabled = true; setState("loading");
-      out.replaceChildren(el("p", { class: "note", text: "Asking… the first call can take about 50 s while the server wakes." }));
+      out.replaceChildren(el("p", { class: "note", text: "Looking up… the first call can take about a minute while the hosted API wakes (hosting delay, not missing CDC data)." }));
       try {
-        const fail = (text) => { setState("error"); out.replaceChildren(el("p", { class: "note", text })); };
+        const fail = (text) => { setState("error"); out.replaceChildren(el("p", { class: "note", text: `${text} This is a service status note—not a disease alert.` })); };
         const splash = /Application loading|waking up|Start building on Render/i;
         const askOnce = async () => {
           const r = await fetch(`${base}/api/agent/ask`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question }) });
@@ -371,7 +371,7 @@
       } finally { button.disabled = false; }
     });
     $("[data-body]", sec).replaceChildren(
-      el("p", { class: "note", text: "Asks the hosted agent. The free server sleeps when idle, so the first call can take about 50 s while it wakes." }),
+      el("p", { class: "note", text: "Asks the hosted agent. The free server sleeps when idle, so the first answer can take about a minute to wake—a hosting delay, not a clinical outage." }),
       label, form, out,
       el("p", { class: "note" }, el("a", { href: "app/ask", text: "Full Ask page" }), " · ", el("a", { href: url, rel: "noopener", text: "API" })));
     sec.hidden = false;
@@ -415,16 +415,51 @@
     const chips = [];
     if (dash && typeof dash.as_of === "string") chips.push(el("span", { class: "chip" }, "dashboard ", el("b", { text: dash.as_of })));
     for (const [t, v] of [...items].sort((x, y) => (x[1].legacy - y[1].legacy) || x[0].localeCompare(y[0])))
-      chips.push(el("span", { class: v.legacy ? "chip legacy" : v.stale ? "chip stale" : "chip" }, `${t} `, el("b", { text: v.date ?? "no data" }), v.stale ? " · stale" : ""));
+      chips.push(el("span", { class: v.legacy ? "chip legacy" : v.stale ? "chip stale" : "chip" }, `${t} `, el("b", { text: v.date ?? "no data" }), v.stale ? (v.legacy ? " · legacy · may be behind" : " · may be behind") : ""));
     if (!chips.length) { strip.hidden = true; return; }
     const rec = nightly && status.generated_at ? ` (nightly run, ${fmtDate(status.generated_at)})` : replay && replay.recorded_at ? ` (from answers recorded ${fmtDate(replay.recorded_at)})` : "";
-    strip.replaceChildren(el("span", { class: "fr-lab", text: "Data as of" }), ...chips, fresh || staleFlag.size ? el("span", { class: "fr-note", text: `Dates and stale flags come from the data's own freshness check${rec}.` }) : "");
+    strip.replaceChildren(el("span", { class: "fr-lab", text: "Data as of" }), ...chips, fresh || staleFlag.size ? el("span", { class: "fr-note", text: `Dates and freshness flags come from the data's own check${rec}. “May be behind” is a publish cadence note—not a disease alert.` }) : "");
     strip.hidden = false;
   }
 
   /* Nightly status strip: data/status.json written by scripts/nightly_status.py (DATA_CONTRACT.md §6).
-     Only fields present are shown; nothing is computed. */
-  const RESULT_TEXT = { success: "Passed", alert: "Passed with alerts", failure: "Failed" };
+     Fields shown as given; display captions reframe eng/QA notes so they are not read as clinical alarms. */
+  const RESULT_TEXT = {
+    success: "Passed",
+    alert: "Passed — engineering notes",
+    failure: "Nightly run failed",
+  };
+  function alertCaption(a) {
+    const kind = typeof a.kind === "string" ? a.kind : "";
+    const title = typeof a.title === "string" ? a.title : "";
+    const detail = typeof a.detail === "string" ? a.detail : "";
+    if (kind === "score_drop") {
+      return {
+        kindLabel: "Ask QA",
+        title: title.replace(/^Eval score drop:\s*/i, "Ask answer-quality score changed: "),
+        detail: detail
+          ? `${detail} This measures whether every number in an Ask answer appeared in tool output—not whether illness is rising.`
+          : "Ask answer-quality score moved vs baseline. Not a disease severity signal.",
+      };
+    }
+    if (kind === "stale") {
+      return {
+        kindLabel: "Data freshness",
+        title: title.replace(/^Stale data:\s*/i, "Table may be behind: "),
+        detail: detail
+          ? `${detail} Publish-cadence note for operators—not a clinical alert.`
+          : "A surveillance table may be behind the usual CDC cadence.",
+      };
+    }
+    if (kind === "step_failed") {
+      return {
+        kindLabel: "Pipeline",
+        title: title.replace(/^Nightly step failed:\s*/i, "Nightly step did not finish: "),
+        detail: detail || "An engineering step in the nightly job did not succeed.",
+      };
+    }
+    return { kindLabel: kind || "Note", title, detail };
+  }
   function renderStatus(d) {
     const strip = $("#status");
     const run = d && d.run && typeof d.run === "object" ? d.run : null;
@@ -434,9 +469,17 @@
     if (run.finished_at) kids.push(el("span", { class: "chip" }, "finished ", el("b", { text: fmtDate(run.finished_at) })));
     if (typeof run.url === "string" && /^https:\/\//.test(run.url)) kids.push(el("a", { class: "chip link", href: run.url, rel: "noopener", text: "View run ↗" }));
     if (Array.isArray(d.alerts)) {
-      if (!d.alerts.length) kids.push(el("span", { class: "chip", text: "No open alerts" }));
-      else kids.push(el("ul", { class: "alerts" }, d.alerts.map((a) => el("li", {},
-        a.kind ? el("span", { class: "chip acc", text: a.kind }) : null, " ", el("b", { text: a.title || "" }), a.detail ? el("span", { class: "ad", text: ` — ${a.detail}` }) : null))));
+      if (!d.alerts.length) kids.push(el("span", { class: "chip", text: "No open engineering notes" }));
+      else {
+        kids.push(el("span", { class: "fr-note", text: "Engineering / Ask QA notes (not disease alerts):" }));
+        kids.push(el("ul", { class: "alerts" }, d.alerts.map((a) => {
+          const c = alertCaption(a);
+          return el("li", {},
+            c.kindLabel ? el("span", { class: "chip acc", text: c.kindLabel }) : null, " ",
+            el("b", { text: c.title || "" }),
+            c.detail ? el("span", { class: "ad", text: ` — ${c.detail}` }) : null);
+        })));
+      }
     }
     strip.replaceChildren(...kids);
   }

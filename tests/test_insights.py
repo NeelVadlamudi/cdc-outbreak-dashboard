@@ -67,3 +67,7 @@ def test_metric_card_and_briefing_use_only_passed_numbers():
     assert "3.6%" in briefing["this_week"]
     assert "1 in 28" in briefing["this_week"]
     assert "not clinical" in briefing["implication"].lower() or "official CDC" in briefing["implication"]
+    elevated = build_briefing(week_ending="2026-10-10", high_risk=6, total_states=50)
+    assert "6 of 50" in elevated["implication"]
+    assert "elevated respiratory pressure" not in elevated["implication"].lower()
+    assert "emergency" not in elevated["implication"].lower()

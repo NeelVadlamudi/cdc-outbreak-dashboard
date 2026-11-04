@@ -122,7 +122,7 @@ table.bt tr.baserow td:first-child{background:#f0f0ff}
 .bt-notes li { margin: .2rem 0; }
 .status{margin-bottom:8px}
 .chip.res-success{color:#059669;border-color:rgba(5,150,105,.35);background:rgba(5,150,105,.08)}
-.chip.res-alert{color:#92400e;border-color:rgba(217,119,6,.4);background:rgba(217,119,6,.1)}
+.chip.res-alert{color:#475569;border-color:rgba(71,85,105,.35);background:rgba(71,85,105,.08)}
 .chip.res-failure{color:#9f1239;border-color:rgba(159,18,57,.35);background:rgba(159,18,57,.08)}
 .chip.link{text-decoration:none;color:var(--ink)}
 .chip.link:hover,.chip.link:focus-visible{border-color:var(--acc);outline:none}
