@@ -5,8 +5,8 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://cdc-outbreak-api.onrender.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>CDC Outbreak Agent — transparency &amp; evals</title>
-  <meta name="description" content="Built for clinicians, coordinators, and researchers: public CDC respiratory data, a tool-grounded Ask agent, twice-daily refresh, and nightly eval scores. Last-value outlooks first; complex models experimental.">
+  <title>Respiratory Virus Dashboard — CDC open data</title>
+  <meta name="description" content="For clinicians, coordinators, and researchers: this week’s CDC respiratory surveillance picture, Ask with tool receipts, and nightly QA scores. Research and education only—not clinical decision support.">
   <meta name="theme-color" content="#0000f2">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/site.css">
@@ -15,9 +15,9 @@
 <body>
   <header class="head panel">
     <div>
-      <h1>CDC Outbreak Agent</h1>
-      <p class="sub">Built for clinicians, coordinators, and researchers who need this week’s CDC respiratory picture—fast. Transparency for the tool-grounded Ask agent, twice-daily DuckDB refresh, nightly evals, and forecast backtests. Forecast Hub honesty: outlooks lead with last-week persistence; neural and tree models are experimental and scored against that baseline (HF / EPI-Eval culture).</p>
-      <p class="sub disclaimer">For research, education, and situational awareness—not clinical decision-making or official CDC guidance. Figures are epidemiology-week surveillance, not live case counts.</p>
+      <h1>Respiratory Virus Dashboard</h1>
+      <p class="sub">Built for clinicians, coordinators, and researchers who need this week’s CDC respiratory picture—fast. Public CDC open data, an Ask agent that shows its sources, twice-daily refresh, and nightly answer-quality scores. Outlooks lead with last-week persistence; more complex models are experimental.</p>
+      <p class="sub disclaimer">For research, education, and situational awareness—not clinical decision-making or official CDC guidance. Figures are epidemiology-week surveillance, not live case counts. Status chips below are engineering/QA notes about this site—not disease alerts.</p>
     </div>
     <div class="head-meta"><span class="chip" id="as-of">CDC week —</span></div>
   </header>
@@ -33,7 +33,7 @@
 
     <section class="panel" id="sec-eval" aria-labelledby="h-eval">
       <div class="sec-head"><h2 id="h-eval">Eval scores</h2><span class="chip" data-stamp>—</span></div>
-      <p class="note">These scores measure whether the Ask bot’s numbers match the database—not whether COVID is rising. Correctness proof for reviewers; captions stay separate from surveillance claims.</p>
+      <p class="note">These scores measure whether the Ask bot’s numbers match the database—not whether illness is rising or falling. They are answer-quality checks for reviewers. Low grounding scores mean a QA regression on the bot, not a clinical emergency.</p>
       <div class="body" data-body></div>
     </section>
 
@@ -46,9 +46,9 @@
     <section class="panel" id="sec-case" aria-labelledby="h-case">
       <div class="sec-head"><h2 id="h-case">Case study</h2></div>
       <div class="body">
-        <p class="note"><strong>Grounding:</strong> a stale-warning path once injected an unverified day count (<code>14</code>), collapsing nightly <code>grounded_answers</code>. The checker now keeps warnings number-free. Scores on this page update only after the next nightly with that fix deployed.</p>
-        <p class="note"><strong>Forecasts:</strong> backtests show LSTM/XGBoost rarely beat repeating last week on these series — so the product leads with persistence, not the losing model.</p>
-        <p class="note"><strong>Live demo:</strong> the free Render API sleeps when idle. The Ask UI retries wake-up instead of dying on the first HTML splash.</p>
+        <p class="note"><strong>Ask QA (grounding):</strong> a stale-table warning once included a day count (<code>14</code>) that never came from a tool result. Nightly answer-quality scoring then marked many answers as ungrounded (for example 16.7% vs a 100% baseline). The numbers in the surveillance tables were unchanged—this was a bot-caption bug. Warnings are now number-free; scores here refresh on the next nightly after deploy.</p>
+        <p class="note"><strong>Forecasts:</strong> backtests show complex models rarely beat repeating last week on these sparse weekly series—so outlooks lead with last-week persistence and label the rest experimental.</p>
+        <p class="note"><strong>Live demo:</strong> the free hosted API sleeps when idle. Ask may take about a minute to wake; that is a hosting delay, not missing CDC data.</p>
       </div>
     </section>
 

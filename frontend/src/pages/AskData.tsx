@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { MessageSquare, ArrowRight, AlertTriangle } from "lucide-react";
+import { MessageSquare, ArrowRight, Info } from "lucide-react";
 import { askAgent } from "../api";
 import type { AdaptedAskResponse } from "../agent/contract";
 import AgentAnswer from "../components/AgentAnswer";
@@ -97,8 +97,12 @@ export default function AskData() {
                   {msg.role === "user" && "content" in msg && msg.content}
                   {"result" in msg && msg.result && <AgentAnswer result={msg.result} />}
                   {"error" in msg && msg.error && (
-                    <div className="agent-error" role="alert">
-                      <AlertTriangle size={14} /> {msg.error}{" "}
+                    <div className="agent-error" role="status">
+                      <Info size={14} style={{ flexShrink: 0, marginTop: 2 }} />
+                      <span>
+                        Ask temporarily unavailable. {msg.error} This is a service status
+                        note—not a disease alert.
+                      </span>{" "}
                       <button
                         className="agent-calls-toggle"
                         onClick={() => sendMessage(msg.question)}
@@ -140,7 +144,7 @@ export default function AskData() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && sendMessage(input)}
-                placeholder="Ask about COVID, flu, RSV, risk levels…"
+                placeholder="Ask about COVID, flu, RSV, or this week’s ARI activity…"
                 aria-label="Ask a question about the data"
               />
               <button

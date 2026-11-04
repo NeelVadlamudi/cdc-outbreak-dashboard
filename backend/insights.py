@@ -149,10 +149,10 @@ def build_briefing(
         )
     elif high_risk >= 5:
         implication = (
-            f"{high_risk} jurisdictions at High or Very High ARI activity points to elevated "
-            "respiratory pressure this surveillance week—relevant for hospital ops and "
-            "infection-prevention planning, not a substitute for clinical judgment or "
-            "official CDC guidance."
+            f"{high_risk} of {total_states} tracked jurisdictions reported High or Very High "
+            "ARI activity this CDC week—useful context for hospital ops and infection-prevention "
+            "planning. Research and education use only—not clinical decision-making or official "
+            "CDC guidance."
         )
     elif high_risk == 0:
         implication = (

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronRight, ShieldAlert, Wrench } from "lucide-react";
+import { ChevronRight, Info, Wrench } from "lucide-react";
 import { formatDuration, formatInputs } from "../agent/contract";
 
 function OutputRows({ rows }) {
@@ -36,9 +36,9 @@ export default function AgentAnswer({ result }) {
   return (
     <div className={`agent-answer${flagged ? " agent-refused" : ""}`}>
       {flagged && (
-        <div className="agent-flag"><ShieldAlert size={14} />
+        <div className="agent-flag"><Info size={14} />
           {result.status === "unverified"
-            ? "Could not fully verify this answer against the data"
+            ? "Could not fully verify this answer against the data (QA note—not a disease alert)"
             : "Could not answer from the available data"}
         </div>
       )}

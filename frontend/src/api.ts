@@ -109,13 +109,14 @@ export async function askAgent(
       }
       if (cold) {
         throw new Error(
-          "The API is waking up (free-tier cold start). Wait about 30–60 seconds, then retry.",
+          "The Ask service is waking up after idle time. Wait about 30–60 seconds, then retry.",
         );
       }
-      const detailText =
-        typeof detail === "string" ? detail : detail ? JSON.stringify(detail) : "";
+      const detailText = typeof detail === "string" ? detail.trim() : "";
       throw new Error(
-        `The agent returned ${res.status}${detailText ? `: ${detailText}` : ""}`,
+        detailText
+          ? `Please try again in a moment. (${detailText})`
+          : `Please try again in a moment. (service status ${res.status})`,
       );
     }
 

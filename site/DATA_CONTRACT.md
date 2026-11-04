@@ -195,9 +195,10 @@ Listed in `index.json` as `"status"` (`scripts/publish_eval.py` and `scripts/nig
   `correct_refusals` and `grounded_answers`, higher for `false_refusals`. `change` is value minus baseline, in points.
 - `freshness.tables` is the `get_data_freshness` output for the refreshed database. `age_days` is relative to the run date.
   Legacy rows are listed but never raise a stale alert.
-- **Page display:** only fields that exist are shown: `run.result` (success → "Passed", alert → "Passed with alerts",
-  failure → "Failed"), `run.finished_at` in ET, `run.url` as "View run ↗" (https only), and `alerts[]` (kind, title,
-  detail; "No open alerts" when the array is empty). Missing file → "Not run yet". The site computes nothing from it.
+- **Page display:** only fields that exist are shown: `run.result` (success → "Passed", alert → "Passed — engineering notes",
+  failure → "Nightly run failed"), `run.finished_at` in ET, `run.url` as "View run ↗" (https only), and `alerts[]`
+  with calm captions (Ask QA / data freshness / pipeline—not disease alerts; "No open engineering notes" when empty).
+  Missing file → "Not run yet". Numeric fields are shown as given; captions reframe eng/QA language only.
 - `backtest` is `null` if no backtest file exists. Each alert also opens a GitHub issue labelled `nightly-alert`;
   if an open issue with the same title exists, the run comments on it instead.
 
