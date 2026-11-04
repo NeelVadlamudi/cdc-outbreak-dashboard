@@ -1,31 +1,30 @@
 # Render Blueprint: the API only (the site is on GitHub Pages).
 #
-# Plan note: change `plan` from free → starter (or higher) in the Render dashboard
-# so the public demo stays warm. Blueprint alone cannot upgrade billing — you must
-# click Upgrade on the service. Free tier sleeps and breaks "Try it live."
+# Plan note: keep `plan: free` so blueprint sync succeeds without a paid plan.
+# Free web services cannot attach persistent disks (Render rejects the blueprint).
+# Upgrade to starter (or higher) in the Render dashboard if you want a warmer
+# demo; after upgrading you can optionally add a disk and remount paths under
+# /var/data. Blueprint alone cannot upgrade billing.
 #
-# Live data: startCommand downloads a nightly-published DuckDB when CDC_DB_URL is set;
-# otherwise it falls back to evals/snapshot.duckdb (frozen for evals). Keep the
-# snapshot committed; do not overwrite it with live pulls.
+# Live data: startCommand runs scripts/fetch_live_db.py. Set CDC_DB_URL in the
+# Render dashboard to the nightly-published DuckDB HTTPS URL (release asset /
+# object storage; artifact name from Actions: cdc-duckdb). If unset or fetch
+# fails, the script copies evals/snapshot.duckdb. /tmp is ephemeral (wiped on
+# restart/spin-down); that is expected on free tier.
 services:
   - type: web
     name: cdc-outbreak-api
     runtime: python
-    # Keep free so blueprint sync does not require a paid plan to deploy.
-    # Upgrade to starter in the Render UI (cannot bill from YAML alone) to stop cold starts.
+    # Free: no persistent disk. Paid plan + disk is optional later for /var/data.
     plan: free
     buildCommand: pip install -r requirements-render.txt
-    startCommand: python scripts/fetch_live_db.py --dest /var/data/cdc_surveillance.duckdb && uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    startCommand: python scripts/fetch_live_db.py --dest /tmp/cdc_surveillance.duckdb && uvicorn backend.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /api/health
-    disk:
-      name: cdc-data
-      mountPath: /var/data
-      sizeGB: 1
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.15
       - key: CDC_DB_PATH
-        value: /var/data/cdc_surveillance.duckdb
+        value: /tmp/cdc_surveillance.duckdb
       # Set in the Render dashboard to the nightly release/asset URL after publishing
       # the DuckDB from GitHub Actions (artifact name: cdc-duckdb). Until then the
       # fetch script copies evals/snapshot.duckdb.
@@ -47,6 +46,8 @@ services:
         value: "false"
       - key: RATE_LIMIT_BACKEND
         value: sqlite
+      # Ephemeral on free tier; resets on restart. Move under /var/data only after
+      # upgrading off free and attaching a persistent disk.
       - key: RATE_LIMIT_DB
-        value: /var/data/ratelimits.sqlite
+        value: /tmp/ratelimits.sqlite
       # Optional: set RATE_LIMIT_BACKEND=redis and REDIS_URL if you provision Redis.
