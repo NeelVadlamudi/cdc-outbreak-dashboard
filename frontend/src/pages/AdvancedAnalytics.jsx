@@ -49,7 +49,7 @@ export default function AdvancedAnalytics() {
   const seasons = [...new Set(seasonData.filter((d) => d.surveillance_network === VIRUS_MAP[selectedVirus]).map((d) => d.season))];
   const seasonTraces = seasons.map((s, i) => {
     const sData = seasonData.filter((d) => d.surveillance_network === VIRUS_MAP[selectedVirus] && d.season === s);
-    const colors = ["#0F5C55", "#B45309", "#1A7A5C", "#C2410C", "#CA8A04"];
+    const colors = ["#0000d9", "#B45309", "#1A7A5C", "#C2410C", "#CA8A04"];
     return {
       x: sData.map((d) => d.mmwr_week),
       y: sData.map((d) => d.avg_rate),
@@ -62,9 +62,9 @@ export default function AdvancedAnalytics() {
   const plotLayout = {
     paper_bgcolor: 'rgba(0,0,0,0)',
     plot_bgcolor: 'rgba(0,0,0,0)',
-    font: { family: 'DM Sans, sans-serif', color: '#6B7C74', size: 11 },
-    xaxis: { gridcolor: '#EEF2F0', zeroline: false },
-    yaxis: { gridcolor: '#EEF2F0', zeroline: false },
+    font: { family: 'Space Grotesk, sans-serif', color: '#6b6b6b', size: 11 },
+    xaxis: { gridcolor: '#e8e8e8', zeroline: false },
+    yaxis: { gridcolor: '#e8e8e8', zeroline: false },
   };
 
   if (loading) {
@@ -166,7 +166,7 @@ export default function AdvancedAnalytics() {
                 x: lastValue.forecasts.map((f) => f.date),
                 y: lastValue.forecasts.map((f) => f.predicted_rate),
                 type: "scatter", mode: "lines+markers",
-                name: "Last-week (primary)", line: { color: "#0F5C55", width: 3 },
+                name: "Last-week (primary)", line: { color: "#0000d9", width: 3 },
               }] : []),
               ...(lstm.forecasts ? [{
                 x: lstm.forecasts.map((f) => f.date),
@@ -190,7 +190,7 @@ export default function AdvancedAnalytics() {
               xaxis: { ...plotLayout.xaxis, title: "Week", tickangle: -45 },
               yaxis: { ...plotLayout.yaxis, title: "Rate per 100k" },
               margin: { t: 20, b: 80, l: 60, r: 20 },
-              legend: { orientation: "h", y: -0.3, font: { color: "#3D4F48" } },
+              legend: { orientation: "h", y: -0.3, font: { color: '#3a3a3a' } },
               height: 380,
             }}
             config={{ displayModeBar: false, responsive: true }}
@@ -242,7 +242,7 @@ export default function AdvancedAnalytics() {
               x: weeks.slice(-26),
               y: ageGroups,
               type: "heatmap",
-              colorscale: [[0, "#F7F9F8"], [0.25, "#D8E8E5"], [0.5, "#6BA8A1"], [0.75, "#0F5C55"], [1, "#0A3D39"]],
+              colorscale: [[0, "#F7F9F8"], [0.25, "#D8E8E5"], [0.5, "#6BA8A1"], [0.75, "#0000d9"], [1, "#0A3D39"]],
               colorbar: { 
                 title: { text: "Rate/100k", font: { color: "#6B7280" } },
                 len: 0.8,

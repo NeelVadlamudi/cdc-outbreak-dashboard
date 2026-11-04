@@ -73,12 +73,12 @@ export default function Simulator() {
   const plotLayout = {
     paper_bgcolor: 'rgba(0,0,0,0)',
     plot_bgcolor: 'rgba(0,0,0,0)',
-    font: { family: 'DM Sans, sans-serif', color: '#6B7C74', size: 11 },
+    font: { family: 'Space Grotesk, sans-serif', color: '#6b6b6b', size: 11 },
     margin: { t: 20, b: 60, l: 60, r: 20 },
-    xaxis: { gridcolor: '#EEF2F0', zeroline: false },
-    yaxis: { gridcolor: '#EEF2F0', zeroline: false },
+    xaxis: { gridcolor: '#e8e8e8', zeroline: false },
+    yaxis: { gridcolor: '#e8e8e8', zeroline: false },
     showlegend: true,
-    legend: { orientation: "h", y: -0.25, font: { color: "#3D4F48" } },
+    legend: { orientation: "h", y: -0.25, font: { color: '#3a3a3a' } },
   };
 
   return (
@@ -229,7 +229,7 @@ export default function Simulator() {
                     {
                       x: results.weeks, y: results.bed_demand_mean,
                       type: "scatter", mode: "lines+markers",
-                      name: "Mean bed demand", line: { color: "#0F5C55", width: 2.5 },
+                      name: "Mean bed demand", line: { color: "#0000d9", width: 2.5 },
                       marker: { size: 7, line: { color: 'white', width: 1 } },
                     },
                     {

@@ -63,7 +63,7 @@ export default function AskData() {
           <div style={{ flex: 1, overflowY: "auto", padding: 24 }}>
             {messages.length === 0 && (
               <div className="empty-state">
-                <MessageSquare size={40} strokeWidth={1.5} color="#6B7C74" style={{ margin: "0 auto 14px" }} />
+                <MessageSquare size={40} strokeWidth={1.5} color="#6b6b6b" style={{ margin: "0 auto 14px" }} />
                 <h3>Try a question about this week’s data</h3>
                 <p>
                   You’ll see the answer, the data week it used, and (if you want) which sources it checked.

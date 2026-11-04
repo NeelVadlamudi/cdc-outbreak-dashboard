@@ -84,12 +84,12 @@ export default function Overview() {
   const plotLayout = {
     paper_bgcolor: 'rgba(0,0,0,0)',
     plot_bgcolor: 'rgba(0,0,0,0)',
-    font: { family: 'DM Sans, sans-serif', color: '#6B7C74', size: 11 },
+    font: { family: 'Space Grotesk, sans-serif', color: '#6b6b6b', size: 11 },
     margin: { l: 45, r: 20, t: 30, b: 40 },
-    xaxis: { gridcolor: '#F3F4F6', zeroline: false },
-    yaxis: { gridcolor: '#F3F4F6', zeroline: false },
+    xaxis: { gridcolor: '#e8e8e8', zeroline: false },
+    yaxis: { gridcolor: '#e8e8e8', zeroline: false },
     showlegend: true,
-    legend: { orientation: 'h', y: -0.15, font: { size: 11, color: '#4B5563' } },
+    legend: { orientation: 'h', y: -0.15, font: { size: 11, color: '#3a3a3a' } },
   };
 
   return (
@@ -252,7 +252,7 @@ export default function Overview() {
             <div className="card-title" style={{ marginBottom: '16px' }}><TestTubes size={16} /> Test Positivity</div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
               {[
-                { label: 'COVID', rate: covidRate, color: '#0F5C55' },
+                { label: 'COVID', rate: covidRate, color: '#0000d9' },
                 { label: 'Flu', rate: fluRate, color: '#D97706' },
                 { label: 'RSV', rate: rsvRate, color: '#059669' },
               ].map(v => (
@@ -266,7 +266,7 @@ export default function Overview() {
                       style={{ transition: 'stroke-dasharray 0.8s cubic-bezier(0.16, 1, 0.3, 1)' }}
                     />
                     <text x="32" y="36" textAnchor="middle" fill="var(--text-primary)"
-                      fontSize="14" fontWeight="700" fontFamily="DM Sans, sans-serif">{v.rate}%</text>
+                      fontSize="14" fontWeight="700" fontFamily="Space Grotesk, sans-serif">{v.rate}%</text>
                   </svg>
                   <span className="gauge-label">{v.label}</span>
                 </div>
@@ -289,7 +289,7 @@ export default function Overview() {
                 type: 'scatter',
                 mode: 'lines',
                 name: 'COVID-19',
-                line: { color: '#0F5C55', width: 2, shape: 'spline' },
+                line: { color: '#0000d9', width: 2, shape: 'spline' },
                 fill: 'tozeroy',
                 fillcolor: 'rgba(79, 70, 229, 0.08)',
               },
@@ -327,7 +327,7 @@ export default function Overview() {
           <Plot
             data={(() => {
               const viruses = ['COVID-NET', 'FluSurv-NET', 'RSV-NET'];
-              const colors = ['#0F5C55', '#B45309', '#1A7A5C'];
+              const colors = ['#0000d9', '#B45309', '#1A7A5C'];
               return viruses.map((v, i) => {
                 const d = trends.filter(t => t.virus === v).sort((a, b) => a.week_ending_date?.localeCompare(b.week_ending_date));
                 return {

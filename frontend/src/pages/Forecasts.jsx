@@ -4,7 +4,7 @@ import { Bot, Crosshair, Calendar, BrainCircuit, Activity, LineChart, AlertTrian
 import { getForecast } from '../api';
 
 const VIRUSES = [
-  { key: 'COVID-NET', label: 'COVID-19', color: '#0F5C55', icon: <Activity size={16} /> },
+  { key: 'COVID-NET', label: 'COVID-19', color: '#0000d9', icon: <Activity size={16} /> },
   { key: 'FluSurv-NET', label: 'Influenza', color: '#B45309', icon: <Activity size={16} /> },
   { key: 'RSV-NET', label: 'RSV', color: '#1A7A5C', icon: <Activity size={16} /> },
 ];
@@ -39,12 +39,12 @@ export default function Forecasts() {
   const plotLayout = {
     paper_bgcolor: 'rgba(0,0,0,0)',
     plot_bgcolor: 'rgba(0,0,0,0)',
-    font: { family: 'DM Sans, sans-serif', color: '#6B7C74', size: 11 },
+    font: { family: 'Space Grotesk, sans-serif', color: '#6b6b6b', size: 11 },
     margin: { l: 50, r: 20, t: 30, b: 50 },
-    xaxis: { gridcolor: '#EEF2F0', zeroline: false, title: { text: 'Week', font: { size: 11 } } },
-    yaxis: { gridcolor: '#EEF2F0', zeroline: false, title: { text: 'Rate per 100k', font: { size: 11 } } },
+    xaxis: { gridcolor: '#e8e8e8', zeroline: false, title: { text: 'Week', font: { size: 11 } } },
+    yaxis: { gridcolor: '#e8e8e8', zeroline: false, title: { text: 'Rate per 100k', font: { size: 11 } } },
     showlegend: true,
-    legend: { orientation: 'h', y: -0.2, font: { size: 11, color: '#3D4F48' } },
+    legend: { orientation: 'h', y: -0.2, font: { size: 11, color: '#3a3a3a' } },
   };
 
   return (
@@ -127,8 +127,8 @@ export default function Forecasts() {
                   type: 'scatter',
                   mode: 'lines+markers',
                   name: 'Outlook (last week held forward)',
-                  line: { color: '#0F5C55', width: 2.5 },
-                  marker: { size: 8, color: '#0F5C55', line: { color: 'white', width: 1 } },
+                  line: { color: '#0000d9', width: 2.5 },
+                  marker: { size: 8, color: '#0000d9', line: { color: 'white', width: 1 } },
                 },
               ]}
               layout={{ ...plotLayout, height: 400 }}
@@ -224,7 +224,7 @@ export default function Forecasts() {
         </>
       ) : (
         <div className="card empty-state" style={{ background: 'var(--bg-elevated)' }}>
-          <Bot size={48} strokeWidth={1.5} color="#6B7C74" style={{ margin: '0 auto 16px' }} />
+          <Bot size={48} strokeWidth={1.5} color="#6b6b6b" style={{ margin: '0 auto 16px' }} />
           <h3>Outlook not available</h3>
           <p>
             {forecast?.detail || 'Hospitalization data for this virus network is not available right now.'}
