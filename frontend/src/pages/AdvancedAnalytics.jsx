@@ -306,8 +306,8 @@ export default function AdvancedAnalytics() {
                 padding: "20px",
                 borderRadius: "var(--radius-md)",
                 marginBottom: "12px",
-                background: a.severity === "Critical" ? "rgba(220, 38, 38, 0.05)" : "rgba(217, 119, 6, 0.05)",
-                border: `1px solid ${a.severity === "Critical" ? "rgba(220, 38, 38, 0.2)" : "rgba(217, 119, 6, 0.2)"}`,
+                background: a.severity === "Critical" ? "rgba(196, 122, 90, 0.08)" : "rgba(196, 146, 74, 0.08)",
+                border: `1px solid ${a.severity === "Critical" ? "rgba(196, 122, 90, 0.28)" : "rgba(196, 146, 74, 0.28)"}`,
                 borderLeft: `4px solid ${a.severity === "Critical" ? "var(--color-high)" : "var(--color-moderate)"}`,
               }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -316,11 +316,14 @@ export default function AdvancedAnalytics() {
                     <div>
                       <span style={{ fontWeight: 800, fontSize: "16px", color: "var(--text-primary)" }}>{a.geography}</span>
                       <span style={{ fontSize: "12px", color: "var(--text-secondary)", marginLeft: "12px", background: "var(--bg-card)", padding: "4px 8px", borderRadius: "12px", border: "1px solid var(--border-light)" }}>{a.metric}</span>
+                      <span style={{ fontSize: "11px", color: "var(--text-muted)", marginLeft: "8px" }}>
+                        {a.severity === "Critical" ? "elevated deviation" : "notable deviation"} · z-score note, not a disease alert
+                      </span>
                     </div>
                   </div>
                   <span style={{
                     padding: "4px 12px", borderRadius: "12px", fontWeight: 800, fontSize: "13px",
-                    background: a.severity === "Critical" ? "rgba(220, 38, 38, 0.1)" : "rgba(217, 119, 6, 0.1)",
+                    background: a.severity === "Critical" ? "rgba(196, 122, 90, 0.12)" : "rgba(196, 146, 74, 0.12)",
                     color: a.severity === "Critical" ? "var(--color-high)" : "var(--color-moderate)",
                   }}>
                     {a.z_score}σ

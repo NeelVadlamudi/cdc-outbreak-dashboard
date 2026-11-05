@@ -1,41 +1,54 @@
 import { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
-import { TestTubes, Map as MapIcon, AlertTriangle, Calendar } from "lucide-react";
+import { TestTubes, Map as MapIcon, AlertTriangle, Calendar, Link2 } from "lucide-react";
 import { getWastewaterLatest, getWastewaterStates } from "../api";
 import { STATE_ABBREV as STATE_ABBREVS } from "../lib/states";
+import ChartEmpty from "../components/ChartEmpty";
+import { getParam, setParams } from "../lib/urlState";
 
 // CDC Wastewater Viral Activity Level categories (dataset atcp-73re)
 const CATEGORY_COLORS = {
-  "Very High": "#9F1239",
-  High: "#C2410C",
-  Moderate: "#B45309",
-  Low: "#1A7A5C",
-  "Very Low": "#0E7490",
+  "Very High": "#a86850",
+  High: "#c47a5a",
+  Moderate: "#c4924a",
+  Low: "#4f7d6a",
+  "Very Low": "#5a8a8c",
 };
 const PATHOGENS = ["SARS-CoV-2", "Influenza A virus", "RSV"];
 
 export default function Wastewater() {
-  const [pathogen, setPathogen] = useState("SARS-CoV-2");
+  const [pathogen, setPathogen] = useState(() => getParam("pathogen", "SARS-CoV-2"));
   const [stateData, setStateData] = useState([]);
   const [sites, setSites] = useState([]);
-  const [selectedState, setSelectedState] = useState(null);
+  const [selectedState, setSelectedState] = useState(() => getParam("state", "") || null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
 
-  useEffect(() => {
+  const load = (p = pathogen) => {
     let cancelled = false;
-    Promise.all([getWastewaterStates(pathogen), getWastewaterLatest(pathogen)])
+    setLoading(true);
+    setLoadError(null);
+    Promise.all([getWastewaterStates(p), getWastewaterLatest(p)])
       .then(([stRes, siteRes]) => {
         if (cancelled) return;
         setStateData(stRes.data || []);
         setSites(siteRes.data || []);
       })
-      .catch(console.error)
+      .catch((err) => {
+        console.error(err);
+        if (!cancelled) setLoadError(err instanceof Error ? err.message : "Failed to load wastewater");
+      })
       .finally(() => !cancelled && setLoading(false));
     return () => { cancelled = true; };
+  };
+
+  useEffect(() => {
+    setParams({ pathogen, state: selectedState || "" });
+    return load(pathogen);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathogen]);
 
   const choosePathogen = (p) => {
-    setLoading(true);
     setSelectedState(null);
     setPathogen(p);
   };
@@ -52,15 +65,22 @@ export default function Wastewater() {
           <div>
             <h1 className="page-title">Wastewater</h1>
             <p className="page-subtitle">
-              Early signal of virus activity in communities from wastewater sampling sites across the U.S.
+              Early community signal from wastewater (not a clinical diagnosis). Shareable via <code>?pathogen=</code>.
             </p>
           </div>
-          <div style={{ display: "flex", gap: "8px" }}>
+          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
             {PATHOGENS.map((p) => (
               <button key={p} className={`filter-btn ${pathogen === p ? "active" : ""}`} onClick={() => choosePathogen(p)}>
                 {p}
               </button>
             ))}
+            <button
+              type="button"
+              className="filter-btn"
+              onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => {})}
+            >
+              <Link2 size={14} /> Share view
+            </button>
           </div>
         </div>
       </div>
@@ -70,6 +90,18 @@ export default function Wastewater() {
           <div className="loading-spinner" />
           <div className="loading-page-text">Loading wastewater activity…</div>
         </div>
+      ) : loadError ? (
+        <ChartEmpty
+          title="Wastewater temporarily unavailable"
+          detail={`${loadError} This is a service status note—not a disease alert.`}
+          onRetry={() => load(pathogen)}
+        />
+      ) : !sites.length && !stateData.length ? (
+        <ChartEmpty
+          title="No wastewater rows for this pathogen"
+          detail="Empty response from the API—not proof that viral activity is absent."
+          onRetry={() => load(pathogen)}
+        />
       ) : (
         <>
           <div className="stat-cards-grid fade-in" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>

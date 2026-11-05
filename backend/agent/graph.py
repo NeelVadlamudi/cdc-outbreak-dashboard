@@ -39,6 +39,8 @@ class AgentState(TypedDict):
     messages: Annotated[list, add_messages]
     trace: list
     tool_calls_made: int
+    input_tokens: int
+    output_tokens: int
 
 
 def build_graph(model, toolset=None):
@@ -53,13 +55,19 @@ def build_graph(model, toolset=None):
         else:
             msg = bound.invoke(state["messages"])
         usage = getattr(msg, "usage_metadata", None) or {}
+        in_tok = usage.get("input_tokens") or 0
+        out_tok = usage.get("output_tokens") or 0
         logger.info("model call", extra={
             "event": "model_call", "model": getattr(model, "_label", None),
             "elapsed_s": round(time.perf_counter() - start, 3),
             "tool_calls_requested": [c["name"] for c in getattr(msg, "tool_calls", []) or []],
             "input_tokens": usage.get("input_tokens"), "output_tokens": usage.get("output_tokens"),
         })
-        return {"messages": [msg]}
+        return {
+            "messages": [msg],
+            "input_tokens": int(state.get("input_tokens") or 0) + int(in_tok or 0),
+            "output_tokens": int(state.get("output_tokens") or 0) + int(out_tok or 0),
+        }
 
     def tool_node(state: AgentState):
         last = state["messages"][-1]
@@ -127,6 +135,8 @@ def run_agent(question: str, model=None, setting: str | None = None, toolset=Non
             "messages": [SystemMessage(system_prompt or SYSTEM_PROMPT), HumanMessage(question)],
             "trace": [],
             "tool_calls_made": 0,
+            "input_tokens": 0,
+            "output_tokens": 0,
         },
         {"recursion_limit": 2 * MAX_TOOL_CALLS + 4},
     )
@@ -162,20 +172,31 @@ def run_agent(question: str, model=None, setting: str | None = None, toolset=Non
         status = "answered"
 
     elapsed_total = round(time.perf_counter() - start, 3)
+    pv = prompt_version or PROMPT_VERSION
+    in_tok = state.get("input_tokens") or 0
+    out_tok = state.get("output_tokens") or 0
     logger.info("agent answer", extra={
         "event": "agent_answer", "status": status, "model": label, "tool_calls": len(trace),
         "unverified": len(checker.get("unverified", [])), "stale_tables": checker["stale_tables"],
         "elapsed_s": elapsed_total,
+        "input_tokens": in_tok, "output_tokens": out_tok, "prompt_version": pv,
     })
     return {
         "status": status,
         "answer": answer,
         "tool_calls": trace,
         "as_of": as_of,
-        "elapsed_s": round(time.perf_counter() - start, 3),
+        "elapsed_s": elapsed_total,
         "model": label,
-        "prompt_version": prompt_version or PROMPT_VERSION,
+        "prompt_version": pv,
         "checker": checker,
+        "observability": {
+            "elapsed_s": elapsed_total,
+            "tool_call_count": len(trace),
+            "prompt_version": pv,
+            "input_tokens": in_tok or None,
+            "output_tokens": out_tok or None,
+        },
     }
 
 

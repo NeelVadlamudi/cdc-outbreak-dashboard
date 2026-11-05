@@ -46,6 +46,19 @@ export default function AgentAnswer({ result }) {
       <div className="agent-meta">
         <span>Data week: {result.asOf ?? "not reported"}</span>
         {took && <span>Answered in {took}</span>}
+        {result.toolCallCount != null && (
+          <span>{result.toolCallCount} tool step{result.toolCallCount === 1 ? "" : "s"}</span>
+        )}
+        {result.promptVersion && <span>Prompt {result.promptVersion}</span>}
+        {result.model && <span>Model {result.model}</span>}
+        {(result.inputTokens != null || result.outputTokens != null) && (
+          <span>
+            Tokens{" "}
+            {result.inputTokens != null ? `${result.inputTokens.toLocaleString()} in` : "—"}
+            {" / "}
+            {result.outputTokens != null ? `${result.outputTokens.toLocaleString()} out` : "—"}
+          </span>
+        )}
         {result.staleTables.length > 0 && (
           <span>Some sources may be behind: {result.staleTables.join(", ")}</span>
         )}

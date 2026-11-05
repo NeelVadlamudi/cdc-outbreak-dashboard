@@ -121,6 +121,36 @@ def init_database():
         )
     """)
 
+    # Multi-source supplements (OWID, CDC burden, …) — provenance-first
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS source_status (
+            source_id VARCHAR PRIMARY KEY,
+            title VARCHAR,
+            license VARCHAR,
+            homepage VARCHAR,
+            citation VARCHAR,
+            status VARCHAR,
+            as_of DATE,
+            retrieved_at TIMESTAMP,
+            detail VARCHAR
+        )
+    """)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS external_series (
+            source_id VARCHAR,
+            series_id VARCHAR,
+            geography VARCHAR,
+            as_of DATE,
+            value DOUBLE,
+            value_high DOUBLE,
+            unit VARCHAR,
+            label VARCHAR,
+            retrieved_at TIMESTAMP,
+            citation VARCHAR,
+            PRIMARY KEY (source_id, series_id, geography, as_of)
+        )
+    """)
+
     conn.close()
     logger.info("Database initialized")
 

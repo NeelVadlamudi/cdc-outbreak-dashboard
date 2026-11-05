@@ -9,7 +9,7 @@
 
 **End product:** a free, open-source respiratory surveillance assistant anyone can run, fork, or host. Built for **hospital/clinic ops leads, infection prevention, research coordinators, epidemiologists, and educators** who need this week’s CDC respiratory picture—fast—with tool receipts and scored nightlies, not free-form “smart” chat.
 
-**Pipeline:** CDC open data → DuckDB → FastAPI → grounded tool-calling agent → twice-daily refresh + nightly evals & forecast backtests.
+**Pipeline:** CDC open data → DuckDB → FastAPI → grounded tool-calling agent → twice-daily refresh + nightly evals & forecast backtests. **Multi-source plane:** CDC SODA stays core; open supplements (OWID weekly COVID deaths, CDC preliminary burden estimates) add provenance-tagged context — see [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md) and `GET /api/sources`.
 
 A surveillance assistant over public U.S. respiratory virus data (COVID-19, influenza, RSV). Outlooks default to **last-week persistence** (Forecast Hub honesty); LSTM/XGBoost are experimental and labelled when they underperform that baseline.
 
@@ -37,12 +37,18 @@ Two lessons the nightlies forced into the product:
 1. **Ask QA grounding regression (`14` bug).** A stale-table warning path included a day-count that never appeared in tool output. Surveillance table numbers were fine; nightly `grounded_answers` (Ask answer-quality) fell (e.g. 16.7% on 2026-11-04) because the scorer requires every figure in the answer to appear in tool results. Fix: keep the warning text free of invented numbers ([`backend/agent/graph.py`](backend/agent/graph.py)). CI can gate `grounded_answers` vs [`evals/baseline.json`](evals/baseline.json) when a clean artifact is supplied (`scripts/check_grounding_gate.py`). Live status chips frame this as an engineering/QA note—not a disease alert.
 2. **Forecast honesty.** Rolling-origin backtests show LSTM/XGBoost rarely beat repeating last week on these sparse weekly series. The UI and `get_forecast` therefore lead with last-value and badge experimental models — not “train harder forever.”
 
+## Resume bullets (locked)
+
+1. **CDC Outbreak Dashboard** (Python, LangGraph, FastAPI, DuckDB, React, GitHub Actions): open-source, free MIT respiratory surveillance over public CDC COVID/flu/RSV data with twice-daily refresh; a tool-calling Ask agent returns answers only with source tables and week stamps, and a number checker queues unverified replies for review.
+2. Ships evaluation set `cdc-q60-v1` ([eval card](evals/HF_CARD.md)) and forecast backtests in CI/nightlies so outlooks default to last-week persistence when experimental models lose — Forecast Hub–style honesty, not vibe forecasts.
+
 ## 60-second demo script
 
-1. Open the [live site](https://neelvadlamudi.github.io/cdc-outbreak-dashboard/) — show nightly status + freshness chips + eval captions.
-2. Open the React Overview — MMWR-style briefing, plain “1 in N” under positivity, `CDC week ending … · last checked …` heartbeat.
-3. Ask three questions in Try it live / React Ask: positivity this week; a state ARI level; a pediatric rate (age_group required). Expand tool tables under each answer.
-4. Open Eval scores + Forecast backtest — point at last-value vs LSTM/XGBoost MAE; note experimental language on Outlook.
+1. Open the [live site](https://neelvadlamudi.github.io/cdc-outbreak-dashboard/) — show nightly status + freshness chips + eval captions; click **Open interactive dashboard**.
+2. Overview — MMWR-style briefing, spa-calm chrome, source chips (`as_of` + license), `data_plane: live_release`.
+3. Ask — shareable `?q=` link; expand tool tables + observability (steps, latency, tokens, prompt version).
+4. Outlook — `?virus=` share; last-value primary vs experimental LSTM badge.
+5. Close — “open source MIT, free to self-host with Ollama; collaborative source adapters welcome.”
 
 ## What the code does
 

@@ -3,6 +3,10 @@
 Scores the agent behind `POST /api/agent/ask` against answers computed by SQL
 from a frozen copy of the CDC data.
 
+**Hugging Face–style dataset card:** [`HF_CARD.md`](HF_CARD.md) (`cdc-q60-v1`).
+Publish that card (or this folder) to the Hub when you want a public eval artifact;
+the gold SQL and frozen snapshot already live here under MIT.
+
 - `build_snapshot.py` writes `snapshot.duckdb` for a fixed window (weeks ending
   2026-07-25 to 2026-10-10; the legacy wastewater metrics to 2025-09-07, where
   that CDC file stops). `--add-wastewater-activity` adds the current NWSS viral

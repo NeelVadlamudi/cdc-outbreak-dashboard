@@ -1,38 +1,49 @@
 import { useState, useEffect } from 'react';
 import Plot from 'react-plotly.js';
-import { Activity, TestTubes, LineChart, BarChart2, TrendingUp, Syringe } from 'lucide-react';
+import { Activity, TestTubes, LineChart, BarChart2, TrendingUp, Syringe, Link2 } from 'lucide-react';
 import { getTestPositivity, getHospitalizations, getSites } from '../api';
+import ChartEmpty from '../components/ChartEmpty';
+import { getParam, setParams } from '../lib/urlState';
 
 export default function Analytics() {
   const [positivity, setPositivity] = useState([]);
   const [hospitalizations, setHospitalizations] = useState([]);
   const [sites, setSites] = useState([]);
-  const [selectedSite, setSelectedSite] = useState(null);
-  const [selectedNetwork, setSelectedNetwork] = useState('all');
+  const [selectedSite, setSelectedSite] = useState(() => getParam('site', '') || null);
+  const [selectedNetwork, setSelectedNetwork] = useState(() => getParam('network', 'all'));
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
+
+  const fetchData = async () => {
+    setLoading(true);
+    setLoadError(null);
+    try {
+      const [posRes, hospRes, sitesRes] = await Promise.all([
+        getTestPositivity('limit=1000'),
+        getHospitalizations('limit=500'),
+        getSites(),
+      ]);
+      setPositivity(posRes.data || []);
+      setHospitalizations(hospRes.data || []);
+      setSites(sitesRes.sites || []);
+    } catch (err) {
+      console.error('Failed to fetch analytics data:', err);
+      setLoadError(err instanceof Error ? err.message : 'Failed to load trends');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const [posRes, hospRes, sitesRes] = await Promise.all([
-          getTestPositivity('limit=1000'),
-          getHospitalizations('limit=500'),
-          getSites(),
-        ]);
-        setPositivity(posRes.data || []);
-        setHospitalizations(hospRes.data || []);
-        setSites(sitesRes.sites || []);
-      } catch (err) {
-        console.error('Failed to fetch analytics data:', err);
-      } finally {
-        setLoading(false);
-      }
-    }
     fetchData();
   }, []);
 
   useEffect(() => {
-    if (!selectedSite && !selectedNetwork) return;
+    setParams({
+      network: selectedNetwork === 'all' ? '' : selectedNetwork,
+      site: selectedSite || '',
+    });
+    if (!selectedSite && selectedNetwork === 'all') return;
     const params = new URLSearchParams();
     if (selectedNetwork && selectedNetwork !== 'all') params.set('network', selectedNetwork);
     if (selectedSite) params.set('site', selectedSite);
@@ -48,6 +59,18 @@ export default function Analytics() {
       <div className="loading-page">
         <div className="loading-spinner" />
         <div className="loading-page-text">Loading trends…</div>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="page-container">
+        <ChartEmpty
+          title="Trends temporarily unavailable"
+          detail={`${loadError} This is a service status note—not a disease alert or an all-clear.`}
+          onRetry={fetchData}
+        />
       </div>
     );
   }
@@ -97,9 +120,16 @@ export default function Analytics() {
           <div>
             <h1 className="page-title">Trends</h1>
             <p className="page-subtitle">
-              Test positivity and hospitalization rates over time for COVID-19, flu, and RSV.
+              Test positivity and hospitalization rates over time for COVID-19, flu, and RSV. Shareable via <code>?network=</code> / <code>?site=</code>.
             </p>
           </div>
+          <button
+            type="button"
+            className="filter-btn"
+            onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => {})}
+          >
+            <Link2 size={14} /> Share view
+          </button>
         </div>
       </div>
 
