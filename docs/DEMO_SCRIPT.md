@@ -22,5 +22,7 @@
 ## Do not claim
 
 - CDC affiliation  
-- That LSTM “predicts outbreaks”  
-- That the free Render tier is always warm (upgrade to starter for always-on)
+- That LSTM “predicts outbreaks” (on free Render, LSTM often shows `no_model`)  
+- That the free Render tier is always warm (upgrade to starter for always-on)  
+- “Production,” “real-time case counts,” or unverified chat ( `/api/chat` is 410 )  
+- That `/api/weekly-brief` uses LSTM/XGBoost (it is rule-based DuckDB only)

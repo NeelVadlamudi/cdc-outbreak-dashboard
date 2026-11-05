@@ -68,7 +68,7 @@ def test_model_routes_are_limited():
     from backend.routes import router
     deps = {r.path: [d.call.__qualname__ for d in r.dependant.dependencies]
             for r in router.routes if hasattr(r, "dependant")}
-    for path in ("/api/agent/ask", "/api/chat", "/api/weekly-brief"):
+    for path in ("/api/agent/ask", "/api/chat", "/api/weekly-brief", "/api/simulator/run"):
         assert any("limited" in q for q in deps[path]), path
 
 

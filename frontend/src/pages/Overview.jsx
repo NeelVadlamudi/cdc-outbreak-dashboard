@@ -204,7 +204,7 @@ export default function Overview() {
   const plotLayout = {
     paper_bgcolor: 'rgba(0,0,0,0)',
     plot_bgcolor: 'rgba(0,0,0,0)',
-    font: { family: 'Space Grotesk, sans-serif', color: '#6b6b6b', size: 11 },
+    font: { family: 'Space Grotesk, sans-serif', color: '#555e58', size: 11 },
     margin: { l: 45, r: 20, t: 30, b: 40 },
     xaxis: { gridcolor: '#e8e8e8', zeroline: false },
     yaxis: { gridcolor: '#e8e8e8', zeroline: false },
@@ -230,14 +230,16 @@ export default function Overview() {
               className={`status-badge ${
                 health?.status === 'degraded' || health?.status === 'stale'
                   ? 'status-degraded'
-                  : 'status-live'
+                  : 'status-ok'
               }`}
-              title={health?.error || undefined}
+              title={health?.error || health?.data_plane || undefined}
             >
               <span className="live-dot" aria-hidden />
               {weekEnding
                 ? `CDC week ending ${weekEnding}`
                 : 'CDC week unavailable'}
+              {health?.data_plane === 'live_release' ? ' · data_plane live_release' : ''}
+              {health?.data_plane === 'snapshot_fallback' ? ' · data_plane snapshot' : ''}
               {health?.status === 'stale' ? ' · refresh may be delayed' : ''}
               {health?.status === 'degraded' ? ' · service check delayed' : ''}
               {checkedLabel ? ` · last checked ${checkedLabel}` : ''}
@@ -299,6 +301,18 @@ export default function Overview() {
               ? ' (live DuckDB download failed—check CDC_DB_URL / release asset).'
               : ' (CDC_DB_URL is not set on the host).'}
             {' '}Figures still carry CDC week stamps—this is an ops note, not a disease alert.
+          </span>
+        </div>
+      )}
+
+      {health?.data_plane === 'live_release' && !loadError && (
+        <div className="alert-banner ops" role="status" style={{ marginBottom: 16 }}>
+          <Info size={18} />
+          <span>
+            DuckDB loaded from the <code>cdc-data-latest</code> release
+            {health?.data_plane_fetched_at ? ` (fetched ${health.data_plane_fetched_at})` : ''}.
+            {' '}Week stamps above are epidemiology weeks from those tables—not a claim of
+            continuous real-time streaming. Free-tier hosts may sleep when idle.
           </span>
         </div>
       )}

@@ -3,6 +3,7 @@ import { useState, lazy, Suspense } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Activity, Menu } from "lucide-react";
 import Sidebar from "./components/Sidebar";
+import ErrorBoundary from "./components/ErrorBoundary";
 import Overview from "./pages/Overview";
 import AskData from "./pages/AskData";
 
@@ -95,7 +96,9 @@ function App() {
         <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
 
         <main className="main-content">
-          <AppRoutes />
+          <ErrorBoundary>
+            <AppRoutes />
+          </ErrorBoundary>
         </main>
       </div>
     </Router>

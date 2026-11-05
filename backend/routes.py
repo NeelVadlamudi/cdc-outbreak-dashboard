@@ -4,12 +4,10 @@ Phase 2: Expanded with wastewater, ensemble models, data chat, anomaly detection
 """
 
 import asyncio
-import json
 import logging
 import secrets
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Query
-from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
 from backend.agent.tools import backtest_vs_last_value
@@ -423,13 +421,18 @@ async def get_sites():
 
 @router.get("/events/stream")
 async def event_stream():
-    """Server-Sent Events for live dashboard updates."""
-    async def generate():
-        while True:
-            summary = await get_dashboard_summary()
-            yield f"data: {json.dumps(summary)}\n\n"
-            await asyncio.sleep(30)
-    return StreamingResponse(generate(), media_type="text/event-stream")
+    """Retired: unbounded SSE was unused by the UI and expensive on free tier."""
+    raise HTTPException(
+        status_code=410,
+        detail={
+            "error": "gone",
+            "message": (
+                "GET /api/events/stream is retired. Poll GET /api/health or "
+                "GET /api/dashboard-summary instead."
+            ),
+            "use": ["/api/health", "/api/dashboard-summary"],
+        },
+    )
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -618,7 +621,7 @@ async def get_season_compare():
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# PHASE 2C: Data chat
+# Ask agent (grounded) — unverified /api/chat is retired (410)
 # ═══════════════════════════════════════════════════════════════════════════════
 
 class ChatMessage(BaseModel):
@@ -676,7 +679,7 @@ async def get_weekly_brief():
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# PHASE 2D: Hospital Capacity Simulator
+# Hospital capacity simulator (illustrative Monte Carlo — not a forecast)
 # ═══════════════════════════════════════════════════════════════════════════════
 
 class SimRequest(BaseModel):
@@ -694,7 +697,7 @@ class SimRequest(BaseModel):
     weeks: int = 8
 
 
-@router.post("/simulator/run")
+@router.post("/simulator/run", dependencies=[Depends(limited("sim"))])
 async def run_sim(req: SimRequest):
     """Run Monte Carlo hospital capacity simulation."""
     params = SimulationParams(
