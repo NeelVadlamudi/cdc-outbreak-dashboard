@@ -103,9 +103,12 @@ export default function Sidebar({ isOpen, setIsOpen }) {
         <div className="sidebar-footer">
           <div className="live-indicator">
             <span className="live-dot" aria-hidden />
-            Data updates about every hour
+            CDC weeks · refreshed twice daily
           </div>
           <div style={{ color: "var(--text-muted)", fontSize: 11, marginTop: 6, paddingLeft: 15 }}>
+            MIT open source · free to use
+          </div>
+          <div style={{ color: "var(--text-muted)", fontSize: 11, marginTop: 4, paddingLeft: 15 }}>
             Source: CDC public surveillance
           </div>
         </div>
