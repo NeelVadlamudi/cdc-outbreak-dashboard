@@ -1,14 +1,21 @@
 # CDC Outbreak Dashboard
 
-**Live site:** https://neelvadlamudi.github.io/cdc-outbreak-dashboard/ · **Portfolio:** https://neelvadlamudi.github.io/neelresume/
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Live site](https://img.shields.io/badge/live-GitHub%20Pages-0000f2)](https://neelvadlamudi.github.io/cdc-outbreak-dashboard/)
 
-Built for **hospital/clinic ops leads, infection prevention, research coordinators, epidemiologists, and educators** who need this week’s CDC respiratory picture—fast—with tool receipts and scored nightlies, not free-form “smart” chat.
+**Open source · free to use · MIT licensed**
+
+**Live site:** https://neelvadlamudi.github.io/cdc-outbreak-dashboard/ · **Source:** https://github.com/NeelVadlamudi/cdc-outbreak-dashboard · **Portfolio:** https://neelvadlamudi.github.io/neelresume/
+
+**End product:** a free, open-source respiratory surveillance assistant anyone can run, fork, or host. Built for **hospital/clinic ops leads, infection prevention, research coordinators, epidemiologists, and educators** who need this week’s CDC respiratory picture—fast—with tool receipts and scored nightlies, not free-form “smart” chat.
 
 **Pipeline:** CDC open data → DuckDB → FastAPI → grounded tool-calling agent → twice-daily refresh + nightly evals & forecast backtests.
 
 A surveillance assistant over public U.S. respiratory virus data (COVID-19, influenza, RSV). Outlooks default to **last-week persistence** (Forecast Hub honesty); LSTM/XGBoost are experimental and labelled when they underperform that baseline.
 
-**Disclaimer:** for research, education, and situational awareness—not clinical decision-making or official CDC guidance. Labels are **epidemiology weeks**, not wall-clock “live cases.”
+**Disclaimer:** for research, education, and situational awareness—not clinical decision-making or official CDC guidance. Labels are **epidemiology weeks**, not wall-clock “live cases.” Surveillance tables come from public [data.cdc.gov](https://data.cdc.gov) feeds; this project is not affiliated with the CDC.
+
+**Cost to you:** the software is free. Self-host with a free [Ollama](https://ollama.com) model for Ask, or optionally your own Gemini API key. The public demo API may sleep on free hosting.
 
 <img src="assets/dashboard_preview.png" alt="Dashboard preview" width="100%" />
 

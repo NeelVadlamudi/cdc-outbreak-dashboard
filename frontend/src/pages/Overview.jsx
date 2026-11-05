@@ -21,7 +21,7 @@ const RISK_LEVELS = { 'Minimal': 0, 'Very Low': 1, 'Low': 2, 'Moderate': 3, 'Hig
 const RISK_COLORS = ['#059669', '#0891b2', '#3b82f6', '#d97706', '#dc2626', '#b91c1c'];
 const HEALTH_POLL_MS = 60_000;
 const DISCLAIMER =
-  'For research, education, and situational awareness—not clinical decision-making or official CDC guidance.';
+  'Open source and free to use (MIT). For research, education, and situational awareness—not clinical decision-making or official CDC guidance.';
 
 function formatCheckedAt(iso) {
   if (!iso) return null;
