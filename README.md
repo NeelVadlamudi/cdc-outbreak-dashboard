@@ -17,7 +17,6 @@ A surveillance assistant over public U.S. respiratory virus data (COVID-19, infl
 
 **Cost to you:** the software is free. Self-host with a free [Ollama](https://ollama.com) model for Ask, or optionally your own Gemini API key. The public demo API may sleep on free hosting.
 
-<img src="assets/dashboard_preview.png" alt="Dashboard preview" width="100%" />
 
 ## Proven vs experimental (60 seconds)
 
