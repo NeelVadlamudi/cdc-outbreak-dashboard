@@ -66,8 +66,12 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="CDC Respiratory Virus Dashboard",
-    description="Live CDC respiratory surveillance data, forecasts and a live data question box",
-    version="1.0.0",
+    description=(
+        "Read-only CDC open-data surveillance (COVID-19, influenza, RSV), "
+        "last-value outlooks, and a grounded tool-calling Ask agent. "
+        "Epidemiology-week figures — not wall-clock case counts."
+    ),
+    version="0.9.5",
     lifespan=lifespan,
     docs_url="/docs" if ENABLE_API_DOCS else None,
     redoc_url="/redoc" if ENABLE_API_DOCS else None,
@@ -190,17 +194,23 @@ async def health():
 async def root():
     return {
         "name": "CDC Respiratory Virus Dashboard",
-        "version": "1.0.0",
+        "version": "0.9.5",
         "status": "operational",
         "docs": "/docs" if ENABLE_API_DOCS else None,
         "endpoints": {
+            "health": "/api/health",
             "dashboard_summary": "/api/dashboard-summary",
+            "sources": "/api/sources",
             "ari_activity": "/api/ari-activity",
             "hospitalizations": "/api/hospitalizations",
             "test_positivity": "/api/test-positivity",
             "forecast": "/api/forecast/{virus}",
-            "live_stream": "/api/events/stream",
-        }
+            "agent_ask": "/api/agent/ask",
+        },
+        "retired": {
+            "chat": "/api/chat",
+            "events_stream": "/api/events/stream",
+        },
     }
 
 

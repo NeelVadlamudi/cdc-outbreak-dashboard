@@ -30,7 +30,7 @@ A surveillance assistant over public U.S. respiratory virus data (COVID-19, infl
 | Anomaly flags | z-score (|z| > 2), not Isolation Forest |
 | Unverified `/api/chat` | **Retired** (HTTP 410 → use `/api/agent/ask`) |
 
-## Case study — measuring production AI
+## Case study — measuring grounded Ask QA
 
 Two lessons the nightlies forced into the product:
 
@@ -45,9 +45,9 @@ Two lessons the nightlies forced into the product:
 ## 60-second demo script
 
 1. Open the [live site](https://neelvadlamudi.github.io/cdc-outbreak-dashboard/) — show nightly status + freshness chips + eval captions; click **Open interactive dashboard**.
-2. Overview — MMWR-style briefing, spa-calm chrome, source chips (`as_of` + license), `data_plane: live_release`.
+2. Overview — MMWR-style briefing, spa-calm chrome, source chips (`as_of` + license), health badge `data_plane: live_release` (or honest `snapshot_fallback` if the host fell back). First load after idle may wait ~30–60s while free-tier wakes.
 3. Ask — shareable `?q=` link; expand tool tables + observability (steps, latency, tokens, prompt version).
-4. Outlook — `?virus=` share; last-value primary vs experimental LSTM badge.
+4. Outlook — `?virus=` share; last-value primary; experimental LSTM may show `no_model` on the free Render image (PyTorch omitted by design).
 5. Close — “open source MIT, free to self-host with Ollama; collaborative source adapters welcome.”
 
 ## What the code does
@@ -58,10 +58,12 @@ Two lessons the nightlies forced into the product:
 - **Outlook** (`backend/forecasting.py`): `GET /api/forecast/{virus}` returns **last-value primary**; LSTM is nested under `experimental_models` when a saved model exists. Never trains on GET.
 - **XGBoost** (`backend/ensemble.py`): experimental; compare endpoint also returns last-value primary. Anomalies use **z-score** only.
 - **Backtest:** published notes attach to forecast/compare responses; models that lose get `underperforms_baseline`.
-- **Agent** (`backend/agent/`): `POST /api/agent/ask` only (verified tools + checker). Exact-week misses refuse; pediatric questions need age_group args. `POST /api/chat` returns **410**.
-- **MCP server** (`backend/mcp_server.py`): same tools over MCP.
-- **Capacity simulator** (`backend/simulator.py`): Monte Carlo bed/ICU demand.
-- **Frontend** (`frontend/`): React + Vite; typed agent contract (`contract.ts` / `api.ts` / `AskData.tsx`).
+- **Agent** (`backend/agent/`): `POST /api/agent/ask` only (verified tools + checker). Exact-week misses refuse; pediatric questions need age_group args. `POST /api/chat` and `GET /api/events/stream` return **410**.
+- **Weekly brief** (`backend/chat_engine.py`): DuckDB aggregates only — not an LLM path.
+- **MCP server** (`backend/mcp_server.py`): same tools over MCP (local; not on the free Render web image).
+- **Capacity simulator** (`backend/simulator.py`): illustrative Monte Carlo bed/ICU demand (rate-limited).
+- **Frontend** (`frontend/`): React + Vite; typed agent contract (`contract.ts` / `api.ts` / `AskData.tsx`); cold-start retries on API fetches.
+- **Boundaries:** [`docs/BOUNDARIES.md`](docs/BOUNDARIES.md).
 
 ## Live DuckDB vs frozen eval snapshot
 
@@ -147,9 +149,9 @@ CI runs `scripts/check_grounding_gate.py` (skips unless `evals/ci_eval_result.js
 `render.yaml` targets the **free** web plan (no persistent disk—Render rejects disks on free). Start command runs `fetch_live_db.py` into `/tmp`. Paid always-on + disk is an optional later upgrade in the Render UI.
 
 - Health: `GET /api/health` (`as_of`, `checked_at`, tables + stale flags).
-- Rate limits: SQLite file by default (`RATE_LIMIT_DB`); optional Redis via env.
-- `/api/chat` is gone (410). Limits apply to `/api/agent/ask` and `/api/weekly-brief`.
-- CORS: Pages origin. Secrets: `GEMINI_API_KEY`, **`CDC_DB_URL`** (set once to the `cdc-data-latest` asset).
+- Rate limits (defaults): Ask 6/min · 60/day/IP · 800/day global; weekly-brief and simulator similarly capped (`RATE_*` env overrides). SQLite file by default (`RATE_LIMIT_DB`); optional Redis via env. Free-tier `/tmp` counters reset on restart.
+- `/api/chat` and `/api/events/stream` are gone (410). Limits apply to `/api/agent/ask`, `/api/weekly-brief`, and `/api/simulator/run`.
+- CORS: Pages origin only (`ALLOWED_ORIGINS`). Secrets: `GEMINI_API_KEY`; `CDC_DB_URL` is a public release URL (blueprint sets it).
 
 ## Release tag (v1.0)
 

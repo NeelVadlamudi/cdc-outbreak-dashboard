@@ -29,10 +29,74 @@ async function sleep(ms: number, signal?: AbortSignal): Promise<void> {
   });
 }
 
+function detailFromBody(raw: string): string {
+  try {
+    const detail = JSON.parse(raw)?.detail;
+    if (typeof detail === "string") return detail.trim();
+    if (detail && typeof detail === "object" && typeof detail.message === "string") {
+      return detail.message.trim();
+    }
+  } catch {
+    /* non-JSON */
+  }
+  return "";
+}
+
+/**
+ * Shared fetch with free-tier cold-start retries so Overview/sources do not
+ * surface a bare 502/HTML splash as if the product were broken.
+ */
 async function fetchAPI(endpoint: string, options: RequestInit = {}): Promise<unknown> {
-  const res = await fetch(`${API_BASE}${endpoint}`, options);
-  if (!res.ok) throw new Error(`API error: ${res.status}`);
-  return res.json();
+  const maxAttempts = 3;
+  const signal = options.signal ?? undefined;
+  let lastError: Error | null = null;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    let res: Response;
+    try {
+      res = await fetch(`${API_BASE}${endpoint}`, options);
+    } catch (err) {
+      lastError = err instanceof Error ? err : new Error(String(err));
+      if (attempt < maxAttempts && !signal?.aborted) {
+        await sleep(2500 * attempt, signal);
+        continue;
+      }
+      throw new Error(
+        "Couldn't reach the data API. It may be waking up — wait ~30s and retry.",
+      );
+    }
+
+    const contentType = res.headers.get("content-type");
+    const raw = await res.text();
+    const cold = looksLikeColdStart(res.status, raw, contentType);
+
+    if (cold) {
+      if (attempt < maxAttempts && !signal?.aborted) {
+        await sleep(4000 * attempt, signal);
+        continue;
+      }
+      throw new Error(
+        "The data API is waking up after idle time. Wait about 30–60 seconds, then retry.",
+      );
+    }
+
+    if (!res.ok) {
+      const detailText = detailFromBody(raw);
+      throw new Error(
+        detailText
+          ? `API error ${res.status}: ${detailText}`
+          : `API error: ${res.status}`,
+      );
+    }
+
+    try {
+      return JSON.parse(raw);
+    } catch {
+      throw new Error("The API returned a non-JSON body. Retry in a moment.");
+    }
+  }
+
+  throw lastError ?? new Error("Request failed after retries");
 }
 
 export const getDashboardSummary = () => fetchAPI("/dashboard-summary");
@@ -98,12 +162,7 @@ export async function askAgent(
     const cold = looksLikeColdStart(res.status, raw, contentType);
 
     if (!res.ok || cold) {
-      let detail: unknown = "";
-      try {
-        detail = JSON.parse(raw)?.detail ?? "";
-      } catch {
-        /* non-JSON splash while Render wakes */
-      }
+      const detailText = detailFromBody(raw);
       if (cold && attempt < maxAttempts && !signal?.aborted) {
         await sleep(4000 * attempt, signal);
         continue;
@@ -113,7 +172,6 @@ export async function askAgent(
           "The Ask service is waking up after idle time. Wait about 30–60 seconds, then retry.",
         );
       }
-      const detailText = typeof detail === "string" ? detail.trim() : "";
       throw new Error(
         detailText
           ? `Please try again in a moment. (${detailText})`

@@ -22,11 +22,11 @@
   /* Text — warm charcoal on mist (AA); sidebar uses on-chrome */
   --text-primary: #2c3330;
   --text-secondary: #4a524e;
-  --text-muted: #6b746e;
+  --text-muted: #555e58; /* ≥4.5:1 on card parchment for body/muted copy */
   --text-accent: #3d6b5c;
   --text-on-panel: #2c3330;
   --text-on-panel-secondary: #4a524e;
-  --text-on-panel-muted: #6b746e;
+  --text-on-panel-muted: #555e58;
   --text-on-chrome: #f2f0eb;
   --text-on-chrome-secondary: rgba(242, 240, 235, 0.78);
   --text-on-chrome-muted: rgba(242, 240, 235, 0.55);
@@ -422,6 +422,7 @@ body {
   border: 1px solid var(--border-accent);
 }
 
+.status-badge.status-ok,
 .status-badge.status-live {
   background: var(--accent-cta);
   color: var(--accent-on-cta);

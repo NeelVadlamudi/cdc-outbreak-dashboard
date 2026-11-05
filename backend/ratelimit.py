@@ -231,6 +231,8 @@ limiter = Limiter(build_store(_default_backend or os.getenv("RATE_LIMIT_BACKEND"
 LIMITS = {
     "ask": (_int("RATE_ASK_PER_MIN", 6), _int("RATE_ASK_PER_DAY", 60), _int("RATE_ASK_GLOBAL_PER_DAY", 800)),
     "brief": (_int("RATE_BRIEF_PER_MIN", 10), _int("RATE_BRIEF_PER_DAY", 100), _int("RATE_BRIEF_GLOBAL_PER_DAY", 1000)),
+    # Monte Carlo is CPU-bound; keep public demo abuse bounded.
+    "sim": (_int("RATE_SIM_PER_MIN", 4), _int("RATE_SIM_PER_DAY", 40), _int("RATE_SIM_GLOBAL_PER_DAY", 400)),
 }
 
 MESSAGES = {

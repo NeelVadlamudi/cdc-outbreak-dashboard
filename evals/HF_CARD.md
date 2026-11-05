@@ -26,7 +26,8 @@ Frozen, SQL-backed evaluation set for the grounded Ask agent in
 
 - Measure whether an agent’s **numbers appear in tool results** (grounding) and match
   SQL gold answers on a **frozen** DuckDB snapshot.
-- Research / education / hiring-signal artifact — **not** clinical decision support.
+- Research / education / portfolio measurement artifact — **not** clinical decision support
+  and **not** a claim of production SLA or real-time case surveillance.
 
 ## Dataset contents (in this repo)
 
