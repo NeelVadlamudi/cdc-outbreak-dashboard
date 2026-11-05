@@ -48,6 +48,7 @@ export const getForecast = (virus: string) => fetchAPI(`/forecast/${encodeURICom
 export const getStates = () => fetchAPI("/states");
 export const getSites = () => fetchAPI("/hospitalizations/sites");
 export const getHealth = () => fetchAPI("/health");
+export const getSources = () => fetchAPI("/sources");
 
 export const getWastewater = (params = "") => fetchAPI(`/wastewater?${params}`);
 export const getWastewaterLatest = (pathogen = "SARS-CoV-2") =>

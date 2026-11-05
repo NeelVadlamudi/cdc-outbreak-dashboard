@@ -18,7 +18,8 @@ import { getDashboardSummary, getAriActivity, getTestPositivity, getHospTrends, 
 import { STATE_ABBREV } from '../lib/states';
 
 const RISK_LEVELS = { 'Minimal': 0, 'Very Low': 1, 'Low': 2, 'Moderate': 3, 'High': 4, 'Very High': 5 };
-const RISK_COLORS = ['#059669', '#0891b2', '#3b82f6', '#d97706', '#dc2626', '#b91c1c'];
+/* Spa-calm sequential: sage → stone → soft amber → terracotta (never screaming red) */
+const RISK_COLORS = ['#4f7d6a', '#5a8a8c', '#7a8f86', '#c4924a', '#c47a5a', '#a86850'];
 const HEALTH_POLL_MS = 60_000;
 const DISCLAIMER =
   'Open source and free to use (MIT). For research, education, and situational awareness—not clinical decision-making or official CDC guidance.';
@@ -219,6 +220,8 @@ export default function Overview() {
             <h1 className="page-title">Overview</h1>
             <p className="page-subtitle">
               Built for clinicians, coordinators, and researchers who need this week’s CDC respiratory picture—fast.
+              {' '}<Link to="/ask">Ask with tool receipts</Link>
+              {' · '}<Link to="/forecasts?virus=COVID-NET">Outlook</Link>
             </p>
             <p className="page-disclaimer">{DISCLAIMER}</p>
           </div>
@@ -318,6 +321,70 @@ export default function Overview() {
           <p className="briefing-ask">
             <Link to="/ask">Ask a grounded question about this week →</Link>
           </p>
+        </div>
+      )}
+
+      {(summary?.sources?.chips || []).length > 0 && (
+        <div className="fade-in" style={{ marginBottom: 8 }}>
+          <div className="briefing-kicker" style={{ color: 'var(--text-muted)' }}>
+            Data plane · source + as_of
+          </div>
+          <div className="source-chips" aria-label="Surveillance data sources">
+            {summary.sources.chips.map((c) => (
+              <a
+                key={c.source_id}
+                className={`source-chip ${c.status === 'ok' ? 'ok' : c.status || ''}`}
+                href={c.homepage || undefined}
+                target={c.homepage ? '_blank' : undefined}
+                rel={c.homepage ? 'noopener noreferrer' : undefined}
+                title={c.license || undefined}
+              >
+                <strong>{c.title}</strong>
+                <span className="src-meta">
+                  {c.role} · {c.status || 'unknown'}
+                  {c.as_of ? ` · as_of ${c.as_of}` : ''}
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {((summary?.sources?.owid_weekly_deaths || []).length > 0
+        || (summary?.sources?.cdc_burden || []).length > 0) && (
+        <div className="context-panel fade-in" aria-label="Supplemental open-data context">
+          <h3>Supplemental context</h3>
+          <p>
+            CDC SODA remains the core plane. These open supplements add national burden ranges
+            and peer-country weekly death context — each with source, as_of, and license.
+            Missing chips mean that adapter failed soft, not that activity is zero.
+          </p>
+          {(summary.sources.owid_weekly_deaths || []).length > 0 && (
+            <div className="context-row" style={{ marginBottom: 8 }}>
+              {(summary.sources.owid_weekly_deaths || []).map((r) => (
+                <span key={`${r.geography}-${r.as_of}`}>
+                  <b>{r.geography}</b>
+                  {': '}
+                  {r.value != null ? Number(r.value).toLocaleString() : '—'}
+                  {' weekly deaths'}
+                  {r.as_of ? ` · ${r.as_of}` : ''}
+                </span>
+              ))}
+            </div>
+          )}
+          {(summary.sources.cdc_burden || []).length > 0 && (
+            <div className="context-row">
+              {(summary.sources.cdc_burden || []).map((r) => (
+                <span key={r.series_id}>
+                  <b>{r.label || r.series_id}</b>
+                  {': '}
+                  {r.value != null ? Number(r.value).toLocaleString() : '—'}
+                  {r.value_high != null ? `–${Number(r.value_high).toLocaleString()}` : ''}
+                  {r.as_of ? ` · as_of ${r.as_of}` : ''}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

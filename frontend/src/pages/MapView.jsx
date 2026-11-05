@@ -1,34 +1,41 @@
 import { useState, useEffect, useRef } from 'react';
 import Plot from 'react-plotly.js';
-import { Map as MapIcon, MapPin, Activity, Globe as GlobeIcon } from 'lucide-react';
+import { Map as MapIcon, MapPin, Activity, Globe as GlobeIcon, Link2 } from 'lucide-react';
 import Globe from 'react-globe.gl';
 import { getAriActivity, getAriHistory } from '../api';
 import { STATE_COORDS } from '../lib/states';
+import ChartEmpty from '../components/ChartEmpty';
+import { getParam, setParams } from '../lib/urlState';
 
 const RISK_LEVELS = { 'Minimal': 0, 'Very Low': 1, 'Low': 2, 'Moderate': 3, 'High': 4, 'Very High': 5 };
 // Matte Light Mode Aesthetic Colors for the points
-const RISK_COLORS = ['#1A7A5C', '#0E7490', '#3D6B66', '#B45309', '#C2410C', '#9F1239'];
+const RISK_COLORS = ['#4f7d6a', '#5a8a8c', '#7a8f86', '#c4924a', '#c47a5a', '#a86850'];
 const RISK_LABELS = ['Minimal', 'Very Low', 'Low', 'Moderate', 'High', 'Very High'];
 
 export default function MapView() {
   const globeRef = useRef();
   const [ariData, setAriData] = useState([]);
-  const [selectedState, setSelectedState] = useState(null);
+  const [selectedState, setSelectedState] = useState(() => getParam('state', '') || null);
   const [stateHistory, setStateHistory] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
   const [globeWidth, setGlobeWidth] = useState(800);
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await getAriActivity();
-        setAriData(res.data || []);
-      } catch (err) {
-        console.error('Failed to fetch map data:', err);
-      } finally {
-        setLoading(false);
-      }
+  const fetchData = async () => {
+    setLoading(true);
+    setLoadError(null);
+    try {
+      const res = await getAriActivity();
+      setAriData(res.data || []);
+    } catch (err) {
+      console.error('Failed to fetch map data:', err);
+      setLoadError(err instanceof Error ? err.message : 'Failed to load map');
+    } finally {
+      setLoading(false);
     }
+  };
+
+  useEffect(() => {
     fetchData();
 
     // Auto-resize the globe container
@@ -46,6 +53,7 @@ export default function MapView() {
   }, []);
 
   useEffect(() => {
+    setParams({ state: selectedState || '' });
     if (!selectedState) return;
     getAriHistory(selectedState).then(res => {
       setStateHistory(res.data || []);
@@ -72,6 +80,30 @@ export default function MapView() {
       <div className="loading-page">
         <div className="loading-spinner" />
         <div className="loading-page-text">Loading the state activity map…</div>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="page-container">
+        <ChartEmpty
+          title="Map temporarily unavailable"
+          detail={`${loadError} This is a service status note—not a disease alert.`}
+          onRetry={fetchData}
+        />
+      </div>
+    );
+  }
+
+  if (!ariData.length) {
+    return (
+      <div className="page-container">
+        <ChartEmpty
+          title="No ARI activity rows for this week"
+          detail="The API returned an empty activity table. That is a data gap—not proof that activity is zero."
+          onRetry={fetchData}
+        />
       </div>
     );
   }
@@ -115,10 +147,39 @@ export default function MapView() {
           <div>
             <h1 className="page-title">Map</h1>
             <p className="page-subtitle">
-              See respiratory illness activity by state. Click a state to view its recent history.
+              ARI activity by state (shareable <code>?state=</code>). Use the list below if you prefer keyboard navigation over the globe.
             </p>
           </div>
+          <button
+            type="button"
+            className="filter-btn"
+            onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => {})}
+          >
+            <Link2 size={14} /> Share view
+          </button>
         </div>
+      </div>
+
+      <div className="filter-bar fade-in">
+        <label htmlFor="map-state-select" style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+          State
+        </label>
+        <select
+          id="map-state-select"
+          className="filter-select"
+          value={selectedState || ''}
+          onChange={(e) => setSelectedState(e.target.value || null)}
+          aria-label="Select a state for ARI history"
+        >
+          <option value="">All states (globe)</option>
+          {ariData
+            .map((d) => d.geography)
+            .filter(Boolean)
+            .sort()
+            .map((name) => (
+              <option key={name} value={name}>{name}</option>
+            ))}
+        </select>
       </div>
 
       <div className="charts-grid fade-in">

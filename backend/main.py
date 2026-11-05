@@ -32,16 +32,29 @@ async def lifespan(app: FastAPI):
     # Initialize database
     init_database()
 
+    def _refresh_supplements():
+        try:
+            from backend.sources import refresh_all_supplements
+
+            refresh_all_supplements()
+        except Exception:
+            logger.exception("supplement source refresh failed (fail soft)")
+
     if INGEST_ON_STARTUP:
         # Run initial data ingestion
         await run_full_ingestion()
+        _refresh_supplements()
 
         # Schedule periodic refresh (every 60 minutes)
         scheduler.add_job(run_full_ingestion, "interval", minutes=60, id="cdc_refresh")
+        scheduler.add_job(_refresh_supplements, "interval", minutes=180, id="supplement_refresh")
         scheduler.start()
-        logger.info("Scheduled data refresh every 60 minutes")
+        logger.info("Scheduled data refresh every 60 minutes; supplements every 180 minutes")
     else:
-        logger.info("INGEST_ON_STARTUP is false; serving the database as is")
+        # Still try supplements once so Overview provenance chips have something to show
+        # when a live DuckDB was mounted without re-ingest.
+        _refresh_supplements()
+        logger.info("INGEST_ON_STARTUP is false; serving the database as is (supplements attempted once)")
 
     yield
 

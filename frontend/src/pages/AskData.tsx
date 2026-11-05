@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { MessageSquare, ArrowRight, Info } from "lucide-react";
+import { MessageSquare, ArrowRight, Info, Link2 } from "lucide-react";
 import { askAgent } from "../api";
 import type { AdaptedAskResponse } from "../agent/contract";
 import AgentAnswer from "../components/AgentAnswer";
+import { getParam, setParams } from "../lib/urlState";
 
 const SUGGESTED_QUESTIONS = [
   // Hospital / clinic ops
@@ -27,7 +28,9 @@ export default function AskData() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [shareHint, setShareHint] = useState<string | null>(null);
   const chatEndRef = useRef<HTMLDivElement | null>(null);
+  const bootstrapped = useRef(false);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -37,6 +40,7 @@ export default function AskData() {
     if (!question.trim()) return;
     const q = question.trim();
     setInput("");
+    setParams({ q });
     setMessages((prev) => [...prev, { role: "user", content: q }]);
     setLoading(true);
 
@@ -50,6 +54,27 @@ export default function AskData() {
     setLoading(false);
   };
 
+  useEffect(() => {
+    if (bootstrapped.current) return;
+    bootstrapped.current = true;
+    const q = getParam("q", "");
+    if (q) {
+      setInput(q);
+      void sendMessage(q);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- bootstrap once from URL
+  }, []);
+
+  const copyShareLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setShareHint("Link copied — includes your question in ?q=");
+    } catch {
+      setShareHint("Copy the address bar — ?q= is the shareable question");
+    }
+    window.setTimeout(() => setShareHint(null), 2500);
+  };
+
   return (
     <div className="page-container">
       <div className="page-header fade-in" style={{ marginBottom: 20 }}>
@@ -61,22 +86,27 @@ export default function AskData() {
               respiratory figures with tool receipts—not free-form chat.
             </p>
             <p className="page-disclaimer">
-              For research, education, and situational awareness—not clinical decision-making or official CDC guidance.
-              Numbers are epidemiology-week surveillance, not live case counts.
+              Open source and free to use (MIT). For research, education, and situational awareness—not clinical
+              decision-making or official CDC guidance. Numbers are epidemiology-week surveillance, not live case counts.
             </p>
           </div>
+          <button type="button" className="filter-btn" onClick={copyShareLink} title="Copy shareable link">
+            <Link2 size={14} /> Share view
+          </button>
         </div>
+        {shareHint ? <p className="page-disclaimer" role="status">{shareHint}</p> : null}
       </div>
 
       <div className="fade-in">
         <div className="card" style={{ display: "flex", flexDirection: "column", minHeight: 560, padding: 0 }}>
           <div style={{ flex: 1, overflowY: "auto", padding: 24 }}>
-            {messages.length === 0 && (
+            {messages.length === 0 && !loading && (
               <div className="empty-state">
                 <MessageSquare size={40} strokeWidth={1.5} color="#6b6b6b" style={{ margin: "0 auto 14px" }} />
                 <h3>Try a question about this week’s data</h3>
                 <p>
-                  You’ll see the answer, the data week it used, and (if you want) which sources it checked.
+                  You’ll see the answer, the data week it used, tool steps, latency, and (if available) token counts.
+                  Shareable links use <code>?q=</code>.
                 </p>
                 <div className="suggest-list">
                   {SUGGESTED_QUESTIONS.map((q) => (

@@ -361,6 +361,14 @@ async def get_dashboard_summary():
         positivity=positivity,
     )
 
+    context = None
+    try:
+        from backend.sources.registry import latest_context_for_overview
+
+        context = latest_context_for_overview()
+    except Exception as e:
+        logger.warning("multi-source context failed: %s", e)
+
     payload = {
         "risk_distribution": risk_data,
         "latest_dates": {
@@ -375,10 +383,28 @@ async def get_dashboard_summary():
         "wastewater_summary": ww_summary,
         "metrics": metrics,
         "briefing": briefing,
+        "sources": context,
     }
     if ww_error:
         payload["wastewater_error"] = ww_error
     return payload
+
+
+@router.get("/sources")
+async def get_sources():
+    """Multi-source registry + latest external series with provenance (fail soft)."""
+    try:
+        from backend.sources import list_sources
+
+        return list_sources()
+    except Exception as e:
+        detail = f"{type(e).__name__}: {e}" if str(e) else type(e).__name__
+        return {
+            "sources": [],
+            "series": [],
+            "note": "Source registry temporarily unavailable",
+            "error": detail,
+        }
 
 
 @router.get("/states")

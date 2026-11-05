@@ -12,7 +12,9 @@ export const FIELDS = {
   asOf: "as_of",
   elapsedS: "elapsed_s",
   model: "model",
+  promptVersion: "prompt_version",
   checker: "checker",
+  observability: "observability",
   call: {
     tool: "tool",
     inputs: "inputs",
@@ -44,6 +46,10 @@ export type AdaptedAskResponse = {
   asOf: string | null;
   elapsedMs: number | null;
   model: string | null;
+  promptVersion: string | null;
+  toolCallCount: number | null;
+  inputTokens: number | null;
+  outputTokens: number | null;
   staleTables: string[];
   toolCalls: AdaptedToolCall[];
 };
@@ -83,14 +89,22 @@ export function adaptAskResponse(raw: unknown): AdaptedAskResponse {
     ? (body[FIELDS.checker] as Record<string, unknown>)
     : null;
   const statusRaw = body[FIELDS.status];
+  const obs =
+    body[FIELDS.observability] && typeof body[FIELDS.observability] === "object"
+      ? (body[FIELDS.observability] as Record<string, unknown>)
+      : null;
   return {
     answer: typeof body[FIELDS.answer] === "string" ? (body[FIELDS.answer] as string) : "",
     status: (STATUSES as readonly string[]).includes(statusRaw as string)
       ? (statusRaw as AgentStatus)
       : "answered",
     asOf: str(body[FIELDS.asOf]),
-    elapsedMs: secToMs(body[FIELDS.elapsedS]),
+    elapsedMs: secToMs(body[FIELDS.elapsedS] ?? obs?.elapsed_s),
     model: str(body[FIELDS.model]),
+    promptVersion: str(body[FIELDS.promptVersion] ?? obs?.prompt_version),
+    toolCallCount: num(obs?.tool_call_count) ?? calls.length,
+    inputTokens: num(obs?.input_tokens),
+    outputTokens: num(obs?.output_tokens),
     staleTables: ck && Array.isArray(ck.stale_tables) ? (ck.stale_tables as string[]) : [],
     toolCalls: calls.map(adaptCall),
   };

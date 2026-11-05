@@ -1,89 +1,92 @@
 /* ================================================
    CDC Respiratory Virus Dashboard
-   Hermes-faithful chrome — electric blue + neon yellow
-   Elevated white panels for charts (clinician readability)
+   Spa-calm ocular comfort — sage mist, warm stone, seafoam
+   Soft panels for charts; severity via gentle amber→terracotta
    ================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
-/* ── CSS Variables ── */
+/* ── CSS Variables (spa calm) ── */
 :root {
-  /* Hermes surfaces */
-  --bg-primary: #0000f2;
-  --bg-secondary: #0000d9;
-  --bg-bright: #1a1aff;
-  --bg-card: #ffffff;
-  --bg-card-hover: #f5f5f5;
-  --bg-sidebar: #0000d9;
-  --bg-elevated: #f5f5f5;
-  --bg-glass: rgba(255, 255, 255, 0.06);
+  /* Mist / sage atmosphere (not pure white or electric blue) */
+  --bg-primary: #e8eee9;
+  --bg-secondary: #dce6df;
+  --bg-bright: #f3f6f2;
+  --bg-card: #f7f5f0;
+  --bg-card-hover: #efece5;
+  --bg-sidebar: #2f3d38;
+  --bg-elevated: #efece6;
+  --bg-glass: rgba(247, 245, 240, 0.08);
+  --bg-atmosphere: linear-gradient(165deg, #e4ebe6 0%, #ebe6df 42%, #e7efea 100%);
 
-  /* Text — off-white on blue; dark on white panels via .card */
-  --text-primary: #f5f5f5;
-  --text-secondary: rgba(245, 245, 245, 0.78);
-  --text-muted: rgba(245, 245, 245, 0.55);
-  --text-accent: #edff45;
-  --text-on-panel: #121212;
-  --text-on-panel-secondary: #3a3a3a;
-  --text-on-panel-muted: #6b6b6b;
+  /* Text — warm charcoal on mist (AA); sidebar uses on-chrome */
+  --text-primary: #2c3330;
+  --text-secondary: #4a524e;
+  --text-muted: #6b746e;
+  --text-accent: #3d6b5c;
+  --text-on-panel: #2c3330;
+  --text-on-panel-secondary: #4a524e;
+  --text-on-panel-muted: #6b746e;
+  --text-on-chrome: #f2f0eb;
+  --text-on-chrome-secondary: rgba(242, 240, 235, 0.78);
+  --text-on-chrome-muted: rgba(242, 240, 235, 0.55);
 
-  /* Status — semantic green→red (not Hermes yellow) */
-  --color-safe: #059669;
-  --color-safe-dim: rgba(5, 150, 105, 0.12);
-  --color-low: #0891b2;
-  --color-low-dim: rgba(8, 145, 178, 0.12);
-  --color-moderate: #d97706;
-  --color-moderate-dim: rgba(217, 119, 6, 0.12);
-  --color-high: #dc2626;
-  --color-high-dim: rgba(220, 38, 38, 0.12);
-  --color-very-high: #9f1239;
-  --color-very-high-dim: rgba(159, 18, 57, 0.12);
+  /* Status — muted sequential; high = soft terracotta, never screaming red */
+  --color-safe: #4f7d6a;
+  --color-safe-dim: rgba(79, 125, 106, 0.14);
+  --color-low: #5a8a8c;
+  --color-low-dim: rgba(90, 138, 140, 0.14);
+  --color-moderate: #c4924a;
+  --color-moderate-dim: rgba(196, 146, 74, 0.14);
+  --color-high: #c47a5a;
+  --color-high-dim: rgba(196, 122, 90, 0.14);
+  --color-very-high: #a86850;
+  --color-very-high-dim: rgba(168, 104, 80, 0.14);
 
-  /* Virus colors — distinct on white panels */
-  --color-covid: #0000d9;
-  --color-flu: #d97706;
-  --color-rsv: #059669;
+  /* Virus colors — soft distinct on parchment panels */
+  --color-covid: #4a6b78;
+  --color-flu: #b8894a;
+  --color-rsv: #4f7d6a;
 
-  /* Accents — neon yellow CTAs (3–5% of UI) */
-  --accent-primary: #edff45;
-  --accent-primary-glow: rgba(237, 255, 69, 0.18);
-  --accent-secondary: #d4e83a;
-  --accent-cta: #edff45;
-  --accent-on-cta: #0000f2;
-  --accent-gradient: linear-gradient(160deg, #edff45, #d4e83a);
-  --accent-gradient-vivid: linear-gradient(160deg, #edff45, #c8dc30);
+  /* Accents — quiet seafoam / stone (no neon) */
+  --accent-primary: #6f9e8c;
+  --accent-primary-glow: rgba(111, 158, 140, 0.2);
+  --accent-secondary: #8fb5a6;
+  --accent-cta: #5f8f7c;
+  --accent-on-cta: #f7f5f0;
+  --accent-gradient: linear-gradient(160deg, #7eab9a, #6f9e8c);
+  --accent-gradient-vivid: linear-gradient(160deg, #8fb5a6, #5f8f7c);
 
-  /* Borders & Shadows — sharp, no glow */
-  --border-subtle: rgba(255, 255, 255, 0.1);
-  --border-light: rgba(255, 255, 255, 0.18);
-  --border-accent: rgba(237, 255, 69, 0.45);
-  --border-panel: rgba(18, 18, 18, 0.08);
+  /* Borders & Shadows — soft lifts, no glow spam */
+  --border-subtle: rgba(242, 240, 235, 0.12);
+  --border-light: rgba(242, 240, 235, 0.2);
+  --border-accent: rgba(111, 158, 140, 0.45);
+  --border-panel: rgba(44, 51, 48, 0.08);
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
+  --shadow-sm: 0 1px 2px rgba(44, 51, 48, 0.05);
+  --shadow-md: 0 4px 14px rgba(44, 51, 48, 0.07);
+  --shadow-lg: 0 10px 28px rgba(44, 51, 48, 0.09);
   --shadow-glow: none;
   --shadow-glow-accent: none;
 
-  --glass-bg: rgba(0, 0, 217, 0.92);
-  --glass-border: rgba(255, 255, 255, 0.12);
-  --glass-blur: blur(12px);
+  --glass-bg: rgba(47, 61, 56, 0.94);
+  --glass-border: rgba(242, 240, 235, 0.12);
+  --glass-blur: blur(14px);
 
-  /* Radius — sharp Hermes geometry */
-  --radius-sm: 4px;
-  --radius-md: 4px;
-  --radius-lg: 4px;
-  --radius-xl: 8px;
-  --radius-2xl: 8px;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 14px;
+  --radius-2xl: 18px;
   --radius-full: 9999px;
 
   --font-sans: 'Space Grotesk', 'Segoe UI', sans-serif;
   --font-display: 'Fraunces', 'Georgia', serif;
   --font-mono: 'Courier Prime', ui-monospace, monospace;
 
-  --transition-fast: 150ms ease;
-  --transition-base: 150ms ease;
-  --transition-smooth: 150ms ease;
+  --transition-fast: 160ms ease;
+  --transition-base: 180ms ease;
+  --transition-smooth: 220ms ease;
 }
 
 /* ── Reset & Base ── */
@@ -101,8 +104,9 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background: var(--bg-primary);
-  color: var(--text-primary);
+  background: var(--bg-atmosphere);
+  background-color: var(--bg-primary);
+  color: var(--text-on-panel);
   line-height: 1.55;
   overflow-x: hidden;
   min-height: 100vh;
@@ -139,7 +143,8 @@ body {
   min-height: 100vh;
   position: relative;
   transition: padding 0.15s ease, margin-left 0.15s ease;
-  background: var(--bg-primary);
+  background: transparent;
+  color: var(--text-on-panel);
 }
 
 /* ── Sidebar — thin Hermes chrome on blue ── */
@@ -209,14 +214,14 @@ body {
   font-family: var(--font-display);
   font-size: 15px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-on-chrome);
   letter-spacing: -0.02em;
   line-height: 1.25;
 }
 
 .sidebar-logo-subtitle {
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--text-on-chrome-muted);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   font-weight: 500;
@@ -232,7 +237,7 @@ body {
 .nav-section-label {
   font-size: 10px;
   font-weight: 600;
-  color: var(--text-muted);
+  color: var(--text-on-chrome-muted);
   letter-spacing: 0.05em;
   text-transform: uppercase;
   padding: 14px 12px 6px;
@@ -245,7 +250,7 @@ body {
   gap: 10px;
   padding: 9px 12px;
   border-radius: var(--radius-sm);
-  color: var(--text-secondary);
+  color: var(--text-on-chrome-secondary);
   text-decoration: none;
   font-size: 13px;
   font-weight: 500;
@@ -256,15 +261,15 @@ body {
 }
 
 .nav-item:hover {
-  background: var(--bg-glass);
-  color: var(--text-primary);
+  background: rgba(247, 245, 240, 0.08);
+  color: var(--text-on-chrome);
 }
 
 .nav-item.active {
-  background: var(--accent-primary-glow);
-  color: var(--accent-cta);
+  background: rgba(111, 158, 140, 0.22);
+  color: #d5e8df;
   font-weight: 600;
-  border-left-color: var(--accent-cta);
+  border-left-color: var(--accent-secondary);
 }
 
 .nav-item-icon {
@@ -287,13 +292,13 @@ body {
   border-bottom: 1px solid var(--border-subtle);
   align-items: center;
   justify-content: space-between;
-  color: var(--text-primary);
+  color: var(--text-on-chrome);
 }
 
 .mobile-menu-btn {
   background: none;
   border: none;
-  color: var(--text-primary);
+  color: var(--text-on-chrome);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -312,7 +317,7 @@ body {
   align-items: center;
   gap: 8px;
   font-size: 12px;
-  color: var(--text-muted);
+  color: var(--text-on-chrome-muted);
   font-weight: 500;
 }
 
@@ -385,9 +390,9 @@ body {
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  border: 1px solid var(--border-subtle);
-  background: var(--bg-glass);
-  color: var(--text-primary);
+  border: 1px solid var(--border-panel);
+  background: var(--bg-elevated);
+  color: var(--text-on-panel-secondary);
   box-shadow: none;
 }
 
@@ -501,7 +506,7 @@ body {
   border-radius: var(--radius-lg) 0 0 var(--radius-lg);
 }
 
-.stat-card.accent-indigo::before { background: var(--bg-primary); }
+.stat-card.accent-indigo::before { background: var(--color-covid); }
 .stat-card.accent-emerald::before { background: var(--color-safe); }
 .stat-card.accent-amber::before { background: var(--color-moderate); }
 .stat-card.accent-rose::before { background: var(--color-high); }
@@ -520,7 +525,7 @@ body {
   margin-bottom: 14px;
 }
 
-.stat-card-icon.indigo { background: rgba(0, 0, 242, 0.1); color: var(--bg-primary); }
+.stat-card-icon.indigo { background: rgba(74, 107, 120, 0.12); color: var(--color-covid); }
 .stat-card-icon.emerald { background: var(--color-safe-dim); color: var(--color-safe); }
 .stat-card-icon.amber { background: var(--color-moderate-dim); color: var(--color-moderate); }
 .stat-card-icon.rose { background: var(--color-high-dim); color: var(--color-high); }
@@ -742,20 +747,20 @@ body {
   color: var(--text-on-panel);
 }
 
-.alert-banner.warning { background: #fffbeb; border: 1px solid rgba(217, 119, 6, 0.25); color: #92400e; }
-.alert-banner.danger { background: #fef2f2; border: 1px solid rgba(220, 38, 38, 0.22); color: #9a3412; }
-.alert-banner.info { background: var(--bg-card); border: 1px solid rgba(0, 0, 242, 0.2); color: var(--bg-secondary); }
-/* Ops / engineering status — calm slate, never clinical red */
+.alert-banner.warning { background: #f6efe4; border: 1px solid rgba(196, 146, 74, 0.28); color: #7a5a2e; }
+.alert-banner.danger { background: #f5ebe6; border: 1px solid rgba(196, 122, 90, 0.28); color: #7a4a38; }
+.alert-banner.info { background: var(--bg-card); border: 1px solid rgba(111, 158, 140, 0.28); color: #3d554c; }
+/* Ops / engineering status — calm stone, never clinical red */
 .alert-banner.ops {
-  background: #f8fafc;
-  border: 1px solid rgba(71, 85, 105, 0.22);
-  color: #334155;
+  background: #f1f0eb;
+  border: 1px solid rgba(107, 116, 110, 0.22);
+  color: #4a524e;
 }
-/* CDC-week situation facts — informational blue, not emergency */
+/* CDC-week situation facts — soft seafoam, not emergency */
 .alert-banner.situation {
-  background: #f5f7ff;
-  border: 1px solid rgba(0, 0, 242, 0.18);
-  color: #1e3a5f;
+  background: #eef3f0;
+  border: 1px solid rgba(111, 158, 140, 0.28);
+  color: #3d554c;
 }
 
 .retry-btn {
@@ -815,8 +820,8 @@ body {
 .filter-btn {
   padding: 8px 14px;
   border-radius: var(--radius-sm);
-  border: 1px solid var(--border-light);
-  background: var(--bg-glass);
+  border: 1px solid var(--border-panel);
+  background: var(--bg-card);
   color: var(--text-secondary);
   font-size: 12px;
   font-weight: 600;
@@ -831,9 +836,9 @@ body {
 }
 
 .filter-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--bg-elevated);
   color: var(--text-primary);
-  border-color: rgba(255, 255, 255, 0.3);
+  border-color: rgba(111, 158, 140, 0.4);
 }
 
 .filter-btn.active {
@@ -978,10 +983,10 @@ body {
 }
 
 .chat-message.user .message-bubble {
-  background: var(--bg-primary);
-  color: var(--text-primary);
+  background: var(--accent-cta);
+  color: var(--accent-on-cta);
   margin-left: auto;
-  border-bottom-right-radius: 2px;
+  border-bottom-right-radius: 6px;
 }
 
 .chat-message.assistant .message-bubble {
@@ -1020,8 +1025,8 @@ body {
 }
 
 .chat-message.assistant .chat-avatar {
-  background: rgba(0, 0, 242, 0.08);
-  color: var(--bg-primary);
+  background: rgba(111, 158, 140, 0.14);
+  color: var(--accent-cta);
   border: none;
 }
 
@@ -1216,8 +1221,80 @@ body {
   --text-secondary: var(--text-on-panel-secondary);
   --text-muted: var(--text-on-panel-muted);
   --border-subtle: var(--border-panel);
-  --bg-elevated: #f5f5f5;
-  --accent-primary: #0000f2;
-  --accent-primary-glow: rgba(0, 0, 242, 0.1);
-  --accent-secondary: #0000d9;
+  --bg-elevated: #efece6;
+  --accent-primary: #5f8f7c;
+  --accent-primary-glow: rgba(111, 158, 140, 0.16);
+  --accent-secondary: #4a6b78;
+}
+
+/* Provenance chips — multi-source plane */
+.source-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 16px;
+}
+.source-chip {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-panel);
+  background: var(--bg-card);
+  color: var(--text-on-panel-secondary);
+  font-size: 12px;
+  line-height: 1.35;
+  max-width: 280px;
+  text-decoration: none;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+.source-chip:hover {
+  border-color: rgba(111, 158, 140, 0.45);
+  background: var(--bg-elevated);
+}
+.source-chip strong {
+  color: var(--text-on-panel);
+  font-weight: 600;
+  font-size: 12px;
+}
+.source-chip .src-meta {
+  color: var(--text-on-panel-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+.source-chip.ok { border-color: rgba(79, 125, 106, 0.28); }
+.source-chip.unavailable { opacity: 0.72; }
+
+.context-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  color: var(--text-on-panel);
+  box-shadow: var(--shadow-sm);
+}
+.context-panel h3 {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+.context-panel p {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: var(--text-on-panel-secondary);
+  line-height: 1.45;
+}
+.context-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  font-size: 13px;
+  color: var(--text-on-panel-secondary);
+}
+.context-row span b {
+  color: var(--text-on-panel);
+  font-weight: 600;
 }

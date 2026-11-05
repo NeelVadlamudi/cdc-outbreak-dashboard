@@ -1,33 +1,58 @@
 import { useState, useEffect } from 'react';
 import Plot from 'react-plotly.js';
-import { Bot, Crosshair, Calendar, BrainCircuit, Activity, LineChart, AlertTriangle } from 'lucide-react';
+import { Crosshair, Calendar, BrainCircuit, Activity, LineChart, AlertTriangle, Link2 } from 'lucide-react';
 import { getForecast } from '../api';
+import ChartEmpty from '../components/ChartEmpty';
+import { getParam, setParams } from '../lib/urlState';
 
 const VIRUSES = [
   { key: 'COVID-NET', label: 'COVID-19', color: '#0000d9', icon: <Activity size={16} /> },
   { key: 'FluSurv-NET', label: 'Influenza', color: '#B45309', icon: <Activity size={16} /> },
   { key: 'RSV-NET', label: 'RSV', color: '#1A7A5C', icon: <Activity size={16} /> },
 ];
+const VIRUS_KEYS = new Set(VIRUSES.map((v) => v.key));
 
 function underperforms(model) {
   return Boolean(model?.underperforms_baseline || (model?.backtest?.lstm?.underperforms_baseline));
 }
 
+function initialVirus() {
+  const fromUrl = getParam('virus', 'COVID-NET');
+  return VIRUS_KEYS.has(fromUrl) ? fromUrl : 'COVID-NET';
+}
+
 export default function Forecasts() {
-  const [selectedVirus, setSelectedVirus] = useState('COVID-NET');
+  const [selectedVirus, setSelectedVirus] = useState(initialVirus);
   const [forecast, setForecast] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
 
   const selectVirus = (key) => {
     setLoading(true);
+    setLoadError(null);
     setSelectedVirus(key);
+    setParams({ virus: key });
+  };
+
+  const load = () => {
+    setLoading(true);
+    setLoadError(null);
+    getForecast(selectedVirus)
+      .then((res) => {
+        setForecast(res);
+        setLoadError(null);
+      })
+      .catch((err) => {
+        console.error(err);
+        setForecast(null);
+        setLoadError(err instanceof Error ? err.message : 'Failed to load outlook');
+      })
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {
-    getForecast(selectedVirus)
-      .then(res => setForecast(res))
-      .catch(console.error)
-      .finally(() => setLoading(false));
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedVirus]);
 
   const virusInfo = VIRUSES.find(v => v.key === selectedVirus);
@@ -55,8 +80,19 @@ export default function Forecasts() {
             <h1 className="page-title">Outlook</h1>
             <p className="page-subtitle">
               A four-week look ahead based on last week’s hospitalization rate. Useful for planning — not a clinical diagnosis.
+              Shareable via <code>?virus=</code>.
             </p>
           </div>
+          <button
+            type="button"
+            className="filter-btn"
+            onClick={() => {
+              setParams({ virus: selectedVirus });
+              navigator.clipboard?.writeText(window.location.href).catch(() => {});
+            }}
+          >
+            <Link2 size={14} /> Share view
+          </button>
         </div>
       </div>
 
@@ -77,6 +113,12 @@ export default function Forecasts() {
           <div className="loading-spinner" />
           <div className="loading-page-text">Loading the {virusInfo?.label} outlook…</div>
         </div>
+      ) : loadError ? (
+        <ChartEmpty
+          title="Outlook temporarily unavailable"
+          detail={`${loadError} This is a service status note—not a disease alert.`}
+          onRetry={load}
+        />
       ) : forecast?.status === 'success' ? (
         <>
           {(forecast.note || forecast.backtest?.lstm?.note) && (
@@ -223,13 +265,11 @@ export default function Forecasts() {
           </div>
         </>
       ) : (
-        <div className="card empty-state" style={{ background: 'var(--bg-elevated)' }}>
-          <Bot size={48} strokeWidth={1.5} color="#6b6b6b" style={{ margin: '0 auto 16px' }} />
-          <h3>Outlook not available</h3>
-          <p>
-            {forecast?.detail || 'Hospitalization data for this virus network is not available right now.'}
-          </p>
-        </div>
+        <ChartEmpty
+          title="Outlook not available for this selection"
+          detail={forecast?.detail || 'Hospitalization data for this virus network is not available right now. This is a data gap—not a clinical all-clear.'}
+          onRetry={load}
+        />
       )}
     </div>
   );
