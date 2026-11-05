@@ -57,15 +57,13 @@ Two lessons the nightlies forced into the product:
 | Release tag **`cdc-data-latest`** asset `cdc_surveillance.duckdb` | Fresh CDC tables for the live API (Actions also keeps a `cdc-duckdb` workflow artifact) |
 | `evals/snapshot.duckdb` | **Frozen** for reproducible 60-q evals — do not overwrite with live pulls |
 
-`scripts/fetch_live_db.py` downloads `CDC_DB_URL` or falls back to the snapshot. See `render.yaml`.
+`scripts/fetch_live_db.py` downloads `CDC_DB_URL` (or, on Render, the public `cdc-data-latest` release by default) and falls back to the snapshot if the download fails. See `render.yaml`.
 
-**One-time Render setup:** set `CDC_DB_URL` in the Render dashboard to the release asset URL after the first successful nightly upload, for example:
+After deploy, `/api/health` should show `data_plane: "live_release"` and a current `as_of`. If an older Render service still has a blank `CDC_DB_URL` override that blocks the blueprint value, clear it or set:
 
 ```text
 https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/releases/download/cdc-data-latest/cdc_surveillance.duckdb
 ```
-
-Until that env var is set (or if the download fails), the API serves the frozen snapshot and health still reports the loaded `as_of`.
 
 ## Running locally
 
