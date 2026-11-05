@@ -1,21 +1,16 @@
 #!/usr/bin/env python3
 """Download the twice-daily-published DuckDB for the live API.
 
-Prefers CDC_DB_URL (direct HTTPS). Falls back to the frozen
-evals/snapshot.duckdb so local/Render boot never hard-fails when the URL is
-unset or the download fails (keeps last good dest file only if you remount;
-on free Render /tmp is wiped on restart—then snapshot is used).
+Prefers CDC_DB_URL (direct HTTPS). On Render (RENDER=true), defaults to the
+public cdc-data-latest release asset when CDC_DB_URL is unset. Falls back to
+frozen evals/snapshot.duckdb if the download fails (local/dev keeps snapshot
+when unset so evals stay reproducible).
 
 Usage (Render startCommand):
   python scripts/fetch_live_db.py --dest /tmp/cdc_surveillance.duckdb && \\
     uvicorn backend.main:app --host 0.0.0.0 --port $PORT
 
-Nightly workflow uploads the refreshed DB to GitHub Release tag cdc-data-latest
-(and as Actions artifact cdc-duckdb). Set CDC_DB_URL on Render once, e.g.:
-
-  https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/releases/download/cdc-data-latest/cdc_surveillance.duckdb
-
-evals/snapshot.duckdb stays frozen for agent evals only.
+Nightly workflow uploads the refreshed DB to GitHub Release tag cdc-data-latest.
 """
 
 from __future__ import annotations
@@ -30,6 +25,25 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SNAPSHOT = ROOT / "evals" / "snapshot.duckdb"
+DEFAULT_RELEASE_URL = (
+    "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/releases/"
+    "download/cdc-data-latest/cdc_surveillance.duckdb"
+)
+
+
+def resolve_url(cli_url: str | None = None) -> str:
+    """Prefer explicit CDC_DB_URL; on Render default to the public release asset.
+
+    Local/dev keeps snapshot fallback when unset so evals stay reproducible.
+    Render sets RENDER=true — that is the signal to pull live data without a
+    manual dashboard env step.
+    """
+    explicit = (cli_url if cli_url is not None else os.environ.get("CDC_DB_URL", "")).strip()
+    if explicit:
+        return explicit
+    if os.environ.get("RENDER", "").lower() in {"true", "1"}:
+        return DEFAULT_RELEASE_URL
+    return ""
 
 
 def download(url: str, dest: Path, timeout: int = 120) -> None:
@@ -62,19 +76,20 @@ def write_marker(dest: Path, *, source: str, url: str | None = None, error: str 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--dest", type=Path, default=Path(os.environ.get("CDC_DB_PATH", "/tmp/cdc_surveillance.duckdb")))
-    ap.add_argument("--url", default=os.environ.get("CDC_DB_URL", "").strip())
+    ap.add_argument("--url", default=None, help="Override CDC_DB_URL / Render release default")
     ap.add_argument("--snapshot", type=Path, default=SNAPSHOT)
     ap.add_argument("--require-url", action="store_true",
-                    help="Fail if CDC_DB_URL is unset (default: fall back to snapshot).")
+                    help="Fail if no live URL resolves (default: fall back to snapshot).")
     args = ap.parse_args()
+    url = resolve_url(args.url)
 
     fetch_error: str | None = None
-    if args.url:
+    if url:
         try:
-            print(f"downloading live DuckDB from {args.url} → {args.dest}")
-            download(args.url, args.dest)
+            print(f"downloading live DuckDB from {url} → {args.dest}")
+            download(url, args.dest)
             print(f"ok: {args.dest.stat().st_size} bytes")
-            write_marker(args.dest, source="url", url=args.url)
+            write_marker(args.dest, source="url", url=url)
             return 0
         except (urllib.error.URLError, TimeoutError, OSError) as e:
             print(f"download failed: {e}", file=sys.stderr)
@@ -83,8 +98,8 @@ def main() -> int:
             print("falling back to frozen snapshot", file=sys.stderr)
             fetch_error = str(e)
 
-    if args.require_url and not args.url:
-        print("CDC_DB_URL is required", file=sys.stderr)
+    if args.require_url and not url:
+        print("CDC_DB_URL is required (or RENDER=true with public release default)", file=sys.stderr)
         return 1
 
     if not args.snapshot.is_file():
@@ -96,8 +111,8 @@ def main() -> int:
     write_marker(
         args.dest,
         source="snapshot",
-        url=args.url or None,
-        error=fetch_error or ("CDC_DB_URL unset" if not args.url else None),
+        url=url or None,
+        error=fetch_error or ("CDC_DB_URL unset" if not url else None),
     )
     return 0
 

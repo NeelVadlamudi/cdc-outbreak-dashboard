@@ -26,10 +26,10 @@ services:
         value: 3.12.15
       - key: CDC_DB_PATH
         value: /tmp/cdc_surveillance.duckdb
-      # Set once in the Render dashboard to the cdc-data-latest asset URL.
-      # Until then the fetch script copies evals/snapshot.duckdb.
+      # Public release asset (not a secret). Blueprint sync sets this so free-tier
+      # boots pull the twice-daily DuckDB without a manual dashboard step.
       - key: CDC_DB_URL
-        sync: false
+        value: https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/releases/download/cdc-data-latest/cdc_surveillance.duckdb
       - key: INGEST_ON_STARTUP
         value: "false"
       - key: AGENT_MODEL

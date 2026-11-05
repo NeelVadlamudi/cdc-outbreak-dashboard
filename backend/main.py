@@ -102,8 +102,10 @@ def _data_plane_meta() -> dict:
     from backend import config
 
     url = (os.environ.get("CDC_DB_URL") or "").strip()
+    on_render = os.environ.get("RENDER", "").lower() in {"true", "1"}
     meta = {
-        "cdc_db_url_configured": bool(url),
+        # True when env is set OR Render will use the public release default.
+        "cdc_db_url_configured": bool(url) or on_render,
         "data_plane": "unknown",
         "data_plane_detail": None,
     }
@@ -114,13 +116,14 @@ def _data_plane_meta() -> dict:
             source = payload.get("source")
             if source == "url":
                 meta["data_plane"] = "live_release"
+                meta["cdc_db_url_configured"] = True
             elif source == "snapshot":
                 meta["data_plane"] = "snapshot_fallback"
             meta["data_plane_detail"] = payload.get("error") or payload.get("fetched_at")
             meta["data_plane_fetched_at"] = payload.get("fetched_at")
         except (OSError, json.JSONDecodeError):
             pass
-    elif not url:
+    elif not url and not on_render:
         # Local/dev without fetch script: typically the frozen snapshot path.
         meta["data_plane"] = "snapshot_fallback"
         meta["data_plane_detail"] = "CDC_DB_URL unset; no fetch marker"
