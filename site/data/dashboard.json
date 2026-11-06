@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-06T01:35:39Z",
-  "as_of": "2026-10-24",
+  "generated_at": "2026-11-06T16:48:30Z",
+  "as_of": "2026-10-31",
   "metrics": [
     {
       "id": "positivity_covid19",
@@ -47,13 +47,13 @@
     {
       "id": "hosp_combined",
       "label": "Combined hospitalizations (Combined)",
-      "value": 2.2,
+      "value": 2.5,
       "unit": "per 100,000 per week",
       "decimals": 1,
       "headline": "Combined hospitalizations (Combined)",
-      "plain": "2.2 hospitalizations per 100,000 people this week",
-      "insight": "2.2 hospitalizations per 100,000 people this week",
-      "week_ending": "2026-10-24",
+      "plain": "2.5 hospitalizations per 100,000 people this week",
+      "insight": "2.5 hospitalizations per 100,000 people this week",
+      "week_ending": "2026-10-31",
       "source_table": "hospitalization_rates"
     },
     {
@@ -65,19 +65,19 @@
       "headline": "COVID-19 hospitalizations (COVID-NET)",
       "plain": "0.8 hospitalizations per 100,000 people this week",
       "insight": "0.8 hospitalizations per 100,000 people this week",
-      "week_ending": "2026-10-24",
+      "week_ending": "2026-10-31",
       "source_table": "hospitalization_rates"
     },
     {
       "id": "hosp_flusurvnet",
       "label": "Influenza hospitalizations (FluSurv-NET)",
-      "value": 1.3,
+      "value": 1.6,
       "unit": "per 100,000 per week",
       "decimals": 1,
       "headline": "Influenza hospitalizations (FluSurv-NET)",
-      "plain": "1.3 hospitalizations per 100,000 people this week",
-      "insight": "1.3 hospitalizations per 100,000 people this week",
-      "week_ending": "2026-10-24",
+      "plain": "1.6 hospitalizations per 100,000 people this week",
+      "insight": "1.6 hospitalizations per 100,000 people this week",
+      "week_ending": "2026-10-31",
       "source_table": "hospitalization_rates"
     },
     {
@@ -89,7 +89,7 @@
       "headline": "RSV hospitalizations (RSV-NET)",
       "plain": "0.1 hospitalizations per 100,000 people this week",
       "insight": "0.1 hospitalizations per 100,000 people this week",
-      "week_ending": "2026-10-24",
+      "week_ending": "2026-10-31",
       "source_table": "hospitalization_rates"
     },
     {
