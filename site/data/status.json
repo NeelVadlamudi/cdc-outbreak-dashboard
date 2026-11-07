@@ -1,23 +1,58 @@
 {
-  "generated_at": "2026-11-06T16:48:30Z",
+  "generated_at": "2026-11-07T01:00:38Z",
   "run": {
     "result": "success",
-    "started_at": "2026-11-06T16:48:02Z",
-    "finished_at": "2026-11-06T16:48:30Z",
-    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/42255561920",
-    "commit": "81d01b350a65e8ae74f3fa8b7a4214f11ac71e1e",
+    "started_at": "2026-11-07T00:58:14Z",
+    "finished_at": "2026-11-07T01:00:38Z",
+    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/42321294324",
+    "commit": "0aa5d7a1630be8d5f966c67a75d4b7cb3cbcbd4e",
     "steps": {
       "refresh": "success",
       "release": "success",
-      "backtest": "skipped",
+      "backtest": "success",
       "dashboard": "success",
-      "eval": "skipped"
+      "eval": "success"
     }
   },
-  "eval": null,
+  "eval": {
+    "model": "gemini-3.5-flash-lite",
+    "date": "2026-11-07",
+    "question_set": "cdc-q60-v1",
+    "summary": {
+      "question_set": "cdc-q60-v1",
+      "questions": 60,
+      "numeric_accuracy": 89.6,
+      "tool_choice": 100.0,
+      "correct_refusals": 100.0,
+      "false_refusals": 10.4,
+      "grounded_answers": 100.0,
+      "median_s": 1.5,
+      "p95_s": 1.95,
+      "median_input_tokens": null,
+      "median_output_tokens": null
+    },
+    "baseline": {
+      "date": "2026-10-20",
+      "model": "gemini-3.5-flash-lite",
+      "summary": {
+        "question_set": "cdc-q60-v1",
+        "questions": 60,
+        "numeric_accuracy": 91.7,
+        "tool_choice": 100.0,
+        "correct_refusals": 75.0,
+        "false_refusals": 6.2,
+        "grounded_answers": 100.0,
+        "median_s": 1.8,
+        "p95_s": 2.48,
+        "median_input_tokens": null,
+        "median_output_tokens": null
+      }
+    },
+    "drops": []
+  },
   "backtest": {
-    "run_at": "2026-11-06T01:35:38Z",
-    "data_through": "2026-10-24",
+    "run_at": "2026-11-07T00:59:04Z",
+    "data_through": "2026-10-31",
     "notes": [
       "LSTM on COVID-NET does not beat last week's value at any horizon.",
       "XGBoost on COVID-NET does not beat last week's value at any horizon.",
@@ -36,8 +71,8 @@
         "table": "ari_activity",
         "dataset": null,
         "legacy": null,
-        "latest_week": "2026-10-24",
-        "age_days": 13,
+        "latest_week": "2026-10-31",
+        "age_days": 7,
         "stale": false
       },
       {
@@ -45,15 +80,15 @@
         "dataset": null,
         "legacy": null,
         "latest_week": "2026-10-31",
-        "age_days": 6,
+        "age_days": 7,
         "stale": false
       },
       {
         "table": "test_positivity",
         "dataset": null,
         "legacy": null,
-        "latest_week": "2026-10-24",
-        "age_days": 13,
+        "latest_week": "2026-10-31",
+        "age_days": 7,
         "stale": false
       },
       {
@@ -61,7 +96,7 @@
         "dataset": "atcp-73re",
         "legacy": false,
         "latest_week": "2026-10-31",
-        "age_days": 6,
+        "age_days": 7,
         "stale": false
       },
       {
