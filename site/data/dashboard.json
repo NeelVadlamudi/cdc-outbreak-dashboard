@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-06T16:48:30Z",
+  "generated_at": "2026-11-07T00:59:05Z",
   "as_of": "2026-10-31",
   "metrics": [
     {
@@ -11,38 +11,38 @@
       "headline": "COVID-19 positivity",
       "unit": "%",
       "plain": "about 1 in 29 tests positive",
-      "insight": "about 1 in 29 tests positive \u00b7 down from 3.8% last week",
-      "week_ending": "2026-10-24",
+      "insight": "about 1 in 29 tests positive \u00b7 unchanged from last week",
+      "week_ending": "2026-10-31",
       "source_table": "test_positivity",
-      "change_text": "3.8% the week ending 2026-10-17"
+      "change_text": "3.5% the week ending 2026-10-24"
     },
     {
       "id": "positivity_influenza",
       "label": "Influenza test positivity",
-      "value": 0.076,
+      "value": 0.091,
       "format": "pct",
       "decimals": 1,
       "headline": "Influenza positivity",
       "unit": "%",
-      "plain": "about 1 in 13 tests positive",
-      "insight": "about 1 in 13 tests positive \u00b7 up from 6% last week",
-      "week_ending": "2026-10-24",
+      "plain": "about 1 in 11 tests positive",
+      "insight": "about 1 in 11 tests positive \u00b7 up from 7.7% last week",
+      "week_ending": "2026-10-31",
       "source_table": "test_positivity",
-      "change_text": "6% the week ending 2026-10-17"
+      "change_text": "7.7% the week ending 2026-10-24"
     },
     {
       "id": "positivity_rsv",
       "label": "RSV test positivity",
-      "value": 0.009,
+      "value": 0.018,
       "format": "pct",
       "decimals": 1,
       "headline": "RSV positivity",
       "unit": "%",
-      "plain": "about 1 in 111 tests positive",
-      "insight": "about 1 in 111 tests positive \u00b7 unchanged from last week",
-      "week_ending": "2026-10-24",
+      "plain": "about 1 in 56 tests positive",
+      "insight": "about 1 in 56 tests positive \u00b7 up from 0.9% last week",
+      "week_ending": "2026-10-31",
       "source_table": "test_positivity",
-      "change_text": "0.9% the week ending 2026-10-17"
+      "change_text": "0.9% the week ending 2026-10-24"
     },
     {
       "id": "hosp_combined",
@@ -95,17 +95,25 @@
     {
       "id": "ari_very_low",
       "label": "States and territories at Very Low ARI activity",
-      "value": 32,
+      "value": 22,
       "headline": "ARI Very Low",
-      "week_ending": "2026-10-24",
+      "week_ending": "2026-10-31",
       "source_table": "ari_activity"
     },
     {
       "id": "ari_low",
       "label": "States and territories at Low ARI activity",
-      "value": 16,
+      "value": 26,
       "headline": "ARI Low",
-      "week_ending": "2026-10-24",
+      "week_ending": "2026-10-31",
+      "source_table": "ari_activity"
+    },
+    {
+      "id": "ari_moderate",
+      "label": "States and territories at Moderate ARI activity",
+      "value": 1,
+      "headline": "ARI Moderate",
+      "week_ending": "2026-10-31",
       "source_table": "ari_activity"
     },
     {
@@ -115,7 +123,7 @@
       "headline": "High / Very High ARI",
       "plain": "0 of 56 states/territories at High or Very High activity",
       "insight": "0 of 56 states/territories at High or Very High activity",
-      "week_ending": "2026-10-24",
+      "week_ending": "2026-10-31",
       "source_table": "ari_activity"
     }
   ]
