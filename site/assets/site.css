@@ -297,7 +297,12 @@ main{display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
 .metric .val{font:600 clamp(28px,4vw,38px)/1.1 var(--display);margin:6px 0 2px;overflow-wrap:anywhere;color:var(--ink-panel)}
 .metric .unit{display:block;font:400 12px/1.35 var(--mono);color:var(--mute-panel);margin-top:2px}
 .metric .ch{font:400 12px var(--mono);color:var(--mute-panel)}
-.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line2);border-radius:8px;background:var(--panel)}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line2);border-radius:8px;background:var(--panel);max-width:100%;min-width:0;overscroll-behavior-x:contain}
+/* evalpast runs wide (~1000px); swipe inside this box so the page width stays at the viewport */
+@media (max-width:860px){
+  .scroll{display:block;width:100%}
+  table.evalpast{margin:0}
+}
 table{border-collapse:collapse;width:100%;font-size:13.5px}
 th,td{padding:9px 12px;text-align:right;border-bottom:1px solid var(--line2);white-space:nowrap}
 th{font:600 11px var(--sans);color:var(--mute-panel);text-transform:uppercase;letter-spacing:.04em;vertical-align:bottom;white-space:normal;min-width:84px}
