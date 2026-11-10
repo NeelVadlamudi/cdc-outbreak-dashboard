@@ -240,3 +240,26 @@ The UI does not inspect the answer text; only `status` counts.
 Field names live in one place: `frontend/src/agent/contract.js` (`FIELDS`). Non-2xx → error state; a JSON `detail` is shown.
 
 Example shapes for tests live in `tests/site-fixtures/` and are labelled EXAMPLE. Never copy them into `site/data/`.
+
+
+## Offline simulator default
+
+`frontend/src/data/simulator-default.json` is bundled with the application, not
+loaded from the API. It contains `schema_version`, the fixed random `seed` (0),
+all `params` from `backend.routes.SimRequest`, and `result` from the same
+`backend.routes.run_sim` code path used by `POST /api/simulator/run`.
+The eight-week example uses the simulator's 1,000 Monte Carlo samples per week.
+It is an illustrative capacity scenario with fixed assumptions, not current CDC
+observations, a live result, or a disease forecast; it does not read a database.
+Regenerate it from the repository root with
+`python scripts/build_simulator_default.py`. The regression test recomputes the
+real route result with the recorded seed and rejects drift.
+
+Opening Surge planning displays this bundled result without making any request
+from the Simulator component. The shared application shell still reads the
+same-origin published-data manifest and loads normal local build assets.
+Published CDC rates are fetched from the static generation only when the user
+selects **Load published CDC rates**. Only **Run scenario** or **Run Simulation**
+POSTs the selected parameters to the live simulation service. If that request
+fails, a visible inline alert explains the failure and retains the pre-built
+(or last completed) result, including the capacity assumptions that produced it.

@@ -130,7 +130,7 @@ export default function Wastewater() {
           <div className="charts-grid fade-in">
             <div className="card">
               <div className="card-header"><span className="card-title">Median activity level by state</span></div>
-              <Plot
+              <Plot divId="wastewater-activity"
                 data={[{
                   type: "choropleth", locationmode: "USA-states",
                   locations: mapped.map((d) => STATE_ABBREVS[d.state]),

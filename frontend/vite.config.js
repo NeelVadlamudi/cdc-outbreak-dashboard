@@ -1,4 +1,5 @@
 import process from 'node:process'
+import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
@@ -6,6 +7,10 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   base: process.env.APP_BASE || '/',
   define: { global: 'globalThis' },
+  // The registered SVG traces never use the upstream tile-map stylesheet.
+  resolve: { alias: {
+    'maplibre-gl/dist/maplibre-gl.css': fileURLToPath(new URL('./src/unused-map.css', import.meta.url)),
+  } },
   plugins: [react(), {
     name: 'same-origin-plot-geography',
     enforce: 'pre',

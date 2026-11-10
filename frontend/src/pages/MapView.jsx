@@ -277,7 +277,7 @@ export default function MapView() {
               {historyData.length > 0 && (
                 <>
                   <div className="card-title" style={{ marginBottom: '16px' }}><Activity size={16} /> Chronological Activity Trace</div>
-                  <Plot
+                  <Plot divId="map-history"
                     data={[{
                       x: historyData.map(d => d.date),
                       y: historyData.map(d => d.level),

@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "seed": 0,
+  "params": {
+    "population": 1000000,
+    "current_rate": 5.0,
+    "surge_multiplier": 2.0,
+    "hospitalization_pct": 10.0,
+    "icu_pct": 20.0,
+    "avg_los_days": 5.0,
+    "icu_los_days": 10.0,
+    "beds_available": 500,
+    "icu_beds_available": 50,
+    "cost_per_bed_day": 3000.0,
+    "cost_per_icu_day": 8000.0,
+    "weeks": 8
+  },
+  "result": {
+    "weeks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "bed_demand_mean": [
+      3.6,
+      4.5,
+      5.4,
+      6.3,
+      7.2,
+      7.2,
+      7.3,
+      7.2
+    ],
+    "bed_demand_p5": [
+      2.7,
+      3.3,
+      3.8,
+      4.5,
+      5.3,
+      5.3,
+      5.2,
+      5.3
+    ],
+    "bed_demand_p95": [
+      4.6,
+      5.9,
+      7.1,
+      8.3,
+      9.5,
+      9.5,
+      9.5,
+      9.6
+    ],
+    "icu_demand_mean": [
+      1.4,
+      1.8,
+      2.1,
+      2.5,
+      2.9,
+      2.9,
+      2.9,
+      2.9
+    ],
+    "icu_demand_p5": [
+      1.0,
+      1.2,
+      1.4,
+      1.7,
+      1.9,
+      1.9,
+      1.9,
+      1.9
+    ],
+    "icu_demand_p95": [
+      2.0,
+      2.6,
+      3.0,
+      3.7,
+      4.1,
+      4.1,
+      4.2,
+      4.1
+    ],
+    "overflow_probability": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "icu_overflow_probability": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "total_cost_mean": 2116326.0,
+    "total_cost_p95": 3216020.0,
+    "params": {
+      "population": 1000000,
+      "current_rate": 5.0,
+      "surge_multiplier": 2.0,
+      "beds_available": 500,
+      "icu_beds_available": 50
+    }
+  }
+}

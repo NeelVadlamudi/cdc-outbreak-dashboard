@@ -4,17 +4,28 @@ export function assertNoBrowserErrors(errors) {
   assert.deepEqual(errors, [], `Browser errors: ${errors.join(' | ')}`);
 }
 
-export function assertChartSnapshots(charts, { minimum = 1, titles = [], map = false } = {}) {
+export function assertChartSnapshots(charts, { minimum = 1, titlesById = {}, optionalIds = [], map = false } = {}) {
   assert.ok(charts.length >= minimum, `Expected at least ${minimum} charts, found ${charts.length}`);
+  const ids = new Set();
   for (const [index, chart] of charts.entries()) {
     assert.ok(chart.svg && chart.marks > 0 && chart.hasData, `Blank chart ${index}: ${JSON.stringify(chart)}`);
-    assert.deepEqual(chart.stringTitles, [], `String titles in chart ${index}`);
+    assert.ok(chart.id && !ids.has(chart.id), `Missing or duplicate chart container ID: ${chart.id}`);
+    ids.add(chart.id);
+    assert.deepEqual(chart.stringTitles, [], `String titles in ${chart.id}`);
     for (const title of chart.declaredTitles) {
-      assert.ok(chart.renderedText.includes(title), `Declared chart title not rendered: ${title}`);
+      assert.ok(chart.renderedTitles.includes(title), `Declared chart title not rendered in ${chart.id}: ${title}`);
+    }
+    if (Object.keys(titlesById).length) {
+      assert.ok(Object.hasOwn(titlesById, chart.id), `Unexpected chart container: ${chart.id}`);
+      for (const title of titlesById[chart.id]) {
+        assert.ok(chart.declaredTitles.includes(title), `Missing title declaration in ${chart.id}: ${title}`);
+        assert.ok(chart.renderedTitles.includes(title), `Expected chart title not rendered in ${chart.id}: ${title}`);
+      }
     }
   }
-  const rendered = charts.flatMap(chart => chart.renderedText);
-  for (const title of titles) assert.ok(rendered.includes(title), `Expected chart title not rendered: ${title}`);
+  for (const id of Object.keys(titlesById)) {
+    if (!optionalIds.includes(id)) assert.ok(ids.has(id), `Missing required chart container: ${id}`);
+  }
   if (map) assert.ok(charts.some(chart => chart.mapPaths > 0), 'Geographic data paths did not render');
 }
 
@@ -39,12 +50,16 @@ export async function inspectCharts(page) {
       return Array.isArray(values) && values.flat().some(value => value !== null && value !== undefined && value !== '');
     });
     return {
+      id: node.id,
       svg: Boolean(node.querySelector('.main-svg')),
       marks: paths.filter(validPath).length + images.length,
       mapPaths: [...node.querySelectorAll('.choroplethlayer path.choroplethlocation')].filter(validPath).length,
       hasData,
       stringTitles: inputTitles.filter(title => typeof title === 'string'),
       declaredTitles: inputTitles.map(title => title.text).filter(Boolean),
+      renderedTitles: [...node.querySelectorAll('text')].filter(text =>
+        text.closest('.cbtitle') || [...text.classList].some(name => /^(gtitle|[xyz]\d*title)$/.test(name)))
+        .map(text => text.textContent.trim()),
       renderedText: [...node.querySelectorAll('text')].map(text => text.textContent.trim()),
       types: (node.data || []).map(trace => trace.type || 'scatter'),
       xaxisType: node._fullLayout?.xaxis?.type,
@@ -62,23 +77,53 @@ export async function assertRenderedCharts(page, expected) {
   return charts;
 }
 
-export async function hoverChart(page) {
-  for (const selector of ['.scatterlayer .points path.point', '.barlayer .point path', '.choroplethlayer path.choroplethlocation']) {
-    const marks = page.locator(selector);
+export async function hoverChart(page, id, { timeout = 1500 } = {}) {
+  assert.match(id, /^[a-z][a-z0-9-]*$/, 'A stable chart container ID is required');
+  const chart = page.locator(`[id="${id}"]`);
+  assert.equal(await chart.count(), 1, `Missing chart container: ${id}`);
+  await chart.scrollIntoViewIfNeeded();
+  await page.mouse.move(0, 0);
+  await page.waitForFunction(id => ![...document.getElementById(id).querySelectorAll('.hoverlayer text')]
+    .some(text => text.textContent.trim()), id, { timeout });
+  const readHover = async selector => {
+    await page.waitForFunction(id => [...document.getElementById(id).querySelectorAll('.hoverlayer text')]
+      .some(text => text.textContent.trim()), id, { timeout });
+    const text = (await chart.locator('.hoverlayer text').allTextContents()).map(value => value.trim()).filter(Boolean);
+    assert.ok(text.length, `Hover labels must contain text in ${id}`);
+    return { id, selector, text };
+  };
+  for (const selector of ['.scatterlayer .points path.point', '.barlayer .point path', '.choroplethlayer path.choroplethlocation', '.scatterlayer path.js-line']) {
+    const marks = chart.locator(selector);
     for (let index = 0; index < Math.min(await marks.count(), 4); index++) {
       const mark = marks.nth(index);
-      await mark.scrollIntoViewIfNeeded();
-      await mark.hover({ force: true });
       try {
-        await page.waitForFunction(() => [...document.querySelectorAll('.hoverlayer text')].some(text => text.textContent.trim()),
-          null, { timeout: 1500 });
-        const text = (await page.locator('.hoverlayer text').allTextContents()).map(value => value.trim()).filter(Boolean);
-        assert.ok(text.length, 'Hover labels must contain text');
-        return { selector, text };
-      } catch { /* Another data mark may be a disconnected geographic fragment. */ }
+        await mark.scrollIntoViewIfNeeded();
+        if (selector.endsWith('path.js-line')) {
+          const point = await mark.evaluate(path => {
+            const matrix = path.getScreenCTM();
+            const local = path.getPointAtLength(path.getTotalLength() * 0.01);
+            return { x: local.x * matrix.a + local.y * matrix.c + matrix.e,
+              y: local.x * matrix.b + local.y * matrix.d + matrix.f };
+          });
+          await page.mouse.move(point.x, point.y);
+        } else await mark.hover({ force: true });
+        return await readHover(selector);
+      } catch { /* Try another actual data mark in this same chart. */ }
     }
   }
-  throw new Error('A real pointer hover did not produce a chart hover label');
+  const images = chart.locator('.heatmaplayer image, .hm image');
+  for (let index = 0; index < await images.count(); index++) {
+    await images.nth(index).scrollIntoViewIfNeeded();
+    const box = await images.nth(index).boundingBox();
+    if (!box) continue;
+    for (const x of [0.1, 0.5, 0.9]) for (const y of [0.1, 0.5, 0.9]) {
+      try {
+        await page.mouse.move(box.x + box.width * x, box.y + box.height * y);
+        return await readHover('heatmap cell');
+      } catch { /* Empty heatmap cells have no label. */ }
+    }
+  }
+  throw new Error(`A real pointer hover did not produce a chart hover label in ${id}`);
 }
 
 export async function inspectGlobe(page) {

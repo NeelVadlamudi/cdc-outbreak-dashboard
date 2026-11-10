@@ -1,53 +1,47 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Plot from "../components/Plot";
 import { Hospital, AlertTriangle, TrendingUp, Settings, Activity, Play } from "lucide-react";
 import { runSimulator, getSimDefaults } from "../api";
 
-const INITIAL_PARAMS = {
-  population: 1000000,
-  current_rate: 5.0,
-  surge_multiplier: 2.0,
-  hospitalization_pct: 10.0,
-  icu_pct: 20.0,
-  avg_los_days: 5.0,
-  icu_los_days: 10.0,
-  beds_available: 500,
-  icu_beds_available: 50,
-  cost_per_bed_day: 3000,
-  cost_per_icu_day: 8000,
-  weeks: 8,
-};
+import defaultScenario from "../data/simulator-default.json";
+
+const INITIAL_PARAMS = defaultScenario.params;
 
 export default function Simulator() {
   const [params, setParams] = useState(INITIAL_PARAMS);
-  const [results, setResults] = useState(null);
-  // Starts true: the first simulation is kicked off on mount.
-  const [loading, setLoading] = useState(true);
+  const [results, setResults] = useState(defaultScenario.result);
+  const [resultParams, setResultParams] = useState(INITIAL_PARAMS);
+  const [showingDefault, setShowingDefault] = useState(true);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [defaults, setDefaults] = useState(null);
 
-  useEffect(() => {
-    getSimDefaults().then(setDefaults).catch(() => {});
-  }, []);
+  const [ratesError, setRatesError] = useState("");
 
-  const runSim = async () => {
-    setLoading(true);
+  const loadPublishedRates = async () => {
     try {
-      const res = await runSimulator(params);
-      setResults(res);
+      setDefaults(await getSimDefaults());
+      setRatesError("");
     } catch {
-      console.error("Simulation failed");
+      setRatesError("Published CDC rates are unavailable. The example scenario is still available.");
     }
-    setLoading(false);
   };
 
-  // Initial run uses the initial params (identical to `params` on mount); state is only set
-  // in async callbacks, so no synchronous setState inside the effect.
-  useEffect(() => {
-    runSimulator(INITIAL_PARAMS)
-      .then(setResults)
-      .catch(() => console.error("Simulation failed"))
-      .finally(() => setLoading(false));
-  }, []);
+  const runSim = async () => {
+    const requested = { ...params };
+    setLoading(true);
+    setError("");
+    try {
+      const res = await runSimulator(requested);
+      setResults(res);
+      setResultParams(requested);
+      setShowingDefault(false);
+    } catch {
+      setError(`Could not run the scenario: the simulation service is unavailable. Showing the ${showingDefault ? "pre-built default" : "last completed"} result. Please retry later.`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const updateParam = (key, value) => {
     setParams((prev) => ({ ...prev, [key]: Number(value) }));
@@ -97,18 +91,25 @@ export default function Simulator() {
         </div>
       </div>
 
+      <p role="status" id="simulation-source" className="alert-banner info">
+        {showingDefault ? "Showing a pre-built default result: an illustrative example, not a forecast. Press Run to calculate a new scenario." : "Showing the last completed scenario."}
+      </p>
+      {error && <div role="alert" className="alert-banner danger">{error}</div>}
+
       <div className="simulator-layout fade-in" style={{ display: "grid", gridTemplateColumns: "minmax(260px, 320px) 1fr", gap: "20px" }}>
         <div className="card" style={{ position: "sticky", top: "24px", alignSelf: "start", padding: "22px" }}>
           <div className="card-header" style={{ marginBottom: "20px" }}>
             <span className="card-title"><Settings size={18} /> Scenario settings</span>
           </div>
 
+          {!defaults && <button className="filter-btn" onClick={loadPublishedRates}>Load published CDC rates</button>}
+          {ratesError && <p role="alert">{ratesError}</p>}
           {defaults?.current_rates && (
             <div style={{
               padding: "16px", borderRadius: "var(--radius-md)", marginBottom: "24px",
               background: "var(--accent-primary-glow)", border: "1px solid var(--border-accent)",
             }}>
-              <strong style={{ color: "var(--accent-primary)", fontSize: "13px" }}>Current CDC rates</strong>
+              <strong style={{ color: "var(--accent-primary)", fontSize: "13px" }}>Published CDC rates</strong>
               <div style={{ display: "grid", gap: "8px", marginTop: "12px" }}>
                 {Object.entries(defaults.current_rates).map(([k, v]) => (
                   <div key={k} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "13px" }}>
@@ -174,8 +175,8 @@ export default function Simulator() {
                   <div className="stat-card-value">
                     {Math.max(...results.bed_demand_mean).toFixed(0)}
                   </div>
-                  <div style={{ marginTop: "12px", fontSize: "13px", fontWeight: 600, color: Math.max(...results.bed_demand_mean) > params.beds_available ? "var(--color-high)" : "var(--color-safe)" }}>
-                    {Math.max(...results.bed_demand_mean) > params.beds_available ? "⚠️ Exceeds capacity" : "✅ Within capacity"}
+                  <div style={{ marginTop: "12px", fontSize: "13px", fontWeight: 600, color: Math.max(...results.bed_demand_mean) > resultParams.beds_available ? "var(--color-high)" : "var(--color-safe)" }}>
+                    {Math.max(...results.bed_demand_mean) > resultParams.beds_available ? "⚠️ Exceeds capacity" : "✅ Within capacity"}
                   </div>
                 </div>
                 <div className="stat-card accent-rose">
@@ -184,8 +185,8 @@ export default function Simulator() {
                   <div className="stat-card-value">
                     {Math.max(...results.icu_demand_mean).toFixed(0)}
                   </div>
-                  <div style={{ marginTop: "12px", fontSize: "13px", fontWeight: 600, color: Math.max(...results.icu_demand_mean) > params.icu_beds_available ? "var(--color-high)" : "var(--color-safe)" }}>
-                    {Math.max(...results.icu_demand_mean) > params.icu_beds_available ? "⚠️ ICU overflow risk" : "✅ ICU OK"}
+                  <div style={{ marginTop: "12px", fontSize: "13px", fontWeight: 600, color: Math.max(...results.icu_demand_mean) > resultParams.icu_beds_available ? "var(--color-high)" : "var(--color-safe)" }}>
+                    {Math.max(...results.icu_demand_mean) > resultParams.icu_beds_available ? "⚠️ ICU overflow risk" : "✅ ICU OK"}
                   </div>
                 </div>
                 <div className="stat-card accent-amber">
@@ -212,7 +213,7 @@ export default function Simulator() {
                 <div className="card-header">
                   <span className="card-title"><Hospital size={18} /> Hospital Bed Demand Projection</span>
                 </div>
-                <Plot
+                <Plot divId="simulator-beds"
                   data={[
                     {
                       x: results.weeks, y: results.bed_demand_p95,
@@ -233,7 +234,7 @@ export default function Simulator() {
                       marker: { size: 7, line: { color: 'white', width: 1 } },
                     },
                     {
-                      x: results.weeks, y: results.weeks.map(() => params.beds_available),
+                      x: results.weeks, y: results.weeks.map(() => resultParams.beds_available),
                       type: "scatter", mode: "lines",
                       name: "Capacity", line: { color: "#DC2626", width: 2, dash: "dash" },
                     },
@@ -253,7 +254,7 @@ export default function Simulator() {
                 <div className="card-header">
                   <span className="card-title"><AlertTriangle size={18} /> ICU Demand & Overflow Probability</span>
                 </div>
-                <Plot
+                <Plot divId="simulator-icu"
                   data={[
                     {
                       x: results.weeks, y: results.icu_demand_p95,
@@ -274,7 +275,7 @@ export default function Simulator() {
                       marker: { size: 7, line: { color: 'white', width: 1 } },
                     },
                     {
-                      x: results.weeks, y: results.weeks.map(() => params.icu_beds_available),
+                      x: results.weeks, y: results.weeks.map(() => resultParams.icu_beds_available),
                       type: "scatter", mode: "lines",
                       name: "ICU capacity", line: { color: "#D97706", width: 2, dash: "dash" },
                     },

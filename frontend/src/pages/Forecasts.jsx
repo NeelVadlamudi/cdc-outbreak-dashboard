@@ -152,7 +152,7 @@ export default function Forecasts() {
               </span>
               <span className="badge badge-updated">based on last week</span>
             </div>
-            <Plot
+            <Plot divId="forecast-primary"
               data={[
                 {
                   x: forecast.historical_recent.map((_, i) => `Week -${forecast.historical_recent.length - i}`),
@@ -191,7 +191,7 @@ export default function Forecasts() {
                   </span>
                 )}
               </div>
-              <Plot
+              <Plot divId="forecast-alternate"
                 data={[
                   {
                     x: forecast.historical_recent.map((_, i) => `Week -${forecast.historical_recent.length - i}`),

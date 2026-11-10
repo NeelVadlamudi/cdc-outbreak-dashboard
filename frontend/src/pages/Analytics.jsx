@@ -171,7 +171,7 @@ export default function Analytics() {
           <div className="card-header">
             <span className="card-title"><TestTubes size={18} /> Positivity Rate Comparison</span>
           </div>
-          <Plot
+          <Plot divId="analytics-positivity"
             data={Object.entries(pathogenGroups).map(([pathogen, data]) => {
               const sorted = [...data].sort((a, b) => a.week_end?.localeCompare(b.week_end));
               return {
@@ -199,7 +199,7 @@ export default function Analytics() {
           <div className="card-header">
             <span className="card-title"><TrendingUp size={18} /> Hospitalization Rates by Network</span>
           </div>
-          <Plot
+          <Plot divId="analytics-hospitalizations"
             data={Object.entries(hospByNetwork).map(([network, data]) => {
               const sorted = [...data].sort((a, b) => a.week_ending_date?.localeCompare(b.week_ending_date));
               return {
@@ -226,7 +226,7 @@ export default function Analytics() {
         <div className="card-header">
           <span className="card-title"><BarChart2 size={18} /> Season-over-Season Comparison</span>
         </div>
-        <Plot
+        <Plot divId="analytics-seasons"
           data={Object.entries(hospByNetwork).map(([network, data]) => {
             const seasons = {};
             data.forEach(d => {

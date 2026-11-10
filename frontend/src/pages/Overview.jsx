@@ -519,7 +519,7 @@ export default function Overview() {
               onRetry={() => { setLoading(true); loadDashboard(); }}
             />
           ) : (
-            <Plot
+            <Plot divId="overview-activity"
               data={[{
                 type: 'choropleth',
                 locationmode: 'USA-states',
@@ -643,7 +643,7 @@ export default function Overview() {
               onRetry={() => { setLoading(true); loadDashboard(); }}
             />
           ) : (
-            <Plot
+            <Plot divId="overview-positivity"
               data={[
                 {
                   x: covidPos.map(d => d.week_end),
@@ -694,7 +694,7 @@ export default function Overview() {
               onRetry={() => { setLoading(true); loadDashboard(); }}
             />
           ) : (
-            <Plot
+            <Plot divId="overview-hospitalizations"
               data={(() => {
                 const viruses = ['COVID-NET', 'FluSurv-NET', 'RSV-NET'];
                 const colors = ['#0000d9', '#B45309', '#1A7A5C'];

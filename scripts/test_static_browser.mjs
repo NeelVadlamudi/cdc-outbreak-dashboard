@@ -10,8 +10,8 @@ import { assertNoBrowserErrors, inspectCharts, assertChartSnapshots, assertRende
 const repo = fileURLToPath(new URL('../', import.meta.url));
 const site = resolve(repo, '_site');
 const cases = JSON.parse(readFileSync(resolve(site, 'browser-cases.json')));
+const defaultScenario = JSON.parse(readFileSync(resolve(repo, 'frontend/src/data/simulator-default.json')));
 const manifest = JSON.parse(readFileSync(resolve(site, 'data/static/manifest.json')));
-const simulation = JSON.parse(readFileSync(resolve(site, 'simulator-case.json')));
 const mime = { '.js': 'text/javascript', '.html': 'text/html', '.json': 'application/json',
   '.wasm': 'application/wasm', '.css': 'text/css', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.png': 'image/png' };
 function serveFile(root, path, response, fallback) {
@@ -39,18 +39,19 @@ const dev = await viteServer({
 });
 await dev.listen();
 const browser = await chromium.launch({ headless: true, args: ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
-const results = { parity: 0, renderRequests: 0, blockedExternal: [], pages: [], databaseAssets: [], fontAssets: [], landingFontAssets: [], mapAssets: [], errors: [], simulatorFixtureRequests: 0 };
+const results = { parity: 0, renderRequests: 0, blockedExternal: [], pages: [], databaseAssets: [], fontAssets: [], landingFontAssets: [], mapAssets: [], errors: [] };
 try {
   const context = await browser.newContext();
+  await context.addInitScript(() => {
+    window.__fetchCalls = [];
+    const original = window.fetch;
+    window.fetch = function(input, options) {
+      window.__fetchCalls.push({ url: String(input), method: options?.method || 'GET' });
+      return original.call(this, input, options);
+    };
+  });
   await context.route('**/*', route => {
     const url = new URL(route.request().url());
-    if (['localhost', '127.0.0.1'].includes(url.hostname) && url.pathname === '/api/simulator/run') {
-      if (route.request().method() === 'POST') {
-        assert.deepEqual(route.request().postDataJSON(), simulation.params);
-        results.simulatorFixtureRequests++;
-      }
-      return route.fulfill({ status: 200, json: simulation.expected, headers: { 'Access-Control-Allow-Origin': '*' } });
-    }
     if (url.hostname === '127.0.0.1') return route.continue();
     if (url.protocol === 'data:' || url.protocol === 'blob:') return route.continue();
     if (url.hostname.endsWith('.onrender.com')) results.renderRequests++;
@@ -90,19 +91,34 @@ try {
     results.parity++;
   }
   await page.waitForLoadState('networkidle');
-  await assertRenderedCharts(page, { minimum: 3, titles: ['ARI activity', '% Positive', 'Rate per 100k'], map: true });
+  results.developmentCharts = await assertRenderedCharts(page, { minimum: 3, titlesById: {
+    'overview-activity': ['ARI activity'], 'overview-positivity': ['% Positive'], 'overview-hospitalizations': ['Rate per 100k'],
+  }, map: true });
+  results.developmentHovers = [];
+  for (const chart of results.developmentCharts) results.developmentHovers.push(await hoverChart(page, chart.id));
   assertNoBrowserErrors(results.errors);
   // Measure bundled assets separately from the development server's source files.
   results.fontAssets = [];
   const pages = [
-    { path: '', minimum: 3, titles: ['ARI activity', '% Positive', 'Rate per 100k'], map: true },
-    { path: 'analytics', minimum: 3, titles: ['% Positive', 'Rate per 100k'] },
-    { path: 'wastewater', minimum: 1, titles: ['WVAL'], map: true },
-    { path: 'forecasts', minimum: 1, titles: ['Week', 'Rate per 100k'] },
-    { path: 'advanced', minimum: 3, titles: ['Week', 'Rate per 100k', 'Week Ending', 'Rate/100k', 'MMWR Week'] },
-    { path: 'map?state=Ohio', minimum: 1, titles: [] },
-    { path: 'simulator', minimum: 2, titles: ['Week', 'Beds Needed', 'ICU Beds Needed', 'Overflow %'] },
-    { path: 'ask', minimum: 0, titles: [] },
+    { path: '', minimum: 3, titlesById: {
+      'overview-activity': ['ARI activity'], 'overview-positivity': ['% Positive'], 'overview-hospitalizations': ['Rate per 100k'],
+    }, map: true },
+    { path: 'analytics', minimum: 3, titlesById: {
+      'analytics-positivity': ['% Positive'], 'analytics-hospitalizations': ['Rate per 100k'], 'analytics-seasons': ['Rate per 100k'],
+    } },
+    { path: 'wastewater', minimum: 1, titlesById: { 'wastewater-activity': ['WVAL'] }, map: true },
+    { path: 'forecasts', minimum: 1, titlesById: {
+      'forecast-primary': ['Week', 'Rate per 100k'], 'forecast-alternate': ['Week', 'Rate per 100k'],
+    }, optionalIds: ['forecast-alternate'] },
+    { path: 'advanced', minimum: 3, titlesById: {
+      'advanced-models': ['Week', 'Rate per 100k'], 'advanced-importance': ['Importance Score'],
+      'advanced-age': ['Week Ending', 'Rate/100k'], 'advanced-seasons': ['MMWR Week', 'Rate per 100k'],
+    }, optionalIds: ['advanced-importance'] },
+    { path: 'map?state=Ohio', minimum: 1, titlesById: { 'map-history': [] } },
+    { path: 'simulator', minimum: 2, titlesById: {
+      'simulator-beds': ['Week', 'Beds Needed'], 'simulator-icu': ['Week', 'ICU Beds Needed', 'Overflow %'],
+    } },
+    { path: 'ask', minimum: 0, titlesById: {} },
   ];
   for (const expected of pages) {
     const failures = [];
@@ -119,12 +135,73 @@ try {
     const result = { path: expected.path || 'overview', elapsedMs: Date.now() - began };
     if (expected.minimum) {
       result.charts = await assertRenderedCharts(page, expected);
-      result.hover = await hoverChart(page);
+      result.hovers = [];
+      for (const chart of result.charts) result.hovers.push(await hoverChart(page, chart.id));
       if (expected.path.startsWith('map')) result.globe = await inspectGlobe(page);
     } else {
       assert.equal(await page.locator('.js-plotly-plot').count(), 0, 'Ask has no chart until a question is answered');
       await page.getByPlaceholder(/Ask about COVID/).waitFor();
       result.note = 'Input-only Ask page: no chart or live submission expected';
+    }
+    if (expected.path === 'simulator') {
+      await page.locator('#simulation-source').filter({ hasText: 'pre-built default result' }).waitFor();
+      const calls = await page.evaluate(() => window.__fetchCalls);
+      const nonShell = calls.filter(call => !call.url.endsWith('/data/static/manifest.json'));
+      assert.deepEqual(nonShell, [], 'Simulator mounting must not make any fetch call');
+      const readScenario = () => page.evaluate(() => ({
+        beds: document.getElementById('simulator-beds').data.find(trace => trace.name === 'Mean bed demand').y,
+        icu: document.getElementById('simulator-icu').data.find(trace => trace.name === 'ICU demand').y,
+        capacity: document.getElementById('simulator-beds').data.find(trace => trace.name === 'Capacity').y,
+      }));
+      const before = await readScenario();
+      assert.deepEqual(before.beds, defaultScenario.result.bed_demand_mean);
+      assert.deepEqual(before.icu, defaultScenario.result.icu_demand_mean);
+      results.simulatorLoad = { componentFetches: nonShell.length, shellManifestFetches: calls.length, defaultVisible: true };
+      await page.locator('input[type=range]').nth(5).press('ArrowRight');
+      assert.equal(await page.locator('input[type=range]').nth(5).inputValue(), '550');
+      // Reject the actual client fetch before any network access; never return a successful fixture.
+      await page.evaluate(() => {
+        const original = window.fetch;
+        window.__failedSimulationAttempts = [];
+        window.fetch = function(input, options) {
+          if (String(input).endsWith('/api/simulator/run')) {
+            window.__failedSimulationAttempts.push({ url: String(input), method: options.method, params: JSON.parse(options.body) });
+            return Promise.reject(new TypeError('Simulation service unavailable'));
+          }
+          return original.call(this, input, options);
+        };
+      });
+      await page.getByRole('button', { name: 'Run scenario', exact: true }).click();
+      const alert = page.getByRole('alert').filter({ hasText: 'Could not run the scenario' });
+      await alert.waitFor({ timeout: 20000 });
+      assert.match(await alert.innerText(), /pre-built default result/);
+      assert.deepEqual(await readScenario(), before, 'A failed run must retain all default data and capacities');
+      assert.equal(await page.getByRole('button', { name: 'Run scenario', exact: true }).isEnabled(), true);
+      const attempts = await page.evaluate(() => window.__failedSimulationAttempts);
+      assert.equal(attempts.length, 3);
+      assert.ok(attempts.every(attempt => new URL(attempt.url).hostname === 'cdc-outbreak-api.onrender.com' && attempt.method === 'POST' && attempt.params.beds_available === 550));
+      const retainedCharts = await assertRenderedCharts(page, expected);
+      results.simulatorRetainedHovers = [];
+      for (const chart of retainedCharts) results.simulatorRetainedHovers.push(await hoverChart(page, chart.id));
+      results.simulatorFailure = { productionApiHost: new URL(attempts[0].url).hostname, attempts: attempts.length, error: await alert.innerText(), defaultRetained: true, selectedBeds: 550, displayedBeds: before.capacity[0] };
+    }
+    if (expected.path === 'analytics') {
+      await page.evaluate(() => {
+        const chart = document.getElementById('analytics-seasons');
+        delete chart.layout.yaxis.title;
+        chart.querySelectorAll('.ytitle').forEach(title => title.remove());
+      });
+      const mutated = await inspectCharts(page);
+      assert.ok(mutated.find(chart => chart.id === 'analytics-hospitalizations').renderedTitles.includes('Rate per 100k'));
+      assert.throws(() => assertChartSnapshots(mutated, expected), /analytics-seasons.*Rate per 100k/);
+      results.missingTitleRejectedById = true;
+      await page.evaluate(() => {
+        const chart = document.getElementById('analytics-positivity');
+        chart.layout.hovermode = false;
+        chart._fullLayout.hovermode = false;
+      });
+      await assert.rejects(() => hoverChart(page, 'analytics-positivity', { timeout: 100 }), /analytics-positivity/);
+      results.missingHoverRejectedById = true;
     }
     assertNoBrowserErrors(results.errors);
     results.pages.push(result);
@@ -173,16 +250,20 @@ try {
     await page.waitForLoadState('networkidle');
     const size = await page.evaluate(() => ({ width: innerWidth, scrollWidth: document.documentElement.scrollWidth }));
     assert.equal(size.width, size.scrollWidth, `Mobile overflow on ${expected.path}: ${JSON.stringify(size)}`);
-    if (expected.minimum) await assertRenderedCharts(page, expected);
+    let charts = [];
+    const hovers = [];
+    if (expected.minimum) {
+      charts = await assertRenderedCharts(page, expected);
+      for (const chart of charts) hovers.push(await hoverChart(page, chart.id));
+    }
     const clipped = await page.locator('.stat-card-value, .stat-card-label, .stat-card-plain, .stat-card-week').evaluateAll(nodes =>
       nodes.filter(node => node.scrollWidth > node.clientWidth).map(node => node.textContent.trim()));
     assert.deepEqual(clipped, [], `Clipped mobile summary on ${expected.path}`);
-    results.mobilePages.push({ path: expected.path || 'overview', ...size, clipped });
+    results.mobilePages.push({ path: expected.path || 'overview', ...size, clipped, charts: charts.map(chart => chart.id), hovers });
     assertNoBrowserErrors(results.errors);
   }
   assertNoBrowserErrors(results.errors);
   assert.equal(results.blockedExternal.length, 0, 'The application attempted an external asset request');
-  assert.ok(results.simulatorFixtureRequests > 0);
   results.mapAssets = [...new Set(results.mapAssets)];
   results.embeddedGeography = await page.evaluate(() => Object.keys(window.PlotlyGeoAssets.topojson.usa_110m.objects));
   assert.ok(results.embeddedGeography.includes('subunits'));

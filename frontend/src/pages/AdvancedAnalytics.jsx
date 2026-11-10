@@ -154,7 +154,7 @@ export default function AdvancedAnalytics() {
           <div className="card-header">
             <span className="card-title"><Microscope size={18} /> Primary outlook vs experimental models</span>
           </div>
-          <Plot
+          <Plot divId="advanced-models"
             data={[
               ...((lastValue.historical_recent || lstm.historical_recent) ? [{
                 x: (lastValue.historical_recent || lstm.historical_recent).map((_, i, arr) => `Week -${arr.length - i}`),
@@ -206,7 +206,7 @@ export default function AdvancedAnalytics() {
             <span className="card-title"><Trees size={18} /> What the tree model weighs most</span>
           </div>
           {xgb.feature_importance && (
-            <Plot
+            <Plot divId="advanced-importance"
               data={[{
                 y: Object.keys(xgb.feature_importance),
                 x: Object.values(xgb.feature_importance),
@@ -236,7 +236,7 @@ export default function AdvancedAnalytics() {
           <div className="card-header">
             <span className="card-title"><Users size={18} /> Age-Stratified Hospitalization Heatmap</span>
           </div>
-          <Plot
+          <Plot divId="advanced-age"
             data={[{
               z: heatZ,
               x: weeks.slice(-26),
@@ -268,7 +268,7 @@ export default function AdvancedAnalytics() {
           <div className="card-header">
             <span className="card-title"><Calendar size={18} /> Season-over-Season Comparison</span>
           </div>
-          <Plot
+          <Plot divId="advanced-seasons"
             data={seasonTraces}
             layout={{
               ...plotLayout,
