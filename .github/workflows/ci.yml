@@ -55,3 +55,14 @@ jobs:
       - name: Frontend smoke
         working-directory: frontend
         run: npm run smoke
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install local static test backend
+        run: pip install -r requirements-render.txt pytest
+      - name: Install browser
+        working-directory: frontend
+        run: npx playwright install --with-deps chromium
+      - name: Static snapshot and cold browser checks
+        run: scripts/check_static.sh

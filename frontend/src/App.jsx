@@ -1,7 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
-import { useState, lazy, Suspense } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Activity, Menu } from "lucide-react";
+import { getStaticManifest } from "./staticData";
 import Sidebar from "./components/Sidebar";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Overview from "./pages/Overview";
@@ -62,6 +63,14 @@ function AppRoutes() {
   );
 }
 
+function DataDate() {
+  const [date, setDate] = useState(null);
+  useEffect(() => {
+    getStaticManifest().then(manifest => setDate(manifest.data_date)).catch(() => setDate("unavailable"));
+  }, []);
+  return <div role="status" style={{ padding: "8px 24px", fontSize: 12 }}>Published data through {date || "…"}. Each source may report a different week.</div>;
+}
+
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -96,6 +105,7 @@ function App() {
         <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
 
         <main className="main-content">
+          <DataDate />
           <ErrorBoundary>
             <AppRoutes />
           </ErrorBoundary>

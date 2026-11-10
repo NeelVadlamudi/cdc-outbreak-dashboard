@@ -97,6 +97,20 @@ jobs:
         continue-on-error: true
         run: python scripts/build_dashboard.py --db "$CDC_DB_PATH"
 
+      - id: static
+        name: Export read-only app data
+        if: steps.refresh.outcome == 'success'
+        run: python scripts/export_static.py --db "$CDC_DB_PATH"
+
+      - name: Keep the complete static generation
+        if: steps.static.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-dashboard
+          path: site/data/static
+          if-no-files-found: error
+          retention-days: 30
+
       - id: eval
         name: Eval (60 questions on the frozen snapshot)
         if: steps.schedule.outputs.full == 'true'
@@ -140,10 +154,10 @@ jobs:
           git push origin HEAD:main
 
       - name: Deploy the site
-        if: always()
+        if: always() && steps.static.outcome == 'success'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh workflow run pages.yml --ref main
+        run: gh workflow run pages.yml --ref main -f data_run_id=${{ github.run_id }}
 
       - name: Open alert issues
         if: always()

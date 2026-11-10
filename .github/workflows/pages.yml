@@ -5,9 +5,15 @@ on:
     branches: [main]
     paths: ["site/**", "frontend/**", ".github/workflows/pages.yml"]
   workflow_dispatch:
+    inputs:
+      data_run_id:
+        description: Nightly run with a complete static-dashboard artifact (blank uses latest)
+        required: false
+        type: string
 
 permissions:
   contents: read
+  actions: read
   pages: write
   id-token: write
 
@@ -43,6 +49,29 @@ jobs:
           for r in ask map forecasts analytics simulator wastewater advanced; do
             mkdir -p "_site/app/$r" && cp _site/app/index.html "_site/app/$r/index.html"
           done
+      - id: data-run
+        name: Select a complete static generation
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DATA_RUN_ID: ${{ inputs.data_run_id }}
+        run: |
+          set -euo pipefail
+          run_id="$DATA_RUN_ID"
+          if [ -z "$run_id" ]; then
+            run_id=$(gh api "repos/${{ github.repository }}/actions/artifacts?name=static-dashboard&per_page=100" \
+              --jq '[.artifacts[] | select(.expired == false)] | sort_by(.created_at) | last | .workflow_run.id // empty')
+          fi
+          [[ "$run_id" =~ ^[0-9]+$ ]] || { echo "No complete static data artifact; leaving Pages unchanged"; exit 1; }
+          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+      - name: Download public app data
+        uses: actions/download-artifact@v4
+        with:
+          name: static-dashboard
+          path: _site/data/static
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.data-run.outputs.run_id }}
+      - name: Validate generation before publishing
+        run: node scripts/validate_static.mjs _site/data/static
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

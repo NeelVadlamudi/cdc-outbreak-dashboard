@@ -14,3 +14,8 @@ evals/review_queue.jsonl
 
 # site/data is published nightly output
 !site/data/
+
+Local static build output
+.venv/
+site/data/static/
+_site/

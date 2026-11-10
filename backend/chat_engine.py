@@ -8,12 +8,12 @@ from __future__ import annotations
 
 import duckdb
 
-from backend.config import DB_PATH
+from backend import config
 
 
 def generate_weekly_brief() -> dict:
     """Weekly brief from DuckDB aggregates only — no LLM, no forecast models."""
-    conn = duckdb.connect(DB_PATH, read_only=True)
+    conn = duckdb.connect(config.DB_PATH, read_only=True)
     try:
         ari = conn.execute("""
             SELECT label, COUNT(*) as cnt FROM ari_activity

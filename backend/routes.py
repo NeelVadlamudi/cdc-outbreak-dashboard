@@ -31,6 +31,7 @@ from backend.insights import (
     wow_plain,
 )
 from backend.ratelimit import limited
+from backend.read_queries import read_payload
 from backend.simulator import SimulationParams, get_current_rates, run_simulation
 
 logger = logging.getLogger(__name__)
@@ -97,35 +98,17 @@ async def get_ari_activity(
     geography: str = Query(None),
 ):
     """Get current ARI activity levels by state."""
-    sql = "SELECT * FROM ari_activity WHERE 1=1"
-    params = []
-
-    if week_end:
-        sql += " AND week_end = ?"
-        params.append(week_end)
-    else:
-        sql += " AND week_end = (SELECT MAX(week_end) FROM ari_activity)"
-
-    if geography:
-        sql += " AND geography = ?"
-        params.append(geography)
-
-    sql += " ORDER BY geography"
-    results = query(sql, params if params else None)
-    serialize_dates(results)
-    return {"data": results, "count": len(results)}
+    result = read_payload("/ari-activity", {"week_end": week_end, "geography": geography}, query)
+    serialize_dates(result["data"])
+    return result
 
 
 @router.get("/ari-activity/history")
 async def get_ari_history(geography: str = Query("Alabama")):
     """Get historical ARI activity for a state."""
-    results = query("""
-        SELECT week_end, geography, label
-        FROM ari_activity WHERE geography = ?
-        ORDER BY week_end DESC LIMIT 52
-    """, [geography])
-    serialize_dates(results)
-    return {"data": results}
+    result = read_payload("/ari-activity/history", {"geography": geography}, query)
+    serialize_dates(result["data"])
+    return result
 
 
 @router.get("/hospitalizations")
@@ -137,27 +120,9 @@ async def get_hospitalizations(
 ):
     """Get RESP-NET hospitalization rates."""
     # CDC RESP-NET uses sex/race 'All' (legacy rows may say 'Overall').
-    sql = """
-        SELECT surveillance_network, season, week_ending_date, mmwr_year, mmwr_week,
-               age_group, site, weekly_rate, cumulative_rate
-        FROM hospitalization_rates
-        WHERE age_group = ?
-          AND sex IN ('All', 'Overall')
-          AND race_ethnicity IN ('All', 'Overall')
-          AND rate_type = 'Observed'
-    """
-    params = [age_group]
-    if network:
-        sql += " AND surveillance_network = ?"
-        params.append(network)
-    if site:
-        sql += " AND site = ?"
-        params.append(site)
-    sql += " ORDER BY week_ending_date DESC LIMIT ?"
-    params.append(limit)
-    results = query(sql, params)
-    serialize_dates(results)
-    return {"data": results, "count": len(results)}
+    result = read_payload("/hospitalizations", {"network": network, "site": site, "age_group": age_group, "limit": limit}, query)
+    serialize_dates(result["data"])
+    return result
 
 
 @router.get("/hospitalizations/trends")
@@ -173,7 +138,7 @@ async def get_hospitalization_trends():
           AND rate_type = 'Observed'
           AND weekly_rate IS NOT NULL
         GROUP BY surveillance_network, week_ending_date
-        ORDER BY week_ending_date
+        ORDER BY week_ending_date, virus
     """)
     serialize_dates(results)
     return {"data": results}
@@ -185,16 +150,9 @@ async def get_test_positivity(
     limit: int = Query(200),
 ):
     """Get test positivity rates by pathogen."""
-    sql = "SELECT * FROM test_positivity WHERE 1=1"
-    params = []
-    if pathogen:
-        sql += " AND pathogen = ?"
-        params.append(pathogen)
-    sql += " ORDER BY week_end DESC LIMIT ?"
-    params.append(limit)
-    results = query(sql, params if params else None)
-    serialize_dates(results)
-    return {"data": results, "count": len(results)}
+    result = read_payload("/test-positivity", {"pathogen": pathogen, "limit": limit}, query)
+    serialize_dates(result["data"])
+    return result
 
 
 @router.get("/test-positivity/latest")
@@ -237,7 +195,7 @@ async def get_dashboard_summary():
     risk_data = query("""
         SELECT label, COUNT(*) as count FROM ari_activity
         WHERE week_end = (SELECT MAX(week_end) FROM ari_activity)
-        GROUP BY label ORDER BY count DESC
+        GROUP BY label ORDER BY count DESC, label
     """)
 
     latest_ari = query("SELECT MAX(week_end) as latest FROM ari_activity")
@@ -466,31 +424,9 @@ async def get_wastewater(
 ):
     """Wastewater rows by site. Current viral activity levels by default."""
     _check_dataset(dataset)
-    if dataset == "legacy":
-        sql = f"""
-            SELECT wwtp_jurisdiction, wwtp_id, county_names, county_fips, population_served, date_end,
-                   ptc_15d AS legacy_ptc_15d, detect_prop_15d AS legacy_detect_prop_15d,
-                   percentile AS legacy_percentile
-            FROM wastewater_sites WHERE {LEGACY_WW}
-        """
-    else:
-        sql = f"""
-            SELECT wwtp_jurisdiction, wwtp_id, county_names, population_served, date_end AS week_end,
-                   pathogen, wval, wval_category
-            FROM wastewater_sites WHERE {CURRENT_WW}
-        """
-    params = []
-    if state:
-        sql += " AND wwtp_jurisdiction = ?"
-        params.append(state)
-    if pathogen and dataset == "current":
-        sql += " AND pathogen = ?"
-        params.append(pathogen)
-    sql += " ORDER BY date_end DESC LIMIT ?"
-    params.append(limit)
-    results = query(sql, params)
-    serialize_dates(results)
-    return {**_ww_meta(dataset), "data": results, "count": len(results)}
+    result = read_payload("/wastewater", {"state": state, "pathogen": pathogen, "dataset": dataset, "limit": limit}, query)
+    serialize_dates(result["data"])
+    return result
 
 
 @router.get("/wastewater/latest")
@@ -526,17 +462,9 @@ async def get_wastewater_latest(
 @router.get("/wastewater/county/{fips}")
 async def get_wastewater_county(fips: str):
     """Legacy SARS-CoV-2 trend for a county FIPS (the current dataset has no FIPS codes)."""
-    results = query(f"""
-        SELECT date_end,
-               CASE WHEN percentile BETWEEN 0 AND 100 THEN percentile END AS legacy_percentile,
-               CASE WHEN ptc_15d NOT IN (-99, 2147483647) THEN ptc_15d END AS legacy_ptc_15d,
-               population_served, county_names, wwtp_jurisdiction
-        FROM wastewater_sites
-        WHERE {LEGACY_WW} AND county_fips = ?
-        ORDER BY date_end
-    """, [fips])
-    serialize_dates(results)
-    return {**_ww_meta("legacy"), "data": results, "county_fips": fips}
+    result = read_payload("/wastewater/county/{fips}", {"fips": fips}, query)
+    serialize_dates(result["data"])
+    return result
 
 
 @router.get("/wastewater/states")
@@ -554,7 +482,7 @@ async def get_wastewater_states(
                    AVG(CASE WHEN ptc_15d NOT IN (-99, 2147483647) THEN ptc_15d END) AS legacy_avg_pct_change
             FROM wastewater_sites
             WHERE {LEGACY_WW} AND date_end = (SELECT MAX(date_end) FROM wastewater_sites WHERE {LEGACY_WW})
-            GROUP BY 1 ORDER BY legacy_avg_percentile DESC NULLS LAST
+            GROUP BY 1 ORDER BY legacy_avg_percentile DESC NULLS LAST, state
         """)
     else:
         results = query(f"""
@@ -564,7 +492,7 @@ async def get_wastewater_states(
             FROM wastewater_sites
             WHERE {CURRENT_WW} AND pathogen = ?
               AND date_end = (SELECT MAX(date_end) FROM wastewater_sites WHERE {CURRENT_WW} AND pathogen = ?)
-            GROUP BY 1 ORDER BY median_wval DESC NULLS LAST
+            GROUP BY 1 ORDER BY median_wval DESC NULLS LAST, state
         """, [pathogen, pathogen])
     serialize_dates(results)
     return {**_ww_meta(dataset), "data": results}

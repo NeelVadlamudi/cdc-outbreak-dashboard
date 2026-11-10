@@ -5,6 +5,8 @@
 
 import { ASK_ENDPOINT, adaptAskResponse, type AdaptedAskResponse } from "./agent/contract";
 
+import { readStatic } from "./staticData";
+
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 
 const RENDER_SPLASH = /Application loading|waking up|Start building on Render/i;
@@ -99,36 +101,36 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}): Promise<un
   throw lastError ?? new Error("Request failed after retries");
 }
 
-export const getDashboardSummary = () => fetchAPI("/dashboard-summary");
+export const getDashboardSummary = () => readStatic("/dashboard-summary");
 export const getAriActivity = (params = "") =>
-  fetchAPI(`/ari-activity${params ? "?" + params : ""}`);
+  readStatic(`/ari-activity${params ? "?" + params : ""}`);
 export const getAriHistory = (state: string) =>
-  fetchAPI(`/ari-activity/history?geography=${encodeURIComponent(state)}`);
-export const getHospitalizations = (params = "") => fetchAPI(`/hospitalizations?${params}`);
-export const getHospTrends = () => fetchAPI("/hospitalizations/trends");
-export const getTestPositivity = (params = "") => fetchAPI(`/test-positivity?${params}`);
-export const getLatestPositivity = () => fetchAPI("/test-positivity/latest");
-export const getForecast = (virus: string) => fetchAPI(`/forecast/${encodeURIComponent(virus)}`);
-export const getStates = () => fetchAPI("/states");
-export const getSites = () => fetchAPI("/hospitalizations/sites");
-export const getHealth = () => fetchAPI("/health");
-export const getSources = () => fetchAPI("/sources");
+  readStatic(`/ari-activity/history?geography=${encodeURIComponent(state)}`);
+export const getHospitalizations = (params = "") => readStatic(`/hospitalizations?${params}`);
+export const getHospTrends = () => readStatic("/hospitalizations/trends");
+export const getTestPositivity = (params = "") => readStatic(`/test-positivity?${params}`);
+export const getLatestPositivity = () => readStatic("/test-positivity/latest");
+export const getForecast = (virus: string) => readStatic(`/forecast/${encodeURIComponent(virus)}`);
+export const getStates = () => readStatic("/states");
+export const getSites = () => readStatic("/hospitalizations/sites");
+export const getHealth = () => readStatic("/health");
+export const getSources = () => readStatic("/sources");
 
-export const getWastewater = (params = "") => fetchAPI(`/wastewater?${params}`);
+export const getWastewater = (params = "") => readStatic(`/wastewater?${params}`);
 export const getWastewaterLatest = (pathogen = "SARS-CoV-2") =>
-  fetchAPI(`/wastewater/latest?pathogen=${encodeURIComponent(pathogen)}`);
-export const getWastewaterCounty = (fips: string) => fetchAPI(`/wastewater/county/${fips}`);
+  readStatic(`/wastewater/latest?pathogen=${encodeURIComponent(pathogen)}`);
+export const getWastewaterCounty = (fips: string) => readStatic(`/wastewater/county/${fips}`);
 export const getWastewaterStates = (pathogen = "SARS-CoV-2") =>
-  fetchAPI(`/wastewater/states?pathogen=${encodeURIComponent(pathogen)}`);
+  readStatic(`/wastewater/states?pathogen=${encodeURIComponent(pathogen)}`);
 
 export const getEnsembleForecast = (virus: string) =>
-  fetchAPI(`/ensemble/forecast/${encodeURIComponent(virus)}`);
+  readStatic(`/ensemble/forecast/${encodeURIComponent(virus)}`);
 export const compareModels = (virus: string) =>
-  fetchAPI(`/ensemble/compare/${encodeURIComponent(virus)}`);
-export const getAnomalies = () => fetchAPI("/anomalies");
+  readStatic(`/ensemble/compare/${encodeURIComponent(virus)}`);
+export const getAnomalies = () => readStatic("/anomalies");
 export const getAgeHeatmap = (network: string) =>
-  fetchAPI(`/age-heatmap/${encodeURIComponent(network)}`);
-export const getSeasonComparison = () => fetchAPI("/season-comparison");
+  readStatic(`/age-heatmap/${encodeURIComponent(network)}`);
+export const getSeasonComparison = () => readStatic("/season-comparison");
 
 export async function askAgent(
   question: string,
@@ -197,4 +199,6 @@ export const runSimulator = (params: Record<string, unknown>) =>
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(params),
   });
-export const getSimDefaults = () => fetchAPI("/simulator/defaults");
+export const getSimDefaults = () => readStatic("/simulator/defaults");
+
+export const getWeeklyBrief = () => readStatic("/weekly-brief");
