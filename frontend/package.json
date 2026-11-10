@@ -16,12 +16,12 @@
     "@duckdb/duckdb-wasm": "^1.33.1-dev57.0",
     "framer-motion": "^12.35.1",
     "lucide-react": "^0.577.0",
-    "plotly.js": "^3.4.0",
+    "plotly.js": "^4.2.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-globe.gl": "^2.37.0",
     "react-plotly.js": "^2.6.0",
-    "react-router-dom": "^7.13.1",
+    "react-router-dom": "^7.18.5",
     "three": "^0.183.2"
   },
   "devDependencies": {
@@ -36,6 +36,6 @@
     "globals": "^16.5.0",
     "tsx": "^4.23.15",
     "typescript": "^5.9.3",
-    "vite": "^7.3.1"
+    "vite": "^7.3.8"
   }
 }
