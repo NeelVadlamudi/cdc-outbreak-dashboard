@@ -4,7 +4,7 @@
    Soft panels for charts; severity via gentle amber→terracotta
    ================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import './fonts.css';
 
 /* ── CSS Variables (spa calm) ── */
 :root {

@@ -11,7 +11,7 @@ const site = resolve(repo, '_site');
 const cases = JSON.parse(readFileSync(resolve(site, 'browser-cases.json')));
 const manifest = JSON.parse(readFileSync(resolve(site, 'data/static/manifest.json')));
 const mime = { '.js': 'text/javascript', '.html': 'text/html', '.json': 'application/json',
-  '.wasm': 'application/wasm', '.css': 'text/css', '.svg': 'image/svg+xml' };
+  '.wasm': 'application/wasm', '.css': 'text/css', '.svg': 'image/svg+xml', '.woff2': 'font/woff2' };
 function serveFile(root, path, response, fallback) {
   let file = resolve(root, '.' + path);
   if (!file.startsWith(root + sep)) { response.writeHead(403).end(); return; }
@@ -37,7 +37,7 @@ const dev = await viteServer({
 });
 await dev.listen();
 const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
-const results = { parity: 0, renderRequests: 0, blockedExternal: [], pages: [], databaseAssets: [] };
+const results = { parity: 0, renderRequests: 0, blockedExternal: [], pages: [], databaseAssets: [], fontAssets: [] };
 try {
   const context = await browser.newContext();
   await context.route('**/*', route => {
@@ -50,6 +50,11 @@ try {
   });
   const page = await context.newPage();
   page.on('response', response => {
+    if (response.url().endsWith('.woff2')) {
+      assert.equal(new URL(response.url()).hostname, '127.0.0.1');
+      assert.equal(response.status(), 200);
+      results.fontAssets.push(response.url().replace(/.*\//, ''));
+    }
     if (/\.wasm$|public\.duckdb$|duckdb-browser-.*worker/.test(response.url())) {
       results.databaseAssets.push(response.url().replace(/.*\//, ''));
     }
@@ -64,6 +69,8 @@ try {
     assert.deepEqual(actual, item.expected, item.endpoint);
     results.parity++;
   }
+  // Measure bundled assets separately from the development server's source files.
+  results.fontAssets = [];
   for (const path of ['', 'analytics', 'wastewater', 'forecasts', 'advanced', 'map', 'ask']) {
     const failures = [];
     const failed = request => {
@@ -80,6 +87,21 @@ try {
     results.pages.push({ path: path || 'overview', elapsedMs: Date.now() - began });
     page.off('requestfailed', failed);
   }
+  results.fonts = await page.evaluate(async () => {
+    const variants = [
+      ['Space Grotesk', 'normal', 400], ['Space Grotesk', 'normal', 500],
+      ['Space Grotesk', 'normal', 600], ['Space Grotesk', 'normal', 700],
+      ['Fraunces', 'normal', 500], ['Fraunces', 'normal', 600], ['Fraunces', 'normal', 700],
+      ['Courier Prime', 'normal', 400], ['Courier Prime', 'normal', 700],
+      ['Courier Prime', 'italic', 400],
+    ];
+    return Promise.all(variants.map(async ([family, style, weight]) => {
+      const faces = await document.fonts.load(`${style} ${weight} 16px "${family}"`, 'Dashboard Đông Łódź');
+      return { family, style, weight, loaded: faces.length > 0 && faces.every(face => face.status === 'loaded') };
+    }));
+  });
+  assert.ok(results.fonts.every(font => font.loaded), 'Bundled font variants must load');
+  assert.ok(!results.blockedExternal.some(origin => /googleapis|gstatic/.test(origin)), 'Unexpected external font request');
   assert.equal(results.renderRequests, 0, 'Read-only views contacted Render');
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('http://127.0.0.1:4174/cdc-outbreak-dashboard/app/');
@@ -103,6 +125,8 @@ try {
   assert.equal(results.wastewaterMobileViewport.width, results.wastewaterMobileViewport.scrollWidth);
   results.blockedExternal = [...new Set(results.blockedExternal)];
   results.databaseAssets = [...new Set(results.databaseAssets)];
+  results.fontAssets = [...new Set(results.fontAssets)];
+  assert.equal(results.fontAssets.length, 12, 'All bundled font subsets must load');
   mkdirSync(resolve(repo, '_site/test-results'), { recursive: true });
   writeFileSync(resolve(repo, '_site/test-results/browser.json'), JSON.stringify(results, null, 2));
   console.log(JSON.stringify(results, null, 2));
