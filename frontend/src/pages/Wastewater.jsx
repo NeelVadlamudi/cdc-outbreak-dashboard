@@ -53,7 +53,7 @@ export default function Wastewater() {
     setPathogen(p);
   };
 
-  const weekEnd = sites.length ? sites[0].week_end : null;
+  const weekEnd = sites.length ? sites[0].week_end?.slice(0, 10) : null;
   const highSites = sites.filter((s) => s.wval_category === "High" || s.wval_category === "Very High").length;
   const stateSites = selectedState ? sites.filter((s) => s.state === selectedState) : [];
   const mapped = stateData.filter((d) => STATE_ABBREVS[d.state]);
@@ -104,7 +104,7 @@ export default function Wastewater() {
         />
       ) : (
         <>
-          <div className="stat-cards-grid fade-in" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
+          <div className="stat-cards-grid fade-in">
             <div className="stat-card accent-indigo">
               <div className="stat-card-icon indigo"><TestTubes size={22} /></div>
               <div className="stat-card-label">SITES REPORTING</div>

@@ -90,6 +90,17 @@ try {
   }), manifest.data_date);
   assert.ok(results.mobileViewport.dateVisible);
   assert.equal(results.renderRequests, 0);
+  await page.goto('http://127.0.0.1:4174/cdc-outbreak-dashboard/app/wastewater');
+  await page.waitForFunction(() => !document.querySelector('.loading-page'));
+  const weekCard = page.locator('.stat-card').filter({ hasText: 'WEEK ENDING' });
+  const dateValue = weekCard.locator('.stat-card-value');
+  assert.match(await dateValue.innerText(), /^\d{4}-\d{2}-\d{2}$/);
+  assert.ok(await dateValue.evaluate(node => node.scrollWidth <= node.clientWidth), 'Wastewater date must not clip');
+  results.wastewaterMobileDate = await dateValue.innerText();
+  results.wastewaterMobileViewport = await page.evaluate(() => ({
+    width: window.innerWidth, scrollWidth: document.documentElement.scrollWidth,
+  }));
+  assert.equal(results.wastewaterMobileViewport.width, results.wastewaterMobileViewport.scrollWidth);
   results.blockedExternal = [...new Set(results.blockedExternal)];
   results.databaseAssets = [...new Set(results.databaseAssets)];
   mkdirSync(resolve(repo, '_site/test-results'), { recursive: true });

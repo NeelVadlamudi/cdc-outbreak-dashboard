@@ -129,7 +129,7 @@ Display rules:
 
 ## 4. `data/replay.json` — section (d)
 Each item wraps one **unmodified** `POST /api/agent/ask` response (same shape as the API section below),
-exactly like `/workspace/cdc-agent-samples.json`:
+as illustrated by the repository fixture `tests/site-fixtures/replay.json`:
 ```json
 {
   "recorded_at": "ISO-8601",

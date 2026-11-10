@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
     paths: ["site/**", "frontend/**", ".github/workflows/pages.yml"]
+  workflow_run:
+    workflows: [nightly]
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
     inputs:
       data_run_id:
@@ -13,9 +17,6 @@ on:
 
 permissions:
   contents: read
-  actions: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: pages
@@ -23,6 +24,12 @@ concurrency:
 
 jobs:
   deploy:
+    if: github.ref == 'refs/heads/main' && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success')
+    permissions:
+      contents: read
+      actions: read
+      pages: write
+      id-token: write
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -35,6 +42,11 @@ jobs:
           node-version: 20
           cache: npm
           cache-dependency-path: frontend/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install public database validator
+        run: pip install 'duckdb>=1.2'
       - name: Build React app under /app/
         working-directory: frontend
         env:
@@ -44,6 +56,7 @@ jobs:
         run: |
           mkdir -p _site
           cp -r site/. _site/
+          rm -rf _site/data/static
           cp -r frontend/dist _site/app
           # Pages has no SPA fallback, so give each route its own entry file.
           for r in ask map forecasts analytics simulator wastewater advanced; do
@@ -53,16 +66,8 @@ jobs:
         name: Select a complete static generation
         env:
           GH_TOKEN: ${{ github.token }}
-          DATA_RUN_ID: ${{ inputs.data_run_id }}
-        run: |
-          set -euo pipefail
-          run_id="$DATA_RUN_ID"
-          if [ -z "$run_id" ]; then
-            run_id=$(gh api "repos/${{ github.repository }}/actions/artifacts?name=static-dashboard&per_page=100" \
-              --jq '[.artifacts[] | select(.expired == false)] | sort_by(.created_at) | last | .workflow_run.id // empty')
-          fi
-          [[ "$run_id" =~ ^[0-9]+$ ]] || { echo "No complete static data artifact; leaving Pages unchanged"; exit 1; }
-          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+          DATA_RUN_ID: ${{ github.event.workflow_run.id || inputs.data_run_id }}
+        run: python scripts/select_static_run.py
       - name: Download public app data
         uses: actions/download-artifact@v4
         with:
@@ -71,6 +76,10 @@ jobs:
           github-token: ${{ github.token }}
           run-id: ${{ steps.data-run.outputs.run_id }}
       - name: Validate generation before publishing
+        env:
+          STATIC_NIGHTLY_RUN_ID: ${{ steps.data-run.outputs.run_id }}
+          STATIC_NIGHTLY_RUN_ATTEMPT: ${{ steps.data-run.outputs.run_attempt }}
+          STATIC_NIGHTLY_COMMIT: ${{ steps.data-run.outputs.head_sha }}
         run: node scripts/validate_static.mjs _site/data/static
       - uses: actions/upload-pages-artifact@v3
         with:

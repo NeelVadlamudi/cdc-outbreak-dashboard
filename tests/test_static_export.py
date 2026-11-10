@@ -1,7 +1,9 @@
 import hashlib
 import json
+import os
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 from urllib.parse import urlencode
 
@@ -154,3 +156,52 @@ def write_browser_cases(target):
 if __name__ == "__main__":
     import sys
     write_browser_cases(sys.argv[1])
+
+
+@pytest.mark.parametrize("mutation", ["bad_response", "bad_unlisted_json", "column", "table", "view", "macro", "schema"])
+def test_upload_validator_rejects_invalid_generation(published, tmp_path, mutation):
+    output, manifest = published
+    copy = tmp_path / "invalid"
+    shutil.copytree(output, copy)
+    if mutation == "bad_response":
+        (copy / manifest["endpoints"]["/dashboard-summary"]).write_text("{broken")
+    elif mutation == "bad_unlisted_json":
+        (copy / "unlisted.json").write_text("{broken")
+    else:
+        statements = {"column": "ALTER TABLE ari_activity ADD COLUMN private_note VARCHAR",
+                      "table": "CREATE TABLE extra_rows (value INTEGER)",
+                      "view": "CREATE VIEW extra_view AS SELECT 1 AS value",
+                      "macro": "CREATE MACRO extra_macro() AS 1", "schema": "CREATE SCHEMA extra_schema"}
+        with duckdb.connect(str(copy / manifest["database"])) as conn:
+            conn.execute(statements[mutation])
+    result = subprocess.run(["node", "scripts/validate_static.mjs", str(copy)], capture_output=True,
+                            env={**os.environ, "PYTHON": sys.executable})
+    assert result.returncode != 0, mutation
+
+
+def test_upload_validator_accepts_allowlisted_generation(published):
+    output, _ = published
+    result = subprocess.run(["node", "scripts/validate_static.mjs", str(output)], capture_output=True,
+                            env={**os.environ, "PYTHON": sys.executable})
+    assert result.returncode == 0, result.stderr.decode()
+
+
+@pytest.mark.parametrize("marker", [None, "wrong-run", "snapshot", "valid"])
+def test_pages_validation_requires_matching_nightly_provenance(published, tmp_path, marker):
+    output, manifest = published
+    copy = tmp_path / "provenance"
+    shutil.copytree(output, copy)
+    if marker:
+        provenance = {"source": "nightly-live", "database": "data/cdc_surveillance.duckdb",
+                      "run_id": "999", "run_attempt": "1", "repository": "example/dashboard",
+                      "commit": "123", "version": manifest["version"]}
+        if marker == "valid":
+            provenance["run_id"] = "123"
+        if marker == "snapshot":
+            provenance.update(run_id="123", database="evals/snapshot.duckdb")
+        (copy / "provenance.json").write_text(json.dumps(provenance))
+    result = subprocess.run(["node", "scripts/validate_static.mjs", str(copy)], capture_output=True,
+                            env={**os.environ, "PYTHON": sys.executable, "STATIC_NIGHTLY_RUN_ID": "123",
+                                 "STATIC_NIGHTLY_RUN_ATTEMPT": "1", "GITHUB_REPOSITORY": "example/dashboard",
+                                 "STATIC_NIGHTLY_COMMIT": "123"})
+    assert (result.returncode == 0) == (marker == "valid"), result.stderr.decode()
