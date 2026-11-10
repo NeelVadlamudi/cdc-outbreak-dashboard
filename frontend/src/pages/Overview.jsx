@@ -18,7 +18,7 @@ import { getDashboardSummary, getAriActivity, getTestPositivity, getHospTrends, 
 import { STATE_ABBREV } from '../lib/states';
 
 const RISK_LEVELS = { 'Minimal': 0, 'Very Low': 1, 'Low': 2, 'Moderate': 3, 'High': 4, 'Very High': 5 };
-/* Spa-calm sequential: sage → stone → soft amber → terracotta (never screaming red) */
+/* Low-contrast sequential scale from low (sage) to high (terracotta). */
 const RISK_COLORS = ['#4f7d6a', '#5a8a8c', '#7a8f86', '#c4924a', '#c47a5a', '#a86850'];
 const HEALTH_POLL_MS = 60_000;
 const DISCLAIMER =

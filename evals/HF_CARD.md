@@ -26,7 +26,7 @@ Frozen, SQL-backed evaluation set for the grounded Ask agent in
 
 - Measure whether an agent’s **numbers appear in tool results** (grounding) and match
   SQL gold answers on a **frozen** DuckDB snapshot.
-- Research / education / portfolio measurement artifact — **not** clinical decision support
+- Research and education measurement artifact — **not** clinical decision support
   and **not** a claim of production SLA or real-time case surveillance.
 
 ## Dataset contents (in this repo)
@@ -38,7 +38,7 @@ Frozen, SQL-backed evaluation set for the grounded Ask agent in
 | [`baseline.json`](baseline.json) | Nightly score floor for CI grounding gate |
 | Nightly `results/*.json` | Model-dated scorecards (Pages publishes a subset) |
 
-## Scoring (functional, not vibe)
+## Scoring
 
 - **numeric_accuracy** — answer within tolerance of `expected_sql`
 - **tool_choice** — expected tools used

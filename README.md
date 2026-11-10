@@ -1,168 +1,79 @@
 # CDC Outbreak Dashboard
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Live site](https://img.shields.io/badge/live-GitHub%20Pages-0000f2)](https://neelvadlamudi.github.io/cdc-outbreak-dashboard/)
+Public respiratory surveillance with a visible path from each answer back to its data.
 
-**Open source · free to use · MIT licensed**
+[Live site](https://neelvadlamudi.github.io/cdc-outbreak-dashboard/) · [Data sources](docs/DATA_SOURCES.md) · [Portfolio](https://neelvadlamudi.github.io/neelresume/)
 
-**Live site:** https://neelvadlamudi.github.io/cdc-outbreak-dashboard/ · **Source:** https://github.com/NeelVadlamudi/cdc-outbreak-dashboard · **Portfolio:** https://neelvadlamudi.github.io/neelresume/
+## What is published
 
-**End product:** a free, open-source respiratory surveillance assistant anyone can run, fork, or host. Built for **hospital/clinic ops leads, infection prevention, research coordinators, epidemiologists, and educators** who need this week’s CDC respiratory picture—fast—with the source table and reporting week for every answer and scored nightlies, not free-form “smart” chat.
+The dashboard brings together public COVID-19, influenza and RSV surveillance tables. A tool-calling assistant can answer questions from those tables and show its source weeks and tool results. The project is for research, education and situational awareness—not clinical decisions or official CDC guidance.
 
-**Pipeline:** CDC open data → DuckDB → FastAPI → grounded tool-calling agent → twice-daily refresh + nightly evals & forecast backtests. **Multi-source plane:** CDC SODA stays core; open supplements (OWID weekly COVID deaths, CDC preliminary burden estimates) add provenance-tagged context — see [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md) and `GET /api/sources`.
+The site checked on **November 9, 2026** reported current surveillance tables through **October 31, 2026**. A recent pipeline run and a recent observation are different things: the former says the refresh ran; the latter says how current the source records are. Check the published [run status](https://neelvadlamudi.github.io/cdc-outbreak-dashboard/data/status.json), [dashboard payload](https://neelvadlamudi.github.io/cdc-outbreak-dashboard/data/dashboard.json) and API health response separately.
 
-A surveillance assistant over public U.S. respiratory virus data (COVID-19, influenza, RSV). Outlooks default to **last-week persistence** (Forecast Hub honesty); LSTM/XGBoost are experimental and labelled when they underperform that baseline.
+The main outlook is **last-week persistence**. The published [backtests](https://neelvadlamudi.github.io/cdc-outbreak-dashboard/data/backtest.json) report that the experimental LSTM and XGBoost models did not beat it on the evaluated series. The product keeps the baseline in front rather than presenting a more complicated model as an improvement by default.
 
-**Disclaimer:** for research, education, and situational awareness—not clinical decision-making or official CDC guidance. Labels are **epidemiology weeks**, not wall-clock “live cases.” Surveillance tables come from public [data.cdc.gov](https://data.cdc.gov) feeds; this project is not affiliated with the CDC.
+## Data and serving path
 
-**Cost to you:** the software is free. Self-host with a free [Ollama](https://ollama.com) model for Ask, or optionally your own Gemini API key. The public demo API may sleep on free hosting.
+CDC open data → ingestion and cleaning → DuckDB → FastAPI → React dashboard and checked tool answers.
 
+The ingestion layer handles surveillance tables independently so one source failure need not discard the others. Supplementary sources carry their own provenance. The API serves query results; model training is not part of a forecast read request.
 
-## Proven vs experimental (60 seconds)
+The charts and tables are static files on Pages, refreshed each night, so they load without the API. Only Ask a question and the surge simulator call a separate API service, which can take up to a minute to wake on free hosting.
 
-| Layer | Status |
+## Answer checking is measured, not assumed
+
+`POST /api/agent/ask` uses defined tools and a number checker. The checker compares numerical claims with returned values. Refusals and unverified responses are part of the contract; passing that check is not proof that every interpretation is correct.
+
+The frozen **60-question** evaluation uses `evals/snapshot.duckdb`. It is separate from the live surveillance database so results can be compared on the same inputs. A historical evaluation score should always name its run, model and data snapshot. This README does not present an old score as current performance.
+
+The [grounding gate](scripts/check_grounding_gate.py) can compare a supplied evaluation artifact with the baseline. It skips when no artifact is supplied, so ordinary green CI alone does not establish current answer quality. See the [evaluation card](evals/HF_CARD.md) and [system boundaries](docs/BOUNDARIES.md).
+
+## Live data and evaluation data stay separate
+
+| Artifact | Purpose |
 | --- | --- |
-| CDC → DuckDB ingestion + `/api` reads | Proven; twice-daily refresh publishes release `cdc-data-latest` |
-| `POST /api/agent/ask` tool agent + number checker | Proven; scored on frozen `evals/snapshot.duckdb` (`cdc-q60-v1`) |
-| Last-value / persistence outlook | **Primary** product outlook |
-| LSTM / XGBoost | **Experimental** — shown with underperforms-baseline when backtests lose |
-| Anomaly flags | z-score (|z| > 2), not Isolation Forest |
-| Unverified `/api/chat` | **Retired** (HTTP 410 → use `/api/agent/ask`) |
+| `cdc-data-latest` release, `cdc_surveillance.duckdb` asset | Refreshed database for the API. |
+| `evals/snapshot.duckdb` | Fixed evaluation input; do not replace it with the latest pull. |
+| `site/data/` | Static dashboard metrics, run status, backtests and evaluation summaries. |
 
-## Case study — measuring grounded Ask QA
+The startup fetch can fall back to the frozen snapshot if it cannot download the release. Inspect `/api/health` for `data_plane`, `as_of` and per-table freshness; do not call a fallback snapshot a current feed.
 
-Two lessons the nightlies forced into the product:
-
-1. **Ask QA grounding regression (`14` bug).** A stale-table warning path included a day-count that never appeared in tool output. Surveillance table numbers were fine; nightly `grounded_answers` (Ask answer-quality) fell (e.g. 16.7% on 2026-11-04) because the scorer requires every figure in the answer to appear in tool results. Fix: keep the warning text free of invented numbers ([`backend/agent/graph.py`](backend/agent/graph.py)). CI can gate `grounded_answers` vs [`evals/baseline.json`](evals/baseline.json) when a clean artifact is supplied (`scripts/check_grounding_gate.py`). Live status chips frame this as an engineering/QA note—not a disease alert.
-2. **Forecast honesty.** Rolling-origin backtests show LSTM/XGBoost rarely beat repeating last week on these sparse weekly series. The UI and `get_forecast` therefore lead with last-value and badge experimental models — not “train harder forever.”
-
-## Resume bullets (locked)
-
-1. **CDC Outbreak Dashboard** (Python, LangGraph, FastAPI, DuckDB, React, GitHub Actions): open-source, free MIT respiratory surveillance over public CDC COVID/flu/RSV data with twice-daily refresh; a tool-calling Ask agent returns answers only with source tables and week stamps, and a number checker queues unverified replies for review.
-2. Ships evaluation set `cdc-q60-v1` ([eval card](evals/HF_CARD.md)) and forecast backtests in CI/nightlies so outlooks default to last-week persistence when experimental models lose — Forecast Hub–style honesty, not vibe forecasts.
-
-## 60-second demo script
-
-1. Open the [live site](https://neelvadlamudi.github.io/cdc-outbreak-dashboard/) — show nightly status + freshness chips + eval captions; click **Open interactive dashboard**.
-2. Overview — MMWR-style briefing, spa-calm chrome, source chips (`as_of` + license), health badge `data_plane: live_release` (or honest `snapshot_fallback` if the host fell back). First load after idle may wait ~30–60s while free-tier wakes.
-3. Ask — shareable `?q=` link; expand tool tables + observability (steps, latency, tokens, prompt version).
-4. Outlook — `?virus=` share; last-value primary; experimental LSTM may show `no_model` on the free Render image (PyTorch omitted by design).
-5. Close — “open source MIT, free to self-host with Ollama; collaborative source adapters welcome.”
-
-## What the code does
-
-- **Data ingestion** (`backend/cdc_ingestion.py`): downloads four public datasets from data.cdc.gov, cleans them with pandas and loads them into DuckDB.
-- **Query API** (`backend/routes.py`): read-only endpoints under `/api` for activity, hospitalizations, positivity, wastewater, dashboard summary (dual-layer metrics + briefing), health (`as_of`, `checked_at`, per-table stale flags), and SSE.
-- **Insights** (`backend/insights.py`): positivity → “1 in N”; hosp → per 100k; high-risk → N of M; WoW when prior week exists. Fail closed—never invent.
-- **Outlook** (`backend/forecasting.py`): `GET /api/forecast/{virus}` returns **last-value primary**; LSTM is nested under `experimental_models` when a saved model exists. Never trains on GET.
-- **XGBoost** (`backend/ensemble.py`): experimental; compare endpoint also returns last-value primary. Anomalies use **z-score** only.
-- **Backtest:** published notes attach to forecast/compare responses; models that lose get `underperforms_baseline`.
-- **Agent** (`backend/agent/`): `POST /api/agent/ask` only (verified tools + checker). Exact-week misses refuse; pediatric questions need age_group args. `POST /api/chat` and `GET /api/events/stream` return **410**.
-- **Weekly brief** (`backend/chat_engine.py`): DuckDB aggregates only — not an LLM path.
-- **MCP server** (`backend/mcp_server.py`): same tools over MCP (local; not on the free Render web image).
-- **Capacity simulator** (`backend/simulator.py`): illustrative Monte Carlo bed/ICU demand (rate-limited).
-- **Frontend** (`frontend/`): React + Vite; typed agent contract (`contract.ts` / `api.ts` / `AskData.tsx`); cold-start retries on API fetches.
-- **Boundaries:** [`docs/BOUNDARIES.md`](docs/BOUNDARIES.md).
-
-## Live DuckDB vs frozen eval snapshot
-
-| File | Role |
-| --- | --- |
-| Release tag **`cdc-data-latest`** asset `cdc_surveillance.duckdb` | Fresh CDC tables for the live API (Actions also keeps a `cdc-duckdb` workflow artifact) |
-| `evals/snapshot.duckdb` | **Frozen** for reproducible 60-q evals — do not overwrite with live pulls |
-
-`scripts/fetch_live_db.py` downloads `CDC_DB_URL` (or, on Render, the public `cdc-data-latest` release by default) and falls back to the snapshot if the download fails. See `render.yaml`.
-
-After deploy, `/api/health` should show `data_plane: "live_release"` and a current `as_of`. If an older Render service still has a blank `CDC_DB_URL` override that blocks the blueprint value, clear it or set:
-
-```text
-https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/releases/download/cdc-data-latest/cdc_surveillance.duckdb
-```
-
-## Running locally
-
-Requirements: Python 3.10+ and Node.js 18+.
-
-### Backend
+## Run locally
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
-set -a; source .env; set +a
+# Configure local settings before starting the API.
 uvicorn backend.main:app --reload
 ```
 
-### Frontend
+In another terminal:
 
 ```bash
-cd frontend && npm ci && npm run dev
+cd frontend
+npm ci
+npm run dev
 ```
 
-## Configuration
+The assistant supports a local Ollama setup or an optional hosted model. Configure the environment as described in `.env.example`; do not put credentials in source files or documentation.
 
-See `.env.example`. Notable vars: `CDC_DB_PATH`, `CDC_DB_URL`, `INGEST_ON_STARTUP`, `AGENT_MODEL`, `GEMINI_API_KEY`, `RATE_LIMIT_BACKEND` (`sqlite` default / `memory` / `redis` + `REDIS_URL`), `STALE_AFTER_DAYS`.
-
-Ask:
+## Test and operate
 
 ```bash
-curl -X POST -H "Content-Type: application/json" \
-  -d '{"question": "What is COVID-19 test positivity this week?"}' \
-  http://localhost:8000/api/agent/ask
+make lint
+make test
+# Requires the configured model and frozen evaluation database.
+make eval
 ```
 
-## Development
+The [refresh workflow](.github/workflows/nightly.yml) is scheduled twice daily. It refreshes DuckDB, publishes the data release and dashboard artifacts, and runs evaluations and backtests on its full-run path. Workflow configuration is not a guarantee of an on-time start; the published run link is the record of what happened.
 
-```bash
-make run    # API with reload
-make test   # pytest
-make lint   # ruff (same as CI)
-make check  # lint + test before push
-make eval   # 60-question eval (needs model + snapshot)
-```
+The API also has request limits. Temporary storage on the free service means some counters reset on restart. The capacity simulator is illustrative, and anomaly flags are statistical checks rather than diagnoses.
 
-**Before push:** run `make check` (or `scripts/check.sh`). Optional pre-commit hook so unused-import / ruff failures never reach CI again:
+## Limits and license
 
-```bash
-pip install pre-commit
-pre-commit install   # uses .pre-commit-config.yaml (ruff check)
-```
+Surveillance records describe reporting weeks and may be revised. Coverage and publication dates differ by source; no national summary is a substitute for local clinical information. A model that fails to beat persistence remains experimental.
 
-## Twice-daily refresh
-
-`.github/workflows/nightly.yml` (`17 9,21 * * *` UTC + `workflow_dispatch`):
-
-1. Refresh CDC SODA → DuckDB
-2. Upload artifact `cdc-duckdb` **and** `gh release upload` to tag **`cdc-data-latest`** (`--clobber`). Release upload failure fails the run (not silent success).
-3. Morning / manual: backtest + 60-q eval on **frozen snapshot** + publish site JSON
-4. Evening: refresh + release + dashboard JSON (faster attack loop)
-5. `status.json` → commit site data → alert issues
-
-Alerts when a rate drops >5pts vs `evals/baseline.json`, a current table is stale, or a step fails. **Baseline bump:** only after a clean post-fix eval summary — see the `note` in `evals/baseline.json`.
-
-CI runs `scripts/check_grounding_gate.py` (skips unless `evals/ci_eval_result.json` or `EVAL_RESULT_PATH` is set).
-
-## Deployment
-
-`render.yaml` targets the **free** web plan (no persistent disk—Render rejects disks on free). Start command runs `fetch_live_db.py` into `/tmp`. Paid always-on + disk is an optional later upgrade in the Render UI.
-
-- Health: `GET /api/health` (`as_of`, `checked_at`, tables + stale flags).
-- Rate limits (defaults): Ask 6/min · 60/day/IP · 800/day global; weekly-brief and simulator similarly capped (`RATE_*` env overrides). SQLite file by default (`RATE_LIMIT_DB`); optional Redis via env. Free-tier `/tmp` counters reset on restart.
-- `/api/chat` and `/api/events/stream` are gone (410). Limits apply to `/api/agent/ask`, `/api/weekly-brief`, and `/api/simulator/run`.
-- CORS: Pages origin only (`ALLOWED_ORIGINS`). Secrets: `GEMINI_API_KEY`; `CDC_DB_URL` is a public release URL (blueprint sets it).
-
-## Release tag (v1.0)
-
-When Phases 1–3 exit criteria are green on a clean tree:
-
-```bash
-git tag -a v1.0 -m "v1.0: grounded agent, honest last-value outlook, live DuckDB path"
-git push origin v1.0
-```
-
-Do not force-push tags. If the working tree is dirty, commit first or leave the tag for after merge.
-
-## Data source
-
-Public CDC datasets on [data.cdc.gov](https://data.cdc.gov). **Not affiliated with the CDC.**
+Independent project, not affiliated with the CDC. Code is [MIT licensed](LICENSE); source-data terms are documented separately in [DATA_SOURCES.md](docs/DATA_SOURCES.md).

@@ -49,9 +49,9 @@
     </section>
 
     <section class="panel" id="sec-case" aria-labelledby="h-case">
-      <div class="sec-head"><h2 id="h-case">Case study</h2></div>
+      <div class="sec-head"><h2 id="h-case">How it works</h2></div>
       <div class="body">
-        <p class="note"><strong>Ask QA (grounding):</strong> a stale-table warning once included a day count (<code>14</code>) that never came from a tool result. Nightly answer-quality scoring then marked many answers as ungrounded (for example 16.7% vs a 100% baseline). The numbers in the surveillance tables were unchanged—this was a bot-caption bug. Warnings are now number-free; scores here refresh on the next nightly after deploy.</p>
+        <p class="note"><strong>Ask QA (grounding):</strong> a stale-table warning once included a day count (<code>14</code>) that never came from a tool result. Nightly answer-quality scoring then marked many answers as ungrounded (for example 16.7% vs a 100% baseline). The numbers in the surveillance tables were unchanged; the warning text had used a hardcoded day count instead of a value returned by the tool. Warnings are now number-free; scores here refresh on the next nightly after deploy.</p>
         <p class="note"><strong>Forecasts:</strong> backtests show complex models rarely beat repeating last week on these sparse weekly series—so outlooks lead with last-week persistence and label the rest experimental.</p>
         <p class="note"><strong>Live demo:</strong> the free hosted API sleeps when idle. Ask may take about a minute to wake; that is a hosting delay, not missing CDC data.</p>
       </div>

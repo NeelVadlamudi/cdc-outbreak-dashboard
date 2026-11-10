@@ -1,14 +1,14 @@
 /* ================================================
    CDC Respiratory Virus Dashboard
-   Spa-calm ocular comfort — sage mist, warm stone, seafoam
-   Soft panels for charts; severity via gentle amber→terracotta
+   Low-contrast palette: sage, stone, and seafoam.
+   Sequential severity scale from sage through amber to terracotta.
    ================================================ */
 
 @import './fonts.css';
 
-/* ── CSS Variables (spa calm) ── */
+/* Color and typography variables */
 :root {
-  /* Mist / sage atmosphere (not pure white or electric blue) */
+  /* Sage and mist backgrounds, not pure white or bright blue */
   --bg-primary: #e8eee9;
   --bg-secondary: #dce6df;
   --bg-bright: #f3f6f2;
@@ -19,10 +19,10 @@
   --bg-glass: rgba(247, 245, 240, 0.08);
   --bg-atmosphere: linear-gradient(165deg, #e4ebe6 0%, #ebe6df 42%, #e7efea 100%);
 
-  /* Text — warm charcoal on mist (AA); sidebar uses on-chrome */
+  /* Text on mist backgrounds (AA contrast); sidebar uses on-chrome tokens */
   --text-primary: #2c3330;
   --text-secondary: #4a524e;
-  --text-muted: #555e58; /* ≥4.5:1 on card parchment for body/muted copy */
+  --text-muted: #555e58; /* ≥4.5:1 on the card background for body and muted copy */
   --text-accent: #3d6b5c;
   --text-on-panel: #2c3330;
   --text-on-panel-secondary: #4a524e;
@@ -31,7 +31,7 @@
   --text-on-chrome-secondary: rgba(242, 240, 235, 0.78);
   --text-on-chrome-muted: rgba(242, 240, 235, 0.55);
 
-  /* Status — muted sequential; high = soft terracotta, never screaming red */
+  /* Status: low-contrast sequential scale; high values use terracotta, not bright red */
   --color-safe: #4f7d6a;
   --color-safe-dim: rgba(79, 125, 106, 0.14);
   --color-low: #5a8a8c;
@@ -43,12 +43,12 @@
   --color-very-high: #a86850;
   --color-very-high-dim: rgba(168, 104, 80, 0.14);
 
-  /* Virus colors — soft distinct on parchment panels */
+  /* Virus colors, distinct on the panel background */
   --color-covid: #4a6b78;
   --color-flu: #b8894a;
   --color-rsv: #4f7d6a;
 
-  /* Accents — quiet seafoam / stone (no neon) */
+  /* Seafoam and stone accents, no neon */
   --accent-primary: #6f9e8c;
   --accent-primary-glow: rgba(111, 158, 140, 0.2);
   --accent-secondary: #8fb5a6;
@@ -57,7 +57,7 @@
   --accent-gradient: linear-gradient(160deg, #7eab9a, #6f9e8c);
   --accent-gradient-vivid: linear-gradient(160deg, #8fb5a6, #5f8f7c);
 
-  /* Borders & Shadows — soft lifts, no glow spam */
+  /* Borders and shadows, no glow */
   --border-subtle: rgba(242, 240, 235, 0.12);
   --border-light: rgba(242, 240, 235, 0.2);
   --border-accent: rgba(111, 158, 140, 0.45);
@@ -148,7 +148,7 @@ body {
   color: var(--text-on-panel);
 }
 
-/* ── Sidebar — thin Hermes chrome on blue ── */
+/* Sidebar frame on the dark background */
 .sidebar {
   position: fixed;
   top: 0;
@@ -758,13 +758,13 @@ body {
 .alert-banner.warning { background: #f6efe4; border: 1px solid rgba(196, 146, 74, 0.28); color: #7a5a2e; }
 .alert-banner.danger { background: #f5ebe6; border: 1px solid rgba(196, 122, 90, 0.28); color: #7a4a38; }
 .alert-banner.info { background: var(--bg-card); border: 1px solid rgba(111, 158, 140, 0.28); color: #3d554c; }
-/* Ops / engineering status — calm stone, never clinical red */
+/* Operations and engineering status, stone palette rather than alert red */
 .alert-banner.ops {
   background: #f1f0eb;
   border: 1px solid rgba(107, 116, 110, 0.22);
   color: #4a524e;
 }
-/* CDC-week situation facts — soft seafoam, not emergency */
+/* CDC-week situation facts, seafoam rather than alert styling */
 .alert-banner.situation {
   background: #eef3f0;
   border: 1px solid rgba(111, 158, 140, 0.28);

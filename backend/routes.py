@@ -88,9 +88,7 @@ def serialize_dates(results, date_fields=None):
     return results
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# PHASE 1: Core Endpoints (ARI, Hospitalizations, Positivity, Forecasts)
-# ═══════════════════════════════════════════════════════════════════════════════
+# Surveillance and forecast endpoints.
 
 @router.get("/ari-activity")
 async def get_ari_activity(
@@ -393,9 +391,7 @@ async def event_stream():
     )
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# PHASE 2A: Wastewater Surveillance (County-Level)
-# ═══════════════════════════════════════════════════════════════════════════════
+# County-level wastewater endpoints.
 
 CURRENT_WW = "source_dataset = 'atcp-73re'"
 LEGACY_WW = "source_dataset = '2ew6-ywp6'"
@@ -498,9 +494,7 @@ async def get_wastewater_states(
     return {**_ww_meta(dataset), "data": results}
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# PHASE 2B: Advanced analytics (XGBoost, Anomalies, Age Heatmap, Season Compare)
-# ═══════════════════════════════════════════════════════════════════════════════
+# Advanced analytics endpoints (XGBoost, anomalies, age heatmap, season comparison).
 
 @router.get("/ensemble/forecast/{virus}")
 async def get_ensemble_forecast(virus: str = "COVID-NET"):
@@ -570,7 +564,7 @@ async def agent_ask(body: AgentQuestion):
     try:
         return await asyncio.to_thread(run_agent, body.question)
     except Exception as e:
-        # Never mark rule-based text as checker-passed — that is a portfolio honesty flop.
+        # The agent failed before verification; return an explicitly unverified response with no checker pass.
         logger.warning("Agent unavailable, refusing with unverified fallback: %s", e)
         start = time.perf_counter()
         return {

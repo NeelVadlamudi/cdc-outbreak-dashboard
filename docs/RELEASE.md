@@ -8,4 +8,4 @@ git tag -a v1.0 -m "v1.0: grounded agent, honest last-value outlook, live DuckDB
 git push origin v1.0
 ```
 
-Do not `--force` the tag. If Path-to-Ten changes are still uncommitted, commit/merge first, then tag.
+Do not `--force` the tag. If any release changes are still uncommitted, commit or merge them first, then tag.

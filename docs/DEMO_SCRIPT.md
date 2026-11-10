@@ -1,6 +1,7 @@
 # 60-second demo script
 
-**Audience:** interviewer or portfolio visitor  
+**Audience:** readers of the live site
+
 **Props:** [live site](https://neelvadlamudi.github.io/cdc-outbreak-dashboard/), React Ask (`/app/ask`), optional local API
 
 ## Script
@@ -17,7 +18,7 @@
    Open Forecast backtest / Outlook: last-value is primary; LSTM/XGBoost marked experimental / underperforms baseline when they lose.
 
 4. **Measurement (10s)**  
-   Eval strip + case study: grounding `14` bug caught by nightly `grounded_answers`; baseline gate in CI when a clean artifact is present.
+   Eval scores and How it works: grounding `14` bug caught by nightly `grounded_answers`; baseline gate in CI when a clean artifact is present.
 
 ## Do not claim
 
