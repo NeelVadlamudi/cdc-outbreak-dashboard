@@ -32,7 +32,8 @@ Conventions for every file:
       "change_text": "string?",
       "headline": "string?",
       "plain": "string? — everyday language; omit rather than invent",
-      "insight": "string? — plain plus optional WoW when prior week exists",
+      "wow": "string? — week-over-week caption only, e.g. unchanged from last week",
+      "insight": "string? — backward compatible: plain plus ' · ' plus wow when both exist",
       "week_ending": "YYYY-MM-DD?",
       "source_table": "string?"
     }
@@ -40,7 +41,7 @@ Conventions for every file:
 }
 ```
 `format: "pct"` means `value` is a 0–1 fraction. Integers are shown with separators; others with `decimals` (default 1).
-`plain` / `insight` / `week_ending` are optional; the site shows them when present and never fabricates them.
+`plain` / `wow` / `insight` / `week_ending` are optional; the site never fabricates them. Cards show `plain`, then `wow` on its own line. They never render `insight` under `plain`. If `wow` is missing and `insight` starts with `plain` plus ` · `, the remainder is used as the change line so already-published files keep working until the next nightly.
 
 ## 2. `data/eval.json` — section (b)
 One entry per model run. Each entry is the top of the file `evals/run_evals.py` already writes

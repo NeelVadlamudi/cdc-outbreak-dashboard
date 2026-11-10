@@ -564,6 +564,13 @@ body {
   font-weight: 500;
 }
 
+.stat-card-wow {
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--text-muted);
+}
+
 .stat-card-week {
   margin-top: 6px;
   font-size: 11px;

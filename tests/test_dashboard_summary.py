@@ -18,7 +18,9 @@ def test_dashboard_summary_dual_layer(fixture_db):
     assert covid["plain"] == "about 1 in 28 tests positive"
     assert covid["week_ending"] == "2026-10-10"
     assert covid["source_table"] == "test_positivity"
+    assert covid["wow"] == "down from 4.1% last week"
     assert "down from 4.1%" in (covid.get("insight") or "")
+    assert covid["insight"].startswith(covid["plain"] + " · ")
 
     high = body["metrics"]["high_risk"]
     assert high["value"] == 2

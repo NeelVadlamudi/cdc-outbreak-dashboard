@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { getDashboardSummary, getAriActivity, getTestPositivity, getHospTrends, getHealth } from '../api';
 import { STATE_ABBREV } from '../lib/states';
+import { wowLine } from '../lib/metricCardText';
 
 const RISK_LEVELS = { 'Minimal': 0, 'Very Low': 1, 'Low': 2, 'Moderate': 3, 'High': 4, 'Very High': 5 };
 /* Low-contrast sequential scale from low (sage) to high (terracotta). */
@@ -40,7 +41,8 @@ function MetricCard({ accent, iconTone, delayClass, icon, metric, fallbackValue,
     : percent
       ? `${value}%`
       : value;
-  const plain = metric?.plain || metric?.insight || null;
+  const plain = metric?.plain || null;
+  const wow = wowLine(metric);
   const week = metric?.week_ending || null;
 
   return (
@@ -49,6 +51,7 @@ function MetricCard({ accent, iconTone, delayClass, icon, metric, fallbackValue,
       <div className="stat-card-label">{metric?.headline || fallbackLabel}</div>
       <div className="stat-card-value">{display}</div>
       {plain ? <div className="stat-card-plain">{plain}</div> : null}
+      {wow ? <div className="stat-card-wow">{wow}</div> : null}
       {week ? <div className="stat-card-week">CDC week ending {week}</div> : null}
       {metric?.source_table ? (
         <details className="stat-card-tech">
@@ -56,7 +59,6 @@ function MetricCard({ accent, iconTone, delayClass, icon, metric, fallbackValue,
           <div>
             Source table: <code>{metric.source_table}</code>
             {metric.unit ? <> · unit: {metric.unit}</> : null}
-            {metric.insight && metric.insight !== plain ? <> · {metric.insight}</> : null}
           </div>
         </details>
       ) : null}

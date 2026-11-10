@@ -24,7 +24,6 @@ from backend.ensemble import (
 from backend.forecasting import generate_forecast, last_value_outlook, train_model
 from backend.insights import (
     build_briefing,
-    combine_insight,
     high_risk_plain,
     metric_card,
     positivity_plain,
@@ -303,7 +302,7 @@ async def get_dashboard_summary():
             value=pct,
             unit="%",
             plain=plain,
-            insight=combine_insight(plain, wow),
+            wow=wow,
             week_ending=pos_week,
             source_table="test_positivity",
         )

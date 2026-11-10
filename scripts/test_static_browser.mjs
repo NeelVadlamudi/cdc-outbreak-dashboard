@@ -258,7 +258,7 @@ try {
       charts = await assertRenderedCharts(page, expected);
       for (const chart of charts) hovers.push(await hoverChart(page, chart.id));
     }
-    const clipped = await page.locator('.stat-card-value, .stat-card-label, .stat-card-plain, .stat-card-week').evaluateAll(nodes =>
+    const clipped = await page.locator('.stat-card-value, .stat-card-label, .stat-card-plain, .stat-card-wow, .stat-card-week').evaluateAll(nodes =>
       nodes.filter(node => node.scrollWidth > node.clientWidth).map(node => node.textContent.trim()));
     assert.deepEqual(clipped, [], `Clipped mobile summary on ${expected.path}`);
     await page.mouse.move(0, 0);

@@ -53,6 +53,7 @@ def build(db_path: str) -> dict:
                 "headline": f"{pathogen} positivity",
                 "unit": "%",
                 "plain": plain,
+                "wow": wow,
                 "insight": combine_insight(plain, wow),
                 "week_ending": week,
                 "source_table": "test_positivity",

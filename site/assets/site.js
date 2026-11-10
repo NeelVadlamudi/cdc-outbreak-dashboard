@@ -16,6 +16,18 @@
   const SVG = "http://www.w3.org/2000/svg";
   const sv = (tag, attrs = {}) => { const n = document.createElementNS(SVG, tag); for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v); return n; };
   const isNum = (v) => typeof v === "number" && Number.isFinite(v);
+  const WOW_SEP = " · ";
+  function wowLine(metric) {
+    if (!metric || typeof metric !== "object") return null;
+    if (typeof metric.wow === "string" && metric.wow) return metric.wow;
+    const plain = typeof metric.plain === "string" ? metric.plain : null;
+    const insight = typeof metric.insight === "string" ? metric.insight : null;
+    if (plain && insight && insight.startsWith(plain + WOW_SEP)) {
+      const rest = insight.slice(plain.length + WOW_SEP.length);
+      return rest || null;
+    }
+    return null;
+  }
 
   /* data/index.json lists which files exist, so missing sections don't 404 in the console. */
   let manifest = null;
@@ -73,9 +85,8 @@
         el("div", { class: "val" }, m.format === "pct" ? pct(m.value) : (Number.isInteger(m.value) ? int(m.value) : dec(m.value, m.decimals ?? 1)),
           m.unit && m.format !== "pct" ? el("span", { class: "unit", text: m.unit }) : null),
         m.plain ? el("div", { class: "ch plain", text: m.plain }) : null,
-        m.insight && m.insight !== m.plain ? el("div", { class: "ch", text: m.insight }) : null,
-        m.week_ending ? el("div", { class: "ch week", text: `CDC week ending ${m.week_ending}` }) : null,
-        m.change_text ? el("div", { class: "ch", text: m.change_text }) : null))));
+        wowLine(m) ? el("div", { class: "ch wow", text: wowLine(m) }) : null,
+        m.week_ending ? el("div", { class: "ch week", text: `CDC week ending ${m.week_ending}` }) : null))));
   }
 
   /* (b) Eval table. Keys are exactly evals/run_evals.py summarize() output.

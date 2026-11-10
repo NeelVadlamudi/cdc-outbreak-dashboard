@@ -54,7 +54,20 @@ def test_metric_card_and_briefing_use_only_passed_numbers():
         source_table="test_positivity",
     )
     assert card["insight"] == "about 1 in 28 tests positive"
+    assert card["wow"] is None
     assert card["week_ending"] == "2026-10-10"
+    with_wow = metric_card(
+        headline="COVID positivity",
+        value=3.6,
+        unit="%",
+        plain="about 1 in 28 tests positive",
+        wow="down from 4.1% last week",
+        week_ending="2026-10-10",
+        source_table="test_positivity",
+    )
+    assert with_wow["wow"] == "down from 4.1% last week"
+    assert with_wow["insight"] == "about 1 in 28 tests positive · down from 4.1% last week"
+    assert with_wow["plain"] == "about 1 in 28 tests positive"
     briefing = build_briefing(
         week_ending="2026-10-10",
         high_risk=2,

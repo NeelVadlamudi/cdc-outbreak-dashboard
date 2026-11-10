@@ -92,17 +92,25 @@ def metric_card(
     value: Any,
     unit: str | None = None,
     plain: str | None = None,
+    wow: str | None = None,
     insight: str | None = None,
     week_ending: str | None = None,
     source_table: str | None = None,
 ) -> dict:
-    """Dual-layer metric payload. Callers must pass only values already in the DB."""
+    """Dual-layer metric payload. Callers must pass only values already in the DB.
+
+    `wow` is the week-over-week caption alone. `insight` stays as plain plus
+    optional wow (joined with " · ") so older clients can still read it.
+    """
+    if insight is None:
+        insight = combine_insight(plain, wow)
     return {
         "headline": headline,
         "value": value,
         "unit": unit,
         "plain": plain,
-        "insight": insight if insight is not None else plain,
+        "wow": wow,
+        "insight": insight,
         "week_ending": week_ending,
         "source_table": source_table,
     }
