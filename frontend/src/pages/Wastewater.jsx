@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Plot from "react-plotly.js";
+import Plot from "../components/Plot";
 import { TestTubes, Map as MapIcon, AlertTriangle, Calendar, Link2 } from "lucide-react";
 import { getWastewaterLatest, getWastewaterStates } from "../api";
 import { STATE_ABBREV as STATE_ABBREVS } from "../lib/states";
@@ -136,7 +136,7 @@ export default function Wastewater() {
                   locations: mapped.map((d) => STATE_ABBREVS[d.state]),
                   z: mapped.map((d) => d.median_wval),
                   text: mapped.map((d) => `${d.state}<br>${d.sites} sites · ${d.sites_high} High or Very High<br>Median WVAL: ${d.median_wval}`),
-                  hoverinfo: "text", colorscale: "YlOrRd", colorbar: { title: "WVAL", thickness: 10 },
+                  hoverinfo: "text", colorscale: "YlOrRd", colorbar: { title: { text: "WVAL" }, thickness: 10 },
                 }]}
                 layout={{ geo: { scope: "usa", bgcolor: "rgba(0,0,0,0)" }, margin: { t: 0, b: 0, l: 0, r: 0 }, height: 380, paper_bgcolor: "rgba(0,0,0,0)" }}
                 config={{ displayModeBar: false, responsive: true }}

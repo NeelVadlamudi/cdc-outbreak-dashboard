@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Plot from 'react-plotly.js';
+import Plot from '../components/Plot';
 import { Crosshair, Calendar, BrainCircuit, Activity, LineChart, AlertTriangle, Link2 } from 'lucide-react';
 import { getForecast } from '../api';
 import ChartEmpty from '../components/ChartEmpty';
@@ -66,7 +66,7 @@ export default function Forecasts() {
     plot_bgcolor: 'rgba(0,0,0,0)',
     font: { family: 'Space Grotesk, sans-serif', color: '#6b6b6b', size: 11 },
     margin: { l: 50, r: 20, t: 30, b: 50 },
-    xaxis: { gridcolor: '#e8e8e8', zeroline: false, title: { text: 'Week', font: { size: 11 } } },
+    xaxis: { gridcolor: '#e8e8e8', zeroline: false, type: 'category', title: { text: 'Week', font: { size: 11 } } },
     yaxis: { gridcolor: '#e8e8e8', zeroline: false, title: { text: 'Rate per 100k', font: { size: 11 } } },
     showlegend: true,
     legend: { orientation: 'h', y: -0.2, font: { size: 11, color: '#3a3a3a' } },
@@ -127,7 +127,7 @@ export default function Forecasts() {
               <span>{forecast.note || forecast.backtest?.lstm?.note}</span>
             </div>
           )}
-          <div className="stat-cards-grid fade-in" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+          <div className="stat-cards-grid fade-in" style={{ '--stat-columns': 3 }}>
             <div className="stat-card accent-indigo">
               <div className="stat-card-icon indigo"><Crosshair size={22} /></div>
               <div className="stat-card-label">Last observed</div>

@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import Plot from 'react-plotly.js';
+import Plot from '../components/Plot';
 import { Map as MapIcon, MapPin, Activity, Globe as GlobeIcon, Link2 } from 'lucide-react';
 import Globe from 'react-globe.gl';
+import earthTexture from '../assets/earth-water.png';
 import { getAriActivity, getAriHistory } from '../api';
 import { STATE_COORDS } from '../lib/states';
 import ChartEmpty from '../components/ChartEmpty';
@@ -203,7 +204,7 @@ export default function MapView() {
               ref={globeRef}
               width={globeWidth}
               height={520}
-              globeImageUrl="//unpkg.com/three-globe/example/img/earth-water.png"
+              globeImageUrl={earthTexture}
               // Light transparent styling for pure light mode
               backgroundColor="rgba(0,0,0,0)"
               atmosphereColor="#E0E7FF"

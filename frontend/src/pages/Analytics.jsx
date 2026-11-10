@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Plot from 'react-plotly.js';
+import Plot from '../components/Plot';
 import { Activity, TestTubes, LineChart, BarChart2, TrendingUp, Syringe, Link2 } from 'lucide-react';
 import { getTestPositivity, getHospitalizations, getSites } from '../api';
 import ChartEmpty from '../components/ChartEmpty';
@@ -133,7 +133,7 @@ export default function Analytics() {
         </div>
       </div>
 
-      <div className="stat-cards-grid fade-in" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+      <div className="stat-cards-grid fade-in" style={{ '--stat-columns': 3 }}>
         {['COVID-NET', 'FluSurv-NET', 'RSV-NET'].map((network, i) => {
           const { latest, prev } = getLatestRate(network);
           const change = prev > 0 ? ((latest - prev) / prev * 100).toFixed(1) : 0;
@@ -259,6 +259,7 @@ export default function Analytics() {
             ...plotLayout,
             height: 350,
             barmode: 'group',
+            xaxis: { ...plotLayout.xaxis, type: 'category' },
             yaxis: { ...plotLayout.yaxis, title: { text: 'Rate per 100k', font: { size: 11 } } },
           }}
           config={{ displayModeBar: false, responsive: true }}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Plot from "react-plotly.js";
+import Plot from "../components/Plot";
 import { Hospital, AlertTriangle, TrendingUp, Settings, Activity, Play } from "lucide-react";
 import { runSimulator, getSimDefaults } from "../api";
 
@@ -167,7 +167,7 @@ export default function Simulator() {
         <div>
           {results && (
             <>
-              <div className="stat-cards-grid" style={{ gridTemplateColumns: "repeat(2, 1fr)", marginBottom: "24px", gap: "16px" }}>
+              <div className="stat-cards-grid" style={{ '--stat-columns': 2, marginBottom: "24px", gap: "16px" }}>
                 <div className="stat-card accent-indigo">
                   <div className="stat-card-icon indigo"><Hospital size={22} /></div>
                   <div className="stat-card-label">Peak Bed Demand</div>
@@ -240,8 +240,8 @@ export default function Simulator() {
                   ]}
                   layout={{
                     ...plotLayout,
-                    xaxis: { ...plotLayout.xaxis, title: "Week" },
-                    yaxis: { ...plotLayout.yaxis, title: "Beds Needed" },
+                    xaxis: { ...plotLayout.xaxis, title: { text: "Week" } },
+                    yaxis: { ...plotLayout.yaxis, title: { text: "Beds Needed" } },
                     height: 350,
                   }}
                   config={{ displayModeBar: false, responsive: true }}
@@ -287,9 +287,9 @@ export default function Simulator() {
                   ]}
                   layout={{
                     ...plotLayout,
-                    xaxis: { ...plotLayout.xaxis, title: "Week" },
-                    yaxis: { ...plotLayout.yaxis, title: "ICU Beds Needed" },
-                    yaxis2: { title: "Overflow %", overlaying: "y", side: "right", range: [0, 100], gridcolor: 'transparent' },
+                    xaxis: { ...plotLayout.xaxis, title: { text: "Week" } },
+                    yaxis: { ...plotLayout.yaxis, title: { text: "ICU Beds Needed" } },
+                    yaxis2: { title: { text: "Overflow %" }, overlaying: "y", side: "right", range: [0, 100], gridcolor: 'transparent' },
                     margin: { t: 20, b: 60, l: 60, r: 60 },
                     height: 350,
                     barmode: "overlay",

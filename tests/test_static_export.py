@@ -151,6 +151,12 @@ def write_browser_cases(target):
             cases.append({"endpoint": path + ("?" + urlencode(params) if params else ""),
                           "expected": response.json()})
     Path(target).write_text(json.dumps(cases))
+    from backend.routes import SimRequest
+
+    params = SimRequest().model_dump()
+    response = client.post("/api/simulator/run", json=params)
+    assert response.status_code == 200
+    Path(target).with_name("simulator-case.json").write_text(json.dumps({"params": params, "expected": response.json()}))
 
 
 if __name__ == "__main__":

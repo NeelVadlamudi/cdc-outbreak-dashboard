@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test:contract": "node --import tsx --test src/agent/__tests__/contract.test.js",
-    "smoke": "node --import tsx ../scripts/smoke_frontend.mjs"
+    "smoke": "node --import tsx ../scripts/smoke_frontend.mjs",
+    "test:charts": "node --test ../tests/frontend-chart-checks.test.mjs"
   },
   "dependencies": {
     "@duckdb/duckdb-wasm": "^1.33.1-dev57.0",
@@ -37,5 +38,8 @@
     "tsx": "^4.23.15",
     "typescript": "^5.9.3",
     "vite": "^7.3.8"
+  },
+  "engines": {
+    "node": ">=22.12.0"
   }
 }

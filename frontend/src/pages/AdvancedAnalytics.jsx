@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Plot from "react-plotly.js";
+import Plot from "../components/Plot";
 import { Microscope, BrainCircuit, Trees, AlertOctagon, Users, Calendar, AlertTriangle, AlertCircle } from "lucide-react";
 import { compareModels, getAnomalies, getAgeHeatmap, getSeasonComparison } from "../api";
 
@@ -122,7 +122,7 @@ export default function AdvancedAnalytics() {
         </div>
       )}
 
-      <div className="stat-cards-grid fade-in" style={{ gridTemplateColumns: "repeat(4, 1fr)", marginBottom: "24px", gap: "16px" }}>
+      <div className="stat-cards-grid fade-in" style={{ '--stat-columns': 4, marginBottom: "24px", gap: "16px" }}>
         <div className="stat-card accent-emerald">
           <div className="stat-card-icon emerald"><Microscope size={22} /></div>
           <div className="stat-card-label">Primary outlook rate</div>
@@ -187,8 +187,8 @@ export default function AdvancedAnalytics() {
             ]}
             layout={{
               ...plotLayout,
-              xaxis: { ...plotLayout.xaxis, title: "Week", tickangle: -45 },
-              yaxis: { ...plotLayout.yaxis, title: "Rate per 100k" },
+              xaxis: { ...plotLayout.xaxis, type: "category", title: { text: "Week" }, tickangle: -45 },
+              yaxis: { ...plotLayout.yaxis, title: { text: "Rate per 100k" } },
               margin: { t: 20, b: 80, l: 60, r: 20 },
               legend: { orientation: "h", y: -0.3, font: { color: '#3a3a3a' } },
               height: 380,
@@ -219,7 +219,7 @@ export default function AdvancedAnalytics() {
               }]}
               layout={{
                 ...plotLayout,
-                xaxis: { ...plotLayout.xaxis, title: "Importance Score" },
+                xaxis: { ...plotLayout.xaxis, title: { text: "Importance Score" } },
                 yaxis: { automargin: true, tickfont: { size: 10, color: "#4B5563" } },
                 margin: { t: 10, b: 50, l: 120, r: 20 },
                 height: 380,
@@ -252,7 +252,7 @@ export default function AdvancedAnalytics() {
             }]}
             layout={{
               ...plotLayout,
-              xaxis: { ...plotLayout.xaxis, title: "Week Ending", nticks: 13 },
+              xaxis: { ...plotLayout.xaxis, title: { text: "Week Ending" }, nticks: 13 },
               yaxis: { automargin: true, tickfont: { color: "#4B5563" } },
               margin: { t: 10, b: 60, l: 140, r: 20 },
               height: 380,
@@ -272,8 +272,8 @@ export default function AdvancedAnalytics() {
             data={seasonTraces}
             layout={{
               ...plotLayout,
-              xaxis: { ...plotLayout.xaxis, title: "MMWR Week" },
-              yaxis: { ...plotLayout.yaxis, title: "Rate per 100k" },
+              xaxis: { ...plotLayout.xaxis, title: { text: "MMWR Week" } },
+              yaxis: { ...plotLayout.yaxis, title: { text: "Rate per 100k" } },
               margin: { t: 20, b: 60, l: 60, r: 20 },
               legend: { orientation: "h", y: -0.25, font: { color: "#4B5563" } },
               height: 380,

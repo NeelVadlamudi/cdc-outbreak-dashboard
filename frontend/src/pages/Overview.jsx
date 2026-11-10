@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import Plot from 'react-plotly.js';
+import Plot from '../components/Plot';
 import {
   Hospital,
   Activity,
