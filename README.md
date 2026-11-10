@@ -7,7 +7,7 @@
 
 **Live site:** https://neelvadlamudi.github.io/cdc-outbreak-dashboard/ · **Source:** https://github.com/NeelVadlamudi/cdc-outbreak-dashboard · **Portfolio:** https://neelvadlamudi.github.io/neelresume/
 
-**End product:** a free, open-source respiratory surveillance assistant anyone can run, fork, or host. Built for **hospital/clinic ops leads, infection prevention, research coordinators, epidemiologists, and educators** who need this week’s CDC respiratory picture—fast—with tool receipts and scored nightlies, not free-form “smart” chat.
+**End product:** a free, open-source respiratory surveillance assistant anyone can run, fork, or host. Built for **hospital/clinic ops leads, infection prevention, research coordinators, epidemiologists, and educators** who need this week’s CDC respiratory picture—fast—with the source table and reporting week for every answer and scored nightlies, not free-form “smart” chat.
 
 **Pipeline:** CDC open data → DuckDB → FastAPI → grounded tool-calling agent → twice-daily refresh + nightly evals & forecast backtests. **Multi-source plane:** CDC SODA stays core; open supplements (OWID weekly COVID deaths, CDC preliminary burden estimates) add provenance-tagged context — see [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md) and `GET /api/sources`.
 

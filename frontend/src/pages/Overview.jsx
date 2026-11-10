@@ -220,7 +220,7 @@ export default function Overview() {
             <h1 className="page-title">Overview</h1>
             <p className="page-subtitle">
               Built for clinicians, coordinators, and researchers who need this week’s CDC respiratory picture—fast.
-              {' '}<Link to="/ask">Ask with tool receipts</Link>
+              {' '}<Link to="/ask">Ask a question</Link>
               {' · '}<Link to="/forecasts?virus=COVID-NET">Outlook</Link>
             </p>
             <p className="page-disclaimer">{DISCLAIMER}</p>
@@ -235,14 +235,16 @@ export default function Overview() {
               title={health?.error || health?.data_plane || undefined}
             >
               <span className="live-dot" aria-hidden />
-              {weekEnding
-                ? `CDC week ending ${weekEnding}`
-                : 'CDC week unavailable'}
-              {health?.data_plane === 'live_release' ? ' · data_plane live_release' : ''}
-              {health?.data_plane === 'snapshot_fallback' ? ' · data_plane snapshot' : ''}
-              {health?.status === 'stale' ? ' · refresh may be delayed' : ''}
-              {health?.status === 'degraded' ? ' · service check delayed' : ''}
-              {checkedLabel ? ` · last checked ${checkedLabel}` : ''}
+              <span className="status-badge-text">
+                {weekEnding
+                  ? `CDC week ending ${weekEnding}`
+                  : 'CDC week unavailable'}
+                {health?.data_plane === 'live_release' ? ' · data_plane live_release' : ''}
+                {health?.data_plane === 'snapshot_fallback' ? ' · data_plane snapshot' : ''}
+                {health?.status === 'stale' ? ' · refresh may be delayed' : ''}
+                {health?.status === 'degraded' ? ' · service check delayed' : ''}
+                {checkedLabel ? ` · last checked ${checkedLabel}` : ''}
+              </span>
             </div>
           </div>
         </div>

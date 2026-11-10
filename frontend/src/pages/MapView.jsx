@@ -15,6 +15,7 @@ const RISK_LABELS = ['Minimal', 'Very Low', 'Low', 'Moderate', 'High', 'Very Hig
 
 export default function MapView() {
   const globeRef = useRef();
+  const globeContainerRef = useRef(null);
   const [ariData, setAriData] = useState([]);
   const [selectedState, setSelectedState] = useState(() => getParam('state', '') || null);
   const [stateHistory, setStateHistory] = useState([]);
@@ -38,20 +39,15 @@ export default function MapView() {
 
   useEffect(() => {
     fetchData();
-
-    // Auto-resize the globe container
-    const handleResize = () => {
-      const parent = document.getElementById('globe-container');
-      if (parent) {
-        setGlobeWidth(parent.clientWidth);
-      }
-    };
-    window.addEventListener('resize', handleResize);
-    // Initial size
-    setTimeout(handleResize, 100);
-
-    return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  useEffect(() => {
+    const container = globeContainerRef.current;
+    if (loading || !container) return;
+    const observer = new ResizeObserver(() => setGlobeWidth(container.clientWidth));
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [loading]);
 
   useEffect(() => {
     setParams({ state: selectedState || '' });
@@ -184,7 +180,7 @@ export default function MapView() {
       </div>
 
       <div className="charts-grid fade-in">
-        <div className="card" style={{ padding: 0, overflow: 'hidden' }} id="globe-container">
+        <div className="card" style={{ padding: 0, overflow: 'hidden' }} id="globe-container" ref={globeContainerRef}>
           <div className="card-header" style={{ padding: '24px 24px 0', borderBottom: 'none' }}>
             <span className="card-title"><GlobeIcon size={18} /> United States</span>
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', zIndex: 10 }}>

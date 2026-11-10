@@ -278,7 +278,7 @@ def get_test_positivity(pathogen: str | None = None, week: str | None = None) ->
         rows = _rows(cur)
         if requested and not rows:
             return _week_not_covered("test_positivity", wk, latest)
-        # Dual-layer fields so “1 in N” can appear in tool receipts (grounding-safe).
+        # Dual-layer fields so “1 in N” can appear alongside the source table and reporting week (grounding-safe).
         for row in rows:
             pct = row.get("percent_positive")
             n = positivity_one_in_n(pct)

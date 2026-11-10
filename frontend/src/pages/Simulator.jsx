@@ -96,7 +96,7 @@ export default function Simulator() {
       </p>
       {error && <div role="alert" className="alert-banner danger">{error}</div>}
 
-      <div className="simulator-layout fade-in" style={{ display: "grid", gridTemplateColumns: "minmax(260px, 320px) 1fr", gap: "20px" }}>
+      <div className="simulator-layout fade-in" style={{ display: "grid", gridTemplateColumns: "minmax(260px, 320px) minmax(0, 1fr)", gap: "20px" }}>
         <div className="card" style={{ position: "sticky", top: "24px", alignSelf: "start", padding: "22px" }}>
           <div className="card-header" style={{ marginBottom: "20px" }}>
             <span className="card-title"><Settings size={18} /> Scenario settings</span>
@@ -136,9 +136,9 @@ export default function Simulator() {
           <div style={{ display: "grid", gap: "24px" }}>
             {sliders.map((s) => (
               <div key={s.key}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
+                <div className="slider-heading">
                   <label style={{ fontSize: "13px", color: "var(--text-secondary)", fontWeight: 600 }}>{s.label}</label>
-                  <span style={{ fontSize: "14px", fontWeight: 800, color: "var(--text-primary)" }}>
+                  <span className="slider-value" style={{ fontSize: "14px", fontWeight: 800, color: "var(--text-primary)" }}>
                     {s.format ? s.format(params[s.key]) : params[s.key]}{s.unit}
                   </span>
                 </div>
@@ -304,7 +304,7 @@ export default function Simulator() {
                 <div className="card-header">
                   <span className="card-title"><Activity size={18} /> Weekly Breakdown</span>
                 </div>
-                <div style={{ overflowX: "auto" }}>
+                <div data-scroll-x="" style={{ overflowX: "auto" }}>
                   <table className="data-table">
                     <thead>
                       <tr>

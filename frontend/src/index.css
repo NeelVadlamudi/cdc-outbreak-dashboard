@@ -138,6 +138,7 @@ body {
 
 .main-content {
   flex: 1;
+  min-width: 0;
   margin-left: 248px;
   padding: 36px 40px 48px;
   min-height: 100vh;
@@ -375,6 +376,8 @@ body {
 
 .page-header-badges {
   display: flex;
+  max-width: 100%;
+  min-width: 0;
   gap: 8px;
   align-items: center;
   flex-shrink: 0;
@@ -418,9 +421,13 @@ body {
   text-transform: uppercase;
   background: var(--accent-primary-glow);
   color: var(--accent-cta);
-  white-space: nowrap;
+  white-space: normal;
+  max-width: 100%;
   border: 1px solid var(--border-accent);
 }
+
+.status-badge-text { min-width: 0; overflow-wrap: anywhere; }
+.status-badge .live-dot { flex-shrink: 0; }
 
 .status-badge.status-ok,
 .status-badge.status-live {
@@ -867,6 +874,13 @@ body {
 }
 
 /* ── Tables (inside white cards) ── */
+.table-scroll {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .data-table {
   width: 100%;
   border-collapse: separate;
@@ -1112,6 +1126,18 @@ body {
 }
 
 /* Simulator sliders */
+.simulator-layout > * { min-width: 0; }
+.slider-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  min-width: 0;
+}
+.slider-heading label { flex: 1; min-width: 0; }
+.slider-value { flex-shrink: 0; white-space: nowrap; }
+
 .range-slider {
   -webkit-appearance: none;
   width: 100%;
@@ -1175,7 +1201,7 @@ body {
   .page-title { font-size: 24px; }
 
   .simulator-layout {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: minmax(0, 1fr) !important;
   }
 }
 

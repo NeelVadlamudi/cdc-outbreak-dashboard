@@ -83,7 +83,7 @@ export default function AskData() {
             <h1 className="page-title">Ask a question</h1>
             <p className="page-subtitle">
               For ops leads, infection prevention, research coordinators, and analysts who need this week’s CDC
-              respiratory figures with tool receipts—not free-form chat.
+              respiratory figures. Ask a question; every answer shows the source table and reporting week.
             </p>
             <p className="page-disclaimer">
               Open source and free to use (MIT). For research, education, and situational awareness—not clinical

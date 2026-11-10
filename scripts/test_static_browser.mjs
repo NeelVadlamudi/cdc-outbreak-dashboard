@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import process from 'node:process';
+import { inspectMobileLayout, assertMobileLayout, inspectHospitalizationScroll, assertScrollableTable } from './layout_checks.mjs';
 import { createServer as httpServer } from 'node:http';
 import { readFileSync, existsSync, statSync, writeFileSync, mkdirSync } from 'node:fs';
 import { resolve, extname, sep } from 'node:path';
@@ -259,9 +261,73 @@ try {
     const clipped = await page.locator('.stat-card-value, .stat-card-label, .stat-card-plain, .stat-card-week').evaluateAll(nodes =>
       nodes.filter(node => node.scrollWidth > node.clientWidth).map(node => node.textContent.trim()));
     assert.deepEqual(clipped, [], `Clipped mobile summary on ${expected.path}`);
-    results.mobilePages.push({ path: expected.path || 'overview', ...size, clipped, charts: charts.map(chart => chart.id), hovers });
+    await page.mouse.move(0, 0);
+    const layout = await inspectMobileLayout(page);
+    if (expected.path === '') {
+      results.layoutNegatives = [];
+      for (const kind of ['nowrap-badge', 'unwrapped-table', 'unmarked-scrollport', 'clipped-marker']) {
+        const probe = await page.evaluate(kind => {
+          const node = document.createElement('div');
+          node.id = 'layout-negative-probe';
+          node.style.cssText = 'position:fixed;left:24px;top:140px;width:240px;max-width:240px;z-index:9999;background:white;color:black;';
+          if (kind === 'nowrap-badge' || kind === 'clipped-marker') {
+            node.className = 'status-badge';
+            node.style.cssText += 'display:block;white-space:nowrap;overflow:hidden;';
+            node.textContent = 'CDC week ending 2026-10-10 · refresh may be delayed · last checked 12:42 PM '.repeat(8);
+            if (kind === 'clipped-marker') node.setAttribute('data-scroll-x', '');
+          } else {
+            const table = document.createElement('table');
+            table.id = 'layout-negative-table';
+            table.style.cssText = 'width:1200px;min-width:1200px;white-space:nowrap;';
+            table.innerHTML = '<tbody><tr><td>Weekly rate</td><td>Cumulative rate</td></tr></tbody>';
+            node.append(table);
+            if (kind === 'unmarked-scrollport') node.style.overflowX = 'auto';
+          }
+          document.querySelector('.main-content').append(node);
+          return { kind, clientWidth: node.clientWidth, scrollWidth: node.scrollWidth, right: node.getBoundingClientRect().right };
+        }, kind);
+        try {
+          assert.ok(probe.scrollWidth > probe.clientWidth + 1, `${kind} must reproduce real internal overflow`);
+          const injected = await inspectMobileLayout(page);
+          assert.throws(() => assertMobileLayout(injected), undefined, `${kind} must fail the real browser layout gate`);
+          if (kind === 'nowrap-badge') {
+            assert.ok(probe.right < 390, 'The clipped badge box itself must remain inside the viewport');
+            assert.ok(injected.overflowingElements.some(item => item.element === '#layout-negative-probe'), 'The collector must detect the badge own concealed text');
+          }
+          results.layoutNegatives.push({ ...probe, rejected: true, layout: injected });
+        } finally {
+          await page.locator('#layout-negative-probe').evaluate(node => node.remove());
+        }
+        assertMobileLayout(await inspectMobileLayout(page));
+      }
+    }
+    const screenshotNames = { '': 'overview', analytics: 'trends', simulator: 'surge-planning' };
+    if (Object.hasOwn(screenshotNames, expected.path)) {
+      const directory = process.env.STATIC_SCREENSHOT_DIR || resolve(site, 'test-results/mobile');
+      mkdirSync(directory, { recursive: true });
+      const name = screenshotNames[expected.path];
+      await page.evaluate(() => scrollTo(0, 0));
+      await page.screenshot({ path: resolve(directory, `${name}-viewport.png`) });
+      await page.screenshot({ path: resolve(directory, `${name}-full.png`), fullPage: true });
+      if (expected.path === 'analytics') {
+        const card = page.locator('.card').filter({ hasText: 'Recent Hospitalization Data' });
+        await card.scrollIntoViewIfNeeded();
+        await page.screenshot({ path: resolve(directory, `${name}-table.png`) });
+        results.hospitalizationScroll = await inspectHospitalizationScroll(page);
+        await page.locator('#hospitalization-table-scroll').evaluate(node => { node.scrollLeft = node.scrollWidth; });
+        await page.screenshot({ path: resolve(directory, `${name}-table-right.png`) });
+        await page.locator('#hospitalization-table-scroll').evaluate(node => { node.scrollLeft = 0; });
+      }
+      if (expected.path === 'simulator') {
+        await page.getByText('Scenario settings', { exact: true }).scrollIntoViewIfNeeded();
+        await page.screenshot({ path: resolve(directory, `${name}-values.png`) });
+      }
+    }
+    results.mobilePages.push({ path: expected.path || 'overview', ...size, clipped, charts: charts.map(chart => chart.id), hovers, layout });
     assertNoBrowserErrors(results.errors);
   }
+  for (const result of results.mobilePages) assertMobileLayout(result.layout);
+  assertScrollableTable(results.hospitalizationScroll);
   assertNoBrowserErrors(results.errors);
   assert.equal(results.blockedExternal.length, 0, 'The application attempted an external asset request');
   results.mapAssets = [...new Set(results.mapAssets)];

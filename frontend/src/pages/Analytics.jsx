@@ -272,7 +272,7 @@ export default function Analytics() {
           <span className="card-title"><LineChart size={18} /> Recent Hospitalization Data</span>
           <span className="badge badge-updated">{hospitalizations.length} records</span>
         </div>
-        <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+        <div id="hospitalization-table-scroll" data-scroll-x="" className="table-scroll" role="region" aria-label="Recent hospitalization data" tabIndex={0} style={{ maxHeight: '400px', overflowY: 'auto' }}>
           <table className="data-table">
             <thead>
               <tr>
