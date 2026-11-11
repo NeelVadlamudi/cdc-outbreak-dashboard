@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-10T17:05:24Z",
+  "generated_at": "2026-11-11T01:15:29Z",
   "as_of": "2026-10-31",
   "metrics": [
     {
@@ -11,6 +11,7 @@
       "headline": "COVID-19 positivity",
       "unit": "%",
       "plain": "about 1 in 29 tests positive",
+      "wow": "unchanged from last week",
       "insight": "about 1 in 29 tests positive \u00b7 unchanged from last week",
       "week_ending": "2026-10-31",
       "source_table": "test_positivity",
@@ -25,6 +26,7 @@
       "headline": "Influenza positivity",
       "unit": "%",
       "plain": "about 1 in 11 tests positive",
+      "wow": "up from 7.7% last week",
       "insight": "about 1 in 11 tests positive \u00b7 up from 7.7% last week",
       "week_ending": "2026-10-31",
       "source_table": "test_positivity",
@@ -39,6 +41,7 @@
       "headline": "RSV positivity",
       "unit": "%",
       "plain": "about 1 in 56 tests positive",
+      "wow": "up from 0.9% last week",
       "insight": "about 1 in 56 tests positive \u00b7 up from 0.9% last week",
       "week_ending": "2026-10-31",
       "source_table": "test_positivity",
