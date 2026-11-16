@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-16T01:00:22Z",
+  "generated_at": "2026-11-16T19:34:32Z",
   "as_of": "2026-11-07",
   "metrics": [
     {
@@ -106,7 +106,7 @@
     {
       "id": "ari_low",
       "label": "States and territories at Low ARI activity",
-      "value": 31,
+      "value": 32,
       "headline": "ARI Low",
       "week_ending": "2026-11-07",
       "source_table": "ari_activity"
@@ -124,8 +124,8 @@
       "label": "States and territories at High or Very High ARI activity",
       "value": 0,
       "headline": "High / Very High ARI",
-      "plain": "0 of 56 states/territories at High or Very High activity",
-      "insight": "0 of 56 states/territories at High or Very High activity",
+      "plain": "0 of 57 states/territories at High or Very High activity",
+      "insight": "0 of 57 states/territories at High or Very High activity",
       "week_ending": "2026-11-07",
       "source_table": "ari_activity"
     }
