@@ -1,22 +1,57 @@
 {
-  "generated_at": "2026-11-16T19:34:45Z",
+  "generated_at": "2026-11-17T03:51:47Z",
   "run": {
     "result": "alert",
-    "started_at": "2026-11-16T19:33:58Z",
-    "finished_at": "2026-11-16T19:34:45Z",
-    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/43940413046",
-    "commit": "8aa128bf56f33ae6b1017225e0ae3ff8162df0db",
+    "started_at": "2026-11-17T03:49:20Z",
+    "finished_at": "2026-11-17T03:51:47Z",
+    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/44012728032",
+    "commit": "e4307bc4345940d8aadc910b0dbbe86ce8a83ea4",
     "steps": {
       "refresh": "success",
       "release": "success",
-      "backtest": "skipped",
+      "backtest": "success",
       "dashboard": "success",
-      "eval": "skipped"
+      "eval": "success"
     }
   },
-  "eval": null,
+  "eval": {
+    "model": "gemini-3.5-flash-lite",
+    "date": "2026-11-17",
+    "question_set": "cdc-q60-v1",
+    "summary": {
+      "question_set": "cdc-q60-v1",
+      "questions": 60,
+      "numeric_accuracy": 89.6,
+      "tool_choice": 100.0,
+      "correct_refusals": 91.7,
+      "false_refusals": 10.4,
+      "grounded_answers": 100.0,
+      "median_s": 1.3,
+      "p95_s": 1.82,
+      "median_input_tokens": null,
+      "median_output_tokens": null
+    },
+    "baseline": {
+      "date": "2026-10-20",
+      "model": "gemini-3.5-flash-lite",
+      "summary": {
+        "question_set": "cdc-q60-v1",
+        "questions": 60,
+        "numeric_accuracy": 91.7,
+        "tool_choice": 100.0,
+        "correct_refusals": 75.0,
+        "false_refusals": 6.2,
+        "grounded_answers": 100.0,
+        "median_s": 1.8,
+        "p95_s": 2.48,
+        "median_input_tokens": null,
+        "median_output_tokens": null
+      }
+    },
+    "drops": []
+  },
   "backtest": {
-    "run_at": "2026-11-16T01:00:21Z",
+    "run_at": "2026-11-17T03:50:09Z",
     "data_through": "2026-10-31",
     "notes": [
       "LSTM on COVID-NET does not beat last week's value at any horizon.",
@@ -37,7 +72,7 @@
         "dataset": null,
         "legacy": null,
         "latest_week": "2026-11-07",
-        "age_days": 9,
+        "age_days": 10,
         "stale": false
       },
       {
@@ -45,7 +80,7 @@
         "dataset": null,
         "legacy": null,
         "latest_week": "2026-10-31",
-        "age_days": 16,
+        "age_days": 17,
         "stale": true
       },
       {
@@ -53,7 +88,7 @@
         "dataset": null,
         "legacy": null,
         "latest_week": "2026-11-07",
-        "age_days": 9,
+        "age_days": 10,
         "stale": false
       },
       {
@@ -61,7 +96,7 @@
         "dataset": "atcp-73re",
         "legacy": false,
         "latest_week": "2026-11-07",
-        "age_days": 9,
+        "age_days": 10,
         "stale": false
       },
       {
@@ -78,7 +113,7 @@
     {
       "kind": "stale",
       "title": "Stale data: hospitalization_rates",
-      "detail": "Latest week 2026-10-31 is 16 days old (limit 14 days)."
+      "detail": "Latest week 2026-10-31 is 17 days old (limit 14 days)."
     }
   ]
 }
