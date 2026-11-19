@@ -1,22 +1,57 @@
 {
-  "generated_at": "2026-11-18T18:03:30Z",
+  "generated_at": "2026-11-19T02:35:49Z",
   "run": {
-    "result": "failure",
-    "started_at": "2026-11-18T18:00:59Z",
-    "finished_at": "2026-11-18T18:03:30Z",
-    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/44364796951",
-    "commit": "18ed77bc49e3f104794daa4468bb98154f56d558",
+    "result": "alert",
+    "started_at": "2026-11-19T02:33:03Z",
+    "finished_at": "2026-11-19T02:35:49Z",
+    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/44444966489",
+    "commit": "9ebc5a73499bccdddcbf9db5fb2b6d9c1d2bcf6f",
     "steps": {
-      "refresh": "failure",
-      "release": "skipped",
-      "backtest": "skipped",
+      "refresh": "success",
+      "release": "success",
+      "backtest": "success",
       "dashboard": "success",
-      "eval": "skipped"
+      "eval": "success"
     }
   },
-  "eval": null,
+  "eval": {
+    "model": "gemini-3.5-flash-lite",
+    "date": "2026-11-19",
+    "question_set": "cdc-q60-v1",
+    "summary": {
+      "question_set": "cdc-q60-v1",
+      "questions": 60,
+      "numeric_accuracy": 95.8,
+      "tool_choice": 100.0,
+      "correct_refusals": 91.7,
+      "false_refusals": 4.2,
+      "grounded_answers": 100.0,
+      "median_s": 1.47,
+      "p95_s": 2.03,
+      "median_input_tokens": null,
+      "median_output_tokens": null
+    },
+    "baseline": {
+      "date": "2026-10-20",
+      "model": "gemini-3.5-flash-lite",
+      "summary": {
+        "question_set": "cdc-q60-v1",
+        "questions": 60,
+        "numeric_accuracy": 91.7,
+        "tool_choice": 100.0,
+        "correct_refusals": 75.0,
+        "false_refusals": 6.2,
+        "grounded_answers": 100.0,
+        "median_s": 1.8,
+        "p95_s": 2.48,
+        "median_input_tokens": null,
+        "median_output_tokens": null
+      }
+    },
+    "drops": []
+  },
   "backtest": {
-    "run_at": "2026-11-18T02:54:57Z",
+    "run_at": "2026-11-19T02:34:08Z",
     "data_through": "2026-10-31",
     "notes": [
       "LSTM on COVID-NET does not beat last week's value at any horizon.",
@@ -37,7 +72,7 @@
         "dataset": null,
         "legacy": null,
         "latest_week": "2026-11-07",
-        "age_days": 11,
+        "age_days": 12,
         "stale": false
       },
       {
@@ -45,7 +80,7 @@
         "dataset": null,
         "legacy": null,
         "latest_week": "2026-10-31",
-        "age_days": 18,
+        "age_days": 19,
         "stale": true
       },
       {
@@ -53,16 +88,16 @@
         "dataset": null,
         "legacy": null,
         "latest_week": "2026-11-07",
-        "age_days": 11,
+        "age_days": 12,
         "stale": false
       },
       {
         "table": "wastewater_sites",
         "dataset": "atcp-73re",
         "legacy": false,
-        "latest_week": null,
-        "age_days": null,
-        "stale": true
+        "latest_week": "2026-11-07",
+        "age_days": 12,
+        "stale": false
       },
       {
         "table": "wastewater_sites",
@@ -76,19 +111,9 @@
   },
   "alerts": [
     {
-      "kind": "step_failed",
-      "title": "Nightly step failed: refresh",
-      "detail": "The refresh step finished with outcome 'failure'."
-    },
-    {
       "kind": "stale",
       "title": "Stale data: hospitalization_rates",
-      "detail": "Latest week 2026-10-31 is 18 days old (limit 14 days)."
-    },
-    {
-      "kind": "stale",
-      "title": "Stale data: wastewater_sites (atcp-73re)",
-      "detail": "Latest week None is None days old (limit 14 days)."
+      "detail": "Latest week 2026-10-31 is 19 days old (limit 14 days)."
     }
   ]
 }
