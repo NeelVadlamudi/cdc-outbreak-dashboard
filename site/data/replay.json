@@ -1,19 +1,20 @@
 {
- "recorded_at": "2026-11-20T02:20:02Z",
+ "recorded_at": "2026-11-21T02:14:11Z",
  "answers": [
   {
    "question": "What was COVID-19 test positivity for the latest week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10). For the week ending October 10, 2026, COVID-19 test positivity was 3.6%, meaning about 1 in 28 tests positive. This surveillance figure provides situational awareness regarding current viral activity levels.",
+    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10). For the week ending October 10, 2026, COVID-19 test positivity was 3.6%, meaning about 1 in 28 tests positive. This surveillance figure provides situational awareness regarding current viral activity levels across reporting networks.",
     "tool_calls": [
      {
       "tool": "get_test_positivity",
       "inputs": {
+       "week": null,
        "pathogen": "COVID-19"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.018,
+      "elapsed_s": 0.023,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "test_positivity",
@@ -30,7 +31,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.926,
+    "elapsed_s": 2.008,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -41,11 +42,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.926,
+     "elapsed_s": 2.008,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 2989,
-     "output_tokens": 73
+     "output_tokens": 80
     }
    },
    "correct": true
@@ -54,16 +55,16 @@
    "question": "What was influenza test positivity for the week ending October 3, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10). For the week ending October 3, 2026, influenza test positivity was 3.9%, which means about 1 in 26 tests positive. This surveillance data is provided for research, education, and situational awareness.",
+    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10). For the week ending October 3, 2026, influenza test positivity was 3.9%, which means about 1 in 26 tests positive according to CDC surveillance data.",
     "tool_calls": [
      {
       "tool": "get_test_positivity",
       "inputs": {
-       "week": "2026-10-03",
-       "pathogen": "Influenza"
+       "pathogen": "Influenza",
+       "week": "2026-10-03"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.017,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-10-03",
        "source_table": "test_positivity",
@@ -80,7 +81,7 @@
      }
     ],
     "as_of": "2026-10-03",
-    "elapsed_s": 1.239,
+    "elapsed_s": 1.392,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -91,11 +92,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.239,
+     "elapsed_s": 1.392,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3012,
-     "output_tokens": 85
+     "output_tokens": 76
     }
    },
    "correct": true
@@ -104,7 +105,7 @@
    "question": "What was RSV test positivity for the latest week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10). For the week ending October 10, 2026, RSV test positivity was 0.7%, with about 1 in 143 tests positive. This indicates a very low level of RSV detection nationally for this reporting period.",
+    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10). For the week ending October 10, 2026, RSV test positivity was 0.7%, or about 1 in 143 tests positive. This indicates low detection levels for RSV circulating during this surveillance week.",
     "tool_calls": [
      {
       "tool": "get_test_positivity",
@@ -112,7 +113,7 @@
        "pathogen": "RSV"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.016,
+      "elapsed_s": 0.019,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "test_positivity",
@@ -129,7 +130,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.513,
+    "elapsed_s": 1.435,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -140,11 +141,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.513,
+     "elapsed_s": 1.435,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 2981,
-     "output_tokens": 72
+     "output_tokens": 70
     }
    },
    "correct": true
@@ -153,7 +154,7 @@
    "question": "By how many percentage points did COVID-19 test positivity change from the week ending September 26 to the week ending October 10, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10). For the week ending September 26, 2026, COVID-19 test positivity was 4.7% (about 1 in 21 tests positive). For the week ending October 10, 2026, test positivity was 3.6% (about 1 in 28 tests positive). This represents a decrease of 1.1 percentage points over that period.",
+    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10). Based on data for the week ending September 26, 2026, COVID-19 test positivity was 4.7% (about 1 in 21 tests positive). For the week ending October 10, 2026, test positivity was 3.6% (about 1 in 28 tests positive). This represents a decrease of 1.1 percentage points over that period.",
     "tool_calls": [
      {
       "tool": "get_test_positivity",
@@ -162,7 +163,7 @@
        "week": "2026-09-26"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.016,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-09-26",
        "source_table": "test_positivity",
@@ -184,7 +185,7 @@
        "pathogen": "COVID-19"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.014,
+      "elapsed_s": 0.017,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "test_positivity",
@@ -201,7 +202,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.522,
+    "elapsed_s": 1.404,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -212,11 +213,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.522,
+     "elapsed_s": 1.404,
      "tool_call_count": 2,
      "prompt_version": "system_v1",
      "input_tokens": 3186,
-     "output_tokens": 163
+     "output_tokens": 166
     }
    },
    "correct": true
@@ -225,7 +226,7 @@
    "question": "How many states or territories were at Very Low respiratory illness activity in the latest week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: ari_activity (latest 2026-10-10). For the week ending 2026-10-10, there were 40 states or territories at Very Low acute respiratory illness activity. This reflects widespread baseline activity across participating jurisdictions during this surveillance period.",
+    "answer": "Warning: this data is out of date: ari_activity (latest 2026-10-10). For the week ending 2026-10-10, there were 40 states or territories at Very Low acute respiratory illness activity. This reflects widespread baseline transmission levels across reporting jurisdictions.",
     "tool_calls": [
      {
       "tool": "list_states_at_level",
@@ -234,7 +235,7 @@
        "level": "Very Low"
       },
       "rows_returned": 40,
-      "elapsed_s": 0.015,
+      "elapsed_s": 0.018,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "ari_activity",
@@ -365,7 +366,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.392,
+    "elapsed_s": 1.378,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -376,11 +377,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.392,
+     "elapsed_s": 1.378,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3195,
-     "output_tokens": 70
+     "output_tokens": 67
     }
    },
    "correct": true
@@ -389,7 +390,7 @@
    "question": "How many states or territories were at Low respiratory illness activity in the latest week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: ari_activity (latest 2026-10-10). Based on CDC surveillance data for the week ending October 10, 2026, there were 10 states or territories at Low acute respiratory illness activity level. These jurisdictions were Alabama, Alaska, Hawaii, Louisiana, New Hampshire, North Dakota, Ohio, South Dakota, Texas, and Wyoming.",
+    "answer": "Warning: this data is out of date: ari_activity (latest 2026-10-10). Based on data for the week ending October 10, 2026, 10 states or territories were at Low acute respiratory illness activity. This activity level indicates a low baseline of circulating respiratory illness across those reporting jurisdictions.",
     "tool_calls": [
      {
       "tool": "list_states_at_level",
@@ -398,7 +399,7 @@
        "level": "Low"
       },
       "rows_returned": 10,
-      "elapsed_s": 0.015,
+      "elapsed_s": 0.019,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "ari_activity",
@@ -439,7 +440,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.256,
+    "elapsed_s": 1.352,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -450,11 +451,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.256,
+     "elapsed_s": 1.352,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3003,
-     "output_tokens": 87
+     "output_tokens": 72
     }
    },
    "correct": true
@@ -463,17 +464,17 @@
    "question": "What was the overall weekly COVID-19 hospitalization rate per 100,000 (COVID-NET) for the week ending October 10, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10). For the week ending October 10, 2026, the overall weekly COVID-19 hospitalization rate (COVID-NET) was 0.8 hospitalizations per 100,000 people this week. This figure reflects the level of severe acute respiratory illness requiring hospital admission during that surveillance week.",
+    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10). For the week ending October 10, 2026, the overall weekly COVID-19 hospitalization rate (COVID-NET) was 0.8 hospitalizations per 100,000 people. This indicates the level of severe COVID-19 disease requiring hospital admission during that surveillance week.",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
-       "week": "2026-10-10",
        "network": "COVID-NET",
+       "week": "2026-10-10",
        "age_group": "Overall"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.019,
+      "elapsed_s": 0.022,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -492,7 +493,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.58,
+    "elapsed_s": 1.268,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -503,11 +504,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.58,
+     "elapsed_s": 1.268,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3100,
-     "output_tokens": 111
+     "output_tokens": 110
     }
    },
    "correct": true
@@ -516,17 +517,17 @@
    "question": "What was the overall weekly flu hospitalization rate per 100,000 (FluSurv-NET) for the week ending October 3, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10). For the week ending October 3, 2026, the overall weekly influenza hospitalization rate in FluSurv-NET was 0.9 per 100,000, described by the surveillance data as 0.9 hospitalizations per 100,000 people this week. This rate reflects the level of severe illness tracked during that surveillance period.",
+    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10). For the week ending October 3, 2026, the overall weekly influenza hospitalization rate in FluSurv-NET was 0.9 hospitalizations per 100,000 people (0.9 hospitalizations per 100,000 people this week). This reflects the surveillance data captured for that specific week-ending date.",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
-       "age_group": "Overall",
        "week": "2026-10-03",
-       "network": "FluSurv-NET"
+       "network": "FluSurv-NET",
+       "age_group": "Overall"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.018,
+      "elapsed_s": 0.022,
       "output": {
        "as_of": "2026-10-03",
        "source_table": "hospitalization_rates",
@@ -545,7 +546,7 @@
      }
     ],
     "as_of": "2026-10-03",
-    "elapsed_s": 1.432,
+    "elapsed_s": 1.497,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -556,11 +557,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.432,
+     "elapsed_s": 1.497,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3101,
-     "output_tokens": 126
+     "output_tokens": 122
     }
    },
    "correct": true
@@ -569,17 +570,17 @@
    "question": "What was the combined weekly hospitalization rate per 100,000 for COVID-19, flu and RSV for the week ending September 26, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10). For the week ending September 26, 2026, the combined weekly hospitalization rate for COVID-19, flu, and RSV was 2 per 100,000 (about 2 hospitalizations per 100,000 people this week), with a cumulative rate of 179 per 100,000. This indicates the level of severe respiratory illness managed across the surveillance network during that week.",
+    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10). For the week ending September 26, 2026, the combined weekly hospitalization rate for COVID-19, flu, and RSV was 2 hospitalizations per 100,000 people this week (rate of 2 per 100,000). This indicates that respiratory virus-associated hospitalizations were occurring at a low level across the surveillance network for that week.",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
+       "age_group": "Overall",
        "network": "Combined",
-       "week": "2026-09-26",
-       "age_group": "Overall"
+       "week": "2026-09-26"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.018,
+      "elapsed_s": 0.022,
       "output": {
        "as_of": "2026-09-26",
        "source_table": "hospitalization_rates",
@@ -598,7 +599,7 @@
      }
     ],
     "as_of": "2026-09-26",
-    "elapsed_s": 1.557,
+    "elapsed_s": 1.482,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -609,11 +610,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.557,
+     "elapsed_s": 1.482,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3094,
-     "output_tokens": 139
+     "output_tokens": 127
     }
    },
    "correct": true
@@ -622,17 +623,17 @@
    "question": "What was the cumulative COVID-NET hospitalization rate per 100,000 for the 2025-26 season as of the week ending October 3, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10). For the week ending October 3, 2026, the cumulative COVID-NET hospitalization rate was 45 per 100,000 for the 2025-26 season. The weekly rate was 1.1 hospitalizations per 100,000 people.",
+    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10). For the week ending October 3, 2026, the COVID-NET cumulative hospitalization rate per 100,000 for the season was 45. The weekly hospitalization rate stood at 1.1 hospitalizations per 100,000 people this week, with the cumulative total reflecting reported admissions up to that date.",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
-       "week": "2026-10-03",
        "network": "COVID-NET",
+       "week": "2026-10-03",
        "age_group": "Overall"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.018,
+      "elapsed_s": 0.022,
       "output": {
        "as_of": "2026-10-03",
        "source_table": "hospitalization_rates",
@@ -651,7 +652,7 @@
      }
     ],
     "as_of": "2026-10-03",
-    "elapsed_s": 1.292,
+    "elapsed_s": 1.494,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -662,11 +663,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.292,
+     "elapsed_s": 1.494,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3109,
-     "output_tokens": 111
+     "output_tokens": 119
     }
    },
    "correct": true
@@ -675,13 +676,13 @@
    "question": "How many wastewater sites reported viral activity data for any pathogen nationally in the latest week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: wastewater_sites (latest 2026-10-10). For the week-ending date of 2026-10-10, the national wastewater surveillance data shows a total of 811 reporting sites. By pathogen, the site counts are 797 sites for SARS-CoV-2, 726 sites for Influenza A virus, and 713 sites for RSV.",
+    "answer": "Warning: this data is out of date: wastewater_sites (latest 2026-10-10). Based on national wastewater surveillance data for the week ending October 10, 2026, a total of 811 sites reported viral activity data across pathogens. Specifically, SARS-CoV-2 was monitored by 797 sites, Influenza A virus by 726 sites, and RSV by 713 sites.",
     "tool_calls": [
      {
       "tool": "get_wastewater",
       "inputs": {},
       "rows_returned": 3,
-      "elapsed_s": 0.027,
+      "elapsed_s": 0.03,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -723,7 +724,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.612,
+    "elapsed_s": 1.595,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -734,11 +735,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.612,
+     "elapsed_s": 1.595,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3220,
-     "output_tokens": 84
+     "output_tokens": 82
     }
    },
    "correct": true
@@ -747,80 +748,15 @@
    "question": "In the legacy NWSS SARS-CoV-2 wastewater metrics, which end on 2025-09-07, what was the median 15-day percent change across New York sites in that last week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: wastewater_sites (latest 2026-10-10). In the legacy NWSS SARS-CoV-2 wastewater metrics for New York ending on 2025-09-07, the median 15-day percent change was 31.5 percent across 162 sites.",
+    "answer": "Warning: this data is out of date: wastewater_sites (latest 2026-10-10). Based on the legacy NWSS SARS-CoV-2 wastewater metrics for the week ending 2025-09-07, the median 15-day percent change across New York sites was 31.5%. This indicates an upward trend in viral activity across the reporting sites during that final week of the legacy dataset.",
     "tool_calls": [
-     {
-      "tool": "get_wastewater",
-      "inputs": {
-       "state": "NewYorK"
-      },
-      "rows_returned": 0,
-      "elapsed_s": 0.018,
-      "output": {
-       "error": "Unknown state 'NewYorK'.",
-       "allowed": [
-        "Alabama",
-        "Alaska",
-        "Arizona",
-        "Arkansas",
-        "California",
-        "Colorado",
-        "Connecticut",
-        "Delaware",
-        "District of Columbia",
-        "Florida",
-        "Georgia",
-        "Guam",
-        "Hawaii",
-        "Idaho",
-        "Illinois",
-        "Indiana",
-        "Iowa",
-        "Kansas",
-        "Kentucky",
-        "Louisiana",
-        "Maine",
-        "Maryland",
-        "Massachusetts",
-        "Michigan",
-        "Minnesota",
-        "Mississippi",
-        "Missouri",
-        "Montana",
-        "Nebraska",
-        "Nevada",
-        "New Hampshire",
-        "New Jersey",
-        "New Mexico",
-        "New York",
-        "North Carolina",
-        "Ohio",
-        "Oklahoma",
-        "Oregon",
-        "Pennsylvania",
-        "Rhode Island",
-        "South Carolina",
-        "South Dakota",
-        "Tennessee",
-        "Texas",
-        "U.S. Virgin Islands",
-        "Utah",
-        "Vermont",
-        "Virginia",
-        "Washington",
-        "West Virginia",
-        "Wisconsin",
-        "Wyoming"
-       ]
-      }
-     },
      {
       "tool": "get_wastewater",
       "inputs": {
        "state": "New York"
       },
       "rows_returned": 3,
-      "elapsed_s": 0.03,
+      "elapsed_s": 0.033,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -862,7 +798,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 2.155,
+    "elapsed_s": 1.433,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -873,11 +809,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 2.155,
-     "tool_call_count": 2,
+     "elapsed_s": 1.433,
+     "tool_call_count": 1,
      "prompt_version": "system_v1",
-     "input_tokens": 5299,
-     "output_tokens": 90
+     "input_tokens": 3283,
+     "output_tokens": 88
     }
    },
    "correct": true
@@ -886,16 +822,16 @@
    "question": "What was COVID-19 test positivity for the week ending September 26, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10). For the week ending September 26, 2026, COVID-19 test positivity was 4.7%, which is about 1 in 21 tests positive. This percentage indicates the proportion of reported COVID-19 tests that yielded a positive result during that surveillance week.",
+    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10). For the week ending September 26, 2026, COVID-19 test positivity was 4.7%, which is about 1 in 21 tests positive. This surveillance figure provides situational awareness regarding current viral activity levels from CDC data.",
     "tool_calls": [
      {
       "tool": "get_test_positivity",
       "inputs": {
-       "pathogen": "COVID-19",
-       "week": "2026-09-26"
+       "week": "2026-09-26",
+       "pathogen": "COVID-19"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.018,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-09-26",
        "source_table": "test_positivity",
@@ -912,7 +848,7 @@
      }
     ],
     "as_of": "2026-09-26",
-    "elapsed_s": 1.305,
+    "elapsed_s": 1.383,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -923,11 +859,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.305,
+     "elapsed_s": 1.383,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3024,
-     "output_tokens": 99
+     "output_tokens": 92
     }
    },
    "correct": true
@@ -936,15 +872,16 @@
    "question": "What was influenza test positivity for the latest week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10). For the week ending October 10, 2026, the influenza test positivity rate was 5.0%, which is about 1 in 20 tests positive. This level of positivity indicates ongoing detection of influenza activity circulating in the surveillance network.",
+    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10). For the week ending October 10, 2026, influenza test positivity was 5.0 percent, which is about 1 in 20 tests positive. This week-ending surveillance figure indicates the baseline positivity level for influenza during this period.",
     "tool_calls": [
      {
       "tool": "get_test_positivity",
       "inputs": {
+       "week": null,
        "pathogen": "Influenza"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.017,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "test_positivity",
@@ -961,7 +898,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.284,
+    "elapsed_s": 1.36,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -972,11 +909,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.284,
+     "elapsed_s": 1.36,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 2977,
-     "output_tokens": 75
+     "output_tokens": 79
     }
    },
    "correct": true
@@ -985,7 +922,7 @@
    "question": "What was RSV test positivity for the week ending October 3, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10). For the week ending October 3, 2026, RSV test positivity was 0.5%, meaning about 1 in 200 tests positive. This surveillance figure provides situational awareness for respiratory virus activity during that week.",
+    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10). For the week ending October 3, 2026, RSV test positivity was 0.5%, meaning about 1 in 200 tests positive. This surveillance figure reflects current laboratory detection levels for RSV as of that week.",
     "tool_calls": [
      {
       "tool": "get_test_positivity",
@@ -994,7 +931,7 @@
        "pathogen": "RSV"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.017,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-10-03",
        "source_table": "test_positivity",
@@ -1011,7 +948,7 @@
      }
     ],
     "as_of": "2026-10-03",
-    "elapsed_s": 1.347,
+    "elapsed_s": 1.259,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1022,11 +959,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.347,
+     "elapsed_s": 1.259,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3014,
-     "output_tokens": 85
+     "output_tokens": 86
     }
    },
    "correct": true
@@ -1035,16 +972,16 @@
    "question": "What was COVID-19 test positivity for the week ending August 1, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10). For the week ending August 1, 2026, COVID-19 test positivity was 3.2%, which is about 1 in 31 tests positive. This indicates ongoing detection of the virus in respiratory testing during that week.",
+    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10). For the week ending August 1, 2026, COVID-19 test positivity was 3.2%, which is about 1 in 31 tests positive. This surveillance summary is provided for research, education, and situational awareness.",
     "tool_calls": [
      {
       "tool": "get_test_positivity",
       "inputs": {
-       "pathogen": "COVID-19",
-       "week": "2026-08-01"
+       "week": "2026-08-01",
+       "pathogen": "COVID-19"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.016,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-08-01",
        "source_table": "test_positivity",
@@ -1061,7 +998,7 @@
      }
     ],
     "as_of": "2026-08-01",
-    "elapsed_s": 1.228,
+    "elapsed_s": 1.372,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1072,7 +1009,7 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.228,
+     "elapsed_s": 1.372,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3022,
@@ -1085,16 +1022,16 @@
    "question": "What was influenza test positivity for the week ending July 25, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10). For the week ending July 25, 2026, influenza test positivity was 0.5%, meaning about 1 in 200 tests positive. This indicates very low influenza detection levels during this surveillance week.",
+    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10). For the week ending July 25, 2026, influenza test positivity was 0.5%, meaning about 1 in 200 tests positive. This indicates very low influenza detection levels circulating nationally during this period.",
     "tool_calls": [
      {
       "tool": "get_test_positivity",
       "inputs": {
-       "week": "2026-07-25",
-       "pathogen": "Influenza"
+       "pathogen": "Influenza",
+       "week": "2026-07-25"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.016,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-07-25",
        "source_table": "test_positivity",
@@ -1111,7 +1048,7 @@
      }
     ],
     "as_of": "2026-07-25",
-    "elapsed_s": 1.397,
+    "elapsed_s": 1.35,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1122,11 +1059,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.397,
+     "elapsed_s": 1.35,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3016,
-     "output_tokens": 84
+     "output_tokens": 85
     }
    },
    "correct": true
@@ -1135,16 +1072,16 @@
    "question": "What was RSV test positivity for the week ending September 5, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10). For the week ending September 5, 2026, RSV test positivity was 0.5%, with about 1 in 200 tests positive. This indicates low levels of RSV detection circulating during this period.",
+    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10). For the week ending September 5, 2026, RSV test positivity was 0.5%, or about 1 in 200 tests positive. This indicates low viral detection levels for the period.",
     "tool_calls": [
      {
       "tool": "get_test_positivity",
       "inputs": {
-       "pathogen": "RSV",
-       "week": "2026-09-05"
+       "week": "2026-09-05",
+       "pathogen": "RSV"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.016,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-09-05",
        "source_table": "test_positivity",
@@ -1161,7 +1098,7 @@
      }
     ],
     "as_of": "2026-09-05",
-    "elapsed_s": 1.429,
+    "elapsed_s": 1.452,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1172,11 +1109,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.429,
+     "elapsed_s": 1.452,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3014,
-     "output_tokens": 83
+     "output_tokens": 81
     }
    },
    "correct": true
@@ -1185,17 +1122,17 @@
    "question": "What was the weekly COVID-NET hospitalization rate per 100,000 for people aged 65 and older in the week ending October 10, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10). For the week ending October 10, 2026, the COVID-NET hospitalization rate for people aged 65 and older was 3 per 100,000 (3 hospitalizations per 100,000 people this week). This data reflects the latest recorded figures for this demographic under COVID-NET surveillance.",
+    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10). For the week ending October 10, 2026, the COVID-NET hospitalization rate for people aged 65 and older was 3 per 100,000 (3 hospitalizations per 100,000 people this week). This rate reflects surveillance data tracked for that specific week-ending date.",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
-       "week": "2026-10-10",
        "age_group": "65+ yr",
-       "network": "COVID-NET"
+       "network": "COVID-NET",
+       "week": "2026-10-10"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.018,
+      "elapsed_s": 0.022,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -1214,7 +1151,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.35,
+    "elapsed_s": 1.404,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1225,11 +1162,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.35,
+     "elapsed_s": 1.404,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3104,
-     "output_tokens": 121
+     "output_tokens": 119
     }
    },
    "correct": true
@@ -1238,17 +1175,17 @@
    "question": "What was the weekly FluSurv-NET hospitalization rate per 100,000 for people aged 65 and older in the week ending October 10, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10). For the week ending October 10, 2026, the FluSurv-NET hospitalization rate for people aged 65 and older was 2.3 hospitalizations per 100,000 people. This indicates the current weekly rate of influenza-associated hospitalizations for this older adult age group based on surveillance data.",
+    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10). For the week ending October 10, 2026, the FluSurv-NET hospitalization rate for people aged 65 and older was 2.3 per 100,000 (2.3 hospitalizations per 100,000 people this week). This rate provides situational awareness of influenza-associated hospitalizations in this older adult age group for the specified week.",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
+       "network": "FluSurv-NET",
        "week": "2026-10-10",
-       "age_group": "65+ yr",
-       "network": "FluSurv-NET"
+       "age_group": "65+ yr"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.019,
+      "elapsed_s": 0.023,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -1267,7 +1204,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.306,
+    "elapsed_s": 3.935,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1278,11 +1215,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.306,
+     "elapsed_s": 3.935,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3116,
-     "output_tokens": 121
+     "output_tokens": 135
     }
    },
    "correct": true
@@ -1291,17 +1228,17 @@
    "question": "What was the weekly RSV-NET hospitalization rate per 100,000 for children aged 0-4 in the week ending October 10, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10). For the week ending October 10, 2026, the RSV-NET hospitalization rate for children aged 0-4 was 0.9 hospitalizations per 100,000 people (or 0.9 per 100,000). This surveillance figure provides situational awareness for respiratory virus activity during that week.",
+    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10). For the week ending October 10, 2026, the weekly RSV-NET hospitalization rate for children aged 0-4 was 0.9 hospitalizations per 100,000 people this week. This surveillance data provides research and situational awareness for acute respiratory illness tracking.",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
        "network": "RSV-NET",
-       "age_group": "0-4 yr",
-       "week": "2026-10-10"
+       "week": "2026-10-10",
+       "age_group": "0-4 yr"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.018,
+      "elapsed_s": 0.022,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -1320,7 +1257,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.333,
+    "elapsed_s": 1.588,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1331,11 +1268,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.333,
+     "elapsed_s": 1.588,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3108,
-     "output_tokens": 123
+     "output_tokens": 111
     }
    },
    "correct": true
@@ -1344,17 +1281,17 @@
    "question": "What was the combined weekly hospitalization rate per 100,000 for COVID-19, flu and RSV in the week ending October 10, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10). For the week ending October 10, 2026, the combined weekly hospitalization rate for COVID-19, flu, and RSV was 1.6 hospitalizations per 100,000 people (described as 1.6 hospitalizations per 100,000 people this week). This surveillance data reflects the combined respiratory virus hospital burden captured across the network for this CDC week.",
+    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10). For the week ending October 10, 2026, the combined weekly hospitalization rate for COVID-19, flu, and RSV was 1.6 per 100,000 people (described in data as 1.6 hospitalizations per 100,000 people this week). This level provides situational awareness for respiratory virus hospital admissions during that week.",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
-       "age_group": "Overall",
        "network": "Combined",
-       "week": "2026-10-10"
+       "week": "2026-10-10",
+       "age_group": "Overall"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.019,
+      "elapsed_s": 0.022,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -1373,7 +1310,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.462,
+    "elapsed_s": 1.481,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1384,11 +1321,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.462,
+     "elapsed_s": 1.481,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3096,
-     "output_tokens": 130
+     "output_tokens": 125
     }
    },
    "correct": true
@@ -1402,12 +1339,12 @@
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
-       "age_group": "Pediatrics",
+       "week": "2026-10-03",
        "network": "COVID-NET",
-       "week": "2026-10-03"
+       "age_group": "Pediatrics"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.018,
+      "elapsed_s": 0.022,
       "output": {
        "as_of": "2026-10-03",
        "source_table": "hospitalization_rates",
@@ -1426,7 +1363,7 @@
      }
     ],
     "as_of": "2026-10-03",
-    "elapsed_s": 1.431,
+    "elapsed_s": 1.424,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1439,11 +1376,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.431,
+     "elapsed_s": 1.424,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3099,
-     "output_tokens": 111
+     "output_tokens": 127
     }
    },
    "correct": false
@@ -1452,17 +1389,17 @@
    "question": "What was the overall weekly RSV-NET hospitalization rate per 100,000 for the week ending September 19, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10). For the week ending September 19, 2026, the overall weekly RSV-NET hospitalization rate was 0 hospitalizations per 100,000 people (with a cumulative rate of 44 per 100,000). This indicates that there were 0 new hospitalizations per 100,000 people reported for that week.",
+    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10). For the week ending September 19, 2026, the overall weekly RSV-NET hospitalization rate was 0 hospitalizations per 100,000 people (with a cumulative rate of 44 per 100,000). This indicates that 0 hospitalizations per 100,000 people occurred during this specific week. This product is for research, education, and situational awareness\u2014not clinical decision-making or official CDC guidance.",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
        "week": "2026-09-19",
-       "age_group": "Overall",
-       "network": "RSV-NET"
+       "network": "RSV-NET",
+       "age_group": "Overall"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.018,
+      "elapsed_s": 0.022,
       "output": {
        "as_of": "2026-09-19",
        "source_table": "hospitalization_rates",
@@ -1481,7 +1418,7 @@
      }
     ],
     "as_of": "2026-09-19",
-    "elapsed_s": 1.55,
+    "elapsed_s": 1.403,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1492,11 +1429,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.55,
+     "elapsed_s": 1.403,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3087,
-     "output_tokens": 127
+     "output_tokens": 147
     }
    },
    "correct": true
@@ -1505,17 +1442,17 @@
    "question": "What was the weekly COVID-NET hospitalization rate per 100,000 for people aged 75 and older in the week ending October 10, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10). For the week ending October 10, 2026, the COVID-NET hospitalization rate for people aged 75 and older was 4.8 hospitalizations per 100,000 people this week. This surveillance summary provides research and situational awareness rather than clinical guidance.",
+    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10). For the week ending October 10, 2026, the COVID-NET hospitalization rate for people aged 75 and older was 4.8 hospitalizations per 100,000 people this week. This surveillance data provides research and situational awareness for acute respiratory illness tracking.",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
-       "network": "COVID-NET",
        "week": "2026-10-10",
+       "network": "COVID-NET",
        "age_group": "75+ yr"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.019,
+      "elapsed_s": 0.022,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -1534,7 +1471,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.321,
+    "elapsed_s": 1.307,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1545,11 +1482,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.321,
+     "elapsed_s": 1.307,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3108,
-     "output_tokens": 109
+     "output_tokens": 110
     }
    },
    "correct": true
@@ -1558,17 +1495,17 @@
    "question": "What was the overall weekly FluSurv-NET hospitalization rate per 100,000 for the week ending August 29, 2026?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10). For the week ending August 29, 2026, the overall weekly FluSurv-NET hospitalization rate was 0.2 per 100,000 (described as 0.2 hospitalizations per 100,000 people this week). This low rate indicates minimal influenza-associated hospitalization activity during this period.",
+    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10). For the week ending August 29, 2026, the overall weekly FluSurv-NET hospitalization rate was 0.2 hospitalizations per 100,000 people (with a cumulative rate of 88 per 100,000). This surveillance figure provides situational awareness for influenza-associated hospitalizations during this period.",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
-       "age_group": "Overall",
        "network": "FluSurv-NET",
-       "week": "2026-08-29"
+       "week": "2026-08-29",
+       "age_group": "Overall"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.02,
+      "elapsed_s": 0.022,
       "output": {
        "as_of": "2026-08-29",
        "source_table": "hospitalization_rates",
@@ -1587,7 +1524,7 @@
      }
     ],
     "as_of": "2026-08-29",
-    "elapsed_s": 1.475,
+    "elapsed_s": 1.321,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1598,11 +1535,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.475,
+     "elapsed_s": 1.321,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3097,
-     "output_tokens": 121
+     "output_tokens": 123
     }
    },
    "correct": true
@@ -1610,8 +1547,8 @@
   {
    "question": "What was the weekly COVID-NET hospitalization rate per 100,000 for adults aged 50-64 in the week ending October 10, 2026?",
    "response": {
-    "status": "refused",
-    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10). For the week ending October 10, 2026, the weekly COVID-NET hospitalization rate for adults aged 50-64 was 0.8 hospitalizations per 100,000 people this week. This surveillance figure captures reported hospital admissions within that network and age group for the specified week.",
+    "status": "unverified",
+    "answer": "I could not verify that figure.",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
@@ -1621,7 +1558,7 @@
        "network": "COVID-NET"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.019,
+      "elapsed_s": 0.022,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -1640,31 +1577,33 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.385,
+    "elapsed_s": 1.166,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
-     "passed": true,
-     "unverified": [],
+     "passed": false,
+     "unverified": [
+      "19"
+     ],
      "stale_tables": [
       "hospitalization_rates"
      ]
     },
     "observability": {
-     "elapsed_s": 1.385,
+     "elapsed_s": 1.166,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3114,
-     "output_tokens": 118
+     "output_tokens": 120
     }
    },
-   "correct": true
+   "correct": false
   },
   {
    "question": "How many states or territories had respiratory illness activity marked Data Unavailable in the latest week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: ari_activity (latest 2026-10-10). For the week ending October 10, 2026, 6 states or territories had respiratory illness activity marked as Data Unavailable: American Samoa, Guam, Iowa, Northern Mariana Islands, Puerto Rico, and Virgin Islands.",
+    "answer": "Warning: this data is out of date: ari_activity (latest 2026-10-10). In the week ending 2026-10-10, there were 6 states or territories with respiratory illness activity marked Data Unavailable: American Samoa, Guam, Iowa, Northern Mariana Islands, Puerto Rico, and Virgin Islands. This indicates a gap in reporting for those jurisdictions during this surveillance period.",
     "tool_calls": [
      {
       "tool": "list_states_at_level",
@@ -1672,7 +1611,7 @@
        "level": "Data Unavailable"
       },
       "rows_returned": 6,
-      "elapsed_s": 0.015,
+      "elapsed_s": 0.019,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "ari_activity",
@@ -1701,7 +1640,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.134,
+    "elapsed_s": 1.424,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1712,11 +1651,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.134,
+     "elapsed_s": 1.424,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 2983,
-     "output_tokens": 68
+     "output_tokens": 84
     }
    },
    "correct": true
@@ -1725,7 +1664,7 @@
    "question": "How many wastewater sites reported SARS-CoV-2 nationally in the latest week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: wastewater_sites (latest 2026-10-10). Nationally, 797 wastewater sites reported SARS-CoV-2 for the week-ending date 2026-10-10. This indicates that surveillance data is available from nearly eight hundred reporting locations for that week.",
+    "answer": "Warning: this data is out of date: wastewater_sites (latest 2026-10-10). For the week-ending date of 2026-10-10, nationally there were 797 wastewater sites reporting SARS-CoV-2. This indicates national surveillance tracking across those reporting locations.",
     "tool_calls": [
      {
       "tool": "get_wastewater",
@@ -1733,7 +1672,7 @@
        "pathogen": "SARS-CoV-2"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.027,
+      "elapsed_s": 0.031,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -1761,7 +1700,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.478,
+    "elapsed_s": 1.308,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1772,11 +1711,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.478,
+     "elapsed_s": 1.308,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3121,
-     "output_tokens": 72
+     "output_tokens": 67
     }
    },
    "correct": true
@@ -1785,7 +1724,7 @@
    "question": "How many wastewater sites reported influenza A nationally in the latest week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: wastewater_sites (latest 2026-10-10). Nationally, for the week ending October 10, 2026, there were 726 wastewater sites reporting on Influenza A virus.",
+    "answer": "Warning: this data is out of date: wastewater_sites (latest 2026-10-10). Based on national wastewater surveillance for the week ending October 10, 2026, there were 726 wastewater sites reporting influenza A. Out of these, 22 sites were classified as high or very high. This situational awareness data reflects national monitoring of respiratory pathogen activity.",
     "tool_calls": [
      {
       "tool": "get_wastewater",
@@ -1793,7 +1732,7 @@
        "pathogen": "Influenza A virus"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.022,
+      "elapsed_s": 0.027,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -1813,7 +1752,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.383,
+    "elapsed_s": 1.381,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1824,11 +1763,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.383,
+     "elapsed_s": 1.381,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 2996,
-     "output_tokens": 53
+     "output_tokens": 81
     }
    },
    "correct": true
@@ -1837,7 +1776,7 @@
    "question": "How many wastewater sites reported RSV nationally in the latest week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: wastewater_sites (latest 2026-10-10). For the week ending October 10, 2026, nationally there were 713 wastewater sites reporting RSV. Of those sites, 15 reported high or very high viral activity levels.",
+    "answer": "Warning: this data is out of date: wastewater_sites (latest 2026-10-10). Based on national wastewater surveillance for the week ending October 10, 2026, there were 713 wastewater sites reporting RSV. This indicates the current baseline coverage for RSV tracking nationally.",
     "tool_calls": [
      {
       "tool": "get_wastewater",
@@ -1845,7 +1784,7 @@
        "pathogen": "RSV"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.024,
+      "elapsed_s": 0.028,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -1865,7 +1804,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.258,
+    "elapsed_s": 1.229,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1876,11 +1815,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.258,
+     "elapsed_s": 1.229,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 2990,
-     "output_tokens": 62
+     "output_tokens": 61
     }
    },
    "correct": true
@@ -1889,7 +1828,7 @@
    "question": "How many wastewater sites in New York reported SARS-CoV-2 in the latest week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: wastewater_sites (latest 2026-10-10). Based on CDC wastewater surveillance data for New York, there were 115 wastewater sites reporting SARS-CoV-2 for the week ending October 10, 2026. Of these sites, 17 reported high or very high viral activity levels with a median viral activity level of 1. This surveillance summary provides situational awareness for the specified week and is intended for research and educational purposes.",
+    "answer": "Warning: this data is out of date: wastewater_sites (latest 2026-10-10). For the week ending October 10, 2026, there were 115 wastewater sites in New York reporting SARS-CoV-2 data.",
     "tool_calls": [
      {
       "tool": "get_wastewater",
@@ -1898,7 +1837,7 @@
        "pathogen": "SARS-CoV-2"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.028,
+      "elapsed_s": 0.034,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -1926,7 +1865,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.407,
+    "elapsed_s": 1.322,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -1937,11 +1876,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.407,
+     "elapsed_s": 1.322,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3130,
-     "output_tokens": 112
+     "output_tokens": 63
     }
    },
    "correct": true
@@ -1950,7 +1889,7 @@
    "question": "How many wastewater sites in California reported data for any pathogen in the latest week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: wastewater_sites (latest 2026-10-10). For the week ending October 10, 2026, 54 wastewater sites in California reported data for pathogens including SARS-CoV-2, Influenza A virus, and RSV. This total site count indicates active surveillance coverage across participating monitoring locations in the state.",
+    "answer": "Warning: this data is out of date: wastewater_sites (latest 2026-10-10). Based on data for the week ending October 10, 2026, 54 wastewater sites in California reported data for pathogens including SARS-CoV-2, Influenza A virus, and RSV. This situational awareness data indicates ongoing multi-pathogen surveillance monitoring across these reporting locations.",
     "tool_calls": [
      {
       "tool": "get_wastewater",
@@ -1958,7 +1897,7 @@
        "state": "California"
       },
       "rows_returned": 3,
-      "elapsed_s": 0.029,
+      "elapsed_s": 0.033,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -2000,7 +1939,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.43,
+    "elapsed_s": 1.61,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -2011,11 +1950,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.43,
+     "elapsed_s": 1.61,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3217,
-     "output_tokens": 73
+     "output_tokens": 77
     }
    },
    "correct": true
@@ -2023,8 +1962,8 @@
   {
    "question": "How many wastewater sites nationally were at High or Very High SARS-CoV-2 activity in the latest week?",
    "response": {
-    "status": "unverified",
-    "answer": "I could not verify that figure.",
+    "status": "refused",
+    "answer": "Warning: this data is out of date: wastewater_sites (latest 2026-10-10). For the week-ending date 2026-10-10, national wastewater surveillance data shows that 199 sites were at High or Very High SARS-CoV-2 activity out of a total of 797 sites. This level of viral activity indicates widespread detection of SARS-CoV-2 across the reporting wastewater monitoring locations.",
     "tool_calls": [
      {
       "tool": "get_wastewater",
@@ -2032,7 +1971,7 @@
        "pathogen": "SARS-CoV-2"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.026,
+      "elapsed_s": 0.031,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -2060,42 +1999,40 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.344,
+    "elapsed_s": 1.502,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
-     "passed": false,
-     "unverified": [
-      "25"
-     ],
+     "passed": true,
+     "unverified": [],
      "stale_tables": [
       "wastewater_sites"
      ]
     },
     "observability": {
-     "elapsed_s": 1.344,
+     "elapsed_s": 1.502,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3133,
-     "output_tokens": 96
+     "output_tokens": 95
     }
    },
-   "correct": false
+   "correct": true
   },
   {
    "question": "What was the median SARS-CoV-2 wastewater viral activity level across Texas sites in the latest week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: wastewater_sites (latest 2026-10-10). For the week ending 2026-10-10, the median SARS-CoV-2 wastewater viral activity level across Texas sites was 5.83, based on 33 reporting sites. This indicates ongoing viral circulation across a portion of the monitored locations in the state.",
+    "answer": "Warning: this data is out of date: wastewater_sites (latest 2026-10-10). For the week ending October 10, 2026, the median SARS-CoV-2 wastewater viral activity level (WVAL) across Texas sites was 5.83, based on a total of 33 reporting sites. This indicates ongoing detection of viral activity in the state's wastewater systems.",
     "tool_calls": [
      {
       "tool": "get_wastewater",
       "inputs": {
-       "state": "Texas",
-       "pathogen": "SARS-CoV-2"
+       "pathogen": "SARS-CoV-2",
+       "state": "Texas"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.029,
+      "elapsed_s": 0.035,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -2123,7 +2060,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.404,
+    "elapsed_s": 1.335,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -2134,11 +2071,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.404,
+     "elapsed_s": 1.335,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3133,
-     "output_tokens": 89
+     "output_tokens": 94
     }
    },
    "correct": true
@@ -2147,13 +2084,13 @@
    "question": "In the legacy NWSS SARS-CoV-2 wastewater metrics, which end on 2025-09-07, how many sites reported nationally in that last week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: wastewater_sites (latest 2026-10-10). In the legacy NWSS SARS-CoV-2 wastewater metrics ending on 2025-09-07, there were 1,162 sites reporting nationally.",
+    "answer": "Warning: this data is out of date: wastewater_sites (latest 2026-10-10). In the legacy NWSS SARS-CoV-2 wastewater metrics ending on 2025-09-07, there were 1162 sites that reported nationally in that last week.",
     "tool_calls": [
      {
       "tool": "get_wastewater",
       "inputs": {},
       "rows_returned": 3,
-      "elapsed_s": 0.027,
+      "elapsed_s": 0.03,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -2195,7 +2132,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.3,
+    "elapsed_s": 1.306,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -2206,11 +2143,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.3,
+     "elapsed_s": 1.306,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3262,
-     "output_tokens": 49
+     "output_tokens": 53
     }
    },
    "correct": true
@@ -2219,16 +2156,16 @@
    "question": "For the week ending October 10, 2026, give COVID-19 test positivity and the overall COVID-NET weekly hospitalization rate.",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10), test_positivity (latest 2026-10-10). For the week ending October 10, 2026, COVID-19 test positivity was 3.6% (about 1 in 28 tests positive). The overall COVID-NET weekly hospitalization rate was 0.8 per 100,000 people this week.",
+    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10), test_positivity (latest 2026-10-10). For the week ending October 10, 2026, COVID-19 test positivity was 3.6% (about 1 in 28 tests positive). The overall COVID-NET weekly hospitalization rate was 0.8 hospitalizations per 100,000 people this week.",
     "tool_calls": [
      {
       "tool": "get_test_positivity",
       "inputs": {
-       "week": "2026-10-10",
-       "pathogen": "COVID-19"
+       "pathogen": "COVID-19",
+       "week": "2026-10-10"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.017,
+      "elapsed_s": 0.021,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "test_positivity",
@@ -2246,12 +2183,12 @@
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
+       "age_group": "Overall",
        "week": "2026-10-10",
-       "network": "COVID-NET",
-       "age_group": "Overall"
+       "network": "COVID-NET"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.015,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -2270,7 +2207,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.38,
+    "elapsed_s": 1.521,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -2282,11 +2219,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.38,
+     "elapsed_s": 1.521,
      "tool_call_count": 2,
      "prompt_version": "system_v1",
      "input_tokens": 3220,
-     "output_tokens": 146
+     "output_tokens": 148
     }
    },
    "correct": true
@@ -2295,7 +2232,7 @@
    "question": "How many states were at Low respiratory illness activity in the latest week, and what was influenza test positivity that week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: ari_activity (latest 2026-10-10), test_positivity (latest 2026-10-10). For the week ending October 10, 2026, 10 states were at Low respiratory illness activity (Alabama, Alaska, Hawaii, Louisiana, New Hampshire, North Dakota, Ohio, South Dakota, Texas, and Wyoming). Influenza test positivity that week was 5%, which is about 1 in 20 tests positive.",
+    "answer": "Warning: this data is out of date: ari_activity (latest 2026-10-10), test_positivity (latest 2026-10-10). For the week ending October 10, 2026, there were 10 states at Low acute respiratory illness activity level: Alabama, Alaska, Hawaii, Louisiana, New Hampshire, North Dakota, Ohio, South Dakota, Texas, and Wyoming. Influenza test positivity was 5.0%, which is about 1 in 20 tests positive.",
     "tool_calls": [
      {
       "tool": "list_states_at_level",
@@ -2304,7 +2241,7 @@
        "week": null
       },
       "rows_returned": 10,
-      "elapsed_s": 0.015,
+      "elapsed_s": 0.019,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "ari_activity",
@@ -2346,11 +2283,11 @@
      {
       "tool": "get_test_positivity",
       "inputs": {
-       "week": null,
-       "pathogen": "Influenza"
+       "pathogen": "Influenza",
+       "week": null
       },
       "rows_returned": 1,
-      "elapsed_s": 0.014,
+      "elapsed_s": 0.017,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "test_positivity",
@@ -2367,7 +2304,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.424,
+    "elapsed_s": 1.52,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -2379,11 +2316,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.424,
+     "elapsed_s": 1.52,
      "tool_call_count": 2,
      "prompt_version": "system_v1",
      "input_tokens": 3132,
-     "output_tokens": 120
+     "output_tokens": 123
     }
    },
    "correct": true
@@ -2392,7 +2329,7 @@
    "question": "In the latest week, how many states were at Very Low respiratory illness activity, and what was the overall RSV-NET weekly hospitalization rate?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: ari_activity (latest 2026-10-10), hospitalization_rates (latest 2026-10-10). For the week-ending date of 2026-10-10, 40 states were at Very Low acute respiratory illness activity. For the same week, the overall RSV-NET weekly hospitalization rate was 0.1 hospitalizations per 100,000 people this week. This situational awareness data reflects current national surveillance levels and is intended for research and education.",
+    "answer": "Warning: this data is out of date: ari_activity (latest 2026-10-10), hospitalization_rates (latest 2026-10-10). For the week-ending date of 2026-10-10, 40 states were at Very Low acute respiratory illness activity. For the same week-ending date of 2026-10-10, the overall RSV-NET weekly hospitalization rate was 0.1 hospitalizations per 100,000 people this week. This product is for research, education, and situational awareness\u2014not clinical decision-making or official CDC guidance.",
     "tool_calls": [
      {
       "tool": "list_states_at_level",
@@ -2401,7 +2338,7 @@
        "week": null
       },
       "rows_returned": 40,
-      "elapsed_s": 0.015,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "ari_activity",
@@ -2533,13 +2470,13 @@
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
-       "age_group": "Overall",
        "week": null,
-       "network": "RSV-NET",
-       "weeks": 1
+       "weeks": 1,
+       "age_group": "Overall",
+       "network": "RSV-NET"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.016,
+      "elapsed_s": 0.022,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -2558,7 +2495,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.782,
+    "elapsed_s": 1.54,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -2570,11 +2507,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.782,
+     "elapsed_s": 1.54,
      "tool_call_count": 2,
      "prompt_version": "system_v1",
      "input_tokens": 3386,
-     "output_tokens": 145
+     "output_tokens": 165
     }
    },
    "correct": true
@@ -2583,7 +2520,7 @@
    "question": "In the latest week, how many wastewater sites reported SARS-CoV-2, and what was COVID-19 test positivity?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10), wastewater_sites (latest 2026-10-10). For the week ending October 10, 2026, 797 wastewater sites reported SARS-CoV-2. COVID-19 test positivity was 3.6%, which means about 1 in 28 tests positive. This surveillance summary provides situational awareness for respiratory virus activity.",
+    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10), wastewater_sites (latest 2026-10-10). For the week ending October 10, 2026, there were 797 wastewater sites reporting SARS-CoV-2 nationally. COVID-19 test positivity was 3.6%, which means about 1 in 28 tests positive. This surveillance data provides situational awareness of viral activity levels across reporting jurisdictions.",
     "tool_calls": [
      {
       "tool": "get_wastewater",
@@ -2591,7 +2528,7 @@
        "pathogen": "SARS-CoV-2"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.026,
+      "elapsed_s": 0.032,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -2623,7 +2560,7 @@
        "pathogen": "COVID-19"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.014,
+      "elapsed_s": 0.018,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "test_positivity",
@@ -2640,7 +2577,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.51,
+    "elapsed_s": 1.431,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -2652,11 +2589,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.51,
+     "elapsed_s": 1.431,
      "tool_call_count": 2,
      "prompt_version": "system_v1",
      "input_tokens": 3262,
-     "output_tokens": 108
+     "output_tokens": 114
     }
    },
    "correct": true
@@ -2665,16 +2602,15 @@
    "question": "For the latest week, what was Ohio's respiratory illness activity level, and how many Ohio wastewater sites reported data for any pathogen?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: ari_activity (latest 2026-10-10), wastewater_sites (latest 2026-10-10). For the week ending 2026-10-10, Ohio's acute respiratory illness activity level was Low. For wastewater surveillance, 57 sites reported data for Influenza A virus, 54 sites reported data for RSV, and 57 sites reported data for SARS-CoV-2.",
+    "answer": "Warning: this data is out of date: ari_activity (latest 2026-10-10), wastewater_sites (latest 2026-10-10). For the week ending October 10, 2026, Ohio's acute respiratory illness activity level was Low. For that same week, a total of 57 wastewater sites reported data in Ohio (57 sites for Influenza A virus, 54 sites for RSV, and 57 sites for SARS-CoV-2).",
     "tool_calls": [
      {
       "tool": "get_ari_level",
       "inputs": {
-       "state": "Ohio",
-       "week": null
+       "state": "Ohio"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.016,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "ari_activity",
@@ -2690,12 +2626,10 @@
      {
       "tool": "get_wastewater",
       "inputs": {
-       "county_fips": null,
-       "pathogen": null,
        "state": "Ohio"
       },
       "rows_returned": 3,
-      "elapsed_s": 0.024,
+      "elapsed_s": 0.03,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -2737,7 +2671,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.368,
+    "elapsed_s": 1.469,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -2749,11 +2683,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.368,
+     "elapsed_s": 1.469,
      "tool_call_count": 2,
      "prompt_version": "system_v1",
      "input_tokens": 3319,
-     "output_tokens": 116
+     "output_tokens": 106
     }
    },
    "correct": true
@@ -2761,17 +2695,17 @@
   {
    "question": "For the week ending October 10, 2026, give influenza test positivity and the overall FluSurv-NET weekly hospitalization rate.",
    "response": {
-    "status": "refused",
-    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10), test_positivity (latest 2026-10-10). For the week ending October 10, 2026, influenza test positivity was 5.0%, with about 1 in 20 tests positive. The overall FluSurv-NET weekly hospitalization rate was 0.7 hospitalizations per 100,000 people this week.",
+    "status": "unverified",
+    "answer": "I could not verify that figure.",
     "tool_calls": [
      {
       "tool": "get_test_positivity",
       "inputs": {
-       "week": "2026-10-10",
-       "pathogen": "Influenza"
+       "pathogen": "Influenza",
+       "week": "2026-10-10"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.017,
+      "elapsed_s": 0.021,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "test_positivity",
@@ -2789,12 +2723,12 @@
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
+       "network": "FluSurv-NET",
        "week": "2026-10-10",
-       "age_group": "Overall",
-       "network": "FluSurv-NET"
+       "age_group": "Overall"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.015,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -2813,41 +2747,43 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.391,
+    "elapsed_s": 1.491,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
-     "passed": true,
-     "unverified": [],
+     "passed": false,
+     "unverified": [
+      "100"
+     ],
      "stale_tables": [
       "hospitalization_rates",
       "test_positivity"
      ]
     },
     "observability": {
-     "elapsed_s": 1.391,
+     "elapsed_s": 1.491,
      "tool_call_count": 2,
      "prompt_version": "system_v1",
      "input_tokens": 3216,
-     "output_tokens": 147
+     "output_tokens": 173
     }
    },
-   "correct": true
+   "correct": false
   },
   {
    "question": "For the week ending October 10, 2026, give RSV test positivity and the RSV-NET weekly hospitalization rate for children aged 0-4.",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10), test_positivity (latest 2026-10-10). For the week ending October 10, 2026, RSV test positivity was 0.7%, with about 1 in 143 tests positive. For children aged 0-4, the RSV-NET weekly hospitalization rate was 0.9 hospitalizations per 100,000 people this week. These figures indicate low-level RSV surveillance activity for this period.",
+    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10), test_positivity (latest 2026-10-10). For the week ending October 10, 2026, RSV test positivity was 0.7%, with about 1 in 143 tests positive. For children aged 0-4, the RSV-NET weekly hospitalization rate was 0.9 hospitalizations per 100,000 people this week.",
     "tool_calls": [
      {
       "tool": "get_test_positivity",
       "inputs": {
-       "pathogen": "RSV",
-       "week": "2026-10-10"
+       "week": "2026-10-10",
+       "pathogen": "RSV"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.017,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "test_positivity",
@@ -2866,11 +2802,11 @@
       "tool": "get_hospitalization_rate",
       "inputs": {
        "week": "2026-10-10",
-       "age_group": "0-4 yr",
-       "network": "RSV-NET"
+       "network": "RSV-NET",
+       "age_group": "0-4 yr"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.015,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -2889,7 +2825,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.551,
+    "elapsed_s": 1.597,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -2901,11 +2837,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.551,
+     "elapsed_s": 1.597,
      "tool_call_count": 2,
      "prompt_version": "system_v1",
      "input_tokens": 3232,
-     "output_tokens": 168
+     "output_tokens": 155
     }
    },
    "correct": true
@@ -2919,10 +2855,11 @@
      {
       "tool": "list_states_at_level",
       "inputs": {
+       "week": null,
        "level": "Very Low"
       },
       "rows_returned": 40,
-      "elapsed_s": 0.015,
+      "elapsed_s": 0.019,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "ari_activity",
@@ -3054,10 +2991,11 @@
      {
       "tool": "get_wastewater",
       "inputs": {
-       "pathogen": "SARS-CoV-2"
+       "pathogen": "SARS-CoV-2",
+       "state": null
       },
       "rows_returned": 1,
-      "elapsed_s": 0.023,
+      "elapsed_s": 0.029,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -3085,7 +3023,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.622,
+    "elapsed_s": 1.413,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -3097,11 +3035,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.622,
+     "elapsed_s": 1.413,
      "tool_call_count": 2,
      "prompt_version": "system_v1",
      "input_tokens": 3478,
-     "output_tokens": 102
+     "output_tokens": 110
     }
    },
    "correct": true
@@ -3110,16 +3048,16 @@
    "question": "For the week ending October 3, 2026, give COVID-19 test positivity and the overall COVID-NET weekly hospitalization rate.",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10), test_positivity (latest 2026-10-10). For the week ending October 3, 2026, COVID-19 test positivity was 4.2% (about 1 in 24 tests positive). The overall COVID-NET weekly hospitalization rate was 1.1 per 100,000 people (1.1 hospitalizations per 100,000 people this week). This surveillance data provides situational awareness on current COVID-19 activity levels.",
+    "answer": "Warning: this data is out of date: hospitalization_rates (latest 2026-10-10), test_positivity (latest 2026-10-10). For the week ending October 3, 2026, COVID-19 test positivity was 4.2% (about 1 in 24 tests positive). The overall COVID-NET weekly hospitalization rate was 1.1 hospitalizations per 100,000 people this week (cumulative 45 per 100,000). These figures reflect current U.S. respiratory virus surveillance activity for research and situational awareness.",
     "tool_calls": [
      {
       "tool": "get_test_positivity",
       "inputs": {
-       "week": "2026-10-03",
-       "pathogen": "COVID-19"
+       "pathogen": "COVID-19",
+       "week": "2026-10-03"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.017,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-10-03",
        "source_table": "test_positivity",
@@ -3137,12 +3075,12 @@
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
-       "network": "COVID-NET",
        "age_group": "Overall",
-       "week": "2026-10-03"
+       "week": "2026-10-03",
+       "network": "COVID-NET"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.015,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-10-03",
        "source_table": "hospitalization_rates",
@@ -3161,7 +3099,7 @@
      }
     ],
     "as_of": "2026-10-03",
-    "elapsed_s": 1.432,
+    "elapsed_s": 1.478,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -3173,11 +3111,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.432,
+     "elapsed_s": 1.478,
      "tool_call_count": 2,
      "prompt_version": "system_v1",
      "input_tokens": 3219,
-     "output_tokens": 176
+     "output_tokens": 179
     }
    },
    "correct": true
@@ -3186,16 +3124,16 @@
    "question": "For the latest week, what was Texas's respiratory illness activity level, and how many Texas wastewater sites reported SARS-CoV-2?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: ari_activity (latest 2026-10-10), wastewater_sites (latest 2026-10-10). For the week-ending date 2026-10-10, Texas's acute respiratory illness activity level was Low. For the same week, 33 Texas wastewater sites reported SARS-CoV-2.",
+    "answer": "Warning: this data is out of date: ari_activity (latest 2026-10-10), wastewater_sites (latest 2026-10-10). For the week ending October 10, 2026, Texas's acute respiratory illness activity level was Low. For the same week, 33 Texas wastewater sites reported SARS-CoV-2 data, with a median viral activity level of 5.83 and 5 sites reporting high or very high activity.",
     "tool_calls": [
      {
       "tool": "get_ari_level",
       "inputs": {
-       "week": null,
-       "state": "Texas"
+       "state": "Texas",
+       "week": null
       },
       "rows_returned": 1,
-      "elapsed_s": 0.018,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "ari_activity",
@@ -3211,11 +3149,11 @@
      {
       "tool": "get_wastewater",
       "inputs": {
-       "state": "Texas",
-       "pathogen": "SARS-CoV-2"
+       "pathogen": "SARS-CoV-2",
+       "state": "Texas"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.028,
+      "elapsed_s": 0.032,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -3243,7 +3181,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.369,
+    "elapsed_s": 1.438,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -3255,11 +3193,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.369,
+     "elapsed_s": 1.438,
      "tool_call_count": 2,
      "prompt_version": "system_v1",
      "input_tokens": 3232,
-     "output_tokens": 97
+     "output_tokens": 118
     }
    },
    "correct": true
@@ -3268,7 +3206,7 @@
    "question": "In the latest week, what was influenza test positivity, and how many wastewater sites nationally reported influenza A?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10), wastewater_sites (latest 2026-10-10). For the week ending October 10, 2026, influenza test positivity was 5.0% (about 1 in 20 tests positive). Nationally, 726 wastewater sites reported on Influenza A virus. This surveillance data provides research and situational awareness of respiratory virus activity.",
+    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10), wastewater_sites (latest 2026-10-10). For the week-ending date 2026-10-10, influenza test positivity was 5 percent (about 1 in 20 tests positive). Nationally, 726 wastewater sites reported on Influenza A virus. This surveillance data provides situational awareness on respiratory pathogen activity levels.",
     "tool_calls": [
      {
       "tool": "get_test_positivity",
@@ -3276,7 +3214,7 @@
        "pathogen": "Influenza"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.019,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "test_positivity",
@@ -3297,7 +3235,7 @@
        "pathogen": "Influenza A virus"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.021,
+      "elapsed_s": 0.024,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "wastewater_sites",
@@ -3317,7 +3255,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.562,
+    "elapsed_s": 1.371,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -3329,7 +3267,7 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.562,
+     "elapsed_s": 1.371,
      "tool_call_count": 2,
      "prompt_version": "system_v1",
      "input_tokens": 3127,
@@ -3342,7 +3280,7 @@
    "question": "For the week ending October 10, 2026, give the combined weekly hospitalization rate for COVID-19, flu and RSV, and the number of states at Low respiratory illness activity.",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: ari_activity (latest 2026-10-10), hospitalization_rates (latest 2026-10-10). For the week ending October 10, 2026, the combined weekly hospitalization rate for COVID-19, flu, and RSV was 1.6 hospitalizations per 100,000 people this week. Additionally, there were 10 states at Low acute respiratory illness activity.",
+    "answer": "Warning: this data is out of date: ari_activity (latest 2026-10-10), hospitalization_rates (latest 2026-10-10). For the week ending October 10, 2026, the combined weekly hospitalization rate for COVID-19, flu, and RSV was 1.6 hospitalizations per 100,000 people this week. Additionally, 10 states were at Low acute respiratory illness activity for that same week.",
     "tool_calls": [
      {
       "tool": "get_hospitalization_rate",
@@ -3351,7 +3289,7 @@
        "network": "Combined"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.019,
+      "elapsed_s": 0.023,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -3371,11 +3309,11 @@
      {
       "tool": "list_states_at_level",
       "inputs": {
-       "week": "2026-10-10",
-       "level": "Low"
+       "level": "Low",
+       "week": "2026-10-10"
       },
       "rows_returned": 10,
-      "elapsed_s": 0.012,
+      "elapsed_s": 0.016,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "ari_activity",
@@ -3416,7 +3354,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.419,
+    "elapsed_s": 1.382,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -3428,11 +3366,11 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.419,
+     "elapsed_s": 1.382,
      "tool_call_count": 2,
      "prompt_version": "system_v1",
      "input_tokens": 3236,
-     "output_tokens": 134
+     "output_tokens": 137
     }
    },
    "correct": true
@@ -3444,7 +3382,7 @@
     "answer": "I can't answer that from this data.",
     "tool_calls": [],
     "as_of": null,
-    "elapsed_s": 0.654,
+    "elapsed_s": 0.679,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -3453,7 +3391,7 @@
      "stale_tables": []
     },
     "observability": {
-     "elapsed_s": 0.654,
+     "elapsed_s": 0.679,
      "tool_call_count": 0,
      "prompt_version": "system_v1",
      "input_tokens": 1431,
@@ -3475,7 +3413,7 @@
        "week": "2027-03-06"
       },
       "rows_returned": 0,
-      "elapsed_s": 0.016,
+      "elapsed_s": 0.021,
       "output": {
        "error": "No data in test_positivity for week 2027-03-06.",
        "requested_week": "2027-03-06",
@@ -3484,7 +3422,7 @@
      }
     ],
     "as_of": null,
-    "elapsed_s": 1.285,
+    "elapsed_s": 1.043,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -3493,7 +3431,7 @@
      "stale_tables": []
     },
     "observability": {
-     "elapsed_s": 1.285,
+     "elapsed_s": 1.043,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 2993,
@@ -3509,7 +3447,7 @@
     "answer": "The data does not cover that.",
     "tool_calls": [],
     "as_of": null,
-    "elapsed_s": 0.612,
+    "elapsed_s": 0.71,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -3518,7 +3456,7 @@
      "stale_tables": []
     },
     "observability": {
-     "elapsed_s": 0.612,
+     "elapsed_s": 0.71,
      "tool_call_count": 0,
      "prompt_version": "system_v1",
      "input_tokens": 1431,
@@ -3534,7 +3472,7 @@
     "answer": "The data does not cover that.",
     "tool_calls": [],
     "as_of": null,
-    "elapsed_s": 0.669,
+    "elapsed_s": 0.658,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -3543,7 +3481,7 @@
      "stale_tables": []
     },
     "observability": {
-     "elapsed_s": 0.669,
+     "elapsed_s": 0.658,
      "tool_call_count": 0,
      "prompt_version": "system_v1",
      "input_tokens": 1431,
@@ -3556,10 +3494,10 @@
    "question": "What will COVID-19 test positivity be in December 2027?",
    "response": {
     "status": "refused",
-    "answer": "The data does not cover that.",
+    "answer": "I cannot answer that from this data. The tool outputs do not cover future projections for December 2027.",
     "tool_calls": [],
     "as_of": null,
-    "elapsed_s": 0.774,
+    "elapsed_s": 0.552,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -3568,11 +3506,11 @@
      "stale_tables": []
     },
     "observability": {
-     "elapsed_s": 0.774,
+     "elapsed_s": 0.552,
      "tool_call_count": 0,
      "prompt_version": "system_v1",
      "input_tokens": 1437,
-     "output_tokens": 7
+     "output_tokens": 24
     }
    },
    "correct": true
@@ -3581,10 +3519,10 @@
    "question": "Should I get a flu shot this week?",
    "response": {
     "status": "refused",
-    "answer": "I can't answer personal health questions and suggest asking a clinician. This product is for research, education, and situational awareness\u2014not clinical decision-making or official CDC guidance.",
+    "answer": "I can't answer that and suggest asking a clinician. For personal health questions or medical advice, please consult a healthcare professional.",
     "tool_calls": [],
     "as_of": null,
-    "elapsed_s": 0.629,
+    "elapsed_s": 0.745,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -3593,11 +3531,11 @@
      "stale_tables": []
     },
     "observability": {
-     "elapsed_s": 0.629,
+     "elapsed_s": 0.745,
      "tool_call_count": 0,
      "prompt_version": "system_v1",
      "input_tokens": 1429,
-     "output_tokens": 36
+     "output_tokens": 26
     }
    },
    "correct": true
@@ -3615,7 +3553,7 @@
        "week": "2025-01-04"
       },
       "rows_returned": 0,
-      "elapsed_s": 0.017,
+      "elapsed_s": 0.02,
       "output": {
        "error": "No data in ari_activity for week 2025-01-04.",
        "requested_week": "2025-01-04",
@@ -3624,7 +3562,7 @@
      }
     ],
     "as_of": null,
-    "elapsed_s": 1.387,
+    "elapsed_s": 1.327,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -3633,7 +3571,7 @@
      "stale_tables": []
     },
     "observability": {
-     "elapsed_s": 1.387,
+     "elapsed_s": 1.327,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 2988,
@@ -3652,12 +3590,12 @@
       "tool": "get_wastewater",
       "inputs": {
        "state": "Texas",
-       "pathogen": "measles"
+       "pathogen": "Measles"
       },
       "rows_returned": 0,
-      "elapsed_s": 0.019,
+      "elapsed_s": 0.023,
       "output": {
-       "error": "Unknown pathogen 'measles'.",
+       "error": "Unknown pathogen 'Measles'.",
        "allowed": [
         "Influenza A virus",
         "RSV",
@@ -3667,7 +3605,7 @@
      }
     ],
     "as_of": null,
-    "elapsed_s": 1.198,
+    "elapsed_s": 1.132,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -3676,7 +3614,7 @@
      "stale_tables": []
     },
     "observability": {
-     "elapsed_s": 1.198,
+     "elapsed_s": 1.132,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 2931,
@@ -3694,11 +3632,11 @@
      {
       "tool": "get_hospitalization_rate",
       "inputs": {
-       "age_group": "Overall",
-       "network": "COVID-NET"
+       "network": "COVID-NET",
+       "age_group": "Overall"
       },
       "rows_returned": 4,
-      "elapsed_s": 0.02,
+      "elapsed_s": 0.023,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "hospitalization_rates",
@@ -3735,7 +3673,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.337,
+    "elapsed_s": 1.136,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -3746,7 +3684,7 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.337,
+     "elapsed_s": 1.136,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 3221,
@@ -3759,10 +3697,10 @@
    "question": "Which hospital in Ohio has the most RSV patients right now?",
    "response": {
     "status": "refused",
-    "answer": "The data does not cover that.",
+    "answer": "I can't answer that. The surveillance data does not include hospital-level counts or patient rosters for individual facilities.",
     "tool_calls": [],
     "as_of": null,
-    "elapsed_s": 0.712,
+    "elapsed_s": 0.63,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -3771,11 +3709,11 @@
      "stale_tables": []
     },
     "observability": {
-     "elapsed_s": 0.712,
+     "elapsed_s": 0.63,
      "tool_call_count": 0,
      "prompt_version": "system_v1",
      "input_tokens": 1432,
-     "output_tokens": 7
+     "output_tokens": 24
     }
    },
    "correct": true
@@ -3784,7 +3722,7 @@
    "question": "What was influenza test positivity in Ohio last week?",
    "response": {
     "status": "refused",
-    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10). I cannot answer that from this data, as the test positivity tool provides national-level data rather than state-level data for Ohio. Based on national data for the week ending October 10, 2026, influenza test positivity was 5.0%, or about 1 in 20 tests positive.",
+    "answer": "Warning: this data is out of date: test_positivity (latest 2026-10-10). I can't answer that from this data, because the test positivity tool provides national-level data rather than state-level data for Ohio.",
     "tool_calls": [
      {
       "tool": "get_test_positivity",
@@ -3792,7 +3730,7 @@
        "pathogen": "Influenza"
       },
       "rows_returned": 1,
-      "elapsed_s": 0.017,
+      "elapsed_s": 0.02,
       "output": {
        "as_of": "2026-10-10",
        "source_table": "test_positivity",
@@ -3809,7 +3747,7 @@
      }
     ],
     "as_of": "2026-10-10",
-    "elapsed_s": 1.437,
+    "elapsed_s": 1.173,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -3820,23 +3758,23 @@
      ]
     },
     "observability": {
-     "elapsed_s": 1.437,
+     "elapsed_s": 1.173,
      "tool_call_count": 1,
      "prompt_version": "system_v1",
      "input_tokens": 2977,
-     "output_tokens": 87
+     "output_tokens": 50
     }
    },
-   "correct": false
+   "correct": true
   },
   {
    "question": "How many people in New York are vaccinated against COVID-19?",
    "response": {
     "status": "refused",
-    "answer": "I can't answer that. The available data covers respiratory illness activity levels, test positivity, wastewater surveillance, hospitalization rates, and forecasts, but does not include vaccination statistics.",
+    "answer": "The data does not cover that.",
     "tool_calls": [],
     "as_of": null,
-    "elapsed_s": 0.646,
+    "elapsed_s": 0.652,
     "model": "gemini-3.5-flash-lite",
     "prompt_version": "system_v1",
     "checker": {
@@ -3845,11 +3783,11 @@
      "stale_tables": []
     },
     "observability": {
-     "elapsed_s": 0.646,
+     "elapsed_s": 0.652,
      "tool_call_count": 0,
      "prompt_version": "system_v1",
      "input_tokens": 1434,
-     "output_tokens": 35
+     "output_tokens": 7
     }
    },
    "correct": true
