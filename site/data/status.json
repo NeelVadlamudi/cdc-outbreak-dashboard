@@ -1,55 +1,20 @@
 {
-  "generated_at": "2026-11-23T01:42:05Z",
+  "generated_at": "2026-11-23T21:17:38Z",
   "run": {
     "result": "success",
-    "started_at": "2026-11-23T01:39:33Z",
-    "finished_at": "2026-11-23T01:42:05Z",
-    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/45095698355",
-    "commit": "89d122d1f9bc76b5956992dcfe044a67d886e8a8",
+    "started_at": "2026-11-23T21:17:10Z",
+    "finished_at": "2026-11-23T21:17:38Z",
+    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/45267929913",
+    "commit": "57aed020417bedf6b5ed06ddab0ebb5885a22851",
     "steps": {
       "refresh": "success",
       "release": "success",
-      "backtest": "success",
+      "backtest": "skipped",
       "dashboard": "success",
-      "eval": "success"
+      "eval": "skipped"
     }
   },
-  "eval": {
-    "model": "gemini-3.5-flash-lite",
-    "date": "2026-11-23",
-    "question_set": "cdc-q60-v1",
-    "summary": {
-      "question_set": "cdc-q60-v1",
-      "questions": 60,
-      "numeric_accuracy": 91.7,
-      "tool_choice": 100.0,
-      "correct_refusals": 100.0,
-      "false_refusals": 6.2,
-      "grounded_answers": 100.0,
-      "median_s": 1.47,
-      "p95_s": 2.05,
-      "median_input_tokens": null,
-      "median_output_tokens": null
-    },
-    "baseline": {
-      "date": "2026-10-20",
-      "model": "gemini-3.5-flash-lite",
-      "summary": {
-        "question_set": "cdc-q60-v1",
-        "questions": 60,
-        "numeric_accuracy": 91.7,
-        "tool_choice": 100.0,
-        "correct_refusals": 75.0,
-        "false_refusals": 6.2,
-        "grounded_answers": 100.0,
-        "median_s": 1.8,
-        "p95_s": 2.48,
-        "median_input_tokens": null,
-        "median_output_tokens": null
-      }
-    },
-    "drops": []
-  },
+  "eval": null,
   "backtest": {
     "run_at": "2026-11-23T01:40:19Z",
     "data_through": "2026-11-14",
