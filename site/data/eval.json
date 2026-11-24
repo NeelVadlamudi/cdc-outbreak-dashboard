@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-11-23T01:42:05Z",
+  "run_at": "2026-11-24T05:23:24Z",
   "runs": [
     {
       "model": "gemini-3.5-flash-lite",
@@ -661,6 +661,23 @@
         "grounded_answers": 100.0,
         "median_s": 1.47,
         "p95_s": 2.05,
+        "median_input_tokens": null,
+        "median_output_tokens": null
+      }
+    },
+    {
+      "model": "gemini-3.5-flash-lite",
+      "date": "2026-11-24",
+      "summary": {
+        "question_set": "cdc-q60-v1",
+        "questions": 60,
+        "numeric_accuracy": 93.8,
+        "tool_choice": 100.0,
+        "correct_refusals": 100.0,
+        "false_refusals": 6.2,
+        "grounded_answers": 100.0,
+        "median_s": 1.27,
+        "p95_s": 1.49,
         "median_input_tokens": null,
         "median_output_tokens": null
       }
