@@ -1,55 +1,20 @@
 {
-  "generated_at": "2026-11-27T03:40:20Z",
+  "generated_at": "2026-11-27T18:55:58Z",
   "run": {
     "result": "success",
-    "started_at": "2026-11-27T03:38:10Z",
-    "finished_at": "2026-11-27T03:40:20Z",
-    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/45935219139",
-    "commit": "d25d3210af0e0d2cce941c1699209311e0b7ed5f",
+    "started_at": "2026-11-27T18:55:28Z",
+    "finished_at": "2026-11-27T18:55:58Z",
+    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/46052887813",
+    "commit": "f024e8c7cf8a1c350783271bafbf499e27c6dfe8",
     "steps": {
       "refresh": "success",
       "release": "success",
-      "backtest": "success",
+      "backtest": "skipped",
       "dashboard": "success",
-      "eval": "success"
+      "eval": "skipped"
     }
   },
-  "eval": {
-    "model": "gemini-3.5-flash-lite",
-    "date": "2026-11-27",
-    "question_set": "cdc-q60-v1",
-    "summary": {
-      "question_set": "cdc-q60-v1",
-      "questions": 60,
-      "numeric_accuracy": 91.7,
-      "tool_choice": 100.0,
-      "correct_refusals": 91.7,
-      "false_refusals": 8.3,
-      "grounded_answers": 100.0,
-      "median_s": 1.28,
-      "p95_s": 1.69,
-      "median_input_tokens": null,
-      "median_output_tokens": null
-    },
-    "baseline": {
-      "date": "2026-10-20",
-      "model": "gemini-3.5-flash-lite",
-      "summary": {
-        "question_set": "cdc-q60-v1",
-        "questions": 60,
-        "numeric_accuracy": 91.7,
-        "tool_choice": 100.0,
-        "correct_refusals": 75.0,
-        "false_refusals": 6.2,
-        "grounded_answers": 100.0,
-        "median_s": 1.8,
-        "p95_s": 2.48,
-        "median_input_tokens": null,
-        "median_output_tokens": null
-      }
-    },
-    "drops": []
-  },
+  "eval": null,
   "backtest": {
     "run_at": "2026-11-27T03:38:51Z",
     "data_through": "2026-11-14",
@@ -71,24 +36,24 @@
         "table": "ari_activity",
         "dataset": null,
         "legacy": null,
-        "latest_week": "2026-11-14",
-        "age_days": 13,
+        "latest_week": "2026-11-21",
+        "age_days": 6,
         "stale": false
       },
       {
         "table": "hospitalization_rates",
         "dataset": null,
         "legacy": null,
-        "latest_week": "2026-11-14",
-        "age_days": 13,
+        "latest_week": "2026-11-21",
+        "age_days": 6,
         "stale": false
       },
       {
         "table": "test_positivity",
         "dataset": null,
         "legacy": null,
-        "latest_week": "2026-11-14",
-        "age_days": 13,
+        "latest_week": "2026-11-21",
+        "age_days": 6,
         "stale": false
       },
       {
