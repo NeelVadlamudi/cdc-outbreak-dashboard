@@ -1,62 +1,20 @@
 {
-  "generated_at": "2026-11-28T03:20:35Z",
+  "generated_at": "2026-11-28T17:31:11Z",
   "run": {
-    "result": "alert",
-    "started_at": "2026-11-28T03:18:10Z",
-    "finished_at": "2026-11-28T03:20:35Z",
-    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/46102098100",
-    "commit": "091a3fb703a3c67ac25df8757f8e7c498021b149",
+    "result": "success",
+    "started_at": "2026-11-28T17:30:40Z",
+    "finished_at": "2026-11-28T17:31:11Z",
+    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/46170748416",
+    "commit": "b0ba0867b65a17ce8db97a568226e67f998e6400",
     "steps": {
       "refresh": "success",
       "release": "success",
-      "backtest": "success",
+      "backtest": "skipped",
       "dashboard": "success",
-      "eval": "success"
+      "eval": "skipped"
     }
   },
-  "eval": {
-    "model": "gemini-3.5-flash-lite",
-    "date": "2026-11-28",
-    "question_set": "cdc-q60-v1",
-    "summary": {
-      "question_set": "cdc-q60-v1",
-      "questions": 60,
-      "numeric_accuracy": 87.5,
-      "tool_choice": 100.0,
-      "correct_refusals": 83.3,
-      "false_refusals": 12.5,
-      "grounded_answers": 100.0,
-      "median_s": 1.51,
-      "p95_s": 1.97,
-      "median_input_tokens": null,
-      "median_output_tokens": null
-    },
-    "baseline": {
-      "date": "2026-10-20",
-      "model": "gemini-3.5-flash-lite",
-      "summary": {
-        "question_set": "cdc-q60-v1",
-        "questions": 60,
-        "numeric_accuracy": 91.7,
-        "tool_choice": 100.0,
-        "correct_refusals": 75.0,
-        "false_refusals": 6.2,
-        "grounded_answers": 100.0,
-        "median_s": 1.8,
-        "p95_s": 2.48,
-        "median_input_tokens": null,
-        "median_output_tokens": null
-      }
-    },
-    "drops": [
-      {
-        "metric": "false_refusals",
-        "baseline": 6.2,
-        "value": 12.5,
-        "change": 6.3
-      }
-    ]
-  },
+  "eval": null,
   "backtest": {
     "run_at": "2026-11-28T03:18:58Z",
     "data_through": "2026-11-21",
@@ -116,11 +74,5 @@
       }
     ]
   },
-  "alerts": [
-    {
-      "kind": "score_drop",
-      "title": "Eval score drop: false_refusals",
-      "detail": "false_refusals was 12.5 against a baseline of 6.2 (+6.3 points; alert threshold 5)."
-    }
-  ]
+  "alerts": []
 }
