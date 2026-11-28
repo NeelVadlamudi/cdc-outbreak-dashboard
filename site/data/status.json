@@ -1,23 +1,65 @@
 {
-  "generated_at": "2026-11-27T18:55:58Z",
+  "generated_at": "2026-11-28T03:20:35Z",
   "run": {
-    "result": "success",
-    "started_at": "2026-11-27T18:55:28Z",
-    "finished_at": "2026-11-27T18:55:58Z",
-    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/46052887813",
-    "commit": "f024e8c7cf8a1c350783271bafbf499e27c6dfe8",
+    "result": "alert",
+    "started_at": "2026-11-28T03:18:10Z",
+    "finished_at": "2026-11-28T03:20:35Z",
+    "url": "https://github.com/NeelVadlamudi/cdc-outbreak-dashboard/actions/runs/46102098100",
+    "commit": "091a3fb703a3c67ac25df8757f8e7c498021b149",
     "steps": {
       "refresh": "success",
       "release": "success",
-      "backtest": "skipped",
+      "backtest": "success",
       "dashboard": "success",
-      "eval": "skipped"
+      "eval": "success"
     }
   },
-  "eval": null,
+  "eval": {
+    "model": "gemini-3.5-flash-lite",
+    "date": "2026-11-28",
+    "question_set": "cdc-q60-v1",
+    "summary": {
+      "question_set": "cdc-q60-v1",
+      "questions": 60,
+      "numeric_accuracy": 87.5,
+      "tool_choice": 100.0,
+      "correct_refusals": 83.3,
+      "false_refusals": 12.5,
+      "grounded_answers": 100.0,
+      "median_s": 1.51,
+      "p95_s": 1.97,
+      "median_input_tokens": null,
+      "median_output_tokens": null
+    },
+    "baseline": {
+      "date": "2026-10-20",
+      "model": "gemini-3.5-flash-lite",
+      "summary": {
+        "question_set": "cdc-q60-v1",
+        "questions": 60,
+        "numeric_accuracy": 91.7,
+        "tool_choice": 100.0,
+        "correct_refusals": 75.0,
+        "false_refusals": 6.2,
+        "grounded_answers": 100.0,
+        "median_s": 1.8,
+        "p95_s": 2.48,
+        "median_input_tokens": null,
+        "median_output_tokens": null
+      }
+    },
+    "drops": [
+      {
+        "metric": "false_refusals",
+        "baseline": 6.2,
+        "value": 12.5,
+        "change": 6.3
+      }
+    ]
+  },
   "backtest": {
-    "run_at": "2026-11-27T03:38:51Z",
-    "data_through": "2026-11-14",
+    "run_at": "2026-11-28T03:18:58Z",
+    "data_through": "2026-11-21",
     "notes": [
       "LSTM on COVID-NET does not beat last week's value at any horizon.",
       "XGBoost on COVID-NET does not beat last week's value at any horizon.",
@@ -26,7 +68,7 @@
       "LSTM on RSV-NET does not beat last week's value at any horizon.",
       "XGBoost on RSV-NET does not beat last week's value at any horizon.",
       "LSTM on Combined does not beat last week's value at any horizon.",
-      "XGBoost on Combined does not beat last week's value at any horizon."
+      "XGBoost on Combined beats last week's value only at h3, h4."
     ]
   },
   "freshness": {
@@ -37,7 +79,7 @@
         "dataset": null,
         "legacy": null,
         "latest_week": "2026-11-21",
-        "age_days": 6,
+        "age_days": 7,
         "stale": false
       },
       {
@@ -45,7 +87,7 @@
         "dataset": null,
         "legacy": null,
         "latest_week": "2026-11-21",
-        "age_days": 6,
+        "age_days": 7,
         "stale": false
       },
       {
@@ -53,7 +95,7 @@
         "dataset": null,
         "legacy": null,
         "latest_week": "2026-11-21",
-        "age_days": 6,
+        "age_days": 7,
         "stale": false
       },
       {
@@ -61,7 +103,7 @@
         "dataset": "atcp-73re",
         "legacy": false,
         "latest_week": "2026-11-14",
-        "age_days": 13,
+        "age_days": 14,
         "stale": false
       },
       {
@@ -74,5 +116,11 @@
       }
     ]
   },
-  "alerts": []
+  "alerts": [
+    {
+      "kind": "score_drop",
+      "title": "Eval score drop: false_refusals",
+      "detail": "false_refusals was 12.5 against a baseline of 6.2 (+6.3 points; alert threshold 5)."
+    }
+  ]
 }

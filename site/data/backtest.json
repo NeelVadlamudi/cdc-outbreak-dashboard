@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-11-27T03:38:51Z",
+  "run_at": "2026-11-28T03:18:58Z",
   "target": "Weekly RESP-NET hospitalization rate, overall population, 1-4 weeks ahead",
   "mae_unit": "rate per 100,000",
   "n_origins": 12,
@@ -9,22 +9,22 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.375,
-          "wmape": 0.384
+          "mae": 0.396,
+          "wmape": 0.38
         },
         {
           "h": 2,
-          "mae": 0.447,
-          "wmape": 0.426
+          "mae": 0.454,
+          "wmape": 0.412
         },
         {
           "h": 3,
-          "mae": 0.491,
+          "mae": 0.525,
           "wmape": 0.45
         },
         {
           "h": 4,
-          "mae": 0.538,
+          "mae": 0.571,
           "wmape": 0.479
         }
       ]
@@ -34,23 +34,23 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.404,
-          "wmape": 0.414
+          "mae": 0.301,
+          "wmape": 0.289
         },
         {
           "h": 2,
-          "mae": 0.579,
-          "wmape": 0.551
+          "mae": 0.446,
+          "wmape": 0.406
         },
         {
           "h": 3,
-          "mae": 0.68,
-          "wmape": 0.623
+          "mae": 0.517,
+          "wmape": 0.443
         },
         {
           "h": 4,
-          "mae": 0.695,
-          "wmape": 0.618
+          "mae": 0.509,
+          "wmape": 0.427
         }
       ]
     },
@@ -59,23 +59,23 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.083,
-          "wmape": 0.085
+          "mae": 0.075,
+          "wmape": 0.072
         },
         {
           "h": 2,
-          "mae": 0.158,
-          "wmape": 0.151
+          "mae": 0.133,
+          "wmape": 0.121
         },
         {
           "h": 3,
           "mae": 0.2,
-          "wmape": 0.183
+          "wmape": 0.171
         },
         {
           "h": 4,
-          "mae": 0.283,
-          "wmape": 0.252
+          "mae": 0.242,
+          "wmape": 0.203
         }
       ]
     },
@@ -84,23 +84,23 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.509,
-          "wmape": 0.744
+          "mae": 0.598,
+          "wmape": 0.683
         },
         {
           "h": 2,
-          "mae": 0.722,
-          "wmape": 0.818
+          "mae": 0.824,
+          "wmape": 0.749
         },
         {
           "h": 3,
-          "mae": 0.852,
-          "wmape": 0.775
+          "mae": 0.973,
+          "wmape": 0.721
         },
         {
           "h": 4,
-          "mae": 0.955,
-          "wmape": 0.749
+          "mae": 1.235,
+          "wmape": 0.788
         }
       ]
     },
@@ -109,23 +109,23 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.175,
-          "wmape": 0.256
+          "mae": 0.223,
+          "wmape": 0.254
         },
         {
           "h": 2,
-          "mae": 0.363,
-          "wmape": 0.411
+          "mae": 0.531,
+          "wmape": 0.482
         },
         {
           "h": 3,
-          "mae": 0.629,
-          "wmape": 0.572
+          "mae": 0.875,
+          "wmape": 0.648
         },
         {
           "h": 4,
-          "mae": 0.848,
-          "wmape": 0.665
+          "mae": 1.154,
+          "wmape": 0.737
         }
       ]
     },
@@ -134,23 +134,23 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.142,
-          "wmape": 0.207
+          "mae": 0.2,
+          "wmape": 0.229
         },
         {
           "h": 2,
-          "mae": 0.342,
-          "wmape": 0.387
+          "mae": 0.425,
+          "wmape": 0.386
         },
         {
           "h": 3,
-          "mae": 0.558,
-          "wmape": 0.508
+          "mae": 0.675,
+          "wmape": 0.5
         },
         {
           "h": 4,
-          "mae": 0.733,
-          "wmape": 0.575
+          "mae": 0.892,
+          "wmape": 0.569
         }
       ]
     },
@@ -159,23 +159,23 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.06,
-          "wmape": 1.2
+          "mae": 0.067,
+          "wmape": 1.01
         },
         {
           "h": 2,
-          "mae": 0.079,
-          "wmape": 1.185
+          "mae": 0.089,
+          "wmape": 1.182
         },
         {
           "h": 3,
-          "mae": 0.083,
-          "wmape": 1.105
+          "mae": 0.097,
+          "wmape": 0.975
         },
         {
           "h": 4,
-          "mae": 0.1,
-          "wmape": 0.995
+          "mae": 0.115,
+          "wmape": 0.919
         }
       ]
     },
@@ -184,23 +184,23 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.066,
-          "wmape": 1.32
+          "mae": 0.063,
+          "wmape": 0.949
         },
         {
           "h": 2,
-          "mae": 0.108,
-          "wmape": 1.62
+          "mae": 0.12,
+          "wmape": 1.6
         },
         {
           "h": 3,
-          "mae": 0.124,
-          "wmape": 1.652
+          "mae": 0.133,
+          "wmape": 1.328
         },
         {
           "h": 4,
-          "mae": 0.131,
-          "wmape": 1.307
+          "mae": 0.151,
+          "wmape": 1.212
         }
       ]
     },
@@ -209,23 +209,23 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.042,
-          "wmape": 0.833
+          "mae": 0.05,
+          "wmape": 0.75
         },
         {
           "h": 2,
           "mae": 0.058,
-          "wmape": 0.875
+          "wmape": 0.778
         },
         {
           "h": 3,
-          "mae": 0.05,
+          "mae": 0.067,
           "wmape": 0.667
         },
         {
           "h": 4,
-          "mae": 0.058,
-          "wmape": 0.583
+          "mae": 0.075,
+          "wmape": 0.6
         }
       ]
     },
@@ -234,23 +234,23 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 1.009,
-          "wmape": 0.588
+          "mae": 1.028,
+          "wmape": 0.516
         },
         {
           "h": 2,
-          "mae": 1.348,
-          "wmape": 0.674
+          "mae": 1.308,
+          "wmape": 0.571
         },
         {
           "h": 3,
-          "mae": 1.523,
-          "wmape": 0.67
+          "mae": 1.541,
+          "wmape": 0.585
         },
         {
           "h": 4,
-          "mae": 1.822,
-          "wmape": 0.729
+          "mae": 1.974,
+          "wmape": 0.681
         }
       ]
     },
@@ -259,23 +259,23 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.376,
-          "wmape": 0.219
+          "mae": 0.366,
+          "wmape": 0.184
         },
         {
           "h": 2,
-          "mae": 0.742,
-          "wmape": 0.371
+          "mae": 0.673,
+          "wmape": 0.294
         },
         {
           "h": 3,
-          "mae": 0.947,
-          "wmape": 0.416
+          "mae": 0.87,
+          "wmape": 0.331
         },
         {
           "h": 4,
-          "mae": 1.082,
-          "wmape": 0.433
+          "mae": 1.101,
+          "wmape": 0.38
         }
       ]
     },
@@ -284,23 +284,23 @@
       "horizons": [
         {
           "h": 1,
-          "mae": 0.225,
-          "wmape": 0.131
+          "mae": 0.283,
+          "wmape": 0.142
         },
         {
           "h": 2,
-          "mae": 0.508,
-          "wmape": 0.254
+          "mae": 0.583,
+          "wmape": 0.255
         },
         {
           "h": 3,
-          "mae": 0.783,
-          "wmape": 0.344
+          "mae": 0.925,
+          "wmape": 0.351
         },
         {
           "h": 4,
-          "mae": 1.008,
-          "wmape": 0.403
+          "mae": 1.192,
+          "wmape": 0.411
         }
       ]
     }
@@ -313,6 +313,6 @@
     "LSTM on RSV-NET does not beat last week's value at any horizon.",
     "XGBoost on RSV-NET does not beat last week's value at any horizon.",
     "LSTM on Combined does not beat last week's value at any horizon.",
-    "XGBoost on Combined does not beat last week's value at any horizon."
+    "XGBoost on Combined beats last week's value only at h3, h4."
   ]
 }
